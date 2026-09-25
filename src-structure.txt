@@ -1,0 +1,420 @@
+Folder PATH listing
+Volume serial number is 00000025 B2E2:73B2
+C:\USERS\ALAM\DOCUMENTS\PROJECT UI ASQI\SHADCN-ADMIN\SRC
+³   main.tsx
+³   routeTree.gen.ts
+³   tanstack-table.d.ts
+³   vite-env.d.ts
+³   
+ÃÄÄÄassets
+³   ³   clerk-full-logo.tsx
+³   ³   clerk-logo.tsx
+³   ³   logo.tsx
+³   ³   
+³   ÃÄÄÄbrand-icons
+³   ³       icon-discord.tsx
+³   ³       icon-docker.tsx
+³   ³       icon-facebook.tsx
+³   ³       icon-figma.tsx
+³   ³       icon-github.tsx
+³   ³       icon-gitlab.tsx
+³   ³       icon-gmail.tsx
+³   ³       icon-medium.tsx
+³   ³       icon-notion.tsx
+³   ³       icon-skype.tsx
+³   ³       icon-slack.tsx
+³   ³       icon-stripe.tsx
+³   ³       icon-telegram.tsx
+³   ³       icon-trello.tsx
+³   ³       icon-whatsapp.tsx
+³   ³       icon-zoom.tsx
+³   ³       index.ts
+³   ³       
+³   ÀÄÄÄcustom
+³           icon-dir.tsx
+³           icon-layout-compact.tsx
+³           icon-layout-default.tsx
+³           icon-layout-full.tsx
+³           icon-sidebar-floating.tsx
+³           icon-sidebar-inset.tsx
+³           icon-sidebar-sidebar.tsx
+³           icon-theme-dark.tsx
+³           icon-theme-light.tsx
+³           icon-theme-system.tsx
+³           
+ÃÄÄÄcomponents
+³   ³   coming-soon.tsx
+³   ³   command-menu.tsx
+³   ³   config-drawer.test.tsx
+³   ³   config-drawer.tsx
+³   ³   confirm-dialog.test.tsx
+³   ³   confirm-dialog.tsx
+³   ³   date-picker.tsx
+³   ³   learn-more.tsx
+³   ³   long-text.tsx
+³   ³   navigation-progress.tsx
+³   ³   password-input.test.tsx
+³   ³   password-input.tsx
+³   ³   profile-dropdown.tsx
+³   ³   search.tsx
+³   ³   select-dropdown.tsx
+³   ³   sign-out-dialog.test.tsx
+³   ³   sign-out-dialog.tsx
+³   ³   skip-to-main.tsx
+³   ³   theme-switch.tsx
+³   ³   
+³   ÃÄÄÄdata-table
+³   ³       bulk-actions.tsx
+³   ³       column-header.tsx
+³   ³       faceted-filter.tsx
+³   ³       index.ts
+³   ³       pagination.tsx
+³   ³       toolbar.tsx
+³   ³       view-options.tsx
+³   ³       
+³   ÃÄÄÄlayout
+³   ³   ³   app-sidebar.tsx
+³   ³   ³   app-title.tsx
+³   ³   ³   authenticated-layout.tsx
+³   ³   ³   header.tsx
+³   ³   ³   main.tsx
+³   ³   ³   nav-group.tsx
+³   ³   ³   nav-user.tsx
+³   ³   ³   page-loading.tsx
+³   ³   ³   team-switcher.tsx
+³   ³   ³   top-nav.tsx
+³   ³   ³   types.ts
+³   ³   ³   
+³   ³   ÀÄÄÄdata
+³   ³           sidebar-data.ts
+³   ³           
+³   ÀÄÄÄui
+³           alert-dialog.tsx
+³           alert.tsx
+³           avatar.tsx
+³           badge.tsx
+³           button.tsx
+³           calendar.tsx
+³           card.tsx
+³           checkbox.tsx
+³           collapsible.tsx
+³           command.tsx
+³           dialog.tsx
+³           dropdown-menu.tsx
+³           form.tsx
+³           input-otp.tsx
+³           input.tsx
+³           label.tsx
+³           popover.tsx
+³           progress.tsx
+³           radio-group.tsx
+³           scroll-area.tsx
+³           select.tsx
+³           separator.tsx
+³           sheet.tsx
+³           sidebar.tsx
+³           skeleton.tsx
+³           sonner.tsx
+³           switch.tsx
+³           table.tsx
+³           tabs.tsx
+³           textarea.tsx
+³           tooltip.tsx
+³           
+ÃÄÄÄconfig
+³       fonts.ts
+³       
+ÃÄÄÄcontext
+³       direction-provider.tsx
+³       font-provider.tsx
+³       layout-provider.tsx
+³       search-provider.test.tsx
+³       search-provider.tsx
+³       theme-provider.tsx
+³       
+ÃÄÄÄdata
+³       dashboard-data.ts
+³       
+ÃÄÄÄfeatures
+³   ÃÄÄÄagents
+³   ³   ³   agent-detail.tsx
+³   ³   ³   create-agent.tsx
+³   ³   ³   index.tsx
+³   ³   ³   
+³   ³   ÃÄÄÄcomponents
+³   ³   ³       agents-action-dialog.test.tsx
+³   ³   ³       agents-action-dialog.tsx
+³   ³   ³       agents-columns.tsx
+³   ³   ³       agents-delete-dialog.test.tsx
+³   ³   ³       agents-delete-dialog.tsx
+³   ³   ³       agents-dialogs.tsx
+³   ³   ³       agents-invite-dialog.test.tsx
+³   ³   ³       agents-invite-dialog.tsx
+³   ³   ³       agents-multi-delete-dialog.test.tsx
+³   ³   ³       agents-multi-delete-dialog.tsx
+³   ³   ³       agents-primary-buttons.tsx
+³   ³   ³       agents-provider.tsx
+³   ³   ³       agents-table.tsx
+³   ³   ³       data-table-bulk-actions.tsx
+³   ³   ³       data-table-row-actions.tsx
+³   ³   ³       
+³   ³   ÀÄÄÄdata
+³   ³           agents.ts
+³   ³           data.ts
+³   ³           schema.ts
+³   ³           
+³   ÃÄÄÄai
+³   ³   ³   index.tsx
+³   ³   ³   
+³   ³   ÀÄÄÄcomponents
+³   ³           agent-selector.tsx
+³   ³           agent-tasks-provider.tsx
+³   ³           
+³   ÃÄÄÄapps
+³   ³   ³   index.tsx
+³   ³   ³   
+³   ³   ÀÄÄÄdata
+³   ³           apps.tsx
+³   ³           
+³   ÃÄÄÄauth
+³   ³   ³   auth-layout.tsx
+³   ³   ³   
+³   ³   ÃÄÄÄforgot-password
+³   ³   ³   ³   index.tsx
+³   ³   ³   ³   
+³   ³   ³   ÀÄÄÄcomponents
+³   ³   ³           forgot-password-form.test.tsx
+³   ³   ³           forgot-password-form.tsx
+³   ³   ³           
+³   ³   ÃÄÄÄotp
+³   ³   ³   ³   index.tsx
+³   ³   ³   ³   
+³   ³   ³   ÀÄÄÄcomponents
+³   ³   ³           otp-form.test.tsx
+³   ³   ³           otp-form.tsx
+³   ³   ³           
+³   ³   ÃÄÄÄsign-in
+³   ³   ³   ³   index.tsx
+³   ³   ³   ³   sign-in-2.tsx
+³   ³   ³   ³   
+³   ³   ³   ÃÄÄÄassets
+³   ³   ³   ³       dashboard-dark.png
+³   ³   ³   ³       dashboard-light.png
+³   ³   ³   ³       
+³   ³   ³   ÀÄÄÄcomponents
+³   ³   ³           user-auth-form.test.tsx
+³   ³   ³           user-auth-form.tsx
+³   ³   ³           
+³   ³   ÀÄÄÄsign-up
+³   ³       ³   index.tsx
+³   ³       ³   
+³   ³       ÀÄÄÄcomponents
+³   ³               sign-up-form.test.tsx
+³   ³               sign-up-form.tsx
+³   ³               
+³   ÃÄÄÄchats
+³   ³   ³   index.tsx
+³   ³   ³   
+³   ³   ÃÄÄÄcomponents
+³   ³   ³       new-chat.tsx
+³   ³   ³       
+³   ³   ÀÄÄÄdata
+³   ³           chat-types.ts
+³   ³           convo.json
+³   ³           
+³   ÃÄÄÄdashboard
+³   ³   ³   index.tsx
+³   ³   ³   
+³   ³   ÀÄÄÄcomponents
+³   ³           active-agents.tsx
+³   ³           agent-analytics.tsx
+³   ³           analytics-chart.tsx
+³   ³           recent-sales.tsx
+³   ³           
+³   ÃÄÄÄerrors
+³   ³       forbidden.tsx
+³   ³       general-error.tsx
+³   ³       maintenance-error.tsx
+³   ³       not-found-error.tsx
+³   ³       unauthorized-error.tsx
+³   ³       
+³   ÃÄÄÄsettings
+³   ³   ³   index.tsx
+³   ³   ³   
+³   ³   ÃÄÄÄaccount
+³   ³   ³       account-form.tsx
+³   ³   ³       index.tsx
+³   ³   ³       
+³   ³   ÃÄÄÄappearance
+³   ³   ³       appearance-form.tsx
+³   ³   ³       index.tsx
+³   ³   ³       
+³   ³   ÃÄÄÄcomponents
+³   ³   ³       content-section.tsx
+³   ³   ³       sidebar-nav.tsx
+³   ³   ³       
+³   ³   ÃÄÄÄdisplay
+³   ³   ³       display-form.tsx
+³   ³   ³       index.tsx
+³   ³   ³       
+³   ³   ÃÄÄÄnotifications
+³   ³   ³       index.tsx
+³   ³   ³       notifications-form.tsx
+³   ³   ³       
+³   ³   ÀÄÄÄprofile
+³   ³           index.tsx
+³   ³           profile-form.tsx
+³   ³           
+³   ÃÄÄÄtasks
+³   ³   ³   index.tsx
+³   ³   ³   
+³   ³   ÃÄÄÄcomponents
+³   ³   ³       data-table-bulk-actions.tsx
+³   ³   ³       data-table-row-actions.tsx
+³   ³   ³       tasks-columns.tsx
+³   ³   ³       tasks-dialogs.tsx
+³   ³   ³       tasks-import-dialog.test.tsx
+³   ³   ³       tasks-import-dialog.tsx
+³   ³   ³       tasks-multi-delete-dialog.test.tsx
+³   ³   ³       tasks-multi-delete-dialog.tsx
+³   ³   ³       tasks-mutate-drawer.test.tsx
+³   ³   ³       tasks-mutate-drawer.tsx
+³   ³   ³       tasks-primary-buttons.tsx
+³   ³   ³       tasks-provider.tsx
+³   ³   ³       tasks-table.tsx
+³   ³   ³       
+³   ³   ÀÄÄÄdata
+³   ³           data.tsx
+³   ³           schema.ts
+³   ³           tasks.ts
+³   ³           
+³   ÃÄÄÄusers
+³   ³   ³   index.tsx
+³   ³   ³   
+³   ³   ÃÄÄÄcomponents
+³   ³   ³       data-table-bulk-actions.tsx
+³   ³   ³       data-table-row-actions.tsx
+³   ³   ³       users-action-dialog.test.tsx
+³   ³   ³       users-action-dialog.tsx
+³   ³   ³       users-columns.tsx
+³   ³   ³       users-delete-dialog.test.tsx
+³   ³   ³       users-delete-dialog.tsx
+³   ³   ³       users-dialogs.tsx
+³   ³   ³       users-invite-dialog.test.tsx
+³   ³   ³       users-invite-dialog.tsx
+³   ³   ³       users-multi-delete-dialog.test.tsx
+³   ³   ³       users-multi-delete-dialog.tsx
+³   ³   ³       users-primary-buttons.tsx
+³   ³   ³       users-provider.tsx
+³   ³   ³       users-table.tsx
+³   ³   ³       
+³   ³   ÀÄÄÄdata
+³   ³           data.ts
+³   ³           schema.ts
+³   ³           users.ts
+³   ³           
+³   ÀÄÄÄworkflow
+³           index.tsx
+³           
+ÃÄÄÄhooks
+³       use-dialog-state.tsx
+³       use-mobile.tsx
+³       use-table-url-state.test.ts
+³       use-table-url-state.ts
+³       
+ÃÄÄÄi18n
+³   ³   index.ts
+³   ³   
+³   ÀÄÄÄlocales
+³           en.json
+³           id.json
+³           
+ÃÄÄÄlib
+³       cookies.test.ts
+³       cookies.ts
+³       handle-server-error.test.ts
+³       handle-server-error.ts
+³       show-submitted-data.tsx
+³       utils.test.ts
+³       utils.ts
+³       
+ÃÄÄÄroutes
+³   ³   __root.tsx
+³   ³   
+³   ÃÄÄÄ(auth)
+³   ³       forgot-password.tsx
+³   ³       otp.tsx
+³   ³       sign-in-2.tsx
+³   ³       sign-in.tsx
+³   ³       sign-up.tsx
+³   ³       
+³   ÃÄÄÄ(errors)
+³   ³       401.tsx
+³   ³       403.tsx
+³   ³       404.tsx
+³   ³       500.tsx
+³   ³       503.tsx
+³   ³       
+³   ÃÄÄÄclerk
+³   ³   ³   route.tsx
+³   ³   ³   
+³   ³   ÃÄÄÄ(auth)
+³   ³   ³       route.tsx
+³   ³   ³       sign-in.tsx
+³   ³   ³       sign-up.tsx
+³   ³   ³       
+³   ³   ÀÄÄÄ_authenticated
+³   ³           route.tsx
+³   ³           user-management.tsx
+³   ³           
+³   ÀÄÄÄ_authenticated
+³       ³   index.tsx
+³       ³   overview.tsx
+³       ³   route.tsx
+³       ³   
+³       ÃÄÄÄai
+³       ³   ³   index.tsx
+³       ³   ³   
+³       ³   ÀÄÄÄagents
+³       ³           agents.tsx
+³       ³           create.tsx
+³       ³           detail.tsx
+³       ³           
+³       ÃÄÄÄapps
+³       ³       index.tsx
+³       ³       
+³       ÃÄÄÄchats
+³       ³       index.tsx
+³       ³       
+³       ÃÄÄÄerrors
+³       ³       $error.tsx
+³       ³       
+³       ÃÄÄÄhelp-center
+³       ³       index.tsx
+³       ³       
+³       ÃÄÄÄsettings
+³       ³       account.tsx
+³       ³       appearance.tsx
+³       ³       display.tsx
+³       ³       index.tsx
+³       ³       notifications.tsx
+³       ³       route.tsx
+³       ³       
+³       ÃÄÄÄtasks
+³       ³       index.tsx
+³       ³       
+³       ÀÄÄÄusers
+³               index.tsx
+³               
+ÃÄÄÄstores
+³       auth-store.test.ts
+³       auth-store.ts
+³       
+ÃÄÄÄstyles
+³       index.css
+³       theme.css
+³       
+ÀÄÄÄtest-utils
+        cookies.ts
+        tanstack-table.ts
+        
