@@ -3,54 +3,51 @@ import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
 import { SignOutDialog } from './sign-out-dialog'
 
-const navigate = vi.fn()
-const reset = vi.fn()
-
-const MOCK_HREF = 'https://app.test/dashboard?tab=1'
+const mocks = vi.hoisted(() => ({
+  navigate: vi.fn(),
+  reset: vi.fn(),
+  href: 'https://app.test/dashboard?tab=1',
+}))
 
 vi.mock('@/stores/auth-store', () => ({
-  useAuthStore: () => ({
-    auth: { reset },
+  useAuthStore: () => ({ auth: { reset: mocks.reset } }),
+}))
+vi.mock('@tanstack/react-router', async (importOriginal) => ({
+  ...await importOriginal<typeof import('@tanstack/react-router')>(),
+  useNavigate: () => mocks.navigate,
+  useLocation: () => ({ href: mocks.href }),
+}))
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) =>
+      ({
+        'auth.signOutDialog.title': 'Sign out',
+        'auth.signOutDialog.description': 'Are you sure you want to sign out?',
+        'auth.signOutDialog.confirmButton': 'Sign out',
+      } as Record<string, string>)[key] ?? key,
   }),
 }))
 
-vi.mock('@tanstack/react-router', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@tanstack/react-router')>()
-  return {
-    ...actual,
-    useNavigate: () => navigate,
-    useLocation: () => ({ href: MOCK_HREF }),
-  }
-})
-
 describe('SignOutDialog', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
+  beforeEach(() => vi.clearAllMocks())
 
-  it('calls auth.reset and navigates to sign-in with current location as redirect', async () => {
-    const { getByRole } = await render(
-      <SignOutDialog open onOpenChange={vi.fn()} />
-    )
+  it('resets auth and navigates to sign-in with the current location as redirect', async () => {
+    const screen = await render(<SignOutDialog open onOpenChange={vi.fn()} />)
+    await userEvent.click(screen.getByRole('button', { name: 'Sign out' }))
 
-    await userEvent.click(getByRole('button', { name: /^Sign out$/i }))
-
-    expect(reset).toHaveBeenCalledOnce()
-    expect(navigate).toHaveBeenCalledWith({
+    expect(mocks.reset).toHaveBeenCalledOnce()
+    expect(mocks.navigate).toHaveBeenCalledWith({
       to: '/sign-in',
-      search: { redirect: MOCK_HREF },
+      search: { redirect: mocks.href },
       replace: true,
     })
   })
 
-  it('does not call reset or navigate when Cancel is clicked', async () => {
-    const { getByRole } = await render(
-      <SignOutDialog open onOpenChange={vi.fn()} />
-    )
+  it('does not reset auth or navigate when Cancel is clicked', async () => {
+    const screen = await render(<SignOutDialog open onOpenChange={vi.fn()} />)
+    await userEvent.click(screen.getByRole('button', { name: 'Cancel' }))
 
-    await userEvent.click(getByRole('button', { name: /^Cancel$/i }))
-
-    expect(reset).not.toHaveBeenCalled()
-    expect(navigate).not.toHaveBeenCalled()
+    expect(mocks.reset).not.toHaveBeenCalled()
+    expect(mocks.navigate).not.toHaveBeenCalled()
   })
 })

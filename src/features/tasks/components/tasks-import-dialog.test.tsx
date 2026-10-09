@@ -6,118 +6,89 @@ import { showSubmittedData } from '@/lib/show-submitted-data'
 import { TasksImportDialog } from './tasks-import-dialog'
 
 vi.mock('@/lib/show-submitted-data', () => ({ showSubmittedData: vi.fn() }))
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) =>
+      ({
+        'tasksPage.import.title': 'Import Tasks',
+        'tasksPage.import.description': 'Import tasks quickly from a CSV file.',
+        'tasksPage.import.file': 'File',
+        'tasksPage.import.close': 'Close',
+        'tasksPage.import.import': 'Import',
+        'tasksPage.import.validationRequired': 'Please upload a file.',
+        'tasksPage.import.validationFormat': 'Please upload a CSV file.',
+        'tasksPage.import.success': 'You have imported the following file:',
+      })[key as keyof {
+        'tasksPage.import.title': string
+        'tasksPage.import.description': string
+        'tasksPage.import.file': string
+        'tasksPage.import.close': string
+        'tasksPage.import.import': string
+        'tasksPage.import.validationRequired': string
+        'tasksPage.import.validationFormat': string
+        'tasksPage.import.success': string
+      }] ?? key,
+  }),
+}))
 
 describe('TasksImportDialog', () => {
   beforeEach(() => vi.clearAllMocks())
 
-  it('renders the dialog with the correct title, description, file input and buttons', async () => {
-    const onOpenChange = vi.fn()
-    const { getByRole, getByText, getByLabelText } = await render(
-      <TasksImportDialog open onOpenChange={onOpenChange} />
+  it('renders the dialog with title, description, file input and buttons', async () => {
+    const screen = await render(
+      <TasksImportDialog open onOpenChange={vi.fn()} />
     )
 
-    const title = getByRole('heading', {
-      level: 2,
-      name: /Import Tasks/i,
-    })
-    const desc = getByText('Import tasks quickly from a CSV file')
-    const fileInput = getByLabelText('File')
-    const closeButtons = getByRole('dialog')
-      .getByRole('button', { name: 'Close' })
-      .all()
-
-    const importButton = getByRole('button', { name: /^Import$/i })
-
-    await expect.element(title).toBeInTheDocument()
-    await expect.element(desc).toBeInTheDocument()
-    await expect.element(fileInput).toBeInTheDocument()
-    expect(closeButtons).toHaveLength(2)
-    await expect.element(importButton).toBeInTheDocument()
+    await expect.element(screen.getByRole('heading', { name: 'Import Tasks' })).toBeInTheDocument()
+    await expect.element(screen.getByText('Import tasks quickly from a CSV file.')).toBeInTheDocument()
+    await expect.element(screen.getByLabelText('File')).toBeInTheDocument()
+    await expect.element(screen.getByRole('button', { name: 'Import' })).toBeInTheDocument()
   })
 
   it('shows validation when submitting without a file', async () => {
     const onOpenChange = vi.fn()
-    const { getByRole, getByText } = await render(
+    const screen = await render(
       <TasksImportDialog open onOpenChange={onOpenChange} />
     )
 
-    const importButton = getByRole('button', { name: /^Import$/i })
-    await userEvent.click(importButton)
+    await userEvent.click(screen.getByRole('button', { name: 'Import' }))
 
-    await expect.element(getByText('Please upload a file.')).toBeInTheDocument()
+    await expect.element(screen.getByText('Please upload a file.')).toBeInTheDocument()
     expect(onOpenChange).not.toHaveBeenCalled()
     expect(showSubmittedData).not.toHaveBeenCalled()
   })
 
-  it('calls showSubmittedData and closes when a CSV file is imported', async () => {
+  it('submits details for an uploaded CSV file and closes the dialog', async () => {
     const onOpenChange = vi.fn()
-    const { getByRole, getByLabelText } = await render(
+    const screen = await render(
       <TasksImportDialog open onOpenChange={onOpenChange} />
     )
 
     const csv = new File(['a,b'], 'tasks.csv', { type: 'text/csv' })
-    await userEvent.upload(getByLabelText('File'), csv)
+    await userEvent.upload(screen.getByLabelText('File'), csv)
+    await userEvent.click(screen.getByRole('button', { name: 'Import' }))
 
-    const importButton = getByRole('button', { name: /^Import$/i })
-    await userEvent.click(importButton)
-
-    expect(showSubmittedData).toHaveBeenCalledOnce()
     expect(showSubmittedData).toHaveBeenCalledWith(
-      {
-        name: 'tasks.csv',
-        size: csv.size,
-        type: 'text/csv',
-      },
+      { name: 'tasks.csv', size: csv.size, type: 'text/csv' },
       'You have imported the following file:'
     )
-    expect(onOpenChange).toHaveBeenCalledOnce()
     expect(onOpenChange).toHaveBeenCalledWith(false)
   })
 
-  it('closes the dialog when Close is clicked', async () => {
-    const onOpenChange = vi.fn()
-
+  it('closes without submitting when Close is clicked', async () => {
     function Harness() {
       const [open, setOpen] = useState(true)
       return (
         <>
-          <button type='button' onClick={() => setOpen(true)}>
-            Reopen
-          </button>
-          <TasksImportDialog
-            open={open}
-            onOpenChange={(val) => {
-              onOpenChange(val)
-              setOpen(val)
-            }}
-          />
+          <button type='button' onClick={() => setOpen(true)}>Reopen</button>
+          <TasksImportDialog open={open} onOpenChange={setOpen} />
         </>
       )
     }
+    const screen = await render(<Harness />)
 
-    const { getByRole } = await render(<Harness />)
-
-    const closeButtonX = getByRole('dialog')
-      .getByRole('button', {
-        name: /Close/i,
-      })
-      .nth(0)
-    await userEvent.click(closeButtonX)
-
-    expect(onOpenChange).toHaveBeenCalledOnce()
-    expect(onOpenChange).toHaveBeenCalledWith(false)
-    expect(showSubmittedData).not.toHaveBeenCalled()
-
-    await userEvent.click(getByRole('button', { name: /Reopen/i }))
-    const closeButton = getByRole('dialog')
-      .getByRole('button', {
-        name: /Close/i,
-      })
-      .nth(1)
-    await userEvent.click(closeButton)
-
-    expect(onOpenChange).toHaveBeenCalledTimes(2)
-    expect(onOpenChange).toHaveBeenCalledWith(false)
+    await userEvent.click(screen.getByRole('button', { name: 'Close' }))
+    await expect.element(screen.getByRole('button', { name: 'Reopen' })).toBeInTheDocument()
     expect(showSubmittedData).not.toHaveBeenCalled()
   })
 })

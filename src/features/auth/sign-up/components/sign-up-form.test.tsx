@@ -3,6 +3,12 @@ import { render, type RenderResult } from 'vitest-browser-react'
 import { type Locator, userEvent } from 'vitest/browser'
 import { SignUpForm } from './sign-up-form'
 
+const toastMocks = vi.hoisted(() => ({
+  success: vi.fn(),
+  error: vi.fn(),
+}))
+vi.mock('sonner', () => ({ toast: toastMocks }))
+
 const FORM_MESSAGES = {
   emailEmpty: 'Please enter your email.',
   passwordEmpty: 'Please enter your password.',
@@ -10,16 +16,9 @@ const FORM_MESSAGES = {
   passwordMismatch: "Passwords don't match.",
 } as const
 
-const toastPromise = vi.hoisted(() =>
-  vi.fn((p: Promise<unknown>, opts: { success?: () => unknown }) => {
-    p.then(() => opts.success?.())
-  })
-)
-
-vi.mock('sonner', () => ({ toast: { promise: toastPromise } }))
-
 describe('SignUpForm', () => {
   let screen: RenderResult
+  let nameInput: Locator
   let emailInput: Locator
   let passwordInput: Locator
   let confirmPasswordInput: Locator
@@ -27,8 +26,8 @@ describe('SignUpForm', () => {
 
   beforeEach(async () => {
     vi.clearAllMocks()
-
     screen = await render(<SignUpForm />)
+    nameInput = screen.getByRole('textbox', { name: /^Name$/i })
     emailInput = screen.getByRole('textbox', { name: /^Email$/i })
     passwordInput = screen.getByLabelText(/^Password$/i)
     confirmPasswordInput = screen.getByLabelText(/^Confirm Password$/i)
@@ -36,10 +35,11 @@ describe('SignUpForm', () => {
   })
 
   afterEach(() => {
-    vi.useRealTimers()
+    vi.unstubAllGlobals()
   })
 
   it('renders fields and submit button', async () => {
+    await expect.element(nameInput).toBeInTheDocument()
     await expect.element(emailInput).toBeInTheDocument()
     await expect.element(passwordInput).toBeInTheDocument()
     await expect.element(confirmPasswordInput).toBeInTheDocument()
@@ -49,40 +49,41 @@ describe('SignUpForm', () => {
   it('shows validation messages when submitting empty form', async () => {
     await userEvent.click(submitButton)
 
-    await expect
-      .element(screen.getByText(FORM_MESSAGES.emailEmpty))
-      .toBeInTheDocument()
-    await expect
-      .element(screen.getByText(FORM_MESSAGES.passwordEmpty))
-      .toBeInTheDocument()
-    await expect
-      .element(screen.getByText(FORM_MESSAGES.confirmPasswordEmpty))
-      .toBeInTheDocument()
+    await expect.element(screen.getByText(FORM_MESSAGES.emailEmpty)).toBeInTheDocument()
+    await expect.element(screen.getByText(FORM_MESSAGES.passwordEmpty)).toBeInTheDocument()
+    await expect.element(screen.getByText(FORM_MESSAGES.confirmPasswordEmpty)).toBeInTheDocument()
   })
 
   it('shows a mismatch error when passwords do not match', async () => {
+    await userEvent.fill(nameInput, 'Alam')
     await userEvent.fill(emailInput, 'a@b.com')
-    await userEvent.fill(passwordInput, '1234567')
-    await userEvent.fill(confirmPasswordInput, '7654321')
+    await userEvent.fill(passwordInput, '12345678')
+    await userEvent.fill(confirmPasswordInput, '87654321')
 
     await userEvent.click(submitButton)
-    await expect
-      .element(screen.getByText(FORM_MESSAGES.passwordMismatch))
-      .toBeInTheDocument()
+    await expect.element(screen.getByText(FORM_MESSAGES.passwordMismatch)).toBeInTheDocument()
   })
 
-  it('disables submit while submitting and re-enables after timeout', async () => {
-    vi.useFakeTimers()
+  it('disables submit while the registration request is pending', async () => {
+    let resolveRequest: ((value: { ok: boolean; json: () => Promise<{ ok: boolean; message: string }> }) => void) | undefined
+    const request = new Promise<{ ok: boolean; json: () => Promise<{ ok: boolean; message: string }> }>((resolve) => {
+      resolveRequest = resolve
+    })
+    vi.stubGlobal('fetch', vi.fn(() => request))
 
+    await userEvent.fill(nameInput, 'Alam')
     await userEvent.fill(emailInput, 'a@b.com')
-    await userEvent.fill(passwordInput, '1234567')
-    await userEvent.fill(confirmPasswordInput, '1234567')
-
+    await userEvent.fill(passwordInput, '12345678')
+    await userEvent.fill(confirmPasswordInput, '12345678')
     await userEvent.click(submitButton)
+
     await expect.element(submitButton).toBeDisabled()
 
-    await vi.advanceTimersByTimeAsync(2000)
+    resolveRequest?.({
+      ok: false,
+      json: async () => ({ ok: false, message: 'Mock registration failure' }),
+    })
     await expect.element(submitButton).toBeEnabled()
-    expect(toastPromise).toHaveBeenCalledOnce()
+    expect(toastMocks.error).toHaveBeenCalledWith('Mock registration failure')
   })
 })
