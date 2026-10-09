@@ -101,6 +101,7 @@ export type FreeModelSource = {
 // ---------------------------------------------------------------------------
 
 export type AIModelCategory = "free" | "free-tier";
+export type AIProviderCategory = AIModelCategory | "api-key";
 export type AIFilterType = "all" | "free" | "free-tier" | "api" | "connected";
 export type AIProviderStatus = "connected" | "available" | "unavailable";
 
@@ -121,7 +122,7 @@ export type AIProvider = {
   name: string;
   description: string;
   website: string;
-  category: AIModelCategory;
+  category: AIProviderCategory;
   authType?: "none" | "api-key";
   status: AIProviderStatus;
   iconInitials: string;
