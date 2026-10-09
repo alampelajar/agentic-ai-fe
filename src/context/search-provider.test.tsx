@@ -73,7 +73,7 @@ describe('SearchProvider and CommandMenu', () => {
   it('navigates for nested sidebar items (group with sub-items)', async () => {
     const screen = await renderWithSearchProvider()
     await openCommandPalette(screen)
-    await userEvent.click(screen.getByRole('option', { name: 'settings ChevronRight account' }))
+    await userEvent.click(screen.getByRole('option', { name: /settings.*account/i }))
     expect(mocks.navigate).toHaveBeenCalledWith({ to: '/settings/account' })
     await expect.element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER)).not.toBeInTheDocument()
   })

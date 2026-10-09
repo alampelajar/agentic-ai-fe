@@ -87,7 +87,7 @@ describe('TasksImportDialog', () => {
     }
     const screen = await render(<Harness />)
 
-    await userEvent.click(screen.getByRole('button', { name: 'Close' }))
+    await userEvent.click(screen.getByRole('dialog').getByRole('button', { name: 'Close' }).nth(0))
     await expect.element(screen.getByRole('button', { name: 'Reopen' })).toBeInTheDocument()
     expect(showSubmittedData).not.toHaveBeenCalled()
   })

@@ -31,7 +31,7 @@ describe('SignUpForm', () => {
     emailInput = screen.getByRole('textbox', { name: /^Email$/i })
     passwordInput = screen.getByLabelText(/^Password$/i)
     confirmPasswordInput = screen.getByLabelText(/^Confirm Password$/i)
-    submitButton = screen.getByRole('button', { name: /^Create Account$/i })
+    submitButton = screen.getByRole('button', { name: /^(Create Account|Creating account\.\.\.)$/i })
   })
 
   afterEach(() => {

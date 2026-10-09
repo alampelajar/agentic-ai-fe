@@ -21,29 +21,28 @@ vi.mock('@/stores/auth-store', () => ({
       },
     }),
 }))
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) =>
-      ({
-        'common.loading': 'Loading',
-        'common.reset': 'Reset',
-        'settingsPage.account.name': 'Name',
-        'settingsPage.account.namePlaceholder': 'Your name',
-        'settingsPage.account.email': 'Email',
-        'settingsPage.account.profilePhoto': 'Profile photo',
-        'settingsPage.account.chooseAvatar': 'Choose an avatar below.',
-        'settingsPage.account.avatarDescription': 'Your avatar appears in navigation.',
-        'settingsPage.account.profileNameHint': 'Use a name between 2 and 30 characters.',
-        'settingsPage.account.emailReadOnly': 'Email cannot be edited.',
-        'settingsPage.account.profileLoadError': 'Could not load profile.',
-        'settingsPage.account.profileNameError': 'Name must contain between 2 and 30 characters.',
-        'settingsPage.account.profileSaveError': 'Could not save profile.',
-        'settingsPage.account.profileSaveSuccess': 'Profile updated successfully.',
-        'settingsPage.account.saving': 'Saving...',
-        'settingsPage.account.saveChanges': 'Save Changes',
-      } as Record<string, string>)[key] ?? key,
-  }),
-}))
+vi.mock('react-i18next', () => {
+  const translations: Record<string, string> = {
+    'common.loading': 'Loading',
+    'common.reset': 'Reset',
+    'settingsPage.account.name': 'Name',
+    'settingsPage.account.namePlaceholder': 'Your name',
+    'settingsPage.account.email': 'Email',
+    'settingsPage.account.profilePhoto': 'Profile photo',
+    'settingsPage.account.chooseAvatar': 'Choose an avatar below.',
+    'settingsPage.account.avatarDescription': 'Your avatar appears in navigation.',
+    'settingsPage.account.profileNameHint': 'Use a name between 2 and 30 characters.',
+    'settingsPage.account.emailReadOnly': 'Email cannot be edited.',
+    'settingsPage.account.profileLoadError': 'Could not load profile.',
+    'settingsPage.account.profileNameError': 'Name must contain between 2 and 30 characters.',
+    'settingsPage.account.profileSaveError': 'Could not save profile.',
+    'settingsPage.account.profileSaveSuccess': 'Profile updated successfully.',
+    'settingsPage.account.saving': 'Saving...',
+    'settingsPage.account.saveChanges': 'Save Changes',
+  }
+  const t = (key: string) => translations[key] ?? key
+  return { useTranslation: () => ({ t }) }
+})
 
 describe('AccountForm', () => {
   beforeEach(() => {
@@ -68,7 +67,7 @@ describe('AccountForm', () => {
 
     await expect.element(nameInput).toHaveValue('Alam')
     await userEvent.fill(nameInput, 'Alam RPL')
-    await userEvent.click(screen.getByRole('button', { name: 'Adventurer' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Adventurer' }).nth(0))
     await userEvent.click(screen.getByRole('button', { name: 'Save Changes' }))
 
     await vi.waitFor(() => {

@@ -93,7 +93,7 @@ describe('TasksMutateDrawer', () => {
       <TasksMutateDrawer open onOpenChange={onOpenChange} />
     )
 
-    await userEvent.click(screen.getByRole('button', { name: 'Close' }))
+    await userEvent.click(screen.getByRole('dialog').getByRole('button', { name: 'Close' }).nth(0))
     expect(onOpenChange).toHaveBeenCalledWith(false)
   })
 })
