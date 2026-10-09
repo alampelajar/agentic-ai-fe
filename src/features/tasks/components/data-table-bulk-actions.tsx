@@ -21,7 +21,9 @@ import { DataTableBulkActions as BulkActionsToolbar } from "@/components/data-ta
 import { priorities, statuses } from "../data/data";
 import { type Task } from "../data/schema";
 import { TasksMultiDeleteDialog } from "./tasks-multi-delete-dialog";
-import { updateTask } from "../data/api";
+import { updateTask, type TaskPriority, type TaskStatus } from "../data/api";
+
+const sleep = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
 
 type DataTableBulkActionsProps<TData> = {
   table: Table<TData>;
@@ -36,7 +38,7 @@ export function DataTableBulkActions<TData>({
 
   const selectedRows = table.getFilteredSelectedRowModel().rows;
 
-  const handleBulkStatusChange = async (status: string) => {
+  const handleBulkStatusChange = async (status: TaskStatus) => {
     const selectedTasks = selectedRows.map((row) => row.original as Task);
     try {
       await Promise.all(selectedTasks.map((task) => updateTask(task.id, { status })));
@@ -51,7 +53,7 @@ export function DataTableBulkActions<TData>({
     }
   };
 
-  const handleBulkPriorityChange = async (priority: string) => {
+  const handleBulkPriorityChange = async (priority: TaskPriority) => {
     const selectedTasks = selectedRows.map((row) => row.original as Task);
     try {
       await Promise.all(selectedTasks.map((task) => updateTask(task.id, { priority })));
