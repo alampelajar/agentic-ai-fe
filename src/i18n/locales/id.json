@@ -676,8 +676,8 @@
   "settingsPage": {
     "title": "Pengaturan",
     "account": {
-      "title": "Akun & Ruang Kerja",
-      "subtitle": "Kelola pengaturan akun dan ruang kerja kamu.",
+      "title": "Profil Pengguna",
+      "subtitle": "Kelola nama tampilan dan foto profil yang digunakan di seluruh Agentic AI.",
       "name": "Nama",
       "namePlaceholder": "Nama kamu",
       "email": "Email",
@@ -703,7 +703,16 @@
       "selectLanguage": "Pilih bahasa",
       "searchLanguage": "Cari bahasa...",
       "noLanguage": "Bahasa tidak ditemukan.",
-      "reset": "Atur Ulang"
+      "reset": "Atur Ulang",
+      "profilePhoto": "Foto profil",
+      "chooseAvatar": "Pilih salah satu avatar di bawah. Pilihanmu akan tersimpan di akun.",
+      "avatarDescription": "Avatar akan tampil di menu akun dan navigasi aplikasi.",
+      "profileNameHint": "Gunakan nama 2–30 karakter. Perubahan akan terlihat di seluruh aplikasi.",
+      "emailReadOnly": "Email akun ditampilkan untuk informasi dan belum dapat diubah dari halaman ini.",
+      "profileLoadError": "Gagal memuat profil. Periksa koneksi dan coba muat ulang halaman.",
+      "profileSaveError": "Gagal menyimpan profil. Silakan coba lagi.",
+      "profileSaveSuccess": "Profil berhasil diperbarui.",
+      "profileNameError": "Nama harus terdiri dari 2 sampai 30 karakter."
     },
     "appearance": {
       "title": "Tampilan",
