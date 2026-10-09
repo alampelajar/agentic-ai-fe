@@ -3,7 +3,7 @@ import { render, type RenderResult } from 'vitest-browser-react'
 import { type UserEvent, userEvent } from 'vitest/browser'
 import { showSubmittedData } from '@/lib/show-submitted-data'
 import { type User } from '../data/schema'
-import { UsersActionDialog } from './agents-action-dialog'
+import { UsersActionDialog } from './users-action-dialog'
 
 const VALIDATION_MESSAGES = {
   firstName: 'First Name is required.',
