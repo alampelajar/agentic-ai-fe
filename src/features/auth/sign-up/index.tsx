@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import {
   ArrowUpRight,
-  Bot,
   CheckCircle2,
   Sparkles,
   UserPlus,
