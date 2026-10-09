@@ -230,7 +230,7 @@ function convertAgent(agent: BackendAgent): DisplayAgent {
 
 const emptyForm: AddModelForm = {
   providerName: '',
-  providerType: 'openai-compatible',
+  providerType: 'openai',
   baseURL: '',
   apiKey: '',
   modelID: '',
@@ -1132,17 +1132,25 @@ export function Agents() {
                     />
                   </div>
 
-                  <div className='space-y-2'>
+                <div className='space-y-2'>
                     <label className='text-sm font-medium'>Tipe Provider</label>
-                    <Input
+                    <Select
                       value={form.providerType}
-                      onChange={(event) =>
-                        updateForm('providerType', event.target.value)
-                      }
-                      placeholder='Contoh: openai-compatible'
-                      autoComplete='off'
+                      onValueChange={(value) => updateForm('providerType', value)}
                       disabled={testingConnection || savingModel}
-                    />
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder='Pilih tipe provider' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value='openai'>openai</SelectItem>
+                        <SelectItem value='google'>google</SelectItem>
+                        <SelectItem value='openrouter'>openrouter</SelectItem>
+                        <SelectItem value='deepseek'>deepseek</SelectItem>
+                        <SelectItem value='nararouter'>nararouter</SelectItem>
+                        <SelectItem value='custom'>custom</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 

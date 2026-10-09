@@ -20,7 +20,7 @@
   "aiAssistant": "Asisten AI",
   "agents": "Daftar Agent",
   "tasks": "Tugas",
-  "tools": "Tools",
+  "tools": "Model Gratis",
   "other": "Lainnya",
   "settings": "Pengaturan",
   "profile": "Profil",
@@ -476,14 +476,14 @@
     }
   },
   "appsPage": {
-    "badge": "Integrasi AI",
-    "title": "Tools & Integrasi AI",
-    "description": "Hubungkan model AI, database, layanan otomatisasi, dan aplikasi eksternal.",
-    "filterPlaceholder": "Filter aplikasi...",
+    "badge": "AI Models",
+    "title": "AI Model Hub",
+    "description": "Temukan dan gunakan berbagai model AI gratis dan free-tier untuk Agentic AI.",
+    "filterPlaceholder": "Cari model AI...",
     "filters": {
-      "all": "Semua Aplikasi",
+      "all": "Semua",
       "connected": "Terhubung",
-      "notConnected": "Tidak Terhubung"
+      "notConnected": "Belum Terhubung"
     },
     "sort": {
       "ascending": "Naik",
@@ -492,12 +492,45 @@
     "connect": "Hubungkan",
     "connected": "Terhubung",
     "integrationActive": "Integrasi aktif",
-    "readyToConnect": "Siap untuk dihubungkan",
+    "readyToConnect": "Siap dihubungkan",
     "aiTool": "Tools AI",
     "empty": {
-      "title": "Tidak ada aplikasi ditemukan",
+      "title": "Model tidak ditemukan",
       "description": "Coba ubah pencarian atau filter kamu."
     }
+  },
+  "freeModels": {
+    "badge": "Model AI Gratis",
+    "title": "Model AI Gratis",
+    "description": "Direktori website dan platform yang menyediakan akses gratis ke model AI.",
+    "searchPlaceholder": "Cari model AI gratis...",
+    "filters": {
+      "all": "Semua",
+      "chat": "Chat",
+      "coding": "Coding",
+      "image": "Gambar",
+      "multimodal": "Multimodal",
+      "openSource": "Open Source",
+      "api": "API",
+      "cli": "CLI"
+    },
+    "access": {
+      "free": "Gratis",
+      "freeTier": "Free Tier",
+      "openSource": "Open Source",
+      "communityFree": "Community Free",
+      "limitedFree": "Terbatas Gratis"
+    },
+    "visitWebsite": "Kunjungi Website",
+    "models": "Model",
+    "empty": {
+      "title": "Tidak ada resource AI gratis ditemukan",
+      "description": "Coba kata pencarian atau filter yang berbeda.",
+      "reset": "Hapus Pencarian"
+    },
+    "results": "{{count}} hasil",
+    "resultsPlural": "{{count}} hasil",
+    "resultsFor": "untuk \"{{term}}\""
   },
   "agentSelector": {
     "errors": {

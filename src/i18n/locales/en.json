@@ -20,7 +20,7 @@
   "aiAssistant": "AI Assistant",
   "agents": "Agents List",
   "tasks": "Tasks",
-  "tools": "Tools",
+  "tools": "Free Model",
   "other": "Other",
   "settings": "Settings",
   "profile": "Profile",
@@ -476,12 +476,12 @@
     }
   },
   "appsPage": {
-    "badge": "AI Integrations",
-    "title": "AI Tools & Integrations",
-    "description": "Connect AI models, databases, automation services, and external applications.",
-    "filterPlaceholder": "Filter apps...",
+    "badge": "AI Models",
+    "title": "AI Model Hub",
+    "description": "Discover and use free and free-tier AI models for Agentic AI.",
+    "filterPlaceholder": "Search AI models...",
     "filters": {
-      "all": "All Apps",
+      "all": "All",
       "connected": "Connected",
       "notConnected": "Not Connected"
     },
@@ -495,9 +495,42 @@
     "readyToConnect": "Ready to connect",
     "aiTool": "AI Tool",
     "empty": {
-      "title": "No apps found",
+      "title": "No models found",
       "description": "Try changing your search or filter."
     }
+  },
+  "freeModels": {
+    "badge": "Free AI Models",
+    "title": "Free AI Models",
+    "description": "Curated websites and platforms that provide free access to AI models.",
+    "searchPlaceholder": "Search free AI models...",
+    "filters": {
+      "all": "All",
+      "chat": "Chat",
+      "coding": "Coding",
+      "image": "Image",
+      "multimodal": "Multimodal",
+      "openSource": "Open Source",
+      "api": "API",
+      "cli": "CLI"
+    },
+    "access": {
+      "free": "Free",
+      "freeTier": "Free Tier",
+      "openSource": "Open Source",
+      "communityFree": "Community Free",
+      "limitedFree": "Limited Free"
+    },
+    "visitWebsite": "Visit Website",
+    "models": "Models",
+    "empty": {
+      "title": "No free AI resources found",
+      "description": "Try a different search term or filter.",
+      "reset": "Clear Search"
+    },
+    "results": "{{count}} result",
+    "resultsPlural": "{{count}} results",
+    "resultsFor": "for \"{{term}}\""
   },
   "agentSelector": {
     "errors": {

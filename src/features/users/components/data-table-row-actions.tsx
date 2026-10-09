@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { type User } from '../data/schema'
-import { useUsers } from './agents-provider'
+import { useUsers } from './users-provider'
 
 type DataTableRowActionsProps = {
   row: Row<User>
