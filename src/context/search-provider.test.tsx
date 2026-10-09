@@ -26,8 +26,8 @@ async function renderWithSearchProvider() {
 
 async function openCommandPalette(screen: RenderResult, modifier: ShortcutModifier = 'Control') {
   await vi.waitFor(async () => {
-    const isOpen = document.querySelector(\`[placeholder="\${COMMAND_MENU_PLACEHOLDER}"]\`) !== null
-    if (!isOpen) await userEvent.keyboard(\`{\${modifier}>}k{/\${modifier}}\`)
+    const isOpen = document.querySelector('[placeholder="' + COMMAND_MENU_PLACEHOLDER + '"]') !== null
+    if (!isOpen) await userEvent.keyboard('{' + modifier + '>}k{/' + modifier + '}')
     await expect.element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER)).toBeInTheDocument()
   }, { interval: 50, timeout: 5000 })
 }
