@@ -9,7 +9,6 @@ import { getCurrentUser, updateCurrentUserProfile } from '@/lib/api-auth'
 import {
   AVATAR_PRESETS,
   avatarPresetValue,
-  DEFAULT_AVATAR_PRESET,
   getAvatarPresetId,
   getAvatarSrc,
 } from '@/lib/avatar-presets'
@@ -35,7 +34,7 @@ export function AccountForm() {
     [name]
   )
   const selectedPreset = getAvatarPresetId(avatar)
-  const previewAvatar = getAvatarSrc(avatar || avatarPresetValue(DEFAULT_AVATAR_PRESET), seed)
+  const previewAvatar = getAvatarSrc(avatar, seed)
   const hasChanges = name.trim() !== originalName || avatar !== originalAvatar
 
   useEffect(() => {
