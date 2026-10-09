@@ -209,7 +209,7 @@ function AIOverview() {
             value={totalAgents}
             description={t('overviewPage.stats.totalAgentsDescription')}
             icon={Bot}
-            href='/users/'
+            href='/users'
             color='blue'
           />
 
@@ -218,7 +218,7 @@ function AIOverview() {
             value={activeAgents}
             description={t('overviewPage.stats.activeAgentsDescription')}
             icon={Sparkles}
-            href='/users/'
+            href='/users'
             color='violet'
           />
 
@@ -227,7 +227,7 @@ function AIOverview() {
             value={totalModels}
             description={t('overviewPage.stats.availableModelsDescription')}
             icon={Cpu}
-            href='/users/'
+            href='/users'
             color='amber'
           />
 
@@ -236,7 +236,7 @@ function AIOverview() {
             value={systemModels}
             description={t('overviewPage.stats.systemModelsDescription')}
             icon={CheckCircle2}
-            href='/users/'
+            href='/users'
             color='emerald'
           />
         </div>
@@ -367,7 +367,7 @@ function AIOverview() {
             />
 
             <QuickAction
-              href='/users/'
+              href='/users'
               icon={Bot}
               title={t('manageAgents')}
               description={t('overviewPage.quickActions.manageAgents')}
@@ -485,7 +485,7 @@ function StatCard({
   value: number
   description: string
   icon: React.ElementType
-  href: '/ai/agents/agents' | '/users/'
+  href: '/ai/agents/agents' | '/users'
   color: 'blue' | 'violet' | 'amber' | 'emerald'
 }) {
   const { t } = useTranslation()
