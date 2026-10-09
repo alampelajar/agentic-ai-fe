@@ -123,7 +123,7 @@ export type AIProvider = {
   description: string;
   website: string;
   category: AIProviderCategory;
-  authType?: "none" | "api-key";
+  authType?: "none" | "api-key" | "oauth";
   status: AIProviderStatus;
   iconInitials: string;
   accentColor: string;
