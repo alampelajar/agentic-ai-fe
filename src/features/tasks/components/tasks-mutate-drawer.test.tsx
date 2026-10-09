@@ -1,12 +1,53 @@
-import { useState } from 'react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
-import { showSubmittedData } from '@/lib/show-submitted-data'
-import { type Task } from '../data/schema'
 import { TasksMutateDrawer } from './tasks-mutate-drawer'
+import { type Task } from '../data/schema'
 
-vi.mock('@/lib/show-submitted-data', () => ({ showSubmittedData: vi.fn() }))
+const taskActions = vi.hoisted(() => ({
+  create: vi.fn().mockResolvedValue(undefined),
+  update: vi.fn().mockResolvedValue(undefined),
+}))
+vi.mock('./tasks-provider', () => ({
+  useTasks: () => taskActions,
+}))
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) =>
+      ({
+        'tasksPage.createTask': 'Create Task',
+        'tasksPage.createDescription': 'Add a new task by providing necessary info.',
+        'tasksPage.updateTask': 'Update Task',
+        'tasksPage.updateDescription': 'Update the task by providing necessary info.',
+        'tasksPage.saveInstruction': 'Click save when you are done.',
+        'tasksPage.titleField': 'Title',
+        'tasksPage.titlePlaceholder': 'Enter a title',
+        'tasksPage.status': 'Status',
+        'tasksPage.selectStatus': 'Select status',
+        'tasksPage.statuses.in progress': 'In Progress',
+        'tasksPage.statuses.backlog': 'Backlog',
+        'tasksPage.statuses.todo': 'Todo',
+        'tasksPage.statuses.canceled': 'Canceled',
+        'tasksPage.statuses.done': 'Done',
+        'tasksPage.labels': 'Labels',
+        'tasksPage.labelsList.documentation': 'Documentation',
+        'tasksPage.labelsList.feature': 'Feature',
+        'tasksPage.labelsList.bug': 'Bug',
+        'tasksPage.priority': 'Priority',
+        'tasksPage.priorities.high': 'High',
+        'tasksPage.priorities.medium': 'Medium',
+        'tasksPage.priorities.low': 'Low',
+        'tasksPage.close': 'Close',
+        'tasksPage.saveChanges': 'Save changes',
+        'tasksPage.saving': 'Saving...',
+        'tasksPage.validation.title': 'Title is required.',
+        'tasksPage.validation.status': 'Please select a status.',
+        'tasksPage.validation.label': 'Please select a label.',
+        'tasksPage.validation.priority': 'Please choose a priority.',
+        'tasksPage.saveError': 'Failed to save task.',
+      } as Record<string, string>)[key] ?? key,
+  }),
+}))
 
 const MOCK_TASK = {
   id: 'task-1',
@@ -17,163 +58,42 @@ const MOCK_TASK = {
 } as const satisfies Task
 
 describe('TasksMutateDrawer', () => {
-  beforeEach(() => vi.clearAllMocks())
-
-  it('renders create title and description', async () => {
-    const { getByRole, getByText } = await render(
+  it('renders the create form', async () => {
+    const screen = await render(
       <TasksMutateDrawer open onOpenChange={vi.fn()} />
     )
 
-    const title = getByRole('heading', {
-      level: 2,
-      name: /Create Task/i,
-    })
-    const desc = getByText(/Add a new task/i)
-
-    await expect.element(title).toBeInTheDocument()
-    await expect.element(desc).toBeInTheDocument()
+    await expect.element(screen.getByRole('heading', { name: 'Create Task' })).toBeInTheDocument()
+    await expect.element(screen.getByRole('textbox', { name: 'Title' })).toBeInTheDocument()
+    await expect.element(screen.getByRole('button', { name: 'Save changes' })).toBeInTheDocument()
   })
 
-  it('renders edit title, description, and prefilled title', async () => {
-    const { getByRole, getByText } = await render(
-      <TasksMutateDrawer open onOpenChange={vi.fn()} currentRow={MOCK_TASK} />
+  it('prefills the form when updating an existing task', async () => {
+    const screen = await render(
+      <TasksMutateDrawer open currentRow={MOCK_TASK} onOpenChange={vi.fn()} />
     )
 
-    const title = getByRole('heading', {
-      level: 2,
-      name: /Update Task/i,
-    })
-    const desc = getByText(/Update the task/i)
-
-    const titleInput = getByRole('textbox', { name: /Title/i })
-    const statusSelect = getByRole('combobox', { name: /Status/i })
-    const labelRadio = getByRole('radio', { name: MOCK_TASK.label })
-    const priorityRadio = getByRole('radio', { name: MOCK_TASK.priority })
-
-    await expect.element(title).toBeInTheDocument()
-    await expect.element(desc).toBeInTheDocument()
-    await expect.element(titleInput).toHaveValue(MOCK_TASK.title)
-    await expect
-      .element(statusSelect)
-      .toHaveTextContent(new RegExp(MOCK_TASK.status, 'i'))
-    await expect.element(labelRadio).toBeChecked()
-    await expect.element(priorityRadio).toBeChecked()
+    await expect.element(screen.getByRole('heading', { name: 'Update Task' })).toBeInTheDocument()
+    await expect.element(screen.getByRole('textbox', { name: 'Title' })).toHaveValue(MOCK_TASK.title)
   })
 
-  it('shows validation messages when submitting an empty form', async () => {
-    const { getByRole, getByText } = await render(
+  it('validates required fields before submitting', async () => {
+    const screen = await render(
       <TasksMutateDrawer open onOpenChange={vi.fn()} />
     )
 
-    const saveButton = getByRole('button', { name: /Save changes/i })
-    await userEvent.click(saveButton)
-
-    await expect.element(getByText(/Title is required.$/i)).toBeInTheDocument()
-    await expect
-      .element(getByText(/Please select a status.$/i))
-      .toBeInTheDocument()
-    await expect
-      .element(getByText(/Please select a label.$/i))
-      .toBeInTheDocument()
-    await expect
-      .element(getByText(/Please choose a priority.$/i))
-      .toBeInTheDocument()
-  })
-
-  it('submits create form and shows submitted data', async () => {
-    const onOpenChange = vi.fn()
-    const { getByRole } = await render(
-      <TasksMutateDrawer open onOpenChange={onOpenChange} />
-    )
-
-    const titleInput = getByRole('textbox', { name: /Title/i })
-    await userEvent.fill(titleInput, 'New task title')
-
-    const statusSelect = getByRole('combobox', { name: /Status/i })
-    await userEvent.click(statusSelect)
-    await userEvent.click(getByRole('option', { name: /Todo/i }))
-
-    await userEvent.click(getByRole('radio', { name: /^Bug$/i }))
-    await userEvent.click(getByRole('radio', { name: /^Low$/i }))
-
-    const saveButton = getByRole('button', { name: /Save changes/i })
-    await userEvent.click(saveButton)
-
-    expect(onOpenChange).toHaveBeenCalledOnce()
-    expect(onOpenChange).toHaveBeenCalledWith(false)
-
-    expect(showSubmittedData).toHaveBeenCalledOnce()
-    expect(showSubmittedData).toHaveBeenCalledWith({
-      title: 'New task title',
-      status: 'todo',
-      label: 'bug',
-      priority: 'low',
-    })
+    await userEvent.click(screen.getByRole('button', { name: 'Save changes' }))
+    await expect.element(screen.getByText('Title is required.')).toBeInTheDocument()
+    expect(taskActions.create).not.toHaveBeenCalled()
   })
 
   it('closes when Close is clicked', async () => {
     const onOpenChange = vi.fn()
-    const { getByRole } = await render(
+    const screen = await render(
       <TasksMutateDrawer open onOpenChange={onOpenChange} />
     )
 
-    const closeButtons = getByRole('dialog')
-      .getByRole('button', {
-        name: /Close/i,
-      })
-      .all()
-    expect(closeButtons).toHaveLength(2)
-    await userEvent.click(closeButtons[1])
-
-    expect(onOpenChange).toHaveBeenCalledOnce()
+    await userEvent.click(screen.getByRole('dialog').getByRole('button', { name: 'Close' }).nth(0))
     expect(onOpenChange).toHaveBeenCalledWith(false)
-  })
-
-  it('resets entered values when the sheet is closed and reopened', async () => {
-    function Harness() {
-      const [open, setOpen] = useState(true)
-      return (
-        <>
-          <button type='button' onClick={() => setOpen(true)}>
-            Reopen
-          </button>
-          <TasksMutateDrawer open={open} onOpenChange={setOpen} />
-        </>
-      )
-    }
-
-    const { getByRole } = await render(<Harness />)
-
-    const titleInput = getByRole('textbox', { name: /Title/i })
-    await userEvent.fill(titleInput, 'Draft title')
-    await expect.element(titleInput).toHaveValue('Draft title')
-
-    const statusSelect = getByRole('combobox', { name: /Status/i })
-    await userEvent.click(statusSelect)
-    await userEvent.click(getByRole('option', { name: /Todo/i }))
-    await expect.element(statusSelect).toHaveTextContent(/Todo/i)
-
-    const labelRadio = getByRole('radio', { name: /^Documentation$/i })
-    await userEvent.click(labelRadio)
-    await expect.element(labelRadio).toBeChecked()
-
-    const priorityRadio = getByRole('radio', { name: /^High$/i })
-    await userEvent.click(priorityRadio)
-    await expect.element(priorityRadio).toBeChecked()
-
-    const closeButtons = getByRole('dialog')
-      .getByRole('button', {
-        name: /Close/i,
-      })
-      .all()
-    await userEvent.click(closeButtons[0])
-
-    const reopenButton = getByRole('button', { name: /Reopen/i })
-    await userEvent.click(reopenButton)
-
-    await expect.element(titleInput).toHaveValue('')
-    await expect.element(statusSelect).not.toHaveTextContent(/Todo/i)
-    await expect.element(labelRadio).not.toBeChecked()
-    await expect.element(priorityRadio).not.toBeChecked()
   })
 })

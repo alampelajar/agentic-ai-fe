@@ -68,3 +68,23 @@ export async function getCurrentUser() {
 
   return result.user
 }
+
+export interface UpdateProfileInput {
+  name: string
+  avatar: string
+}
+
+export async function updateCurrentUserProfile(input: UpdateProfileInput): Promise<UserResponse> {
+  const response = await apiFetch('/api/me', {
+    method: 'PUT',
+    body: JSON.stringify(input),
+  })
+  const result: MeResponse = await response.json().catch(() => ({}))
+
+  if (!response.ok || !result.ok || !result.user) {
+    throw new Error(result.message || 'Gagal menyimpan perubahan profil.')
+  }
+
+  updateAuthUser(result.user)
+  return result.user
+}

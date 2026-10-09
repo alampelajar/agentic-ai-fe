@@ -2,7 +2,6 @@ import {
   LayoutDashboard,
   Monitor,
   ListTodo,
-  HelpCircle,
   Bell,
   Package,
   Palette,
@@ -12,7 +11,6 @@ import {
   GalleryVerticalEnd,
   AudioWaveform,
   Bot,
-  UserCog,
 } from "lucide-react";
 
 import { type SidebarData } from "../types";

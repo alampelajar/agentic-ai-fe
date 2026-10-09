@@ -18,6 +18,16 @@ export type BackendTask = {
   updated_at: string
 }
 
+export type TaskMutationInput = {
+  title?: string;
+  description?: string;
+  status?: string;
+  label?: string;
+  priority?: string;
+  agent_id?: number | null;
+  model_id?: number | null;
+};
+
 async function readJSON(response: Response) {
   const data = await response.json().catch(() => ({}))
   if (!response.ok) {
@@ -56,7 +66,7 @@ export async function getTask(id: string | number) {
   return data.task as BackendTask
 }
 
-export async function createTask(payload: Partial<BackendTask>) {
+export async function createTask(payload: TaskMutationInput) {
   const response = await apiFetch('/api/tasks', {
     method: 'POST',
     body: JSON.stringify({
@@ -76,7 +86,7 @@ export async function createTask(payload: Partial<BackendTask>) {
 
 export async function updateTask(
   id: string | number,
-  payload: Partial<BackendTask>
+  payload: TaskMutationInput
 ) {
   const response = await apiFetch(`/api/tasks/${id}`, {
     method: 'PATCH',

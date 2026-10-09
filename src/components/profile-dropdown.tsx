@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { SignOutDialog } from '@/components/sign-out-dialog'
 import { useAuthStore } from '@/stores/auth-store'
+import { getAvatarSrc } from '@/lib/avatar-presets'
 
 export function ProfileDropdown() {
   const [open, setOpen] = useDialogState()
@@ -22,7 +23,7 @@ export function ProfileDropdown() {
 
   const name = user?.name || 'User'
   const email = user?.email || 'No email'
-  const avatar = user?.avatar || ''
+  const avatar = getAvatarSrc(user?.avatar, user?.accountNo || user?.email || name)
 
   const initials = name
     .trim()
@@ -74,7 +75,7 @@ export function ProfileDropdown() {
 
           <DropdownMenuGroup>
             <DropdownMenuItem asChild>
-              <Link to='/settings'>
+              <Link to='/settings/account'>
                 Profile
                 <DropdownMenuShortcut>
                   ⇧⌘P

@@ -676,8 +676,8 @@
   "settingsPage": {
     "title": "Settings",
     "account": {
-      "title": "Account & Workspace",
-      "subtitle": "Manage your account and workspace settings.",
+      "title": "User profile",
+      "subtitle": "Manage the display name and profile photo used throughout Agentic AI.",
       "name": "Name",
       "namePlaceholder": "Your name",
       "email": "Email",
@@ -703,7 +703,16 @@
       "selectLanguage": "Select language",
       "searchLanguage": "Search language...",
       "noLanguage": "No language found.",
-      "reset": "Reset"
+      "reset": "Reset",
+      "profilePhoto": "Profile photo",
+      "chooseAvatar": "Choose an avatar below. Your selection will be saved to your account.",
+      "avatarDescription": "Your avatar appears in the account menu and application navigation.",
+      "profileNameHint": "Use a name between 2 and 30 characters. Changes appear throughout the app.",
+      "emailReadOnly": "Your account email is shown for reference and cannot be edited from this page yet.",
+      "profileLoadError": "Could not load your profile. Check your connection and reload the page.",
+      "profileSaveError": "Could not save your profile. Please try again.",
+      "profileSaveSuccess": "Profile updated successfully.",
+      "profileNameError": "Name must contain between 2 and 30 characters."
     },
     "appearance": {
       "title": "Appearance",

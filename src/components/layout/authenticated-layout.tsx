@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Outlet } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
@@ -26,7 +26,7 @@ import i18n from "@/i18n";
 
 const API_URL = "http://localhost:8080";
 
-export function AuthenticatedLayout() {
+export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
   const defaultOpen = getCookie("sidebar_state") !== "false";
 
   const { i18n: currentI18n } = useTranslation();
@@ -314,7 +314,7 @@ export function AuthenticatedLayout() {
                   PAGE CONTENT
               ================================= */}
 
-              <Outlet />
+              {children ?? <Outlet />}
 
             </SidebarInset>
           </SidebarProvider>

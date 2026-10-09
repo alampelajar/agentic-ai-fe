@@ -92,3 +92,40 @@ export type FreeModelSource = {
   /** Data sudah dikonfirmasi akurat */
   verified: boolean;
 };
+
+
+// ---------------------------------------------------------------------------
+// Legacy model-hub component types
+// These are still imported by reusable model-hub components in this folder.
+// The current /apps route uses FreeModelSource above.
+// ---------------------------------------------------------------------------
+
+export type AIModelCategory = "free" | "free-tier";
+export type AIProviderCategory = AIModelCategory | "api-key";
+export type AIFilterType = "all" | "free" | "free-tier" | "api" | "connected";
+export type AIProviderStatus = "connected" | "available" | "unavailable";
+
+export type AIModel = {
+  id: string;
+  name: string;
+  providerId: string;
+  description: string;
+  category: AIModelCategory;
+  contextWindow?: number;
+  capabilities?: string[];
+  requiresApiKey?: boolean;
+  modelId?: string;
+};
+
+export type AIProvider = {
+  id: string;
+  name: string;
+  description: string;
+  website: string;
+  category: AIProviderCategory;
+  authType?: "none" | "api-key" | "oauth";
+  status: AIProviderStatus;
+  iconInitials: string;
+  accentColor: string;
+  models: AIModel[];
+};

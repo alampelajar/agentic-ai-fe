@@ -80,18 +80,6 @@ type BackendAgent = {
   models: AgentModel[]
 }
 
-type BackendTask = {
-  id: number
-  title: string
-  description?: string
-  status: string
-  label?: string
-  priority?: string
-  agent_id?: number | null
-  model_id?: number | null
-  created_at?: string
-  updated_at?: string
-}
 
 type AgentStatus = 'Running' | 'Thinking' | 'Idle' | 'Offline'
 

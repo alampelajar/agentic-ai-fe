@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next'
 
 import useDialogState from '@/hooks/use-dialog-state'
 import { useAuthStore } from '@/stores/auth-store'
+import { getAvatarSrc } from '@/lib/avatar-presets'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -41,7 +42,7 @@ export function NavUser() {
 
   const name = user?.name || 'User'
   const email = user?.email || 'No email'
-  const avatar = user?.avatar || ''
+  const avatar = getAvatarSrc(user?.avatar, user?.accountNo || user?.email || name)
 
   const initials = name
     .trim()
