@@ -6,13 +6,12 @@ import {
   Bot,
   CheckCircle2,
   ChevronRight,
-  Clock3,
   Cpu,
   ListTodo,
   Sparkles,
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
 const API_URL = 'http://localhost:8080'
@@ -210,7 +209,7 @@ function AIOverview() {
             value={totalAgents}
             description={t('overviewPage.stats.totalAgentsDescription')}
             icon={Bot}
-            href='/users'
+            href='/users/'
             color='blue'
           />
 
@@ -219,7 +218,7 @@ function AIOverview() {
             value={activeAgents}
             description={t('overviewPage.stats.activeAgentsDescription')}
             icon={Sparkles}
-            href='/users'
+            href='/users/'
             color='violet'
           />
 
@@ -228,7 +227,7 @@ function AIOverview() {
             value={totalModels}
             description={t('overviewPage.stats.availableModelsDescription')}
             icon={Cpu}
-            href='/users'
+            href='/users/'
             color='amber'
           />
 
@@ -237,7 +236,7 @@ function AIOverview() {
             value={systemModels}
             description={t('overviewPage.stats.systemModelsDescription')}
             icon={CheckCircle2}
-            href='/users'
+            href='/users/'
             color='emerald'
           />
         </div>
@@ -258,7 +257,7 @@ function AIOverview() {
               </div>
 
               <Link
-                to='/ai/agents'
+                to='/ai/agents/agents'
                 className='group flex shrink-0 items-center gap-1 text-sm font-medium text-primary'
               >
                 {t('viewAll')}
@@ -368,7 +367,7 @@ function AIOverview() {
             />
 
             <QuickAction
-              href='/users'
+              href='/users/'
               icon={Bot}
               title={t('manageAgents')}
               description={t('overviewPage.quickActions.manageAgents')}
@@ -406,7 +405,7 @@ function EmptyAgents() {
         {t('overviewPage.emptyAgents.description')}
       </p>
 
-      <Link to='/ai/agents' className='mt-3 text-xs font-medium text-primary'>
+      <Link to='/ai/agents/agents' className='mt-3 text-xs font-medium text-primary'>
         {t('overviewPage.emptyAgents.viewAgents')}
       </Link>
     </div>
@@ -486,7 +485,7 @@ function StatCard({
   value: number
   description: string
   icon: React.ElementType
-  href: '/ai/agents'
+  href: '/ai/agents/agents' | '/users/'
   color: 'blue' | 'violet' | 'amber' | 'emerald'
 }) {
   const { t } = useTranslation()
