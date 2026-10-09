@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
 import { showSubmittedData } from '@/lib/show-submitted-data'
-import { UsersInviteDialog } from './agents-invite-dialog'
+import { UsersInviteDialog } from './users-invite-dialog'
 
 vi.mock('@/lib/show-submitted-data', () => ({ showSubmittedData: vi.fn() }))
 
