@@ -11,7 +11,7 @@ export function ProfilePage() {
       title={isIndonesian ? "Profil" : "Profile"}
       desc={isIndonesian ? "Kelola nama dan foto profil kamu." : "Manage your name and profile photo."}
     >
-      <div className="mx-auto w-full max-w-3xl">
+      <div className="w-full min-w-0">
         <AccountForm />
       </div>
     </ContentSection>
