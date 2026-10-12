@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { ContentSection } from "../components/content-section";
 import { AccountForm } from "./account-form";
+import { DeleteAccountCard } from "./delete-account-card";
 
 export function SettingsAccount() {
   const { t } = useTranslation();
@@ -10,7 +11,10 @@ export function SettingsAccount() {
       title={t("settingsPage.account.title")}
       desc={t("settingsPage.account.subtitle")}
     >
-      <AccountForm />
+      <div className="space-y-8">
+        <AccountForm />
+        <DeleteAccountCard />
+      </div>
     </ContentSection>
   );
 }

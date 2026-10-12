@@ -88,3 +88,26 @@ export async function updateCurrentUserProfile(input: UpdateProfileInput): Promi
   updateAuthUser(result.user)
   return result.user
 }
+export async function verifyCurrentUserPasswordForDeletion(password: string): Promise<void> {
+  const response = await apiFetch('/api/me/verify-delete-password', {
+    method: 'POST',
+    body: JSON.stringify({ password }),
+  })
+  const result: { ok?: boolean; message?: string } = await response.json().catch(() => ({}))
+
+  if (!response.ok || !result.ok) {
+    throw new Error(result.message || 'Gagal memverifikasi kata sandi.')
+  }
+}
+
+export async function deleteCurrentUserAccount(password: string): Promise<void> {
+  const response = await apiFetch('/api/me', {
+    method: 'DELETE',
+    body: JSON.stringify({ password }),
+  })
+  const result: { ok?: boolean; message?: string } = await response.json().catch(() => ({}))
+
+  if (!response.ok || !result.ok) {
+    throw new Error(result.message || 'Gagal menghapus akun.')
+  }
+}
