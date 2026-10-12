@@ -111,3 +111,21 @@ export async function deleteCurrentUserAccount(password: string): Promise<void> 
     throw new Error(result.message || 'Gagal menghapus akun.')
   }
 }
+
+export interface ChangePasswordInput {
+  current_password: string
+  new_password: string
+  confirm_password: string
+}
+
+export async function changeCurrentUserPassword(input: ChangePasswordInput): Promise<void> {
+  const response = await apiFetch('/api/me/password', {
+    method: 'PUT',
+    body: JSON.stringify(input),
+  })
+  const result: { ok?: boolean; message?: string } = await response.json().catch(() => ({}))
+
+  if (!response.ok || !result.ok) {
+    throw new Error(result.message || 'Gagal mengubah password.')
+  }
+}
