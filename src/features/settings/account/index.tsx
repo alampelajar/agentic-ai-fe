@@ -11,7 +11,7 @@ export function SettingsAccount() {
       title={t("settingsPage.account.title")}
       desc={t("settingsPage.account.subtitle")}
     >
-      <div className="mx-auto w-full max-w-3xl space-y-6">
+      <div className="w-full min-w-0 space-y-6">
         <div className="space-y-1">
           <h2 className="text-lg font-semibold">Keamanan akun</h2>
           <p className="text-sm text-muted-foreground">
