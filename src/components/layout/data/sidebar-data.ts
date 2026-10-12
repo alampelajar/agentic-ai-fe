@@ -115,21 +115,6 @@ export const sidebarData: SidebarData = {
     },
 
     /* ===================================================
-       PROFILE
-    =================================================== */
-
-    {
-      title: "Profile",
-      items: [
-        {
-          title: "profile",
-          url: "/profile",
-          icon: UserRound,
-        },
-      ],
-    },
-
-    /* ===================================================
        SETTINGS
     =================================================== */
 
@@ -148,6 +133,12 @@ export const sidebarData: SidebarData = {
               title: "account",
               url: "/settings/account",
               icon: Wrench,
+            },
+
+            {
+              title: "profile",
+              url: "/profile",
+              icon: UserRound,
             },
 
             {
