@@ -5,7 +5,7 @@ import { Main } from "@/components/layout/main";
 
 export function Settings() {
   return (
-    <Main fixed>
+    <Main fixed fluid>
       {/* =====================================================
           SETTINGS HEADER
       ===================================================== */}
