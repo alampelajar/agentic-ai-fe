@@ -7,6 +7,7 @@ import {
   Palette,
   Settings,
   Wrench,
+  UserRound,
   Command,
   GalleryVerticalEnd,
   AudioWaveform,
@@ -109,6 +110,21 @@ export const sidebarData: SidebarData = {
           title: "tools",
           url: "/apps",
           icon: Package,
+        },
+      ],
+    },
+
+    /* ===================================================
+       PROFILE
+    =================================================== */
+
+    {
+      title: "Profile",
+      items: [
+        {
+          title: "profile",
+          url: "/profile",
+          icon: UserRound,
         },
       ],
     },
