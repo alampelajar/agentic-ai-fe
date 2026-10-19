@@ -44,7 +44,7 @@ export function UserAuthForm({
   ...props
 }: UserAuthFormProps) {
   const navigate = useNavigate()
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const auth = useAuthStore((state) => state.auth)
 
   const [email, setEmail] = useState('')
@@ -247,7 +247,6 @@ export function UserAuthForm({
           width="100%"
           text="continue_with"
           shape="rectangular"
-          locale={i18n.language === 'id' ? 'id' : 'en'}
         />
       </div>
     </div>
