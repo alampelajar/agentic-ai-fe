@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { ExternalLink, Search, X, CreditCard } from 'lucide-react'
+import { ExternalLink, Search, X } from 'lucide-react'
 import { getRouteApi } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 
