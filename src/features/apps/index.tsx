@@ -216,6 +216,9 @@ const PAID_PROVIDERS: DirectoryItem[] = [
 
 const DIRECTORY_ITEMS = [...FREE_MODEL_SOURCES, ...PAID_PROVIDERS]
 
+const getCategoryKey = (category: Exclude<Category, 'all'> | 'all') =>
+  category === 'open-source' ? 'openSource' : category
+
 const TYPE_FILTERS: Array<{ id: 'all' | DirectoryType; key: string }> = [
   { id: 'all', key: 'appDirectory.tabs.all' },
   { id: 'free', key: 'appDirectory.tabs.free' },
@@ -287,7 +290,7 @@ export function Apps() {
         item.name,
         t(item.descriptionKey),
         t(item.accessKey),
-        ...item.categories.map((itemCategory) => t('appDirectory.categories.' + itemCategory.replace('-', ''))),
+        ...item.categories.map((itemCategory) => t('appDirectory.categories.' + getCategoryKey(itemCategory))),
         ...(item.models ?? []),
         ...(item.highlightKeys ?? []).map((key) => t('appDirectory.highlights.' + key)),
       ]
@@ -446,7 +449,9 @@ export function Apps() {
                             >
                               {item.type === 'paid'
                                 ? t('appDirectory.highlights.' + value)
-                                : value}
+                                : value === 'Free model variants'
+                                  ? t('appDirectory.genericModelVariants')
+                                  : value}
                             </span>
                           ))}
                         </div>
@@ -464,7 +469,7 @@ export function Apps() {
                     <div className='flex flex-wrap gap-x-2 gap-y-1'>
                       {item.categories.slice(0, 2).map((itemCategory) => (
                         <span key={itemCategory} className='text-xs text-muted-foreground'>
-                          {t('appDirectory.categories.' + itemCategory.replace('-', ''))}
+                          {t('appDirectory.categories.' + getCategoryKey(itemCategory))}
                         </span>
                       ))}
                     </div>

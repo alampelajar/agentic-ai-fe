@@ -948,6 +948,7 @@
       "ai21": "Model and API provider for generative AI applications and business language solutions.",
       "cerebras": "AI inference platform with API access focused on fast model execution.",
       "azure": "Cloud AI services for applications and organizations that need enterprise integration and management."
-    }
+    },
+    "genericModelVariants": "Free model variants"
   }
 }

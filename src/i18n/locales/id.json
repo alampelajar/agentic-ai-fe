@@ -948,6 +948,7 @@
       "ai21": "Penyedia model dan API untuk aplikasi generative AI serta solusi bahasa bagi bisnis.",
       "cerebras": "Platform inference AI dengan akses API yang berfokus pada eksekusi model berkecepatan tinggi.",
       "azure": "Layanan AI cloud untuk aplikasi dan organisasi yang membutuhkan integrasi serta pengelolaan enterprise."
-    }
+    },
+    "genericModelVariants": "Varian model gratis"
   }
 }
