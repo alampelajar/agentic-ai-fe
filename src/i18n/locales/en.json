@@ -950,5 +950,55 @@
       "azure": "Cloud AI services for applications and organizations that need enterprise integration and management."
     },
     "genericModelVariants": "Free model variants"
+  },
+  "authLayout": {
+    "eyebrow": "AGENTIC AI WORKSPACE",
+    "headline": "Your AI work, in one place.",
+    "description": "Configure agents, manage tasks, and follow progress from a single workspace.",
+    "features": {
+      "agents": "Agents",
+      "tasks": "Tasks",
+      "models": "Models"
+    },
+    "footerNote": "A calmer space for focused work.",
+    "copyright": "© {{year}} Agentic AI",
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
+  "authPage": {
+    "configuration": {
+      "title": "Sign-in is not configured",
+      "description": "Google sign-in cannot be enabled until the client ID is configured.",
+      "missingVariable": "This environment variable was not found."
+    },
+    "signIn": {
+      "eyebrow": "YOUR WORKSPACE",
+      "title": "Sign in",
+      "description": "Use your account details to continue to Agentic AI.",
+      "noAccount": "New to Agentic AI?",
+      "createAccount": "Create an account"
+    },
+    "fields": {
+      "email": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "password": "Password",
+      "forgotPassword": "Forgot password?",
+      "signIn": "Sign in",
+      "signingIn": "Signing in…",
+      "orContinueWith": "Or continue with"
+    },
+    "errors": {
+      "emailRequired": "Enter your email address.",
+      "passwordRequired": "Enter your password.",
+      "invalidCredentials": "The email or password is incorrect.",
+      "googleFailed": "Google sign-in failed.",
+      "loginUnexpected": "Something went wrong while signing in.",
+      "resetUnavailable": "Password reset is not available yet."
+    },
+    "toasts": {
+      "loginSuccess": "Signed in successfully",
+      "googleLoginSuccess": "Google sign-in successful",
+      "welcome": "Welcome, {{name}}."
+    }
   }
 }

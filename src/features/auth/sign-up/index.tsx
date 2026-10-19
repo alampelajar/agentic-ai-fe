@@ -2,7 +2,6 @@ import { Link } from "@tanstack/react-router";
 import {
   ArrowUpRight,
   CheckCircle2,
-  Sparkles,
   UserPlus,
 } from "lucide-react";
 
@@ -13,20 +12,6 @@ export function SignUp() {
   return (
     <AuthLayout>
       <div className="w-full">
-        {/* Mobile Brand */}
-        <div className="mb-4 flex flex-col items-center text-center lg:hidden">
-          <Sparkles className="mb-1.5 size-5 text-primary" />
-
-          <h1 className="text-lg font-bold tracking-tight">
-            agentic
-            <span className="text-primary">AI</span>
-          </h1>
-
-          <p className="mt-0.5 text-[11px] text-muted-foreground">
-            Autonomous AI Workspace
-          </p>
-        </div>
-
         {/* Sign Up Card */}
         <div className="rounded-2xl border border-white/10 bg-[#080c16] p-5 shadow-xl sm:p-6">
           {/* Header */}
