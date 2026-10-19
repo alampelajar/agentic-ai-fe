@@ -67,7 +67,7 @@ describe('OtpForm', () => {
     await userEvent.fill(otpInput, '123456')
     await userEvent.click(verifyButton)
 
-    const passwordInput = screen.getByLabelText('New password')
+    const passwordInput = screen.getByLabelText('New password', { exact: true })
     const confirmInput = screen.getByLabelText('Confirm new password')
     await userEvent.fill(passwordInput, 'new-secure-pass')
     await userEvent.fill(confirmInput, 'new-secure-pass')
