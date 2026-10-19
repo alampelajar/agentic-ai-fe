@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
+import i18n from '@/i18n'
 import { UserAuthForm } from './user-auth-form'
 
 const mocks = vi.hoisted(() => ({
@@ -27,7 +28,8 @@ vi.mock('sonner', () => ({
 }))
 
 describe('UserAuthForm', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
+    await i18n.changeLanguage('en')
     vi.clearAllMocks()
     vi.stubGlobal('fetch', mocks.fetch)
   })
@@ -39,21 +41,21 @@ describe('UserAuthForm', () => {
   it('renders email, password, submit, and reset-password controls', async () => {
     const screen = await render(<UserAuthForm />)
 
-    await expect.element(screen.getByRole('textbox', { name: 'Email' })).toBeInTheDocument()
+    await expect.element(screen.getByRole('textbox', { name: 'Email address' })).toBeInTheDocument()
     await expect.element(screen.getByLabelText('Password')).toBeInTheDocument()
     await expect.element(screen.getByRole('button', { name: 'Forgot password?' })).toBeInTheDocument()
-    await expect.element(screen.getByRole('button', { name: 'Sign In' })).toBeInTheDocument()
+    await expect.element(screen.getByRole('button', { name: 'Sign in' })).toBeInTheDocument()
   })
 
   it('shows validation toasts for missing credentials', async () => {
     const screen = await render(<UserAuthForm />)
 
-    await userEvent.click(screen.getByRole('button', { name: 'Sign In' }))
-    expect(mocks.toastError).toHaveBeenCalledWith('Email wajib diisi.')
+    await userEvent.click(screen.getByRole('button', { name: 'Sign in' }))
+    expect(mocks.toastError).toHaveBeenCalledWith('Enter your email address.')
 
-    await userEvent.fill(screen.getByRole('textbox', { name: 'Email' }), 'alam@example.com')
-    await userEvent.click(screen.getByRole('button', { name: 'Sign In' }))
-    expect(mocks.toastError).toHaveBeenCalledWith('Password wajib diisi.')
+    await userEvent.fill(screen.getByRole('textbox', { name: 'Email address' }), 'alam@example.com')
+    await userEvent.click(screen.getByRole('button', { name: 'Sign in' }))
+    expect(mocks.toastError).toHaveBeenCalledWith('Enter your password.')
   })
 
   it('saves the user and navigates to the default route after login', async () => {
@@ -68,9 +70,9 @@ describe('UserAuthForm', () => {
     })
     const screen = await render(<UserAuthForm />)
 
-    await userEvent.fill(screen.getByRole('textbox', { name: 'Email' }), 'alam@example.com')
+    await userEvent.fill(screen.getByRole('textbox', { name: 'Email address' }), 'alam@example.com')
     await userEvent.fill(screen.getByLabelText('Password'), 'valid-password')
-    await userEvent.click(screen.getByRole('button', { name: 'Sign In' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Sign in' }))
 
     await vi.waitFor(() => expect(mocks.setUser).toHaveBeenCalledOnce())
     expect(mocks.setAccessToken).toHaveBeenCalledWith('mock-access-token')
@@ -89,9 +91,9 @@ describe('UserAuthForm', () => {
     })
     const screen = await render(<UserAuthForm redirectTo='/settings' />)
 
-    await userEvent.fill(screen.getByRole('textbox', { name: 'Email' }), 'alam@example.com')
+    await userEvent.fill(screen.getByRole('textbox', { name: 'Email address' }), 'alam@example.com')
     await userEvent.fill(screen.getByLabelText('Password'), 'valid-password')
-    await userEvent.click(screen.getByRole('button', { name: 'Sign In' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Sign in' }))
 
     await vi.waitFor(() => expect(mocks.navigate).toHaveBeenCalledWith({ to: '/settings', replace: true }))
   })

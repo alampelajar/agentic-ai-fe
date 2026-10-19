@@ -1,148 +1,70 @@
 import { Logo } from "@/assets/logo";
-import { ArrowUpRight, Bot, CheckCircle2, Sparkles } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 type AuthLayoutProps = {
   children: React.ReactNode;
 };
 
 export function AuthLayout({ children }: AuthLayoutProps) {
+  const { t } = useTranslation();
+
   return (
-    <div className="relative h-svh overflow-hidden bg-[#05070d] text-white">
-      {/* Background grid */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.025]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }}
-      />
+    <div className="min-h-svh bg-[#090a0c] text-white">
+      <main className="grid min-h-svh lg:grid-cols-[minmax(0,1.04fr)_minmax(420px,0.96fr)]">
+        <aside className="hidden min-h-svh flex-col border-r border-white/[0.08] bg-[#0d0f12] px-10 py-9 lg:flex xl:px-16 2xl:px-20">
+          <div className="flex items-center gap-2.5">
+            <Logo className="size-7 text-white" />
+            <span className="text-base font-semibold tracking-tight">
+              agentic<span className="text-primary">AI</span>
+            </span>
+          </div>
 
-      {/* Header */}
-      <header className="relative z-20 flex h-16 shrink-0 items-center justify-between px-6 lg:px-10">
-        <div className="flex items-center gap-2.5">
-          <Logo className="size-7" />
-
-          <span className="text-lg font-semibold tracking-tight">
-            agentic<span className="text-primary">AI</span>
-          </span>
-        </div>
-
-        <div className="hidden items-center gap-2 text-xs text-zinc-500 sm:flex">
-          <span className="size-1.5 rounded-full bg-emerald-500" />
-          All systems operational
-        </div>
-      </header>
-
-      {/* Main */}
-      <main className="relative z-10 grid h-[calc(100svh-4rem)] min-h-0 items-center lg:grid-cols-2">
-        {/* Left */}
-        <section className="hidden min-h-0 items-center px-10 lg:flex xl:px-20">
-          <div className="max-w-xl">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.02] px-3 py-1.5 text-xs text-zinc-400">
-              <Sparkles className="size-3.5 text-primary" />
-              Autonomous AI Workspace
-            </div>
-
-            <h1 className="text-5xl font-semibold leading-[1] tracking-[-0.045em] xl:text-6xl">
-              Let AI
-              <br />
-              <span className="text-zinc-500">do the work.</span>
-            </h1>
-
-            <p className="mt-5 max-w-md text-sm leading-6 text-zinc-500">
-              Build intelligent agents, delegate tasks, and automate complex
-              workflows from one powerful workspace.
+          <div className="my-auto max-w-lg py-16">
+            <p className="mb-5 text-[11px] font-medium uppercase tracking-[0.18em] text-zinc-500">
+              {t("authLayout.eyebrow")}
             </p>
 
-            {/* Agent preview */}
-            <div className="mt-7 max-w-md rounded-2xl border border-white/10 bg-white/[0.02] p-4">
-              <div className="flex items-center justify-between border-b border-white/[0.07] pb-3">
-                <div className="flex items-center gap-2.5">
-                  <div className="flex size-8 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03]">
-                    <Bot className="size-4 text-zinc-300" />
-                  </div>
+            <h1 className="max-w-[12ch] text-4xl font-semibold leading-[1.12] tracking-[-0.04em] xl:text-5xl">
+              {t("authLayout.headline")}
+            </h1>
 
-                  <div>
-                    <p className="text-sm font-medium text-zinc-200">
-                      Research Agent
-                    </p>
+            <p className="mt-5 max-w-md text-sm leading-7 text-zinc-400 xl:text-base">
+              {t("authLayout.description")}
+            </p>
 
-                    <p className="text-[11px] text-zinc-600">Autonomous task</p>
-                  </div>
-                </div>
-
-                <span className="flex items-center gap-1.5 text-[11px] text-emerald-500">
-                  <span className="size-1.5 rounded-full bg-emerald-500" />
-                  Running
-                </span>
-              </div>
-
-              <div className="space-y-2.5 pt-3">
-                <div className="flex items-center gap-3">
-                  <CheckCircle2 className="size-3.5 text-emerald-500" />
-                  <span className="text-xs text-zinc-500">
-                    Analyze project requirements
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <CheckCircle2 className="size-3.5 text-emerald-500" />
-                  <span className="text-xs text-zinc-500">
-                    Generate implementation plan
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <span className="flex size-3.5 items-center justify-center">
-                    <span className="size-1.5 animate-pulse rounded-full bg-primary" />
-                  </span>
-
-                  <span className="text-xs text-zinc-300">
-                    Execute assigned task...
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-5 flex items-center gap-6">
-              <div>
-                <p className="text-base font-semibold">24/7</p>
-                <p className="text-[10px] text-zinc-600">Autonomous</p>
-              </div>
-
-              <div className="h-7 w-px bg-white/10" />
-
-              <div>
-                <p className="text-base font-semibold">AI Agents</p>
-                <p className="text-[10px] text-zinc-600">
-                  Built for your workflow
-                </p>
-              </div>
+            <div className="mt-9 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/[0.09] pt-5 text-sm text-zinc-400">
+              <span>{t("authLayout.features.agents")}</span>
+              <span className="text-zinc-700" aria-hidden="true">/</span>
+              <span>{t("authLayout.features.tasks")}</span>
+              <span className="text-zinc-700" aria-hidden="true">/</span>
+              <span>{t("authLayout.features.models")}</span>
             </div>
           </div>
-        </section>
 
-        {/* Right */}
-        <section className="flex min-h-0 h-full items-center justify-center px-5 py-3 sm:px-8 lg:justify-start lg:px-10 xl:px-20">
-          <div className="w-full max-w-[390px]">{children}</div>
+          <p className="text-xs text-zinc-600">
+            {t("authLayout.footerNote")}
+          </p>
+        </aside>
+
+        <section className="flex min-h-svh flex-col px-5 py-6 sm:px-8 lg:px-12 xl:px-16">
+          <header className="flex h-10 items-center lg:hidden">
+            <Logo className="me-2 size-6 text-white" />
+            <span className="text-sm font-semibold tracking-tight">
+              agentic<span className="text-primary">AI</span>
+            </span>
+          </header>
+
+          <div className="flex flex-1 items-center justify-center py-8">
+            <div className="w-full max-w-[380px]">{children}</div>
+          </div>
+
+          <footer className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-white/[0.07] pt-5 text-xs text-zinc-500 lg:justify-start">
+            <span>{t("authLayout.copyright", { year: new Date().getFullYear() })}</span>
+            <span>{t("authLayout.privacy")}</span>
+            <span>{t("authLayout.terms")}</span>
+          </footer>
         </section>
       </main>
-
-      {/* Footer */}
-      <footer className="absolute bottom-3 left-6 right-6 z-20 flex items-center justify-between text-[10px] text-zinc-600 sm:left-10 sm:right-10">
-        <span>© {new Date().getFullYear()} agenticAI</span>
-
-        <div className="hidden items-center gap-4 sm:flex">
-          <span className="flex items-center gap-1">
-            Secure
-            <ArrowUpRight className="size-3" />
-          </span>
-
-          <span>Privacy</span>
-          <span>Terms</span>
-        </div>
-      </footer>
     </div>
   );
 }

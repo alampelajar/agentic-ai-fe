@@ -950,5 +950,55 @@
       "azure": "Layanan AI cloud untuk aplikasi dan organisasi yang membutuhkan integrasi serta pengelolaan enterprise."
     },
     "genericModelVariants": "Varian model gratis"
+  },
+  "authLayout": {
+    "eyebrow": "WORKSPACE AGENTIC AI",
+    "headline": "Pekerjaan AI dalam satu tempat.",
+    "description": "Atur agent, kelola tugas, dan pantau progres dari satu ruang kerja.",
+    "features": {
+      "agents": "Agent",
+      "tasks": "Tugas",
+      "models": "Model"
+    },
+    "footerNote": "Ruang kerja yang rapi untuk tetap fokus.",
+    "copyright": "© {{year}} Agentic AI",
+    "privacy": "Privasi",
+    "terms": "Ketentuan"
+  },
+  "authPage": {
+    "configuration": {
+      "title": "Login belum dikonfigurasi",
+      "description": "Login dengan Google belum dapat digunakan sampai client ID dikonfigurasi.",
+      "missingVariable": "Variabel lingkungan ini tidak ditemukan."
+    },
+    "signIn": {
+      "eyebrow": "RUANG KERJA KAMU",
+      "title": "Masuk",
+      "description": "Masukkan informasi akun untuk melanjutkan ke Agentic AI.",
+      "noAccount": "Belum punya akun Agentic AI?",
+      "createAccount": "Buat akun"
+    },
+    "fields": {
+      "email": "Alamat email",
+      "emailPlaceholder": "nama@contoh.com",
+      "password": "Kata sandi",
+      "forgotPassword": "Lupa kata sandi?",
+      "signIn": "Masuk",
+      "signingIn": "Sedang masuk…",
+      "orContinueWith": "Atau lanjutkan dengan"
+    },
+    "errors": {
+      "emailRequired": "Masukkan alamat email.",
+      "passwordRequired": "Masukkan kata sandi.",
+      "invalidCredentials": "Email atau kata sandi salah.",
+      "googleFailed": "Login Google gagal.",
+      "loginUnexpected": "Terjadi kesalahan saat login.",
+      "resetUnavailable": "Reset kata sandi belum tersedia."
+    },
+    "toasts": {
+      "loginSuccess": "Berhasil masuk",
+      "googleLoginSuccess": "Berhasil masuk dengan Google",
+      "welcome": "Selamat datang, {{name}}."
+    }
   }
 }

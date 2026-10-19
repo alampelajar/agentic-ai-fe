@@ -1,19 +1,16 @@
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import {
-  GoogleLogin,
-  type CredentialResponse,
-} from '@react-oauth/google'
+import { GoogleLogin, type CredentialResponse } from '@react-oauth/google'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 
 import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
-interface UserAuthFormProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
   redirectTo?: string
 }
 
@@ -47,183 +44,122 @@ export function UserAuthForm({
   ...props
 }: UserAuthFormProps) {
   const navigate = useNavigate()
-
-  const auth = useAuthStore(
-    (state) => state.auth
-  )
+  const { t } = useTranslation()
+  const auth = useAuthStore((state) => state.auth)
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [isLoading, setIsLoading] =
-    useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
-  async function handleLogin(
-    event: React.FormEvent<HTMLFormElement>
-  ) {
+  async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     if (!email.trim()) {
-      toast.error('Email wajib diisi.')
+      toast.error(t('authPage.errors.emailRequired'))
       return
     }
 
     if (!password) {
-      toast.error('Password wajib diisi.')
+      toast.error(t('authPage.errors.passwordRequired'))
       return
     }
 
     setIsLoading(true)
 
     try {
-      const response = await fetch(
-        'http://localhost:8081/api/auth/login',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            email: email.trim(),
-            password,
-          }),
-        }
-      )
+      const response = await fetch('http://localhost:8081/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ email: email.trim(), password }),
+      })
 
-      const result: LoginResponse =
-        await response.json()
+      const result: LoginResponse = await response.json()
 
-      if (
-        !response.ok ||
-        !result.ok ||
-        !result.access_token ||
-        !result.user
-      ) {
-        throw new Error(
-          result.message ||
-            'Email atau password salah.'
-        )
+      if (!response.ok || !result.ok || !result.access_token || !result.user) {
+        throw new Error(result.message || t('authPage.errors.invalidCredentials'))
       }
 
       const user = {
         accountNo: `USER_${result.user.id}`,
         email: result.user.email,
         role: ['user'],
-        exp:
-          Date.now() +
-          15 * 60 * 1000,
+        exp: Date.now() + 15 * 60 * 1000,
         name: result.user.name,
-        avatar:
-          result.user.avatar || '',
+        avatar: result.user.avatar || '',
       }
 
       auth.setUser(user)
-      auth.setAccessToken(
-        result.access_token
-      )
+      auth.setAccessToken(result.access_token)
 
-      toast.success('Login berhasil', {
-        description: `Selamat datang, ${result.user.name}.`,
+      toast.success(t('authPage.toasts.loginSuccess'), {
+        description: t('authPage.toasts.welcome', { name: result.user.name }),
       })
 
       navigate({
-        to:
-          (redirectTo as '/overview') ||
-          '/overview',
+        to: (redirectTo as '/overview') || '/overview',
         replace: true,
       })
     } catch (error) {
       toast.error(
-        error instanceof Error
-          ? error.message
-          : 'Terjadi kesalahan saat login.'
+        error instanceof Error ? error.message : t('authPage.errors.loginUnexpected'),
       )
     } finally {
       setIsLoading(false)
     }
   }
 
-  async function handleGoogleSuccess(
-    credentialResponse: CredentialResponse
-  ) {
+  async function handleGoogleSuccess(credentialResponse: CredentialResponse) {
     if (!credentialResponse.credential) {
-      toast.error(
-        'Google authentication gagal.'
-      )
+      toast.error(t('authPage.errors.googleFailed'))
       return
     }
 
     setIsLoading(true)
 
     try {
-      const response = await fetch(
-        'http://localhost:8081/api/auth/google',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            credential:
-              credentialResponse.credential,
-          }),
-        }
-      )
+      const response = await fetch('http://localhost:8081/api/auth/google', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ credential: credentialResponse.credential }),
+      })
 
-      const result: GoogleLoginResponse =
-        await response.json()
+      const result: GoogleLoginResponse = await response.json()
 
-      if (
-        !response.ok ||
-        !result.ok ||
-        !result.access_token ||
-        !result.user
-      ) {
-        throw new Error(
-          result.message ||
-            'Google authentication gagal.'
-        )
+      if (!response.ok || !result.ok || !result.access_token || !result.user) {
+        throw new Error(result.message || t('authPage.errors.googleFailed'))
       }
 
       const user = {
         accountNo: `USER_${result.user.id}`,
         email: result.user.email,
         role: ['user'],
-        exp:
-          Date.now() +
-          15 * 60 * 1000,
+        exp: Date.now() + 15 * 60 * 1000,
         name: result.user.name,
-        avatar:
-          result.user.avatar || '',
+        avatar: result.user.avatar || '',
       }
 
-      auth.setAccessToken(
-        result.access_token
-      )
-
+      auth.setAccessToken(result.access_token)
       auth.setUser(user)
 
-      toast.success(
-        'Google login berhasil',
-        {
-          description: `Selamat datang, ${result.user.name}.`,
-        }
-      )
+      toast.success(t('authPage.toasts.googleLoginSuccess'), {
+        description: t('authPage.toasts.welcome', { name: result.user.name }),
+      })
 
       navigate({
-        to:
-          (redirectTo as '/overview') ||
-          '/overview',
+        to: (redirectTo as '/overview') || '/overview',
         replace: true,
       })
     } catch (error) {
       toast.error(
-        error instanceof Error
-          ? error.message
-          : 'Google authentication gagal.'
+        error instanceof Error ? error.message : t('authPage.errors.googleFailed'),
       )
     } finally {
       setIsLoading(false)
@@ -231,69 +167,42 @@ export function UserAuthForm({
   }
 
   function handleGoogleError() {
-    toast.error(
-      'Google authentication gagal.'
-    )
+    toast.error(t('authPage.errors.googleFailed'))
   }
 
   return (
-    <div
-      className={`w-full ${
-        className ?? ''
-      }`}
-      {...props}
-    >
-      <form
-        onSubmit={handleLogin}
-        className="space-y-4"
-      >
-        {/* Email */}
+    <div className={`w-full ${className ?? ''}`} {...props}>
+      <form onSubmit={handleLogin} className="space-y-5">
         <div className="space-y-2">
-          <Label
-            htmlFor="email"
-            className="text-sm font-medium"
-          >
-            Email
+          <Label htmlFor="email" className="text-sm font-medium text-zinc-200">
+            {t('authPage.fields.email')}
           </Label>
-
           <Input
             id="email"
             name="email"
             type="email"
-            placeholder="name@example.com"
+            placeholder={t('authPage.fields.emailPlaceholder')}
             autoComplete="email"
             value={email}
-            onChange={(event) =>
-              setEmail(event.target.value)
-            }
+            onChange={(event) => setEmail(event.target.value)}
             disabled={isLoading}
-            className="h-11 rounded-xl border-border/70 bg-background/60 px-3.5 transition-all focus-visible:ring-1"
+            className="h-11 rounded-md border-white/10 bg-white/[0.035] px-3.5 text-sm shadow-none placeholder:text-zinc-600 focus-visible:ring-2 focus-visible:ring-primary/20"
           />
         </div>
 
-        {/* Password */}
         <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label
-              htmlFor="password"
-              className="text-sm font-medium"
-            >
-              Password
+          <div className="flex items-center justify-between gap-3">
+            <Label htmlFor="password" className="text-sm font-medium text-zinc-200">
+              {t('authPage.fields.password')}
             </Label>
-
             <button
               type="button"
-              className="text-xs text-muted-foreground transition-colors hover:text-foreground"
-              onClick={() =>
-                toast.info(
-                  'Fitur reset password belum tersedia.'
-                )
-              }
+              className="text-xs text-zinc-400 underline decoration-zinc-700 underline-offset-4 transition-colors hover:text-white"
+              onClick={() => toast.info(t('authPage.errors.resetUnavailable'))}
             >
-              Forgot password?
+              {t('authPage.fields.forgotPassword')}
             </button>
           </div>
-
           <Input
             id="password"
             name="password"
@@ -301,45 +210,34 @@ export function UserAuthForm({
             placeholder="••••••••"
             autoComplete="current-password"
             value={password}
-            onChange={(event) =>
-              setPassword(event.target.value)
-            }
+            onChange={(event) => setPassword(event.target.value)}
             disabled={isLoading}
-            className="h-11 rounded-xl border-border/70 bg-background/60 px-3.5 transition-all focus-visible:ring-1"
+            className="h-11 rounded-md border-white/10 bg-white/[0.035] px-3.5 text-sm shadow-none placeholder:text-zinc-600 focus-visible:ring-2 focus-visible:ring-primary/20"
           />
         </div>
 
-        {/* Sign In */}
         <Button
           type="submit"
           disabled={isLoading}
-          className="h-11 w-full rounded-xl font-medium transition-all"
+          className="h-11 w-full rounded-md font-medium shadow-none transition-colors"
         >
-          {isLoading && (
-            <Loader2 className="size-4 animate-spin" />
-          )}
-
-          {isLoading
-            ? 'Signing in...'
-            : 'Sign In'}
+          {isLoading && <Loader2 className="size-4 animate-spin" />}
+          {isLoading ? t('authPage.fields.signingIn') : t('authPage.fields.signIn')}
         </Button>
       </form>
 
-      {/* Divider */}
-      <div className="relative my-5">
+      <div className="relative my-6">
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-border/60" />
+          <span className="w-full border-t border-white/[0.09]" />
         </div>
-
         <div className="relative flex justify-center">
-          <span className="bg-card px-3 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-            Or continue with
+          <span className="bg-[#090a0c] px-3 text-[11px] font-medium uppercase tracking-[0.12em] text-zinc-500">
+            {t('authPage.fields.orContinueWith')}
           </span>
         </div>
       </div>
 
-      {/* Google */}
-      <div className="overflow-hidden rounded-xl border border-border/60 bg-background/30">
+      <div className="flex min-h-11 w-full items-center justify-center [&>div]:max-w-full">
         <GoogleLogin
           onSuccess={handleGoogleSuccess}
           onError={handleGoogleError}
