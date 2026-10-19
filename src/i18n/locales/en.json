@@ -575,18 +575,17 @@
     "reset": "Reset"
   },
   "navigation": {
-  "upgradeToPro": "Upgrade to Pro",
-  "billing": "Billing",
-  "signOut": "Sign out",
-  "profile": "Profile",
-  "settings": "Settings",
-  "newTeam": "New Team",
-  "groups": {
-    "CHAT": "Chat",
-    "AI Workspace": "AI Workspace",
-    "Settings": "Settings"
-  
-}
+    "upgradeToPro": "Upgrade to Pro",
+    "billing": "Billing",
+    "signOut": "Sign out",
+    "profile": "Profile",
+    "settings": "Settings",
+    "newTeam": "New Team",
+    "groups": {
+      "CHAT": "Chat",
+      "AI Workspace": "AI Workspace",
+      "Settings": "Settings"
+    }
   },
   "sidebar": {
     "smartAgentic": "SMART AGENTIC"
@@ -613,7 +612,6 @@
         "emailRequired": "Email is required.",
         "emailInvalid": "Invalid email format.",
         "passwordRequired": "Password is required."
-        
       }
     },
     "signUp": {
@@ -842,11 +840,115 @@
       "backToHome": "Back to Home"
     }
   },
- 
   "dataTable": {
     "reset": "Reset"
   },
   "toggleNavigation": "Toggle navigation",
-  "paidModels": "Paid Models"
+  "paidModels": "Paid Models",
+  "appsMenu": "Apps",
+  "appDirectory": {
+    "badge": "AI RESOURCE DIRECTORY",
+    "title": "Apps",
+    "description": "Explore free AI resources and paid model providers in one place.",
+    "searchPlaceholder": "Search providers, models, or capabilities...",
+    "clearSearch": "Clear search",
+    "typeFilterLabel": "Resource type",
+    "categoryFilterLabel": "Capability category",
+    "tabs": {
+      "all": "All resources",
+      "free": "Free",
+      "paid": "Paid"
+    },
+    "categories": {
+      "all": "All categories",
+      "coding": "Coding",
+      "chat": "Chat",
+      "api": "API",
+      "cli": "CLI",
+      "openSource": "Open Source",
+      "multimodal": "Multimodal",
+      "enterprise": "Enterprise"
+    },
+    "types": {
+      "free": "Free",
+      "paid": "Paid"
+    },
+    "accessTypes": {
+      "freeModels": "Free Models",
+      "freeTier": "Free Tier",
+      "freeEndpoint": "Free Endpoint",
+      "limitedFree": "Limited Free",
+      "paidApi": "Paid AI API",
+      "enterprise": "Enterprise"
+    },
+    "modelCount": {
+      "freeModels": "Free models available",
+      "freeTier": "Free tier available",
+      "freeEndpoints": "Free endpoints available",
+      "freeVariants": "Free variants available",
+      "limitedFree": "Limited free access"
+    },
+    "resultCount": "{{count}} results",
+    "allNotice": "Access, quotas, and prices may change over time",
+    "freeNotice": "Free access and quotas may change over time",
+    "paidNotice": "Visit provider sites for current pricing",
+    "models": "Models",
+    "highlights": {
+      "claudeApi": "Claude API",
+      "coding": "Coding",
+      "reasoning": "Reasoning",
+      "directApi": "Direct API",
+      "developer": "Developer",
+      "languageApi": "Language API",
+      "business": "Business",
+      "enterpriseAI": "Enterprise AI",
+      "search": "Search",
+      "rag": "RAG",
+      "generativeAI": "Generative AI",
+      "inferenceApi": "Inference API",
+      "speed": "Speed",
+      "cloudAI": "Cloud AI",
+      "enterprise": "Enterprise",
+      "integration": "Integration"
+    },
+    "visitWebsite": "Visit website",
+    "empty": {
+      "title": "No AI resources found",
+      "description": "Try another search term or change the filters.",
+      "reset": "Reset filters"
+    },
+    "freeSources": {
+      "opencode": {
+        "description": "Open-source coding agent with selected models available at no cost for a limited time."
+      },
+      "openrouter": {
+        "description": "Model directory with a dedicated collection of free AI models and free model access."
+      },
+      "kiro": {
+        "description": "AI development environment with a free tier and access to selected coding models."
+      },
+      "kilo": {
+        "description": "Developer-focused platform with hosted models and selected models available at no cost."
+      },
+      "nvidia": {
+        "description": "NVIDIA model catalog with hosted inference endpoints and selected models available for free access."
+      },
+      "apiAirforce": {
+        "description": "OpenAI-compatible API platform with selected models and free variants."
+      },
+      "poolside": {
+        "description": "Agentic coding model platform with selected models and limited free access."
+      }
+    },
+    "paidProviders": {
+      "anthropic": "Official Claude API platform for applications that need coding, analysis, and reasoning capabilities.",
+      "deepseek": "AI API provider for conversational applications, reasoning, and software development.",
+      "mistral": "API platform for integrating AI models into applications, from language processing to coding.",
+      "cohere": "Business-focused AI platform for semantic search, retrieval, and language processing.",
+      "ai21": "Model and API provider for generative AI applications and business language solutions.",
+      "cerebras": "AI inference platform with API access focused on fast model execution.",
+      "azure": "Cloud AI services for applications and organizations that need enterprise integration and management."
+    },
+    "genericModelVariants": "Free model variants"
+  }
 }
-

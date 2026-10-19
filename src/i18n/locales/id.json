@@ -574,19 +574,18 @@
     "viewAll": "Lihat Semua",
     "reset": "Atur Ulang"
   },
- "navigation": {
-  "upgradeToPro": "Upgrade ke Pro",
-  "billing": "Tagihan",
-  "signOut": "Keluar",
-  "profile": "Profil",
-  "settings": "Pengaturan",
-  "newTeam": "Tim Baru",
-  "groups": {
-    "CHAT": "Chat",
-    "AI Workspace": "Ruang Kerja AI",
-    "Settings": "Pengaturan"
-  
-}
+  "navigation": {
+    "upgradeToPro": "Upgrade ke Pro",
+    "billing": "Tagihan",
+    "signOut": "Keluar",
+    "profile": "Profil",
+    "settings": "Pengaturan",
+    "newTeam": "Tim Baru",
+    "groups": {
+      "CHAT": "Chat",
+      "AI Workspace": "Ruang Kerja AI",
+      "Settings": "Pengaturan"
+    }
   },
   "sidebar": {
     "smartAgentic": "SMART AGENTIC"
@@ -845,5 +844,111 @@
     "reset": "Atur Ulang"
   },
   "toggleNavigation": "Buka/tutup navigasi",
-  "paidModels": "Model Berbayar"
+  "paidModels": "Model Berbayar",
+  "appsMenu": "Aplikasi",
+  "appDirectory": {
+    "badge": "DIREKTORI SUMBER DAYA AI",
+    "title": "Aplikasi",
+    "description": "Jelajahi layanan AI gratis dan penyedia model berbayar dalam satu halaman.",
+    "searchPlaceholder": "Cari provider, model, atau kemampuan...",
+    "clearSearch": "Hapus pencarian",
+    "typeFilterLabel": "Jenis sumber daya",
+    "categoryFilterLabel": "Kategori kemampuan",
+    "tabs": {
+      "all": "Semua sumber daya",
+      "free": "Gratis",
+      "paid": "Berbayar"
+    },
+    "categories": {
+      "all": "Semua kategori",
+      "coding": "Coding",
+      "chat": "Chat",
+      "api": "API",
+      "cli": "CLI",
+      "openSource": "Open Source",
+      "multimodal": "Multimodal",
+      "enterprise": "Enterprise"
+    },
+    "types": {
+      "free": "Gratis",
+      "paid": "Berbayar"
+    },
+    "accessTypes": {
+      "freeModels": "Model gratis",
+      "freeTier": "Paket gratis",
+      "freeEndpoint": "Endpoint gratis",
+      "limitedFree": "Akses gratis terbatas",
+      "paidApi": "API AI berbayar",
+      "enterprise": "Enterprise"
+    },
+    "modelCount": {
+      "freeModels": "Model gratis tersedia",
+      "freeTier": "Paket gratis tersedia",
+      "freeEndpoints": "Endpoint gratis tersedia",
+      "freeVariants": "Varian gratis tersedia",
+      "limitedFree": "Akses gratis terbatas"
+    },
+    "resultCount": "{{count}} hasil",
+    "allNotice": "Akses, kuota, dan harga dapat berubah sewaktu-waktu",
+    "freeNotice": "Akses dan kuota gratis dapat berubah sewaktu-waktu",
+    "paidNotice": "Kunjungi situs penyedia untuk melihat harga terbaru",
+    "models": "Model",
+    "highlights": {
+      "claudeApi": "Claude API",
+      "coding": "Coding",
+      "reasoning": "Penalaran",
+      "directApi": "API langsung",
+      "developer": "Developer",
+      "languageApi": "API bahasa",
+      "business": "Bisnis",
+      "enterpriseAI": "AI enterprise",
+      "search": "Pencarian",
+      "rag": "RAG",
+      "generativeAI": "Generative AI",
+      "inferenceApi": "API inference",
+      "speed": "Kecepatan",
+      "cloudAI": "AI cloud",
+      "enterprise": "Enterprise",
+      "integration": "Integrasi"
+    },
+    "visitWebsite": "Kunjungi situs",
+    "empty": {
+      "title": "Sumber daya AI tidak ditemukan",
+      "description": "Coba kata kunci lain atau ubah filter.",
+      "reset": "Atur ulang filter"
+    },
+    "freeSources": {
+      "opencode": {
+        "description": "Agen coding open-source dengan pilihan model yang tersedia gratis untuk waktu terbatas."
+      },
+      "openrouter": {
+        "description": "Direktori model yang menyediakan koleksi khusus model AI gratis dan akses model gratis."
+      },
+      "kiro": {
+        "description": "Lingkungan pengembangan AI dengan paket gratis dan akses ke model coding pilihan."
+      },
+      "kilo": {
+        "description": "Platform untuk developer dengan model hosted dan beberapa model yang tersedia gratis."
+      },
+      "nvidia": {
+        "description": "Katalog model NVIDIA dengan endpoint inference hosted dan sejumlah model yang dapat diakses gratis."
+      },
+      "apiAirforce": {
+        "description": "Platform API kompatibel dengan OpenAI yang menyediakan model pilihan dan varian gratis."
+      },
+      "poolside": {
+        "description": "Platform model coding agentic dengan model pilihan dan akses gratis terbatas."
+      }
+    },
+    "paidProviders": {
+      "anthropic": "Platform resmi Claude API untuk aplikasi yang membutuhkan kemampuan coding, analisis, dan penalaran.",
+      "deepseek": "Penyedia API AI untuk aplikasi percakapan, penalaran, dan pengembangan perangkat lunak.",
+      "mistral": "Platform API untuk mengintegrasikan model AI ke aplikasi, mulai dari pemrosesan bahasa hingga coding.",
+      "cohere": "Platform AI berfokus pada bisnis untuk pencarian semantik, retrieval, dan pemrosesan bahasa.",
+      "ai21": "Penyedia model dan API untuk aplikasi generative AI serta solusi bahasa bagi bisnis.",
+      "cerebras": "Platform inference AI dengan akses API yang berfokus pada eksekusi model berkecepatan tinggi.",
+      "azure": "Layanan AI cloud untuk aplikasi dan organisasi yang membutuhkan integrasi serta pengelolaan enterprise."
+    },
+    "genericModelVariants": "Varian model gratis"
+  }
 }

@@ -1,7 +1,8 @@
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
-import { createFileRoute } from '@tanstack/react-router'
-import { PaidModels } from '@/features/paid-models'
-
+// Keep old bookmarks working after Free and Paid models are combined under Apps.
 export const Route = createFileRoute('/_authenticated/paid-models')({
-  component: PaidModels,
+  beforeLoad: () => {
+    throw redirect({ to: '/apps' })
+  },
 })
