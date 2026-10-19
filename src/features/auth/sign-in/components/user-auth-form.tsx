@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { GoogleLogin, type CredentialResponse } from '@react-oauth/google'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
@@ -9,6 +9,8 @@ import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081').replace(/\/$/, '')
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
   redirectTo?: string
@@ -67,7 +69,7 @@ export function UserAuthForm({
     setIsLoading(true)
 
     try {
-      const response = await fetch('http://localhost:8081/api/auth/login', {
+      const response = await fetch(API_BASE_URL + '/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -121,7 +123,7 @@ export function UserAuthForm({
     setIsLoading(true)
 
     try {
-      const response = await fetch('http://localhost:8081/api/auth/google', {
+      const response = await fetch(API_BASE_URL + '/api/auth/google', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -195,13 +197,12 @@ export function UserAuthForm({
             <Label htmlFor="password" className="text-sm font-medium text-zinc-200">
               {t('authPage.fields.password')}
             </Label>
-            <button
-              type="button"
+            <Link
+              to="/forgot-password"
               className="text-xs text-zinc-400 underline decoration-zinc-700 underline-offset-4 transition-colors hover:text-white"
-              onClick={() => toast.info(t('authPage.errors.resetUnavailable'))}
             >
               {t('authPage.fields.forgotPassword')}
-            </button>
+            </Link>
           </div>
           <Input
             id="password"

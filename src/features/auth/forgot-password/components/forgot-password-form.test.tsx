@@ -1,19 +1,16 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, type RenderResult } from 'vitest-browser-react'
 import { userEvent, type Locator } from 'vitest/browser'
+import i18n from '@/i18n'
 import { ForgotPasswordForm } from './forgot-password-form'
 
 const navigateMock = vi.fn()
+const fetchMock = vi.fn()
 
 vi.mock('@tanstack/react-router', async (orig) => {
   const actual = await orig<typeof import('@tanstack/react-router')>()
   return { ...actual, useNavigate: () => navigateMock }
 })
-
-vi.mock('@/lib/utils', async (orig) => ({
-  ...(await orig()),
-  sleep: vi.fn(() => Promise.resolve()),
-}))
 
 describe('ForgotPasswordForm', () => {
   let screen: RenderResult
@@ -21,34 +18,50 @@ describe('ForgotPasswordForm', () => {
   let continueButton: Locator
 
   beforeEach(async () => {
+    await i18n.changeLanguage('en')
     vi.clearAllMocks()
-
+    vi.stubGlobal('fetch', fetchMock)
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () => ({ ok: true, message: 'If the email exists, a code will be sent.' }),
+    })
     screen = await render(<ForgotPasswordForm />)
-    emailInput = screen.getByRole('textbox', { name: /^Email$/i })
-    continueButton = screen.getByRole('button', { name: /^Continue$/i })
+    emailInput = screen.getByRole('textbox', { name: /^Email address$/i })
+    continueButton = screen.getByRole('button', { name: /^Send verification code$/i })
   })
 
-  it('renders email field and continue button', async () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('renders the email field and send-code button', async () => {
     await expect.element(emailInput).toBeInTheDocument()
     await expect.element(continueButton).toBeInTheDocument()
   })
 
-  it('shows validation when submitting empty form', async () => {
+  it('shows validation when submitting an empty form', async () => {
     await userEvent.click(continueButton)
     await expect
-      .element(screen.getByText(/^Please enter your email\.$/i))
+      .element(screen.getByText(/^Enter your email address\.$/i))
       .toBeInTheDocument()
   })
 
-  it('resets the form and navigates to /otp on success', async () => {
+  it('requests an OTP and navigates to the OTP screen with the email', async () => {
     await userEvent.fill(emailInput, 'a@b.com')
     await userEvent.click(continueButton)
 
-    await vi.waitFor(() =>
-      expect(navigateMock).toHaveBeenCalledWith({ to: '/otp' })
-    )
-
-    // Form should reset on success
-    await expect.element(emailInput).toHaveValue('')
+    await vi.waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith(
+        'http://localhost:8081/api/auth/forgot-password/request',
+        expect.objectContaining({
+          method: 'POST',
+          body: JSON.stringify({ email: 'a@b.com' }),
+        }),
+      )
+      expect(navigateMock).toHaveBeenCalledWith({
+        to: '/otp',
+        search: { email: 'a@b.com' },
+      })
+    })
   })
 })

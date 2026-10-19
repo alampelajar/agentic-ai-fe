@@ -1000,5 +1000,55 @@
       "googleLoginSuccess": "Google sign-in successful",
       "welcome": "Welcome, {{name}}."
     }
+  },
+  "passwordReset": {
+    "eyebrow": "ACCOUNT RECOVERY",
+    "backToSignIn": "Back to sign in",
+    "backToEmail": "Use a different email",
+    "securityNote": "For your security, verification codes are short-lived and can only be used once.",
+    "request": {
+      "title": "Reset your password",
+      "description": "Enter the email address associated with your account. We will send a verification code if the account exists.",
+      "email": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "submit": "Send verification code",
+      "sending": "Sending code…",
+      "genericSuccess": "If that email is registered, a verification code will be sent."
+    },
+    "otp": {
+      "title": "Verify your email",
+      "description": "Enter the six-digit code sent to your email to continue.",
+      "code": "6-digit verification code",
+      "verify": "Verify code",
+      "verifying": "Verifying…",
+      "didNotReceive": "Didn’t receive a code?",
+      "resend": "Send a new code",
+      "resendCountdown": "Resend in {{seconds}}s",
+      "resendSuccess": "If that email is registered, a new code will be sent.",
+      "verified": "Email verified."
+    },
+    "newPassword": {
+      "title": "Choose a new password",
+      "description": "Create a new password with at least 8 characters.",
+      "password": "New password",
+      "confirmPassword": "Confirm new password",
+      "submit": "Save new password",
+      "saving": "Saving password…",
+      "success": "Password reset successfully. Sign in with your new password."
+    },
+    "errors": {
+      "emailRequired": "Enter your email address.",
+      "emailInvalid": "Enter a valid email address.",
+      "unavailable": "Password reset is temporarily unavailable. Try again later.",
+      "requestFailed": "Could not start password reset. Try again later.",
+      "invalidOtp": "That code is invalid or expired.",
+      "tooManyAttempts": "Too many attempts. Request a new code.",
+      "verifyFailed": "Could not verify this code. Try again.",
+      "invalidResetToken": "This reset session is invalid or has expired. Request a new code.",
+      "passwordTooShort": "Use at least 8 characters.",
+      "passwordTooLong": "Use a shorter password.",
+      "passwordMismatch": "The passwords do not match.",
+      "resetFailed": "Could not reset your password. Request a new code and try again."
+    }
   }
 }

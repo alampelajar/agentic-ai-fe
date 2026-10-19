@@ -21,6 +21,9 @@ vi.mock('@/stores/auth-store', () => ({
 vi.mock('@tanstack/react-router', async (importOriginal) => ({
   ...await importOriginal<typeof import('@tanstack/react-router')>(),
   useNavigate: () => mocks.navigate,
+  Link: ({ to, children, className }: { to: string; children: React.ReactNode; className?: string }) => (
+    <a href={to} className={className}>{children}</a>
+  ),
 }))
 vi.mock('@react-oauth/google', () => ({ GoogleLogin: () => null }))
 vi.mock('sonner', () => ({
@@ -43,7 +46,7 @@ describe('UserAuthForm', () => {
 
     await expect.element(screen.getByRole('textbox', { name: 'Email address' })).toBeInTheDocument()
     await expect.element(screen.getByLabelText('Password')).toBeInTheDocument()
-    await expect.element(screen.getByRole('button', { name: 'Forgot password?' })).toBeInTheDocument()
+    await expect.element(screen.getByRole('link', { name: 'Forgot password?' })).toBeInTheDocument()
     await expect.element(screen.getByRole('button', { name: 'Sign in' })).toBeInTheDocument()
   })
 
