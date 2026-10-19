@@ -574,15 +574,19 @@
     "viewAll": "Lihat Semua",
     "reset": "Atur Ulang"
   },
-  "navigation": {
-    "upgradeToPro": "Upgrade ke Pro",
-    "billing": "Tagihan",
-    "signOut": "Keluar",
-    "groups": {
-      "CHAT": "Chat",
-      "AI Workspace": "Ruang Kerja AI",
-      "Settings": "Pengaturan"
-    }
+ "navigation": {
+  "upgradeToPro": "Upgrade ke Pro",
+  "billing": "Tagihan",
+  "signOut": "Keluar",
+  "profile": "Profil",
+  "settings": "Pengaturan",
+  "newTeam": "Tim Baru",
+  "groups": {
+    "CHAT": "Chat",
+    "AI Workspace": "Ruang Kerja AI",
+    "Settings": "Pengaturan"
+  
+}
   },
   "sidebar": {
     "smartAgentic": "SMART AGENTIC"
@@ -840,5 +844,6 @@
   "dataTable": {
     "reset": "Atur Ulang"
   },
-  "toggleNavigation": "Buka/tutup navigasi"
+  "toggleNavigation": "Buka/tutup navigasi",
+  "paidModels": "Model Berbayar"
 }

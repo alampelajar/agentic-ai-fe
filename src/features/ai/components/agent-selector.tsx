@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { useAuthStore } from "@/stores/auth-store";
 
-const API_URL = "http://localhost:8080";
+const API_URL = "http://localhost:8081";
 
 // ============================================================
 // TYPES

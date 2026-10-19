@@ -575,14 +575,18 @@
     "reset": "Reset"
   },
   "navigation": {
-    "upgradeToPro": "Upgrade to Pro",
-    "billing": "Billing",
-    "signOut": "Sign out",
-    "groups": {
-      "CHAT": "Chat",
-      "AI Workspace": "AI Workspace",
-      "Settings": "Settings"
-    }
+  "upgradeToPro": "Upgrade to Pro",
+  "billing": "Billing",
+  "signOut": "Sign out",
+  "profile": "Profile",
+  "settings": "Settings",
+  "newTeam": "New Team",
+  "groups": {
+    "CHAT": "Chat",
+    "AI Workspace": "AI Workspace",
+    "Settings": "Settings"
+  
+}
   },
   "sidebar": {
     "smartAgentic": "SMART AGENTIC"
@@ -609,6 +613,7 @@
         "emailRequired": "Email is required.",
         "emailInvalid": "Invalid email format.",
         "passwordRequired": "Password is required."
+        
       }
     },
     "signUp": {
@@ -837,8 +842,11 @@
       "backToHome": "Back to Home"
     }
   },
+ 
   "dataTable": {
     "reset": "Reset"
   },
-  "toggleNavigation": "Toggle navigation"
+  "toggleNavigation": "Toggle navigation",
+  "paidModels": "Paid Models"
 }
+

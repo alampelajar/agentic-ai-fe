@@ -22,7 +22,7 @@ import {
   type AgentModel,
 } from './components/agent-selector'
 
-const API_URL = 'http://localhost:8080'
+const API_URL = 'http://localhost:8081'
 
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024

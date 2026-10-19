@@ -24,7 +24,7 @@ import { getCurrentUser } from "@/lib/api-auth";
 
 import i18n from "@/i18n";
 
-const API_URL = "http://localhost:8080";
+const API_URL = "http://localhost:8081";
 
 export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
   const defaultOpen = getCookie("sidebar_state") !== "false";

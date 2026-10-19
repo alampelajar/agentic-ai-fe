@@ -1,3 +1,4 @@
+
 import {
   LayoutDashboard,
   Monitor,
@@ -12,6 +13,7 @@ import {
   GalleryVerticalEnd,
   AudioWaveform,
   Bot,
+  CreditCard,
 } from "lucide-react";
 
 import { type SidebarData } from "../types";
@@ -110,6 +112,14 @@ export const sidebarData: SidebarData = {
           title: "tools",
           url: "/apps",
           icon: Package,
+        },
+
+        /* Paid Models */
+
+        {
+          title: "paidModels",
+          url: "/paid-models",
+          icon: CreditCard,
         },
       ],
     },

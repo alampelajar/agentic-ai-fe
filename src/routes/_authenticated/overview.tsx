@@ -14,7 +14,7 @@ import { useAuthStore } from '@/stores/auth-store'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
-const API_URL = 'http://localhost:8080'
+const API_URL = 'http://localhost:8081'
 
 // ============================================================
 // ROUTE

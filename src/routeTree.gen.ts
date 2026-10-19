@@ -23,6 +23,7 @@ import { Route as errors500RouteImport } from './routes/(errors)/500'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedOverviewRouteImport } from './routes/_authenticated/overview'
+import { Route as AuthenticatedPaidModelsRouteImport } from './routes/_authenticated/paid-models'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as ClerkauthRouteRouteImport } from './routes/clerk/(auth)/route'
@@ -112,6 +113,11 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
 const AuthenticatedOverviewRoute = AuthenticatedOverviewRouteImport.update({
   id: '/overview',
   path: '/overview',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPaidModelsRoute = AuthenticatedPaidModelsRouteImport.update({
+  id: '/paid-models',
+  path: '/paid-models',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
@@ -245,6 +251,7 @@ export interface FileRoutesByFullPath {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/overview': typeof AuthenticatedOverviewRoute
+  '/paid-models': typeof AuthenticatedPaidModelsRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
@@ -277,6 +284,7 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/overview': typeof AuthenticatedOverviewRoute
+  '/paid-models': typeof AuthenticatedPaidModelsRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
@@ -315,6 +323,7 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/_authenticated/overview': typeof AuthenticatedOverviewRoute
+  '/_authenticated/paid-models': typeof AuthenticatedPaidModelsRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
@@ -352,6 +361,7 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/overview'
+    | '/paid-models'
     | '/profile'
     | '/errors/$error'
     | '/settings/account'
@@ -384,6 +394,7 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/overview'
+    | '/paid-models'
     | '/profile'
     | '/'
     | '/errors/$error'
@@ -421,6 +432,7 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/_authenticated/overview'
+    | '/_authenticated/paid-models'
     | '/_authenticated/profile'
     | '/_authenticated/'
     | '/_authenticated/errors/$error'
@@ -550,18 +562,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/profile': {
-      id: '/_authenticated/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof AuthenticatedProfileRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/overview': {
       id: '/_authenticated/overview'
       path: '/overview'
       fullPath: '/overview'
       preLoaderRoute: typeof AuthenticatedOverviewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/paid-models': {
+      id: '/_authenticated/paid-models'
+      path: '/paid-models'
+      fullPath: '/paid-models'
+      preLoaderRoute: typeof AuthenticatedPaidModelsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/settings': {
@@ -733,6 +752,7 @@ const AuthenticatedSettingsRouteRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedOverviewRoute: typeof AuthenticatedOverviewRoute
+  AuthenticatedPaidModelsRoute: typeof AuthenticatedPaidModelsRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
@@ -749,6 +769,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedOverviewRoute: AuthenticatedOverviewRoute,
+  AuthenticatedPaidModelsRoute: AuthenticatedPaidModelsRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,

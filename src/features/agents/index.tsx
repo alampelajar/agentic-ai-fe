@@ -45,7 +45,7 @@ import { PageLoading } from '@/components/layout/page-loading'
 // CONSTANT
 // ============================================================
 
-const API_URL = 'http://localhost:8080'
+const API_URL = 'http://localhost:8081'
 
 // ============================================================
 // TYPES

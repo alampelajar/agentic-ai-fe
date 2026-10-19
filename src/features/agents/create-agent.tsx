@@ -29,7 +29,7 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { useAuthStore } from '@/stores/auth-store'
 import i18n from '@/i18n'
 
-const API_URL = 'http://localhost:8080'
+const API_URL = 'http://localhost:8081'
 
 type ToolCardProps = {
   icon: React.ElementType

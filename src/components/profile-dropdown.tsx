@@ -1,4 +1,6 @@
+
 import { Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 import useDialogState from '@/hooks/use-dialog-state'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -18,12 +20,16 @@ import { getAvatarSrc } from '@/lib/avatar-presets'
 
 export function ProfileDropdown() {
   const [open, setOpen] = useDialogState()
+  const { t } = useTranslation()
 
   const user = useAuthStore((state) => state.auth.user)
 
   const name = user?.name || 'User'
   const email = user?.email || 'No email'
-  const avatar = getAvatarSrc(user?.avatar, user?.accountNo || user?.email || name)
+  const avatar = getAvatarSrc(
+    user?.avatar,
+    user?.accountNo || user?.email || name
+  )
 
   const initials = name
     .trim()
@@ -46,7 +52,6 @@ export function ProfileDropdown() {
                 src={avatar}
                 alt={name}
               />
-
               <AvatarFallback>
                 {initials || 'U'}
               </AvatarFallback>
@@ -64,7 +69,6 @@ export function ProfileDropdown() {
               <p className='text-sm leading-none font-medium'>
                 {name}
               </p>
-
               <p className='text-xs leading-none text-muted-foreground'>
                 {email}
               </p>
@@ -75,8 +79,8 @@ export function ProfileDropdown() {
 
           <DropdownMenuGroup>
             <DropdownMenuItem asChild>
-              <Link to='/settings/account'>
-                Profile
+              <Link to='/profile'>
+                {t('navigation.profile')}
                 <DropdownMenuShortcut>
                   ⇧⌘P
                 </DropdownMenuShortcut>
@@ -85,7 +89,7 @@ export function ProfileDropdown() {
 
             <DropdownMenuItem asChild>
               <Link to='/settings'>
-                Billing
+                {t('navigation.billing')}
                 <DropdownMenuShortcut>
                   ⌘B
                 </DropdownMenuShortcut>
@@ -94,7 +98,7 @@ export function ProfileDropdown() {
 
             <DropdownMenuItem asChild>
               <Link to='/settings'>
-                Settings
+                {t('navigation.settings')}
                 <DropdownMenuShortcut>
                   ⌘S
                 </DropdownMenuShortcut>
@@ -102,7 +106,7 @@ export function ProfileDropdown() {
             </DropdownMenuItem>
 
             <DropdownMenuItem>
-              New Team
+              {t('navigation.newTeam')}
             </DropdownMenuItem>
           </DropdownMenuGroup>
 
@@ -112,8 +116,7 @@ export function ProfileDropdown() {
             variant='destructive'
             onClick={() => setOpen(true)}
           >
-            Sign out
-
+            {t('navigation.signOut')}
             <DropdownMenuShortcut className='text-current'>
               ⇧⌘Q
             </DropdownMenuShortcut>
