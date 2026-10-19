@@ -1000,5 +1000,55 @@
       "googleLoginSuccess": "Berhasil masuk dengan Google",
       "welcome": "Selamat datang, {{name}}."
     }
+  },
+  "passwordReset": {
+    "eyebrow": "PEMULIHAN AKUN",
+    "backToSignIn": "Kembali ke halaman masuk",
+    "backToEmail": "Gunakan email lain",
+    "securityNote": "Demi keamanan, kode verifikasi hanya berlaku sebentar dan hanya dapat digunakan sekali.",
+    "request": {
+      "title": "Atur ulang kata sandi",
+      "description": "Masukkan email yang terhubung ke akun kamu. Kode verifikasi akan dikirim jika akun terdaftar.",
+      "email": "Alamat email",
+      "emailPlaceholder": "nama@contoh.com",
+      "submit": "Kirim kode verifikasi",
+      "sending": "Mengirim kode…",
+      "genericSuccess": "Jika email terdaftar, kode verifikasi akan dikirim."
+    },
+    "otp": {
+      "title": "Verifikasi email",
+      "description": "Masukkan kode enam digit yang dikirim ke email untuk melanjutkan.",
+      "code": "Kode verifikasi 6 digit",
+      "verify": "Verifikasi kode",
+      "verifying": "Memverifikasi…",
+      "didNotReceive": "Belum menerima kode?",
+      "resend": "Kirim kode baru",
+      "resendCountdown": "Kirim ulang dalam {{seconds}} detik",
+      "resendSuccess": "Jika email terdaftar, kode baru akan dikirim.",
+      "verified": "Email berhasil diverifikasi."
+    },
+    "newPassword": {
+      "title": "Buat kata sandi baru",
+      "description": "Buat kata sandi baru dengan minimal 8 karakter.",
+      "password": "Kata sandi baru",
+      "confirmPassword": "Konfirmasi kata sandi baru",
+      "submit": "Simpan kata sandi baru",
+      "saving": "Menyimpan kata sandi…",
+      "success": "Kata sandi berhasil direset. Silakan masuk menggunakan kata sandi baru."
+    },
+    "errors": {
+      "emailRequired": "Masukkan alamat email.",
+      "emailInvalid": "Masukkan alamat email yang valid.",
+      "unavailable": "Reset kata sandi sedang tidak tersedia. Coba lagi nanti.",
+      "requestFailed": "Permintaan reset kata sandi gagal. Coba lagi nanti.",
+      "invalidOtp": "Kode tidak valid atau sudah kedaluwarsa.",
+      "tooManyAttempts": "Terlalu banyak percobaan. Minta kode baru.",
+      "verifyFailed": "Kode tidak dapat diverifikasi. Coba lagi.",
+      "invalidResetToken": "Sesi reset tidak valid atau kedaluwarsa. Minta kode baru.",
+      "passwordTooShort": "Gunakan minimal 8 karakter.",
+      "passwordTooLong": "Gunakan kata sandi yang lebih pendek.",
+      "passwordMismatch": "Konfirmasi kata sandi tidak cocok.",
+      "resetFailed": "Kata sandi gagal direset. Minta kode baru lalu coba lagi."
+    }
   }
 }

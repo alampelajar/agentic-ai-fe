@@ -43,7 +43,7 @@ describe('UserAuthForm', () => {
 
     await expect.element(screen.getByRole('textbox', { name: 'Email address' })).toBeInTheDocument()
     await expect.element(screen.getByLabelText('Password')).toBeInTheDocument()
-    await expect.element(screen.getByRole('button', { name: 'Forgot password?' })).toBeInTheDocument()
+    await expect.element(screen.getByRole('link', { name: 'Forgot password?' })).toBeInTheDocument()
     await expect.element(screen.getByRole('button', { name: 'Sign in' })).toBeInTheDocument()
   })
 
