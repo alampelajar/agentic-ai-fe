@@ -53,7 +53,7 @@ describe('OtpForm', () => {
 
     await vi.waitFor(() => {
       expect(fetchMock).toHaveBeenCalledWith(
-        'http://localhost:8081/api/auth/forgot-password/verify',
+        'http://localhost:8080/api/auth/forgot-password/verify',
         expect.objectContaining({
           method: 'POST',
           body: JSON.stringify({ email: 'a@b.com', otp: '123456' }),
@@ -75,7 +75,7 @@ describe('OtpForm', () => {
 
     await vi.waitFor(() => {
       expect(fetchMock).toHaveBeenCalledWith(
-        'http://localhost:8081/api/auth/forgot-password/reset',
+        'http://localhost:8080/api/auth/forgot-password/reset',
         expect.objectContaining({
           method: 'POST',
           body: JSON.stringify({
