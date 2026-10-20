@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import {
   BadgeCheck,
@@ -39,10 +40,26 @@ export function NavUser() {
   const { t } = useTranslation()
 
   const user = useAuthStore((state) => state.auth.user)
+  const avatarStorageKey = `agentic-ai-profile-avatar:${user?.accountNo || user?.email || user?.name || 'User'}`
+  const [customAvatar, setCustomAvatar] = useState<string | null>(null)
+
+  useEffect(() => {
+    try {
+      setCustomAvatar(window.localStorage.getItem(avatarStorageKey))
+    } catch {
+      setCustomAvatar(null)
+    }
+    const handleAvatarUpdate = (event: Event) => {
+      const detail = (event as CustomEvent<string | null>).detail
+      setCustomAvatar(typeof detail === 'string' ? detail : null)
+    }
+    window.addEventListener('agentic-ai-avatar-updated', handleAvatarUpdate)
+    return () => window.removeEventListener('agentic-ai-avatar-updated', handleAvatarUpdate)
+  }, [avatarStorageKey])
 
   const name = user?.name || 'User'
   const email = user?.email || 'No email'
-  const avatar = getAvatarSrc(user?.avatar, user?.accountNo || user?.email || name)
+  const avatar = customAvatar || getAvatarSrc(user?.avatar, user?.accountNo || user?.email || name)
 
   const initials = name
     .trim()
