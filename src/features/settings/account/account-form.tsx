@@ -38,7 +38,7 @@ export function AccountForm() {
     () => (name || 'U').trim().split(/\s+/).map((word) => word[0]).join('').slice(0, 2).toUpperCase(),
     [name]
   )
-  const selectedPreset = getAvatarPresetId(avatar)
+  const selectedPreset = customPhoto ? null : getAvatarPresetId(avatar)
   const previewAvatar = customPhoto || getAvatarSrc(avatar, seed)
   const localPhotoKey = `agentic-ai-profile-avatar:${authUser?.accountNo || authUser?.email || authUser?.name || seed}`
 
@@ -75,6 +75,7 @@ export function AccountForm() {
         try {
           window.localStorage.setItem(localPhotoKey, dataUrl)
           setCustomPhoto(dataUrl)
+          window.dispatchEvent(new CustomEvent('agentic-ai-avatar-updated', { detail: dataUrl }))
           setNotice({ kind: 'success', text: isIndonesian ? 'Foto profil berhasil diperbarui di browser ini.' : 'Profile photo updated in this browser.' })
         } catch {
           setNotice({ kind: 'error', text: isIndonesian ? 'Penyimpanan browser penuh. Coba gambar yang lebih kecil.' : 'Browser storage is full. Try a smaller image.' })
@@ -209,6 +210,7 @@ export function AccountForm() {
               onClick={() => {
                 window.localStorage.removeItem(localPhotoKey)
                 setCustomPhoto(null)
+                window.dispatchEvent(new CustomEvent('agentic-ai-avatar-updated', { detail: null }))
                 setNotice({ kind: 'success', text: isIndonesian ? 'Foto kembali ke avatar bawaan.' : 'Restored the default avatar.' })
               }}
             >
@@ -256,6 +258,11 @@ export function AccountForm() {
                 aria-pressed={isSelected}
                 aria-label={preset.label}
                 onClick={() => {
+                  if (customPhoto) {
+                    window.localStorage.removeItem(localPhotoKey)
+                    setCustomPhoto(null)
+                    window.dispatchEvent(new CustomEvent('agentic-ai-avatar-updated', { detail: null }))
+                  }
                   setAvatar(avatarPresetValue(preset.id))
                   setNotice(null)
                 }}
