@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import useDialogState from '@/hooks/use-dialog-state'
@@ -22,7 +22,6 @@ export function ProfileDropdown() {
   const [open, setOpen] = useDialogState()
   const { t } = useTranslation()
   const user = useAuthStore((state) => state.auth.user)
-  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const name = user?.name || 'User'
   const email = user?.email || 'No email'
@@ -51,58 +50,6 @@ export function ProfileDropdown() {
     }
   }, [avatarStorageKey])
 
-  const handleAvatarSelection = (file?: File) => {
-    if (!file) return
-
-    if (!file.type.startsWith('image/')) {
-      window.alert(t('navigation.avatarInvalidFile'))
-      return
-    }
-
-    const reader = new FileReader()
-    reader.onerror = () => window.alert(t('navigation.avatarUploadFailed'))
-    reader.onload = () => {
-      const image = new Image()
-      image.onerror = () => window.alert(t('navigation.avatarUploadFailed'))
-      image.onload = () => {
-        const maxSize = 512
-        const scale = Math.min(1, maxSize / Math.max(image.width, image.height))
-        const canvas = document.createElement('canvas')
-        canvas.width = Math.max(1, Math.round(image.width * scale))
-        canvas.height = Math.max(1, Math.round(image.height * scale))
-
-        const context = canvas.getContext('2d')
-        if (!context) {
-          window.alert(t('navigation.avatarUploadFailed'))
-          return
-        }
-
-        context.drawImage(image, 0, 0, canvas.width, canvas.height)
-        const compressedAvatar = canvas.toDataURL('image/jpeg', 0.82)
-
-        try {
-          window.localStorage.setItem(avatarStorageKey, compressedAvatar)
-          setCustomAvatar(compressedAvatar)
-          window.dispatchEvent(new CustomEvent('agentic-ai-avatar-updated', { detail: compressedAvatar }))
-        } catch {
-          window.alert(t('navigation.avatarStorageFull'))
-        }
-      }
-      image.src = String(reader.result)
-    }
-    reader.readAsDataURL(file)
-  }
-
-  const handleRemoveAvatar = () => {
-    try {
-      window.localStorage.removeItem(avatarStorageKey)
-      setCustomAvatar(null)
-      window.dispatchEvent(new CustomEvent('agentic-ai-avatar-updated', { detail: null }))
-    } catch {
-      window.alert(t('navigation.avatarUploadFailed'))
-    }
-  }
-
   const initials = name
     .trim()
     .split(/\\s+/)
@@ -113,18 +60,6 @@ export function ProfileDropdown() {
 
   return (
     <>
-      <input
-        ref={fileInputRef}
-        type='file'
-        accept='image/*'
-        className='hidden'
-        aria-label={t('navigation.changeAvatar')}
-        onChange={(event) => {
-          handleAvatarSelection(event.currentTarget.files?.[0])
-          event.currentTarget.value = ''
-        }}
-      />
-
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button
@@ -162,20 +97,6 @@ export function ProfileDropdown() {
           <DropdownMenuSeparator />
 
           <DropdownMenuGroup>
-            <DropdownMenuItem
-              onSelect={(event) => {
-                event.preventDefault()
-                fileInputRef.current?.click()
-              }}
-            >
-              {t('navigation.changeAvatar')}
-            </DropdownMenuItem>
-            {customAvatar && (
-              <DropdownMenuItem onSelect={handleRemoveAvatar}>
-                {t('navigation.removeAvatar')}
-              </DropdownMenuItem>
-            )}
-
             <DropdownMenuSeparator />
 
             <DropdownMenuItem asChild>
