@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
-import { Check, LoaderCircle, Pencil, RotateCcw, Trash2, UserRound } from 'lucide-react'
+import { Camera, Check, Eye, Folder, LoaderCircle, Pencil, RotateCcw, Trash2, UserRound } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { getCurrentUser, updateCurrentUserProfile } from '@/lib/api-auth'
 import {
   AVATAR_PRESETS,
@@ -21,6 +22,7 @@ export function AccountForm() {
   const { t, i18n } = useTranslation()
   const isIndonesian = (i18n.resolvedLanguage ?? i18n.language).toLowerCase().startsWith('id')
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const cameraInputRef = useRef<HTMLInputElement>(null)
   const [customPhoto, setCustomPhoto] = useState<string | null>(null)
   const [photoPreviewOpen, setPhotoPreviewOpen] = useState(false)
   const [pendingAvatarAction, setPendingAvatarAction] = useState<{ type: 'preset'; value: string; label: string } | { type: 'remove' } | null>(null)
@@ -167,7 +169,19 @@ export function AccountForm() {
             type='file'
             accept='image/*'
             className='hidden'
-            aria-label={isIndonesian ? 'Ubah foto profil' : 'Change profile photo'}
+            aria-label={isIndonesian ? 'Unggah foto profil' : 'Upload profile photo'}
+            onChange={(event) => {
+              onPhotoFileChange(event.currentTarget.files?.[0])
+              event.currentTarget.value = ''
+            }}
+          />
+          <input
+            ref={cameraInputRef}
+            type='file'
+            accept='image/*'
+            capture='user'
+            className='hidden'
+            aria-label={isIndonesian ? 'Ambil foto profil' : 'Take profile photo'}
             onChange={(event) => {
               onPhotoFileChange(event.currentTarget.files?.[0])
               event.currentTarget.value = ''
@@ -185,35 +199,51 @@ export function AccountForm() {
                 <AvatarFallback className='text-2xl'>{initials || 'U'}</AvatarFallback>
               </Avatar>
             </button>
-            {customPhoto && (
-              <Button
-                type='button'
-                size='icon'
-                variant='destructive'
-                aria-label={isIndonesian ? 'Hapus foto profil' : 'Delete profile photo'}
-                title={isIndonesian ? 'Hapus foto profil' : 'Delete profile photo'}
-                onClick={() => setPendingAvatarAction({ type: 'remove' })}
-                className='absolute bottom-0 left-0 size-9 rounded-full border-2 border-background shadow-md'
-              >
-                <Trash2 className='size-4 text-white' />
-              </Button>
-            )}
-            <Button
-              type='button'
-              size='icon'
-              variant='secondary'
-              aria-label={isIndonesian ? 'Ubah foto profil' : 'Edit profile photo'}
-              title={isIndonesian ? 'Ubah foto profil' : 'Edit profile photo'}
-              onClick={() => fileInputRef.current?.click()}
-              className='absolute right-0 bottom-0 size-9 rounded-full border-2 border-background shadow-md'
-            >
-              <Pencil className='size-4' />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  type='button'
+                  size='icon'
+                  variant='secondary'
+                  aria-label={isIndonesian ? 'Opsi foto profil' : 'Profile photo options'}
+                  title={isIndonesian ? 'Opsi foto profil' : 'Profile photo options'}
+                  className='absolute right-0 bottom-0 size-9 rounded-full border-2 border-background shadow-md'
+                >
+                  <Pencil className='size-4' />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align='start' side='right' className='w-56'>
+                <DropdownMenuItem onSelect={() => setPhotoPreviewOpen(true)}>
+                  <Eye className='me-2 size-4' />
+                  {isIndonesian ? 'Lihat foto' : 'View photo'}
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => cameraInputRef.current?.click()}>
+                  <Camera className='me-2 size-4' />
+                  {isIndonesian ? 'Ambil foto' : 'Take photo'}
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => fileInputRef.current?.click()}>
+                  <Folder className='me-2 size-4' />
+                  {isIndonesian ? 'Unggah foto' : 'Upload photo'}
+                </DropdownMenuItem>
+                {customPhoto && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      className='text-destructive focus:text-destructive'
+                      onSelect={() => setPendingAvatarAction({ type: 'remove' })}
+                    >
+                      <Trash2 className='me-2 size-4 text-destructive' />
+                      {isIndonesian ? 'Hapus foto' : 'Remove photo'}
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           <p className='mt-4 max-w-full truncate font-semibold'>{name || t('settingsPage.account.namePlaceholder')}</p>
           <p className='mt-1 max-w-full truncate text-sm text-muted-foreground'>{email || t('settingsPage.account.email')}</p>
           <p className='mt-4 text-xs leading-5 text-muted-foreground'>
-            {isIndonesian ? 'Klik foto untuk melihat ukuran penuh. Tekan ikon pensil untuk mengganti foto.' : 'Click the photo to view it larger. Use the pencil icon to change it.'}
+            {isIndonesian ? 'Tekan ikon pensil untuk melihat, mengambil, mengunggah, atau menghapus foto.' : 'Click the pencil icon to view, take, upload, or remove your photo.'}
           </p>
 
         </section>
