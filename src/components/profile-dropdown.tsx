@@ -35,6 +35,15 @@ export function ProfileDropdown() {
   const avatar = customAvatar || defaultAvatar
 
   useEffect(() => {
+    const handleAvatarUpdate = (event: Event) => {
+      const detail = (event as CustomEvent<string | null>).detail
+      setCustomAvatar(typeof detail === 'string' ? detail : null)
+    }
+    window.addEventListener('agentic-ai-avatar-updated', handleAvatarUpdate)
+    return () => window.removeEventListener('agentic-ai-avatar-updated', handleAvatarUpdate)
+  }, [])
+
+  useEffect(() => {
     try {
       setCustomAvatar(window.localStorage.getItem(avatarStorageKey))
     } catch {
@@ -74,6 +83,7 @@ export function ProfileDropdown() {
         try {
           window.localStorage.setItem(avatarStorageKey, compressedAvatar)
           setCustomAvatar(compressedAvatar)
+          window.dispatchEvent(new CustomEvent('agentic-ai-avatar-updated', { detail: compressedAvatar }))
         } catch {
           window.alert(t('navigation.avatarStorageFull'))
         }
@@ -87,6 +97,7 @@ export function ProfileDropdown() {
     try {
       window.localStorage.removeItem(avatarStorageKey)
       setCustomAvatar(null)
+      window.dispatchEvent(new CustomEvent('agentic-ai-avatar-updated', { detail: null }))
     } catch {
       window.alert(t('navigation.avatarUploadFailed'))
     }
