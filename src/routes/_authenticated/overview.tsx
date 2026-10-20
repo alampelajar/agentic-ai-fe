@@ -11,10 +11,11 @@ import {
   Sparkles,
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
+import { API_BASE_URL } from '@/lib/api-config'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
-const API_URL = 'http://localhost:8081'
+const API_URL = API_BASE_URL
 
 // ============================================================
 // ROUTE

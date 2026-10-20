@@ -1,12 +1,11 @@
 import { useAuthStore } from '@/stores/auth-store'
-
-const API_URL = 'http://localhost:8081'
+import { API_BASE_URL } from '@/lib/api-config'
 
 let refreshPromise: Promise<string> | null = null
 
 async function refreshAccessToken() {
   const response = await fetch(
-    `${API_URL}/api/auth/refresh`,
+    `${API_BASE_URL}/api/auth/refresh`,
     {
       method: 'POST',
       headers: {
@@ -68,7 +67,7 @@ export async function apiFetch(
   }
 
   let response = await fetch(
-    `${API_URL}${path}`,
+    `${API_BASE_URL}${path}`,
     {
       ...options,
       headers,
@@ -89,7 +88,7 @@ export async function apiFetch(
 
       // Ulangi request setelah mendapatkan token baru
       response = await fetch(
-        `${API_URL}${path}`,
+        `${API_BASE_URL}${path}`,
         {
           ...options,
           headers,

@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { getCookie } from "@/lib/cookies";
+import { API_BASE_URL } from "@/lib/api-config";
 import { cn } from "@/lib/utils";
 
 import { LayoutProvider } from "@/context/layout-provider";
@@ -64,7 +65,6 @@ function LanguageFlag({ language }: { language: "id" | "en" }) {
   );
 }
 
-const API_URL = "http://localhost:8081";
 
 export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
   const defaultOpen = getCookie("sidebar_state") !== "false";
@@ -91,7 +91,7 @@ export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
   const checkMaintenance = async () => {
     try {
       const response = await fetch(
-        `${API_URL}/api/system/maintenance`,
+        `${API_BASE_URL}/api/system/maintenance`,
         {
           method: "GET",
           cache: "no-store",
