@@ -97,8 +97,6 @@ export function ProfileDropdown() {
           <DropdownMenuSeparator />
 
           <DropdownMenuGroup>
-            <DropdownMenuSeparator />
-
             <DropdownMenuItem asChild>
               <Link to='/profile'>
                 {t('navigation.profile')}
