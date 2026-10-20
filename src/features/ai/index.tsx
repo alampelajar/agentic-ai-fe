@@ -12,6 +12,7 @@ import {
   User,
   X,
 } from 'lucide-react'
+import { API_BASE_URL } from '@/lib/api-config'
 import { useAuthStore } from '@/stores/auth-store'
 import { addTaskMessage, createTask, getTask, getTaskMessages, updateTask } from '@/features/tasks/data/api'
 import { Main } from '@/components/layout/main'
@@ -21,9 +22,6 @@ import {
   type Agent,
   type AgentModel,
 } from './components/agent-selector'
-
-const API_URL = 'http://localhost:8081'
-
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024
 
@@ -249,7 +247,7 @@ export function AIAssistant() {
         if (task.agent_id) {
           try {
             const agentResponse = await fetch(
-              `${API_URL}/api/agents/${task.agent_id}`,
+              `${API_BASE_URL}/api/agents/${task.agent_id}`,
               {
                 headers: {
                   Authorization: `Bearer ${accessToken}`,
@@ -513,7 +511,7 @@ export function AIAssistant() {
     history: ChatHistoryItem[],
     hasImage: boolean
   ) => {
-    const response = await fetch(`${API_URL}/api/agent/plan`, {
+    const response = await fetch(`${API_BASE_URL}/api/agent/plan`, {
       method: 'POST',
 
       headers: {
@@ -571,7 +569,7 @@ export function AIAssistant() {
     const headers: HeadersInit = {}
     if (accessToken) headers.Authorization = `Bearer ${accessToken}`
 
-    const response = await fetch(`${API_URL}/api/chat`, {
+    const response = await fetch(`${API_BASE_URL}/api/chat`, {
       method: 'POST',
       headers,
       body: formData,
@@ -665,7 +663,7 @@ export function AIAssistant() {
 
     setProgress(35)
 
-    const response = await fetch(`${API_URL}/api/generator/landing-page`, {
+    const response = await fetch(`${API_BASE_URL}/api/generator/landing-page`, {
       method: 'POST',
       headers,
       body: formData,

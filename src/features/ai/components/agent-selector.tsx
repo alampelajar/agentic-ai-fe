@@ -3,9 +3,8 @@ import { createPortal } from "react-dom";
 import { Bot, Check, ChevronDown, Cpu } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+import { API_BASE_URL } from "@/lib/api-config";
 import { useAuthStore } from "@/stores/auth-store";
-
-const API_URL = "http://localhost:8081";
 
 // ============================================================
 // TYPES
@@ -119,7 +118,7 @@ export function AgentSelector({
       setError(null);
 
       try {
-        const response = await fetch(`${API_URL}/api/agents`, {
+        const response = await fetch(`${API_BASE_URL}/api/agents`, {
           method: "GET",
           headers: {
             ...(accessToken

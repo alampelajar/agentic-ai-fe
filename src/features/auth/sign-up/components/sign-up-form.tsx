@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 
+import { API_BASE_URL } from "@/lib/api-config";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -63,7 +64,7 @@ export function SignUpForm({
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8081/api/auth/register", {
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
