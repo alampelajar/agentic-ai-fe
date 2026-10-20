@@ -153,6 +153,7 @@ export function AccountForm() {
   }
 
   return (
+    <>
     <form onSubmit={onSubmit} className='space-y-8'>
       <div className='grid gap-6 lg:grid-cols-[240px_minmax(0,1fr)]'>
         <section className='flex flex-col items-center rounded-xl border bg-card p-6 text-center'>
@@ -326,5 +327,6 @@ export function AccountForm() {
           </div>
         </DialogContent>
       </Dialog>
+    </>
   )
 }
