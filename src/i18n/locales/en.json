@@ -106,7 +106,6 @@
     "cannotLoad": "Unable to load Agents",
     "checkBackend": "Check the backend connection.",
     "models": "Models",
-    "highlightsTitle": "Highlights",
     "system": "SYSTEM",
     "closeMenu": "Close menu",
     "noModels": "No models yet.",
@@ -894,6 +893,7 @@
     "freeNotice": "Free access and quotas may change over time",
     "paidNotice": "Visit provider sites for current pricing",
     "models": "Models",
+    "highlightsTitle": "Highlights",
     "highlights": {
       "claudeApi": "Claude API",
       "coding": "Coding",
