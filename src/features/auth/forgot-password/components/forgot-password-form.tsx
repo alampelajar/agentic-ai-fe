@@ -17,8 +17,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081').replace(/\/$/, '')
+import { API_BASE_URL } from '@/lib/api-config'
 
 type ForgotPasswordValues = {
   email: string

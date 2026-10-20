@@ -52,7 +52,7 @@ describe('ForgotPasswordForm', () => {
 
     await vi.waitFor(() => {
       expect(fetchMock).toHaveBeenCalledWith(
-        'http://localhost:8081/api/auth/forgot-password/request',
+        'http://localhost:8080/api/auth/forgot-password/request',
         expect.objectContaining({
           method: 'POST',
           body: JSON.stringify({ email: 'a@b.com' }),

@@ -26,10 +26,9 @@ import { Main } from '@/components/layout/main'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { ProfileDropdown } from '@/components/profile-dropdown'
+import { API_BASE_URL } from '@/lib/api-config'
 import { useAuthStore } from '@/stores/auth-store'
 import i18n from '@/i18n'
-
-const API_URL = 'http://localhost:8081'
 
 type ToolCardProps = {
   icon: React.ElementType
@@ -81,7 +80,7 @@ export function CreateAgent() {
     setSaving(true)
 
     try {
-      const response = await fetch(`${API_URL}/api/agents`, {
+      const response = await fetch(`${API_BASE_URL}/api/agents`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
