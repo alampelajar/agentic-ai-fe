@@ -106,7 +106,6 @@
     "cannotLoad": "Tidak dapat memuat Agent",
     "checkBackend": "Periksa koneksi backend.",
     "models": "Model",
-    "highlightsTitle": "Fitur Utama",
     "system": "SISTEM",
     "closeMenu": "Tutup menu",
     "noModels": "Belum ada model.",
@@ -894,6 +893,7 @@
     "freeNotice": "Akses dan kuota gratis dapat berubah sewaktu-waktu",
     "paidNotice": "Kunjungi situs penyedia untuk melihat harga terbaru",
     "models": "Model",
+    "highlightsTitle": "Fitur Utama",
     "highlights": {
       "claudeApi": "Claude API",
       "coding": "Coding",
