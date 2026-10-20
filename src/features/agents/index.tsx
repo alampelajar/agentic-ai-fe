@@ -20,6 +20,7 @@ import {
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '@/stores/auth-store'
+import { API_BASE_URL } from '@/lib/api-config'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -45,7 +46,7 @@ import { PageLoading } from '@/components/layout/page-loading'
 // CONSTANT
 // ============================================================
 
-const API_URL = 'http://localhost:8081'
+const API_URL = API_BASE_URL
 
 // ============================================================
 // TYPES
