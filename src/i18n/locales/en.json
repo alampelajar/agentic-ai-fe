@@ -106,6 +106,7 @@
     "cannotLoad": "Unable to load Agents",
     "checkBackend": "Check the backend connection.",
     "models": "Models",
+    "highlightsTitle": "Highlights",
     "system": "SYSTEM",
     "closeMenu": "Close menu",
     "noModels": "No models yet.",
