@@ -110,6 +110,7 @@ type EditModelForm = {
   modelID: string
   modelName: string
   description: string
+  agentID: string
 }
 
 type APIResponseData = Record<string, unknown>
@@ -271,6 +272,7 @@ export function Agents() {
     modelID: '',
     modelName: '',
     description: '',
+    agentID: '',
   })
   const [savingEditModel, setSavingEditModel] = useState(false)
   const [editModelError, setEditModelError] = useState('')
@@ -585,12 +587,13 @@ export function Agents() {
   // OPEN EDIT MODEL
   // ============================================================
 
-  const openEditModel = (model: AgentModel) => {
+  const openEditModel = (agent: DisplayAgent, model: AgentModel) => {
     setSelectedModelForEdit(model)
     setEditForm({
       modelID: model.model_id,
       modelName: model.name,
       description: model.description || '',
+      agentID: String(agent.id),
     })
     setEditModelError('')
     setEditModelOpen(true)
@@ -609,6 +612,7 @@ export function Agents() {
       modelID: '',
       modelName: '',
       description: '',
+      agentID: '',
     })
     setEditModelError('')
   }
@@ -635,6 +639,11 @@ export function Agents() {
       return
     }
 
+    if (!editForm.agentID) {
+      setEditModelError('Pilih satu Agent tujuan model.')
+      return
+    }
+
     setSavingEditModel(true)
 
     try {
@@ -654,6 +663,7 @@ export function Agents() {
             name: editForm.modelName.trim(),
             model_id: editForm.modelID.trim(),
             description: editForm.description.trim(),
+            agent_ids: [Number(editForm.agentID)],
           }),
         }
       )
@@ -1395,6 +1405,34 @@ export function Agents() {
               </div>
 
               <div className='space-y-2'>
+                <label className='text-sm font-medium'>Agent tujuan</label>
+                <Select
+                  value={editForm.agentID}
+                  onValueChange={(value) =>
+                    setEditForm((current) => ({
+                      ...current,
+                      agentID: value,
+                    }))
+                  }
+                  disabled={savingEditModel}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder='Pilih satu Agent' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {agents.map((agent) => (
+                      <SelectItem key={agent.id} value={String(agent.id)}>
+                        {agent.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className='text-xs text-muted-foreground'>
+                  Model akan dihubungkan hanya ke Agent yang dipilih. Relasi lama ke Agent lain akan dilepas.
+                </p>
+              </div>
+
+              <div className='space-y-2'>
                 <label className='text-sm font-medium'>{t('agentPage.addModel.modelName')}</label>
 
                 <Input
@@ -1653,7 +1691,7 @@ function AgentCard({
 }: {
   agent: DisplayAgent
   onAddModel: (agent: DisplayAgent) => void
-  onEditModel: (model: AgentModel) => void
+  onEditModel: (agent: DisplayAgent, model: AgentModel) => void
   onRemoveModel: (agent: DisplayAgent, model: AgentModel) => void
   onDeleteModel: (model: AgentModel) => void
 }) {
@@ -1824,7 +1862,7 @@ function AgentCard({
                               className='flex w-full items-center rounded-lg px-3 py-2 text-left text-xs transition-colors hover:bg-muted'
                               onClick={() => {
                                 setOpenModelMenu(null)
-                                onEditModel(model)
+                                onEditModel(agent, model)
                               }}
                             >
                               Edit Model
