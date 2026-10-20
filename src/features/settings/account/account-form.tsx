@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
-import { Check, LoaderCircle, Pencil, RotateCcw, UserRound } from 'lucide-react'
+import { Check, LoaderCircle, Pencil, RotateCcw, Trash2, UserRound } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -23,6 +23,7 @@ export function AccountForm() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [customPhoto, setCustomPhoto] = useState<string | null>(null)
   const [photoPreviewOpen, setPhotoPreviewOpen] = useState(false)
+  const [pendingAvatarAction, setPendingAvatarAction] = useState<{ type: 'preset'; value: string; label: string } | { type: 'remove' } | null>(null)
   const authUser = useAuthStore((state) => state.auth.user)
   const seed = authUser?.accountNo || authUser?.email || 'agentic-ai-user'
   const [name, setName] = useState('')
@@ -184,6 +185,19 @@ export function AccountForm() {
                 <AvatarFallback className='text-2xl'>{initials || 'U'}</AvatarFallback>
               </Avatar>
             </button>
+            {customPhoto && (
+              <Button
+                type='button'
+                size='icon'
+                variant='destructive'
+                aria-label={isIndonesian ? 'Hapus foto profil' : 'Delete profile photo'}
+                title={isIndonesian ? 'Hapus foto profil' : 'Delete profile photo'}
+                onClick={() => setPendingAvatarAction({ type: 'remove' })}
+                className='absolute bottom-0 left-0 size-9 rounded-full border-2 border-background shadow-md'
+              >
+                <Trash2 className='size-4 text-white' />
+              </Button>
+            )}
             <Button
               type='button'
               size='icon'
@@ -201,22 +215,7 @@ export function AccountForm() {
           <p className='mt-4 text-xs leading-5 text-muted-foreground'>
             {isIndonesian ? 'Klik foto untuk melihat ukuran penuh. Tekan ikon pensil untuk mengganti foto.' : 'Click the photo to view it larger. Use the pencil icon to change it.'}
           </p>
-          {customPhoto && (
-            <Button
-              type='button'
-              variant='ghost'
-              size='sm'
-              className='mt-2'
-              onClick={() => {
-                window.localStorage.removeItem(localPhotoKey)
-                setCustomPhoto(null)
-                window.dispatchEvent(new CustomEvent('agentic-ai-avatar-updated', { detail: null }))
-                setNotice({ kind: 'success', text: isIndonesian ? 'Foto kembali ke avatar bawaan.' : 'Restored the default avatar.' })
-              }}
-            >
-              {isIndonesian ? 'Gunakan avatar bawaan' : 'Use default avatar'}
-            </Button>
-          )}
+
         </section>
 
         <section className='space-y-5 rounded-xl border bg-card p-5 sm:p-6'>
@@ -257,15 +256,11 @@ export function AccountForm() {
                 type='button'
                 aria-pressed={isSelected}
                 aria-label={preset.label}
-                onClick={() => {
-                  if (customPhoto) {
-                    window.localStorage.removeItem(localPhotoKey)
-                    setCustomPhoto(null)
-                    window.dispatchEvent(new CustomEvent('agentic-ai-avatar-updated', { detail: null }))
-                  }
-                  setAvatar(avatarPresetValue(preset.id))
-                  setNotice(null)
-                }}
+                onClick={() => setPendingAvatarAction({
+                  type: 'preset',
+                  value: avatarPresetValue(preset.id),
+                  label: preset.label,
+                })}
                 className={[
                   'group flex min-h-28 flex-col items-center justify-center gap-2 rounded-xl border p-3 text-center transition-colors',
                   isSelected ? 'border-primary bg-primary/5 ring-2 ring-primary/20' : 'border-border hover:border-primary/50 hover:bg-accent/40',
@@ -330,6 +325,55 @@ export function AccountForm() {
             <Button type='button' onClick={() => { setPhotoPreviewOpen(false); fileInputRef.current?.click() }}>
               <Pencil className='me-2 size-4' />
               {isIndonesian ? 'Ubah foto' : 'Change photo'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={pendingAvatarAction !== null} onOpenChange={(open) => { if (!open) setPendingAvatarAction(null) }}>
+        <DialogContent className='max-w-md'>
+          <DialogHeader>
+            <DialogTitle>
+              {pendingAvatarAction?.type === 'remove'
+                ? (isIndonesian ? 'Hapus foto profil?' : 'Delete profile photo?')
+                : (isIndonesian ? 'Gunakan avatar ini?' : 'Use this avatar?')}
+            </DialogTitle>
+            <DialogDescription>
+              {pendingAvatarAction?.type === 'remove'
+                ? (isIndonesian ? 'Foto kustom akan dihapus dan avatar bawaan akan digunakan kembali.' : 'Your custom photo will be deleted and the default avatar will be used.')
+                : (isIndonesian ? `Avatar "${pendingAvatarAction?.type === 'preset' ? pendingAvatarAction.label : ''}" akan menggantikan foto profil saat ini. Lanjutkan?` : `The "${pendingAvatarAction?.type === 'preset' ? pendingAvatarAction.label : ''}" avatar will replace your current profile photo. Continue?`)}
+            </DialogDescription>
+          </DialogHeader>
+          <div className='flex justify-end gap-2'>
+            <Button type='button' variant='outline' onClick={() => setPendingAvatarAction(null)}>
+              {isIndonesian ? 'Tidak' : 'No'}
+            </Button>
+            <Button
+              type='button'
+              variant={pendingAvatarAction?.type === 'remove' ? 'destructive' : 'default'}
+              onClick={() => {
+                if (!pendingAvatarAction) return
+                if (pendingAvatarAction.type === 'remove') {
+                  try {
+                    window.localStorage.removeItem(localPhotoKey)
+                    setCustomPhoto(null)
+                    window.dispatchEvent(new CustomEvent('agentic-ai-avatar-updated', { detail: null }))
+                    setNotice({ kind: 'success', text: isIndonesian ? 'Foto profil berhasil dihapus.' : 'Profile photo deleted.' })
+                  } catch {
+                    setNotice({ kind: 'error', text: isIndonesian ? 'Foto tidak dapat dihapus.' : 'The photo could not be deleted.' })
+                  }
+                } else {
+                  if (customPhoto) {
+                    window.localStorage.removeItem(localPhotoKey)
+                    setCustomPhoto(null)
+                    window.dispatchEvent(new CustomEvent('agentic-ai-avatar-updated', { detail: null }))
+                  }
+                  setAvatar(pendingAvatarAction.value)
+                  setNotice(null)
+                }
+                setPendingAvatarAction(null)
+              }}
+            >
+              {isIndonesian ? 'Ya' : 'Yes'}
             </Button>
           </div>
         </DialogContent>
