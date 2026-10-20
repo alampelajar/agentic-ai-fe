@@ -575,6 +575,11 @@
     "reset": "Atur Ulang"
   },
   "navigation": {
+    "changeAvatar": "Ganti foto profil",
+    "removeAvatar": "Hapus foto profil",
+    "avatarInvalidFile": "Pilih file gambar yang valid.",
+    "avatarUploadFailed": "Foto tidak dapat diproses. Coba gambar lain.",
+    "avatarStorageFull": "Penyimpanan browser penuh. Coba gambar yang lebih kecil.",
     "upgradeToPro": "Upgrade ke Pro",
     "billing": "Tagihan",
     "signOut": "Keluar",
