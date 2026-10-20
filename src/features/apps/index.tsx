@@ -439,7 +439,7 @@ export function Apps() {
                     {(item.models?.length || item.highlightKeys?.length) ? (
                       <>
                         <p className='mb-2 text-xs font-medium text-foreground'>
-                          {t(item.type === 'free' ? 'appDirectory.models' : 'appDirectory.highlights')}
+                          {t(item.type === 'free' ? 'appDirectory.models' : 'appDirectory.highlightsTitle')}
                         </p>
                         <div className='flex flex-wrap gap-1.5'>
                           {(item.models ?? item.highlightKeys ?? []).slice(0, 3).map((value) => (
