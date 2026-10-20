@@ -1,6 +1,17 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Outlet } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import { Check, ChevronDown } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import { getCookie } from "@/lib/cookies";
 import { cn } from "@/lib/utils";
@@ -23,6 +34,35 @@ import { AgentTasksProvider } from "@/features/ai/components/agent-tasks-provide
 import { getCurrentUser } from "@/lib/api-auth";
 
 import i18n from "@/i18n";
+
+function LanguageFlag({ language }: { language: "id" | "en" }) {
+  if (language === "id") {
+    return (
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 60 40"
+        className="h-4 w-6 shrink-0 overflow-hidden rounded-[3px] border border-border/70"
+      >
+        <rect width="60" height="20" fill="#dc2626" />
+        <rect y="20" width="60" height="20" fill="#ffffff" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 60 40"
+      className="h-4 w-6 shrink-0 overflow-hidden rounded-[3px] border border-border/70"
+    >
+      <rect width="60" height="40" fill="#012169" />
+      <path d="M0 0 60 40M60 0 0 40" stroke="#ffffff" strokeWidth="10" />
+      <path d="M0 0 60 40M60 0 0 40" stroke="#c8102e" strokeWidth="4" />
+      <path d="M30 0V40M0 20H60" stroke="#ffffff" strokeWidth="15" />
+      <path d="M30 0V40M0 20H60" stroke="#c8102e" strokeWidth="8" />
+    </svg>
+  );
+}
 
 const API_URL = "http://localhost:8081";
 
@@ -252,49 +292,62 @@ export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
                     LANGUAGE SWITCHER
                 ================================= */}
 
-                <div className="flex items-center gap-1 rounded-lg border bg-background p-1">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      aria-label={
+                        isIndonesian
+                          ? "Bahasa aktif: Indonesia"
+                          : "Current language: English"
+                      }
+                      className="h-9 gap-2 px-3"
+                    >
+                      <LanguageFlag language={isIndonesian ? "id" : "en"} />
+                      <span className="hidden text-sm sm:inline">
+                        {isIndonesian ? "Indonesia" : "English"}
+                      </span>
+                      <ChevronDown className="size-4 text-muted-foreground" />
+                    </Button>
+                  </DropdownMenuTrigger>
 
-                  {/* Indonesia */}
+                  <DropdownMenuContent align="end" className="min-w-44">
+                    <DropdownMenuLabel>Language / Bahasa</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
 
-                  <button
-                    type="button"
-                    onClick={() => changeLanguage("id")}
-                    aria-label="Bahasa Indonesia"
-                    aria-pressed={isIndonesian}
-                    className={cn(
-                      "flex h-7 w-9 items-center justify-center rounded-md",
-                      "text-xl transition-all duration-200",
-                      "focus-visible:outline-none focus-visible:ring-2",
-                      "focus-visible:ring-primary/50",
-                      isIndonesian
-                        ? "bg-primary/10 shadow-sm ring-1 ring-primary/20"
-                        : "opacity-50 hover:bg-muted hover:opacity-100",
-                    )}
-                  >
-                    🇮🇩
-                  </button>
+                    <DropdownMenuItem
+                      onSelect={() => changeLanguage("id")}
+                      className={cn(
+                        "gap-3 py-2",
+                        isIndonesian && "bg-accent/70",
+                      )}
+                      aria-current={isIndonesian ? "true" : undefined}
+                    >
+                      <LanguageFlag language="id" />
+                      <span>Bahasa Indonesia</span>
+                      {isIndonesian && (
+                        <Check className="ms-auto size-4 text-primary" />
+                      )}
+                    </DropdownMenuItem>
 
-                  {/* English */}
-
-                  <button
-                    type="button"
-                    onClick={() => changeLanguage("en")}
-                    aria-label="English"
-                    aria-pressed={isEnglish}
-                    className={cn(
-                      "flex h-7 w-9 items-center justify-center rounded-md",
-                      "text-xl transition-all duration-200",
-                      "focus-visible:outline-none focus-visible:ring-2",
-                      "focus-visible:ring-primary/50",
-                      isEnglish
-                        ? "bg-primary/10 shadow-sm ring-1 ring-primary/20"
-                        : "opacity-50 hover:bg-muted hover:opacity-100",
-                    )}
-                  >
-                    🇬🇧
-                  </button>
-
-                </div>
+                    <DropdownMenuItem
+                      onSelect={() => changeLanguage("en")}
+                      className={cn(
+                        "gap-3 py-2",
+                        isEnglish && "bg-accent/70",
+                      )}
+                      aria-current={isEnglish ? "true" : undefined}
+                    >
+                      <LanguageFlag language="en" />
+                      <span>English</span>
+                      {isEnglish && (
+                        <Check className="ms-auto size-4 text-primary" />
+                      )}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
 
                 {/* Theme */}
 
