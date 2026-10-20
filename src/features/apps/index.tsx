@@ -238,6 +238,13 @@ const CATEGORIES: Array<{ id: Category; key: string }> = [
 
 function DirectoryLogo({ item }: { item: DirectoryItem }) {
   const [failed, setFailed] = useState(false)
+  const needsLightTileInDarkMode = [
+    'kilo',
+    'anthropic',
+    'cohere',
+    'cerebras',
+    'azure',
+  ].includes(item.id)
 
   if (!item.logoUrl || failed) {
     return (
@@ -248,7 +255,9 @@ function DirectoryLogo({ item }: { item: DirectoryItem }) {
   }
 
   return (
-    <div className='flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-lg border bg-background p-2'>
+    <div
+      className={`flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-lg border p-2 bg-background ${needsLightTileInDarkMode ? 'dark:bg-white' : ''}`}
+    >
       <img
         src={item.logoUrl}
         alt={item.name + ' logo'}
