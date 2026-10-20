@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react'
-import { Check, LoaderCircle, RotateCcw, UserRound } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
+import { Check, LoaderCircle, Pencil, RotateCcw, UserRound } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { getCurrentUser, updateCurrentUserProfile } from '@/lib/api-auth'
 import {
   AVATAR_PRESETS,
@@ -17,7 +18,11 @@ import { useAuthStore } from '@/stores/auth-store'
 type Notice = { kind: 'success' | 'error'; text: string } | null
 
 export function AccountForm() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const isIndonesian = (i18n.resolvedLanguage ?? i18n.language).toLowerCase().startsWith('id')
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [customPhoto, setCustomPhoto] = useState<string | null>(null)
+  const [photoPreviewOpen, setPhotoPreviewOpen] = useState(false)
   const authUser = useAuthStore((state) => state.auth.user)
   const seed = authUser?.accountNo || authUser?.email || 'agentic-ai-user'
   const [name, setName] = useState('')
@@ -34,7 +39,51 @@ export function AccountForm() {
     [name]
   )
   const selectedPreset = getAvatarPresetId(avatar)
-  const previewAvatar = getAvatarSrc(avatar, seed)
+  const previewAvatar = customPhoto || getAvatarSrc(avatar, seed)
+  const localPhotoKey = `agentic-ai-profile-avatar:${authUser?.accountNo || authUser?.email || authUser?.name || seed}`
+
+  useEffect(() => {
+    try {
+      setCustomPhoto(window.localStorage.getItem(localPhotoKey))
+    } catch {
+      setCustomPhoto(null)
+    }
+  }, [localPhotoKey])
+
+  function onPhotoFileChange(file?: File) {
+    if (!file) return
+    if (!file.type.startsWith('image/')) {
+      setNotice({ kind: 'error', text: isIndonesian ? 'Pilih file gambar yang valid.' : 'Please choose a valid image file.' })
+      return
+    }
+
+    const reader = new FileReader()
+    reader.onerror = () => setNotice({ kind: 'error', text: isIndonesian ? 'Foto tidak dapat diproses.' : 'The photo could not be processed.' })
+    reader.onload = () => {
+      const image = new Image()
+      image.onerror = () => setNotice({ kind: 'error', text: isIndonesian ? 'Foto tidak dapat diproses.' : 'The photo could not be processed.' })
+      image.onload = () => {
+        const maxSize = 512
+        const scale = Math.min(1, maxSize / Math.max(image.width, image.height))
+        const canvas = document.createElement('canvas')
+        canvas.width = Math.max(1, Math.round(image.width * scale))
+        canvas.height = Math.max(1, Math.round(image.height * scale))
+        const context = canvas.getContext('2d')
+        if (!context) return
+        context.drawImage(image, 0, 0, canvas.width, canvas.height)
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.82)
+        try {
+          window.localStorage.setItem(localPhotoKey, dataUrl)
+          setCustomPhoto(dataUrl)
+          setNotice({ kind: 'success', text: isIndonesian ? 'Foto profil berhasil diperbarui di browser ini.' : 'Profile photo updated in this browser.' })
+        } catch {
+          setNotice({ kind: 'error', text: isIndonesian ? 'Penyimpanan browser penuh. Coba gambar yang lebih kecil.' : 'Browser storage is full. Try a smaller image.' })
+        }
+      }
+      image.src = String(reader.result)
+    }
+    reader.readAsDataURL(file)
+  }
   const hasChanges = name.trim() !== originalName || avatar !== originalAvatar
 
   useEffect(() => {
@@ -110,13 +159,61 @@ export function AccountForm() {
           <div className='mb-4 flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary'>
             <UserRound className='size-5' />
           </div>
-          <Avatar className='size-28 border shadow-sm'>
-            <AvatarImage src={previewAvatar} alt={name || 'Profile avatar'} />
-            <AvatarFallback className='text-2xl'>{initials || 'U'}</AvatarFallback>
-          </Avatar>
+          <input
+            ref={fileInputRef}
+            type='file'
+            accept='image/*'
+            className='hidden'
+            aria-label={isIndonesian ? 'Ubah foto profil' : 'Change profile photo'}
+            onChange={(event) => {
+              onPhotoFileChange(event.currentTarget.files?.[0])
+              event.currentTarget.value = ''
+            }}
+          />
+          <div className='relative'>
+            <button
+              type='button'
+              onClick={() => setPhotoPreviewOpen(true)}
+              aria-label={isIndonesian ? 'Lihat foto profil' : 'View profile photo'}
+              className='block rounded-full transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2'
+            >
+              <Avatar className='size-28 cursor-zoom-in border shadow-sm'>
+                <AvatarImage src={previewAvatar} alt={name || 'Profile avatar'} />
+                <AvatarFallback className='text-2xl'>{initials || 'U'}</AvatarFallback>
+              </Avatar>
+            </button>
+            <Button
+              type='button'
+              size='icon'
+              variant='secondary'
+              aria-label={isIndonesian ? 'Ubah foto profil' : 'Edit profile photo'}
+              title={isIndonesian ? 'Ubah foto profil' : 'Edit profile photo'}
+              onClick={() => fileInputRef.current?.click()}
+              className='absolute right-0 bottom-0 size-9 rounded-full border-2 border-background shadow-md'
+            >
+              <Pencil className='size-4' />
+            </Button>
+          </div>
           <p className='mt-4 max-w-full truncate font-semibold'>{name || t('settingsPage.account.namePlaceholder')}</p>
           <p className='mt-1 max-w-full truncate text-sm text-muted-foreground'>{email || t('settingsPage.account.email')}</p>
-          <p className='mt-4 text-xs leading-5 text-muted-foreground'>{t('settingsPage.account.avatarDescription')}</p>
+          <p className='mt-4 text-xs leading-5 text-muted-foreground'>
+            {isIndonesian ? 'Klik foto untuk melihat ukuran penuh. Tekan ikon pensil untuk mengganti foto.' : 'Click the photo to view it larger. Use the pencil icon to change it.'}
+          </p>
+          {customPhoto && (
+            <Button
+              type='button'
+              variant='ghost'
+              size='sm'
+              className='mt-2'
+              onClick={() => {
+                window.localStorage.removeItem(localPhotoKey)
+                setCustomPhoto(null)
+                setNotice({ kind: 'success', text: isIndonesian ? 'Foto kembali ke avatar bawaan.' : 'Restored the default avatar.' })
+              }}
+            >
+              {isIndonesian ? 'Gunakan avatar bawaan' : 'Use default avatar'}
+            </Button>
+          )}
         </section>
 
         <section className='space-y-5 rounded-xl border bg-card p-5 sm:p-6'>
@@ -205,5 +302,29 @@ export function AccountForm() {
         </Button>
       </div>
     </form>
+      <Dialog open={photoPreviewOpen} onOpenChange={setPhotoPreviewOpen}>
+        <DialogContent className='max-w-xl'>
+          <DialogHeader>
+            <DialogTitle>{isIndonesian ? 'Foto profil' : 'Profile photo'}</DialogTitle>
+            <DialogDescription>{isIndonesian ? 'Pratinjau foto profil kamu.' : 'Preview your profile photo.'}</DialogDescription>
+          </DialogHeader>
+          <div className='flex justify-center rounded-xl bg-muted/40 p-6 sm:p-10'>
+            <img
+              src={previewAvatar || undefined}
+              alt={name || 'Profile avatar'}
+              className='max-h-[65vh] max-w-full rounded-lg object-contain'
+            />
+          </div>
+          <div className='flex justify-end gap-2'>
+            <Button type='button' variant='outline' onClick={() => setPhotoPreviewOpen(false)}>
+              {isIndonesian ? 'Tutup' : 'Close'}
+            </Button>
+            <Button type='button' onClick={() => { setPhotoPreviewOpen(false); fileInputRef.current?.click() }}>
+              <Pencil className='me-2 size-4' />
+              {isIndonesian ? 'Ubah foto' : 'Change photo'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
   )
 }
