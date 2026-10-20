@@ -870,6 +870,36 @@ export function AIAssistant() {
           </div>
         </header>
 
+        {/* Agent and model selection stays above the conversation. */}
+        <section className='shrink-0 border-b border-border/70 bg-background/95'>
+          <div className='mx-auto w-full max-w-5xl px-4 py-3 sm:px-6'>
+            <AgentSelector
+              selectedAgent={selectedAgent}
+              onSelect={setSelectedAgent}
+              selectedModel={selectedModel}
+              onModelSelect={setSelectedModel}
+            />
+
+            <div className='mt-2 text-center text-xs text-muted-foreground'>
+              {running && selectedAgent
+                ? t('agentic.status.thinking', {
+                    agent: selectedAgent.name,
+                    model: selectedModel?.name,
+                  })
+                : selectedAgent && selectedModel
+                  ? t('agentic.status.ready', {
+                      agent: selectedAgent.name,
+                      model: selectedModel.name,
+                    })
+                  : selectedAgent
+                    ? t('agentic.status.selectModel', {
+                        agent: selectedAgent.name,
+                      })
+                    : t('agentic.status.selectEmployee')}
+            </div>
+          </div>
+        </section>
+
         {/* ======================================================
             WORKFLOW PROGRESS
         ====================================================== */}
@@ -1185,43 +1215,7 @@ export function AIAssistant() {
               </div>
             </div>
 
-            {/* ==================================================
-                AGENT + MODEL CONTROLS
-                Deliberately placed below the composer, like modern
-                agentic interfaces. Agent is the workspace context;
-                model is a quick execution choice.
-            ================================================== */}
 
-            <div className='mt-2'>
-              <AgentSelector
-                selectedAgent={selectedAgent}
-                onSelect={setSelectedAgent}
-                selectedModel={selectedModel}
-                onModelSelect={setSelectedModel}
-              />
-            </div>
-
-            {/* ==================================================
-                STATUS
-            ================================================== */}
-
-            <div className='mt-2 text-center text-xs text-muted-foreground'>
-              {running && selectedAgent
-                ? t('agentic.status.thinking', {
-                    agent: selectedAgent.name,
-                    model: selectedModel?.name,
-                  })
-                : selectedAgent && selectedModel
-                  ? t('agentic.status.ready', {
-                      agent: selectedAgent.name,
-                      model: selectedModel.name,
-                    })
-                  : selectedAgent
-                    ? t('agentic.status.selectModel', {
-                        agent: selectedAgent.name,
-                      })
-                    : t('agentic.status.selectEmployee')}
-            </div>
           </div>
         </div>
       </div>
