@@ -575,6 +575,11 @@
     "reset": "Reset"
   },
   "navigation": {
+    "changeAvatar": "Change profile photo",
+    "removeAvatar": "Remove profile photo",
+    "avatarInvalidFile": "Please choose a valid image file.",
+    "avatarUploadFailed": "The photo could not be processed. Try another image.",
+    "avatarStorageFull": "Browser storage is full. Try a smaller image.",
     "upgradeToPro": "Upgrade to Pro",
     "billing": "Billing",
     "signOut": "Sign out",
