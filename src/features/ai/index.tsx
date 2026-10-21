@@ -938,7 +938,8 @@ export function AIAssistant() {
       { role: 'user', content: originalText },
     ]
 
-    for (let iteration = 0; iteration < 4; iteration += 1) {
+    const maxToolCalls = 8
+    for (let iteration = 0; iteration < maxToolCalls; iteration += 1) {
       const match = result.message.match(/<LOCAL_AGENT_TOOL>([\s\S]*?)<\/LOCAL_AGENT_TOOL>/)
       if (!match) return result
 
@@ -977,7 +978,24 @@ export function AIAssistant() {
     }
 
     if (/<LOCAL_AGENT_TOOL>/.test(result.message)) {
-      return { ...result, message: 'Batas 4 pemanggilan tool per giliran tercapai. Tinjau hasil yang sudah diperoleh, lalu minta agent melanjutkan jika diperlukan.' }
+      setRunnerStatus('Batas tool tercapai; meminta ringkasan dari hasil yang sudah terkumpul...')
+      const finalPrompt = `Batas aman ${maxToolCalls} pemanggilan tool telah tercapai. JANGAN meminta atau mengeluarkan tool marker lagi. Buat jawaban akhir sekarang hanya berdasarkan output Local Agent Runner yang sudah ada di riwayat percakapan. Ringkas file yang benar-benar berhasil dibaca, temuan yang didukung output, dan hal yang belum dapat dipastikan. Jangan mengklaim file sudah dibaca atau perintah sudah dijalankan jika tidak ada hasilnya. Permintaan awal pengguna: ${originalText}`
+      try {
+        const finalResult = await sendChat(finalPrompt, files, toolHistory, agentId, modelId)
+        if (!/<LOCAL_AGENT_TOOL>/.test(finalResult.message)) {
+          setRunnerStatus(`Selesai dengan ${maxToolCalls} pemanggilan tool`)
+          return finalResult
+        }
+        return {
+          ...finalResult,
+          message: `Pemeriksaan mencapai batas ${maxToolCalls} pemanggilan tool. Ringkasan AI masih meminta tool tambahan, jadi saya tidak menjalankannya lagi. Minta agent merangkum bukti yang sudah terkumpul atau lanjutkan pemeriksaan dalam pesan baru.`,
+        }
+      } catch (error) {
+        return {
+          ...result,
+          message: `Pemeriksaan mencapai batas ${maxToolCalls} pemanggilan tool dan ringkasan akhir gagal dibuat: ${error instanceof Error ? error.message : 'kesalahan tidak diketahui'}. Tidak ada tool tambahan yang dijalankan.`,
+        }
+      }
     }
     return result
   }
