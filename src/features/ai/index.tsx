@@ -943,7 +943,7 @@ export function AIAssistant() {
     let promptedForFirstTool = false
 
     while (toolCalls < maxToolCalls) {
-      const match = result.message.match(/<LOCAL_AGENT_TOOL>([\s\S]*?)<\\/LOCAL_AGENT_TOOL>/)
+      const match = result.message.match(/<LOCAL_AGENT_TOOL>([\s\S]*?)<\/LOCAL_AGENT_TOOL>/)
       if (!match) {
         const looksLikeWorkspaceTask =
           /\b(repository|repo|workspace|local agent runner|struktur|daftar file|list-files|baca file|membaca|package\.json|konfigurasi|inspect|periksa|pemeriksaan|pengujian|testing|test)\b/i.test(originalText)
