@@ -724,7 +724,7 @@ export function AIAssistant() {
       throw new Error(
         [`[${statusLabel}] ${baseMessage}`, detail ? `Detail: ${detail}` : 'Backend tidak mengirim detail penyebab.']
           .filter(Boolean)
-          .join('\\n')
+          .join('\n')
       )
     }
 
