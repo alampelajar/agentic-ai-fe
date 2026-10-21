@@ -716,7 +716,16 @@ export function AIAssistant() {
     const data = await response.json().catch(() => ({}))
 
     if (!response.ok) {
-      throw new Error(data?.error || data?.message || t('agentic.errors.chatFailed'))
+      const baseMessage = String(
+        data?.error || data?.message || t('agentic.errors.chatFailed')
+      )
+      const detail = typeof data?.detail === 'string' ? data.detail.trim() : ''
+      const statusLabel = `HTTP ${response.status}`
+      throw new Error(
+        [`[${statusLabel}] ${baseMessage}`, detail ? `Detail: ${detail}` : 'Backend tidak mengirim detail penyebab.']
+          .filter(Boolean)
+          .join('\\n')
+      )
     }
 
     if (!data?.message) {
