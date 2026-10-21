@@ -629,6 +629,193 @@ export function AIAssistant() {
   }
 
   // ============================================================
+  // LOCAL AGENT RUNNER
+  // ============================================================
+
+  const connectRunner = async () => {
+    const base = runnerURL.trim().replace(/\/+$/, '')
+    if (!base || !runnerToken.trim()) {
+      setRunnerStatus('Masukkan URL runner dan bearer token.')
+      return
+    }
+
+    setRunnerConnecting(true)
+    setRunnerStatus('')
+    try {
+      const response = await fetch(`${base}/api/workspaces`, {
+        headers: { Authorization: `Bearer ${runnerToken.trim()}` },
+      })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        throw new Error(data?.error || `Runner merespons HTTP ${response.status}`)
+      }
+
+      const workspaces = Array.isArray(data.workspaces)
+        ? (data.workspaces as LocalRunnerWorkspace[])
+        : []
+      setRunnerURL(base)
+      setRunnerWorkspaces(workspaces)
+      setRunnerWorkspaceID((current) =>
+        workspaces.some((workspace) => workspace.id === current)
+          ? current
+          : workspaces[0]?.id ?? ''
+      )
+      setRunnerConnected(true)
+      setRunnerStatus(`Terhubung · ${workspaces.length} workspace`)
+    } catch (error) {
+      setRunnerConnected(false)
+      setRunnerWorkspaces([])
+      setRunnerWorkspaceID('')
+      setRunnerStatus(
+        error instanceof Error
+          ? error.message
+          : 'Tidak dapat terhubung ke Local Agent Runner.'
+      )
+    } finally {
+      setRunnerConnecting(false)
+    }
+  }
+
+  const runLocalTool = async (call: LocalRunnerToolCall): Promise<string> => {
+    if (!runnerConnected || !runnerToken || !runnerWorkspaceID) {
+      throw new Error('Local Agent Runner belum terhubung atau workspace belum dipilih.')
+    }
+
+    const allowedExecution = [
+      'git-status',
+      'go-test',
+      'go-build',
+      'npm-test',
+      'npm-build',
+      'npm-lint',
+      'python-test',
+    ]
+    const allowedFileTools = ['list-files', 'read-file', 'write-file']
+    if (!allowedExecution.includes(call.action) && !allowedFileTools.includes(call.action)) {
+      throw new Error(`Tool tidak diizinkan: ${call.action}`)
+    }
+
+    const base = runnerURL.replace(/\/+$/, '')
+    const workspace = encodeURIComponent(runnerWorkspaceID)
+    const headers = {
+      Authorization: `Bearer ${runnerToken}`,
+      'Content-Type': 'application/json',
+    }
+
+    if (call.action === 'list-files') {
+      const path = encodeURIComponent(call.path || '.')
+      const response = await fetch(`${base}/api/workspaces/${workspace}/tree?path=${path}`, { headers })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(data?.error || 'Gagal membaca daftar file.')
+      return JSON.stringify(data)
+    }
+
+    if (call.action === 'read-file') {
+      if (!call.path) throw new Error('Tool read-file wajib menyertakan path relatif.')
+      const path = encodeURIComponent(call.path)
+      const response = await fetch(`${base}/api/workspaces/${workspace}/file?path=${path}`, { headers })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(data?.error || 'Gagal membaca file.')
+      return JSON.stringify(data)
+    }
+
+    if (call.action === 'write-file') {
+      if (!call.path || typeof call.content !== 'string') {
+        throw new Error('Tool write-file wajib menyertakan path dan content.')
+      }
+      const approved = window.confirm(
+        `Izinkan Coding Agent menulis file berikut?\n\nWorkspace: ${runnerWorkspaceID}\nFile: ${call.path}\n\nPerubahan file akan langsung diterapkan ke disk.`
+      )
+      if (!approved) return 'DIBATALKAN: pengguna menolak perubahan file.'
+      const response = await fetch(`${base}/api/workspaces/${workspace}/file`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({
+          path: call.path,
+          content: call.content,
+          create: Boolean(call.create),
+        }),
+      })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(data?.error || 'Gagal menulis file.')
+      return JSON.stringify(data)
+    }
+
+    const runtime = call.runtime === 'docker' ? 'docker' : 'native'
+    const approved = window.confirm(
+      `Izinkan Local Agent Runner menjalankan ${call.action}?\n\nWorkspace: ${runnerWorkspaceID}\nRuntime: ${runtime}\n\nPerintah dapat menjalankan kode dari project. Jalankan hanya kode yang dipercaya.`
+    )
+    if (!approved) return 'DIBATALKAN: pengguna menolak eksekusi perintah.'
+    setRunnerBusy(true)
+    setRunnerStatus(`Menjalankan ${call.action} (${runtime})...`)
+    try {
+      const response = await fetch(`${base}/api/workspaces/${workspace}/execute`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ action: call.action, runtime }),
+      })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(data?.error || 'Eksekusi tool gagal.')
+      setRunnerStatus(`${call.action}: ${data.status} (exit ${data.exit_code})`)
+      return JSON.stringify(data)
+    } finally {
+      setRunnerBusy(false)
+    }
+  }
+
+  const runAgentToolLoop = async (
+    initial: ChatResult,
+    originalText: string,
+    originalHistory: ChatHistoryItem[],
+    files: File[],
+    agentId: number,
+    modelId: number
+  ): Promise<ChatResult> => {
+    let result = initial
+    const toolHistory: ChatHistoryItem[] = [
+      ...originalHistory,
+      { role: 'user', content: originalText },
+    ]
+
+    for (let iteration = 0; iteration < 4; iteration += 1) {
+      const match = result.message.match(/<LOCAL_AGENT_TOOL>\s*(\{[\s\S]*?\})\s*<\/LOCAL_AGENT_TOOL>/)
+      if (!match) return result
+
+      if (!runnerConnected || !runnerWorkspaceID) {
+        return {
+          ...result,
+          message: 'Local Agent Runner belum terhubung. Hubungkan runner dan pilih workspace, lalu kirim ulang permintaan.\n\nPermintaan tool tidak dijalankan.',
+        }
+      }
+
+      let call: LocalRunnerToolCall
+      try {
+        call = JSON.parse(match[1]) as LocalRunnerToolCall
+      } catch {
+        return { ...result, message: 'Agent menghasilkan permintaan tool dengan format tidak valid. Tidak ada tindakan yang dijalankan.' }
+      }
+
+      let toolResult: string
+      try {
+        toolResult = await runLocalTool(call)
+      } catch (error) {
+        toolResult = `TOOL_ERROR: ${error instanceof Error ? error.message : 'Kesalahan tool tidak diketahui'}`
+      }
+
+      setRunnerStatus(`Tool ${call.action} selesai; meminta agent melanjutkan...`)
+      const assistantToolCall = result.message
+      toolHistory.push({ role: 'assistant', content: assistantToolCall })
+      const followup = `Hasil Local Agent Runner untuk tool ${call.action}:\n\n${toolResult}\n\nGunakan hanya hasil tool di atas sebagai bukti. Jika perlu tindakan lain, keluarkan satu marker <LOCAL_AGENT_TOOL> yang valid. Jika sudah selesai, jawab pengguna tanpa marker.`
+      result = await sendChat(followup, files, toolHistory, agentId, modelId)
+    }
+
+    if (/<LOCAL_AGENT_TOOL>/.test(result.message)) {
+      return { ...result, message: 'Batas 4 pemanggilan tool per giliran tercapai. Tinjau hasil yang sudah diperoleh, lalu minta agent melanjutkan jika diperlukan.' }
+    }
+    return result
+  }
+
+  // ============================================================
   // GENERATOR WEBSITE
   // ============================================================
 
