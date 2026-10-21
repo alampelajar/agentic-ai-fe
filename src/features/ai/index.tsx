@@ -150,6 +150,7 @@ export function AIAssistant() {
   const [runnerConnecting, setRunnerConnecting] = useState(false)
   const [runnerWorkspaces, setRunnerWorkspaces] = useState<LocalRunnerWorkspace[]>([])
   const [runnerWorkspaceID, setRunnerWorkspaceID] = useState('')
+  const [githubRepoURL, setGithubRepoURL] = useState('')
   const [runnerStatus, setRunnerStatus] = useState('')
   const [runnerBusy, setRunnerBusy] = useState(false)
 
@@ -676,6 +677,48 @@ export function AIAssistant() {
     }
   }
 
+  const cloneGitHubRepository = async () => {
+    const url = githubRepoURL.trim()
+    if (!runnerConnected || !url) {
+      setRunnerStatus('Hubungkan runner dan masukkan URL repository GitHub publik.')
+      return
+    }
+
+    setRunnerConnecting(true)
+    setRunnerStatus('Meng-clone repository GitHub...')
+    try {
+      const response = await fetch(`${runnerURL.replace(/\\/+$/, '')}/api/workspaces/clone`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${runnerToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url }),
+      })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        throw new Error(data?.error || 'Gagal meng-clone repository.')
+      }
+
+      const listResponse = await fetch(`${runnerURL.replace(/\\/+$/, '')}/api/workspaces`, {
+        headers: { Authorization: `Bearer ${runnerToken}` },
+      })
+      const listData = await listResponse.json().catch(() => ({}))
+      if (!listResponse.ok) throw new Error(listData?.error || 'Repository berhasil di-clone, tetapi daftar workspace gagal dimuat.')
+      const workspaces = Array.isArray(listData.workspaces)
+        ? (listData.workspaces as LocalRunnerWorkspace[])
+        : []
+      setRunnerWorkspaces(workspaces)
+      setRunnerWorkspaceID(String(data?.workspace?.id || workspaces[0]?.id || ''))
+      setGithubRepoURL('')
+      setRunnerStatus(`Repository ${data?.workspace?.name || url} berhasil ditambahkan.`)
+    } catch (error) {
+      setRunnerStatus(error instanceof Error ? error.message : 'Gagal meng-clone repository.')
+    } finally {
+      setRunnerConnecting(false)
+    }
+  }
+
   const runLocalTool = async (call: LocalRunnerToolCall): Promise<string> => {
     if (!runnerConnected || !runnerToken || !runnerWorkspaceID) {
       throw new Error('Local Agent Runner belum terhubung atau workspace belum dipilih.')
@@ -1189,6 +1232,31 @@ export function AIAssistant() {
                     ))}
                   </select>
                 </label>
+              )}
+
+              {runnerConnected && (
+                <div className='mt-3 grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]'>
+                  <label className='grid gap-1 text-xs text-muted-foreground'>
+                    Clone repository GitHub publik
+                    <input
+                      value={githubRepoURL}
+                      onChange={(event) => setGithubRepoURL(event.target.value)}
+                      placeholder='https://github.com/owner/repository'
+                      className='h-9 min-w-0 rounded-md border border-input bg-background px-3 text-sm text-foreground'
+                      spellCheck={false}
+                    />
+                  </label>
+                  <div className='flex items-end'>
+                    <button
+                      type='button'
+                      onClick={cloneGitHubRepository}
+                      disabled={runnerConnecting || !githubRepoURL.trim()}
+                      className='h-9 w-full rounded-md border px-3 text-sm font-medium disabled:opacity-50'
+                    >
+                      Clone repository
+                    </button>
+                  </div>
+                </div>
               )}
 
               <p className='mt-2 text-xs text-muted-foreground'>
