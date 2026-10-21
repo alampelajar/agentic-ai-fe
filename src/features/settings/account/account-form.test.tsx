@@ -73,6 +73,8 @@ describe('AccountForm', () => {
     await expect.element(nameInput).toHaveValue('Alam')
     await userEvent.fill(nameInput, 'Alam RPL')
     await userEvent.click(screen.getByRole('button', { name: 'Adventurer' }).nth(0))
+    // The component deliberately asks for confirmation before selecting a preset.
+    await userEvent.click(screen.getByRole('button', { name: 'Yes' }))
     await userEvent.click(screen.getByRole('button', { name: 'Save Changes' }))
 
     await vi.waitFor(() => {
