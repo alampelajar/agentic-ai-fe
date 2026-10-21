@@ -833,7 +833,73 @@ export function AIAssistant() {
 
       let call: LocalRunnerToolCall
       try {
-        call = JSON.parse(match[1]) as LocalRunnerToolCall
+        const parsed = JSON.parse(match[1]) as Record<string, unknown>
+        // Be tolerant of common tool-call schemas emitted by different models:
+        // { action }, { tool }, { name }, or { function: { name, arguments } }.
+        const nested = (
+          parsed.function && typeof parsed.function === 'object'
+            ? parsed.function
+            : parsed.arguments && typeof parsed.arguments === 'object'
+              ? parsed.arguments
+              : {}
+        ) as Record<string, unknown>
+        const rawAction =
+          parsed.action ??
+          parsed.tool ??
+          parsed.name ??
+          nested.action ??
+          nested.tool ??
+          nested.name ??
+          (typeof parsed.function === 'string' ? parsed.function : undefined)
+        const normalizedAction = String(rawAction ?? '')
+          .trim()
+          .replace(/([a-z])([A-Z])/g, '$1-$2')
+          .replace(/[ _]+/g, '-')
+          .toLowerCase()
+        const aliases: Record<string, string> = {
+          'list-files': 'list-files',
+          'list-file': 'list-files',
+          'list-directory': 'list-files',
+          'list-dir': 'list-files',
+          'read-file': 'read-file',
+          'get-file': 'read-file',
+          'write-file': 'write-file',
+          'edit-file': 'write-file',
+          'git-status': 'git-status',
+          'go-test': 'go-test',
+          'go-build': 'go-build',
+          'npm-test': 'npm-test',
+          'npm-build': 'npm-build',
+          'npm-lint': 'npm-lint',
+          'python-test': 'python-test',
+        }
+        const args = (
+          parsed.arguments && typeof parsed.arguments === 'object'
+            ? parsed.arguments
+            : parsed.input && typeof parsed.input === 'object'
+              ? parsed.input
+              : nested
+        ) as Record<string, unknown>
+        const pathValue = parsed.path ?? args.path
+        const contentValue = parsed.content ?? args.content
+        const runtimeValue = parsed.runtime ?? args.runtime
+        call = {
+          action: aliases[normalizedAction] ?? normalizedAction,
+          ...(typeof pathValue === 'string' ? { path: pathValue } : {}),
+          ...(typeof contentValue === 'string' ? { content: contentValue } : {}),
+          ...(typeof parsed.create === 'boolean' || typeof args.create === 'boolean'
+            ? { create: Boolean(parsed.create ?? args.create) }
+            : {}),
+          ...(runtimeValue === 'docker' || runtimeValue === 'native'
+            ? { runtime: runtimeValue }
+            : {}),
+        }
+        if (!call.action) {
+          return {
+            ...result,
+            message: 'Agent meminta tool tanpa nama aksi yang valid. Tidak ada tindakan yang dijalankan. Coba kirim ulang dengan instruksi: gunakan marker LOCAL_AGENT_TOOL dengan field action yang jelas.',
+          }
+        }
       } catch {
         return { ...result, message: 'Agent menghasilkan permintaan tool dengan format tidak valid. Tidak ada tindakan yang dijalankan.' }
       }
