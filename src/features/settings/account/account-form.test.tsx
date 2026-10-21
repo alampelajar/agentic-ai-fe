@@ -41,7 +41,12 @@ vi.mock('react-i18next', () => {
     'settingsPage.account.saveChanges': 'Save Changes',
   }
   const t = (key: string) => translations[key] ?? key
-  return { useTranslation: () => ({ t }) }
+  return {
+    useTranslation: () => ({
+      t,
+      i18n: { resolvedLanguage: 'en', language: 'en' },
+    }),
+  }
 })
 
 describe('AccountForm', () => {
