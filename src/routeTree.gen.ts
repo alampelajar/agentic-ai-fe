@@ -24,6 +24,7 @@ import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedOverviewRouteImport } from './routes/_authenticated/overview'
 import { Route as AuthenticatedPaidModelsRouteImport } from './routes/_authenticated/paid-models'
+import { Route as AuthenticatedSubscriptionPremiumRouteImport } from './routes/_authenticated/subscription-premium'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as ClerkauthRouteRouteImport } from './routes/clerk/(auth)/route'
@@ -118,6 +119,11 @@ const AuthenticatedOverviewRoute = AuthenticatedOverviewRouteImport.update({
 const AuthenticatedPaidModelsRoute = AuthenticatedPaidModelsRouteImport.update({
   id: '/paid-models',
   path: '/paid-models',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSubscriptionPremiumRoute = AuthenticatedSubscriptionPremiumRouteImport.update({
+  id: '/subscription-premium',
+  path: '/subscription-premium',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
@@ -252,6 +258,7 @@ export interface FileRoutesByFullPath {
   '/503': typeof errors503Route
   '/overview': typeof AuthenticatedOverviewRoute
   '/paid-models': typeof AuthenticatedPaidModelsRoute
+  '/subscription-premium': typeof AuthenticatedSubscriptionPremiumRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
@@ -285,6 +292,7 @@ export interface FileRoutesByTo {
   '/503': typeof errors503Route
   '/overview': typeof AuthenticatedOverviewRoute
   '/paid-models': typeof AuthenticatedPaidModelsRoute
+  '/subscription-premium': typeof AuthenticatedSubscriptionPremiumRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
@@ -324,6 +332,7 @@ export interface FileRoutesById {
   '/(errors)/503': typeof errors503Route
   '/_authenticated/overview': typeof AuthenticatedOverviewRoute
   '/_authenticated/paid-models': typeof AuthenticatedPaidModelsRoute
+  '/_authenticated/subscription-premium': typeof AuthenticatedSubscriptionPremiumRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
@@ -362,6 +371,7 @@ export interface FileRouteTypes {
     | '/503'
     | '/overview'
     | '/paid-models'
+    | '/subscription-premium'
     | '/profile'
     | '/errors/$error'
     | '/settings/account'
@@ -395,6 +405,7 @@ export interface FileRouteTypes {
     | '/503'
     | '/overview'
     | '/paid-models'
+    | '/subscription-premium'
     | '/profile'
     | '/'
     | '/errors/$error'
@@ -433,6 +444,7 @@ export interface FileRouteTypes {
     | '/(errors)/503'
     | '/_authenticated/overview'
     | '/_authenticated/paid-models'
+    | '/_authenticated/subscription-premium'
     | '/_authenticated/profile'
     | '/_authenticated/'
     | '/_authenticated/errors/$error'
@@ -574,6 +586,13 @@ declare module '@tanstack/react-router' {
       path: '/paid-models'
       fullPath: '/paid-models'
       preLoaderRoute: typeof AuthenticatedPaidModelsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/subscription-premium': {
+      id: '/_authenticated/subscription-premium'
+      path: '/subscription-premium'
+      fullPath: '/subscription-premium'
+      preLoaderRoute: typeof AuthenticatedSubscriptionPremiumRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/profile': {
@@ -753,6 +772,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedOverviewRoute: typeof AuthenticatedOverviewRoute
   AuthenticatedPaidModelsRoute: typeof AuthenticatedPaidModelsRoute
+  AuthenticatedSubscriptionPremiumRoute: typeof AuthenticatedSubscriptionPremiumRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
@@ -770,6 +790,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedOverviewRoute: AuthenticatedOverviewRoute,
   AuthenticatedPaidModelsRoute: AuthenticatedPaidModelsRoute,
+  AuthenticatedSubscriptionPremiumRoute: AuthenticatedSubscriptionPremiumRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
