@@ -1166,7 +1166,7 @@ export function AIAssistant() {
                   <button
                     type='button'
                     onClick={connectRunner}
-                    disabled={runnerConnecting || !runnerToken.trim()}
+                    disabled={runnerConnecting || runnerBusy || !runnerToken.trim()}
                     className='h-9 w-full rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground disabled:opacity-50'
                   >
                     {runnerConnecting ? 'Menghubungkan…' : runnerConnected ? 'Hubungkan ulang' : 'Hubungkan'}
