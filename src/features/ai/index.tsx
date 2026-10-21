@@ -71,6 +71,15 @@ type ChatResult = {
 
 type WorkflowStep = 'goal' | 'planning' | 'coding' | 'testing' | 'done'
 
+type LocalRunnerWorkspace = { id: string; name: string }
+type LocalRunnerToolCall = {
+  action: string
+  runtime?: 'native' | 'docker'
+  path?: string
+  content?: string
+  create?: boolean
+}
+
 const workflowSteps: WorkflowStep[] = [
   'goal',
   'planning',
@@ -133,6 +142,16 @@ export function AIAssistant() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
 
   const [running, setRunning] = useState(false)
+
+  // Local Agent Runner connection is session-only; never persist its bearer token.
+  const [runnerURL, setRunnerURL] = useState('http://127.0.0.1:8765')
+  const [runnerToken, setRunnerToken] = useState('')
+  const [runnerConnected, setRunnerConnected] = useState(false)
+  const [runnerConnecting, setRunnerConnecting] = useState(false)
+  const [runnerWorkspaces, setRunnerWorkspaces] = useState<LocalRunnerWorkspace[]>([])
+  const [runnerWorkspaceID, setRunnerWorkspaceID] = useState('')
+  const [runnerStatus, setRunnerStatus] = useState('')
+  const [runnerBusy, setRunnerBusy] = useState(false)
 
   const [currentStep, setCurrentStep] = useState<WorkflowStep | null>(null)
 
