@@ -142,9 +142,11 @@ export function NavUser() {
 
               {/* Upgrade */}
               <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <Sparkles />
-                  {t('navigation.upgradeToPro')}
+                <DropdownMenuItem asChild>
+                  <Link to='/subscription-premium'>
+                    <Sparkles />
+                    {t('navigation.upgradeToPro')}
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
 
