@@ -13,7 +13,6 @@ import {
   GalleryVerticalEnd,
   AudioWaveform,
   Bot,
-  CreditCard,
 } from "lucide-react";
 
 import { type SidebarData } from "../types";
@@ -74,11 +73,6 @@ export const sidebarData: SidebarData = {
           title: "appsMenu",
           url: "/apps",
           icon: Package,
-        },
-        {
-          title: "Subscription & Premium",
-          url: "/subscription-premium",
-          icon: CreditCard,
         },
       ],
     },
