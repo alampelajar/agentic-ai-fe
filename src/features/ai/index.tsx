@@ -939,14 +939,48 @@ export function AIAssistant() {
     ]
 
     const maxToolCalls = 8
-    for (let iteration = 0; iteration < maxToolCalls; iteration += 1) {
-      const match = result.message.match(/<LOCAL_AGENT_TOOL>([\s\S]*?)<\/LOCAL_AGENT_TOOL>/)
-      if (!match) return result
+    let toolCalls = 0
+    let promptedForFirstTool = false
+
+    while (toolCalls < maxToolCalls) {
+      const match = result.message.match(/<LOCAL_AGENT_TOOL>([\\s\\S]*?)<\\/LOCAL_AGENT_TOOL>/)
+      if (!match) {
+        const looksLikeWorkspaceTask =
+          /\\b(repository|repo|workspace|local agent runner|struktur|daftar file|list-files|baca file|membaca|package\\.json|konfigurasi|inspect|periksa|pemeriksaan|pengujian|testing|test)\\b/i.test(originalText)
+
+        // Some models first narrate a plan instead of emitting a tool marker.
+        // For an explicit repository-inspection request, nudge once to the
+        // required tool protocol rather than falsely treating the plan as work.
+        if (toolCalls === 0 && !promptedForFirstTool && looksLikeWorkspaceTask) {
+          promptedForFirstTool = true
+          toolHistory.push({ role: 'assistant', content: result.message })
+          const toolRequestPrompt =
+            'Permintaan pengguna ini membutuhkan pemeriksaan workspace. Jangan menjawab dengan rencana atau narasi. Segera panggil tool read-only pertama memakai marker persis berikut, tanpa Markdown fence atau teks di dalam marker selain JSON valid: <LOCAL_AGENT_TOOL>{"action":"list-files","path":"."}</LOCAL_AGENT_TOOL>. Jangan mengubah file dan jangan menjalankan perintah terminal.'
+          toolHistory.push({ role: 'user', content: toolRequestPrompt })
+          result = await sendChat(
+            toolRequestPrompt,
+            files,
+            toolHistory.slice(0, -1),
+            agentId,
+            modelId
+          )
+          continue
+        }
+
+        if (promptedForFirstTool && toolCalls === 0) {
+          return {
+            ...result,
+            message:
+              'Saya belum bisa memeriksa workspace karena model tidak menghasilkan marker tool yang valid setelah satu kali diminta ulang. Tidak ada file yang dibaca atau diubah. Coba ulangi permintaan atau pilih model lain yang lebih patuh pada format tool.',
+          }
+        }
+        return result
+      }
 
       if (!runnerConnected || !runnerWorkspaceID) {
         return {
           ...result,
-          message: 'Local Agent Runner belum terhubung. Hubungkan runner dan pilih workspace, lalu kirim ulang permintaan.\n\nPermintaan tool tidak dijalankan.',
+          message: 'Local Agent Runner belum terhubung. Hubungkan runner dan pilih workspace, lalu kirim ulang permintaan.\\n\\nPermintaan tool tidak dijalankan.',
         }
       }
 
@@ -968,11 +1002,12 @@ export function AIAssistant() {
       } catch (error) {
         toolResult = `TOOL_ERROR: ${error instanceof Error ? error.message : 'Kesalahan tool tidak diketahui'}`
       }
+      toolCalls += 1
 
-      setRunnerStatus(`Tool ${call.action} selesai; meminta agent melanjutkan...`)
+      setRunnerStatus(`Tool ${call.action} selesai (${toolCalls}/${maxToolCalls}); meminta agent melanjutkan...`)
       const assistantToolCall = result.message
       toolHistory.push({ role: 'assistant', content: assistantToolCall })
-      const followup = `Hasil Local Agent Runner untuk tool ${call.action}:\n\n${toolResult}\n\nGunakan hanya hasil tool di atas sebagai bukti. Jika perlu tindakan lain, keluarkan satu marker <LOCAL_AGENT_TOOL> yang valid. Jika sudah selesai, jawab pengguna tanpa marker.`
+      const followup = `Hasil Local Agent Runner untuk tool ${call.action}:\\n\\n${toolResult}\\n\\nGunakan hanya hasil tool di atas sebagai bukti. Jika perlu tindakan lain, keluarkan satu marker <LOCAL_AGENT_TOOL> yang valid. Jika sudah selesai, jawab pengguna tanpa marker.`
       toolHistory.push({ role: 'user', content: followup })
       result = await sendChat(followup, files, toolHistory.slice(0, -1), agentId, modelId)
     }
@@ -983,7 +1018,7 @@ export function AIAssistant() {
       try {
         const finalResult = await sendChat(finalPrompt, files, toolHistory, agentId, modelId)
         if (!/<LOCAL_AGENT_TOOL>/.test(finalResult.message)) {
-          setRunnerStatus(`Selesai dengan ${maxToolCalls} pemanggilan tool`)
+          setRunnerStatus(`Selesai dengan ${toolCalls} pemanggilan tool`)
           return finalResult
         }
         return {
