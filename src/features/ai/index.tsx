@@ -687,7 +687,7 @@ export function AIAssistant() {
     setRunnerConnecting(true)
     setRunnerStatus('Meng-clone repository GitHub...')
     try {
-      const response = await fetch(`${runnerURL.replace(/\\/+$/, '')}/api/workspaces/clone`, {
+      const response = await fetch(`${runnerURL.replace(/\/+$/, '')}/api/workspaces/clone`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${runnerToken}`,
@@ -700,7 +700,7 @@ export function AIAssistant() {
         throw new Error(data?.error || 'Gagal meng-clone repository.')
       }
 
-      const listResponse = await fetch(`${runnerURL.replace(/\\/+$/, '')}/api/workspaces`, {
+      const listResponse = await fetch(`${runnerURL.replace(/\/+$/, '')}/api/workspaces`, {
         headers: { Authorization: `Bearer ${runnerToken}` },
       })
       const listData = await listResponse.json().catch(() => ({}))
