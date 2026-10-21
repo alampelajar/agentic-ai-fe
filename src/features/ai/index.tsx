@@ -1129,6 +1129,77 @@ export function AIAssistant() {
                       })
                     : t('agentic.status.selectEmployee')}
             </div>
+
+            <details className='mt-3 rounded-lg border border-border/70 bg-muted/10 px-3 py-2'>
+              <summary className='cursor-pointer select-none text-xs font-medium'>
+                Local Agent Runner {runnerConnected ? '· Terhubung' : '· Belum terhubung'}
+              </summary>
+              <div className='mt-3 grid gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]'>
+                <label className='grid gap-1 text-xs text-muted-foreground'>
+                  URL runner
+                  <input
+                    value={runnerURL}
+                    onChange={(event) => {
+                      setRunnerURL(event.target.value)
+                      setRunnerConnected(false)
+                    }}
+                    placeholder='http://127.0.0.1:8765'
+                    className='h-9 min-w-0 rounded-md border border-input bg-background px-3 text-sm text-foreground'
+                    spellCheck={false}
+                  />
+                </label>
+                <label className='grid gap-1 text-xs text-muted-foreground'>
+                  Bearer token
+                  <input
+                    type='password'
+                    value={runnerToken}
+                    onChange={(event) => {
+                      setRunnerToken(event.target.value)
+                      setRunnerConnected(false)
+                    }}
+                    placeholder='Token dari LOCAL_RUNNER_TOKEN'
+                    className='h-9 min-w-0 rounded-md border border-input bg-background px-3 text-sm text-foreground'
+                    autoComplete='off'
+                  />
+                </label>
+                <div className='flex items-end'>
+                  <button
+                    type='button'
+                    onClick={connectRunner}
+                    disabled={runnerConnecting || !runnerToken.trim()}
+                    className='h-9 w-full rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground disabled:opacity-50'
+                  >
+                    {runnerConnecting ? 'Menghubungkan…' : runnerConnected ? 'Hubungkan ulang' : 'Hubungkan'}
+                  </button>
+                </div>
+              </div>
+
+              {runnerConnected && (
+                <label className='mt-3 grid max-w-xl gap-1 text-xs text-muted-foreground'>
+                  Workspace lokal
+                  <select
+                    value={runnerWorkspaceID}
+                    onChange={(event) => setRunnerWorkspaceID(event.target.value)}
+                    className='h-9 rounded-md border border-input bg-background px-3 text-sm text-foreground'
+                  >
+                    {runnerWorkspaces.map((workspace) => (
+                      <option key={workspace.id} value={workspace.id}>
+                        {workspace.name} ({workspace.id})
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              )}
+
+              <p className='mt-2 text-xs text-muted-foreground'>
+                {runnerStatus || 'Token hanya disimpan di memori halaman ini. File write dan setiap perintah terminal akan meminta persetujuan.'}
+              </p>
+              {runnerConnected && runnerWorkspaces.length === 0 && (
+                <p className='mt-1 text-xs text-destructive'>
+                  Runner terhubung tetapi belum memiliki workspace. Daftarkan folder melalui konfigurasi runner lalu hubungkan ulang.
+                </p>
+              )}
+            </details>
           </div>
         </section>
 
