@@ -806,7 +806,8 @@ export function AIAssistant() {
       const assistantToolCall = result.message
       toolHistory.push({ role: 'assistant', content: assistantToolCall })
       const followup = `Hasil Local Agent Runner untuk tool ${call.action}:\n\n${toolResult}\n\nGunakan hanya hasil tool di atas sebagai bukti. Jika perlu tindakan lain, keluarkan satu marker <LOCAL_AGENT_TOOL> yang valid. Jika sudah selesai, jawab pengguna tanpa marker.`
-      result = await sendChat(followup, files, toolHistory, agentId, modelId)
+      toolHistory.push({ role: 'user', content: followup })
+      result = await sendChat(followup, files, toolHistory.slice(0, -1), agentId, modelId)
     }
 
     if (/<LOCAL_AGENT_TOOL>/.test(result.message)) {
@@ -973,14 +974,39 @@ export function AIAssistant() {
         addAgentMessage(content, { file: generated })
         await persistMessage(taskId, 'assistant', content)
       } else {
-        const result = await sendChat(
-          text,
+        const agentSlug = selectedAgent.slug.toLowerCase()
+        const isCodingAgent = agentSlug.includes('coding') || agentSlug.includes('code')
+        const isTestingAgent = agentSlug.includes('testing') || agentSlug.includes('test')
+        setCurrentStep(isCodingAgent ? 'coding' : isTestingAgent ? 'testing' : 'planning')
+        setProgress(35)
+
+        const runnerContext = runnerConnected && runnerWorkspaceID
+          ? `[LOCAL RUNNER CONTEXT: connected=true; workspace=${runnerWorkspaceID}; base_url=${runnerURL}. You may request one allowed Local Agent Runner tool at a time using the exact <LOCAL_AGENT_TOOL>{JSON}</LOCAL_AGENT_TOOL> protocol. File writes and command execution require user approval.]`
+          : '[LOCAL RUNNER CONTEXT: connected=false. Do not emit Local Agent Runner tool markers. Explain the required manual steps instead.]'
+        const effectivePrompt = `${text}\n\n${runnerContext}`
+
+        let result = await sendChat(
+          effectivePrompt,
           files,
           history,
           selectedAgent.id,
           selectedModel.id
         )
 
+        if (runnerConnected && runnerWorkspaceID && (isCodingAgent || isTestingAgent)) {
+          setProgress(55)
+          result = await runAgentToolLoop(
+            result,
+            effectivePrompt,
+            history,
+            files,
+            selectedAgent.id,
+            selectedModel.id
+          )
+        }
+
+        setCurrentStep('done')
+        setProgress(100)
         addAgentMessage(result.message, {
           model: result.model,
           modelId: result.modelId,
