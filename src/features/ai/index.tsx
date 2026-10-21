@@ -80,6 +80,124 @@ type LocalRunnerToolCall = {
   create?: boolean
 }
 
+const normalizeToolAction = (value: unknown) =>
+  String(value ?? '')
+    .trim()
+    .replace(/([a-z])([A-Z])/g, '$1-$2')
+    .replace(/[ _]+/g, '-')
+    .toLowerCase()
+
+function parseLocalAgentToolCall(raw: string): LocalRunnerToolCall {
+  const cleaned = raw
+    .trim()
+    .replace(/^`{3}(?:json)?\s*/i, '')
+    .replace(/\s*`{3}$/i, '')
+    .trim()
+
+  let decoded: unknown
+  try {
+    decoded = JSON.parse(cleaned)
+  } catch {
+    // A few models emit single-quoted or otherwise almost-JSON tool envelopes.
+    // Only recover explicit, read-only requests from that format; never recover
+    // file writes or command execution from malformed JSON.
+    const actionMatch = cleaned.match(
+      /(?:["']?(?:action|tool|name)["']?)\s*[:=]\s*["']([a-zA-Z][a-zA-Z _-]*)["']/i
+    )
+    if (!actionMatch) {
+      throw new Error('Tool payload is not valid JSON and has no explicit action.')
+    }
+
+    const action = normalizeToolAction(actionMatch[1])
+    const readOnlyAliases: Record<string, string> = {
+      'list-files': 'list-files',
+      'list-file': 'list-files',
+      'list-directory': 'list-files',
+      'list-dir': 'list-files',
+      'read-file': 'read-file',
+      'get-file': 'read-file',
+    }
+    const safeAction = readOnlyAliases[action]
+    if (!safeAction) {
+      throw new Error('Malformed payload recovery is restricted to read-only tools.')
+    }
+
+    let path: string | undefined
+    const pathMatch = cleaned.match(
+      /(?:["']?path["']?)\s*[:=]\s*("(?:\\\\.|[^"\\\\])*"|'[^'\\\\]*')/i
+    )
+    if (pathMatch) {
+      const encodedPath = pathMatch[1]
+      path = encodedPath.startsWith('"')
+        ? String(JSON.parse(encodedPath))
+        : encodedPath.slice(1, -1)
+    }
+    return { action: safeAction, ...(path !== undefined ? { path } : {}) }
+  }
+
+  // Some model adapters wrap the JSON payload as a JSON-encoded string.
+  if (typeof decoded === 'string') {
+    decoded = JSON.parse(decoded)
+  }
+  if (!decoded || typeof decoded !== 'object' || Array.isArray(decoded)) {
+    throw new Error('Tool payload must be a JSON object.')
+  }
+
+  const parsed = decoded as Record<string, unknown>
+  let functionValue = parsed.function
+  if (typeof functionValue === 'string') {
+    functionValue = { name: functionValue }
+  }
+  const functionObject =
+    functionValue && typeof functionValue === 'object' && !Array.isArray(functionValue)
+      ? (functionValue as Record<string, unknown>)
+      : {}
+  let argumentValue = parsed.arguments ?? parsed.input ?? functionObject.arguments
+  if (typeof argumentValue === 'string') {
+    try {
+      argumentValue = JSON.parse(argumentValue)
+    } catch {
+      // Arguments strings may be present in common function-call envelopes.
+      // Invalid argument JSON is not safe to interpret for write/execute tools.
+      argumentValue = undefined
+    }
+  }
+  const argumentObject =
+    argumentValue && typeof argumentValue === 'object' && !Array.isArray(argumentValue)
+      ? (argumentValue as Record<string, unknown>)
+      : {}
+
+  const rawAction =
+    parsed.action ??
+    parsed.tool ??
+    parsed.name ??
+    functionObject.name ??
+    argumentObject.action ??
+    argumentObject.tool ??
+    argumentObject.name
+  const action = normalizeToolAction(rawAction)
+  if (!action) {
+    throw new Error('Tool payload does not contain an explicit action.')
+  }
+
+  return {
+    action,
+    ...(typeof (parsed.path ?? argumentObject.path) === 'string'
+      ? { path: String(parsed.path ?? argumentObject.path) }
+      : {}),
+    ...(typeof (parsed.content ?? argumentObject.content) === 'string'
+      ? { content: String(parsed.content ?? argumentObject.content) }
+      : {}),
+    ...(typeof (parsed.create ?? argumentObject.create) === 'boolean'
+      ? { create: Boolean(parsed.create ?? argumentObject.create) }
+      : {}),
+    ...((parsed.runtime ?? argumentObject.runtime) === 'docker' ||
+    (parsed.runtime ?? argumentObject.runtime) === 'native'
+      ? { runtime: (parsed.runtime ?? argumentObject.runtime) as 'docker' | 'native' }
+      : {}),
+  }
+}
+
 const workflowSteps: WorkflowStep[] = [
   'goal',
   'planning',
@@ -821,7 +939,7 @@ export function AIAssistant() {
     ]
 
     for (let iteration = 0; iteration < 4; iteration += 1) {
-      const match = result.message.match(/<LOCAL_AGENT_TOOL>\s*(\{[\s\S]*?\})\s*<\/LOCAL_AGENT_TOOL>/)
+      const match = result.message.match(/<LOCAL_AGENT_TOOL>([\s\S]*?)<\/LOCAL_AGENT_TOOL>/)
       if (!match) return result
 
       if (!runnerConnected || !runnerWorkspaceID) {
@@ -833,75 +951,14 @@ export function AIAssistant() {
 
       let call: LocalRunnerToolCall
       try {
-        const parsed = JSON.parse(match[1]) as Record<string, unknown>
-        // Be tolerant of common tool-call schemas emitted by different models:
-        // { action }, { tool }, { name }, or { function: { name, arguments } }.
-        const nested = (
-          parsed.function && typeof parsed.function === 'object'
-            ? parsed.function
-            : parsed.arguments && typeof parsed.arguments === 'object'
-              ? parsed.arguments
-              : {}
-        ) as Record<string, unknown>
-        const rawAction =
-          parsed.action ??
-          parsed.tool ??
-          parsed.name ??
-          nested.action ??
-          nested.tool ??
-          nested.name ??
-          (typeof parsed.function === 'string' ? parsed.function : undefined)
-        const normalizedAction = String(rawAction ?? '')
-          .trim()
-          .replace(/([a-z])([A-Z])/g, '$1-$2')
-          .replace(/[ _]+/g, '-')
-          .toLowerCase()
-        const aliases: Record<string, string> = {
-          'list-files': 'list-files',
-          'list-file': 'list-files',
-          'list-directory': 'list-files',
-          'list-dir': 'list-files',
-          'read-file': 'read-file',
-          'get-file': 'read-file',
-          'write-file': 'write-file',
-          'edit-file': 'write-file',
-          'git-status': 'git-status',
-          'go-test': 'go-test',
-          'go-build': 'go-build',
-          'npm-test': 'npm-test',
-          'npm-build': 'npm-build',
-          'npm-lint': 'npm-lint',
-          'python-test': 'python-test',
+        call = parseLocalAgentToolCall(match[1])
+      } catch (error) {
+        const detail = error instanceof Error ? error.message : 'format tidak dikenali'
+        setRunnerStatus(`Format tool tidak valid: ${detail}`)
+        return {
+          ...result,
+          message: `Agent menghasilkan permintaan tool yang tidak valid (${detail}). Tidak ada tindakan yang dijalankan. Coba ulangi sekali dengan meminta format persis: <LOCAL_AGENT_TOOL>{"action":"list-files","path":"."}</LOCAL_AGENT_TOOL>.`,
         }
-        const args = (
-          parsed.arguments && typeof parsed.arguments === 'object'
-            ? parsed.arguments
-            : parsed.input && typeof parsed.input === 'object'
-              ? parsed.input
-              : nested
-        ) as Record<string, unknown>
-        const pathValue = parsed.path ?? args.path
-        const contentValue = parsed.content ?? args.content
-        const runtimeValue = parsed.runtime ?? args.runtime
-        call = {
-          action: aliases[normalizedAction] ?? normalizedAction,
-          ...(typeof pathValue === 'string' ? { path: pathValue } : {}),
-          ...(typeof contentValue === 'string' ? { content: contentValue } : {}),
-          ...(typeof parsed.create === 'boolean' || typeof args.create === 'boolean'
-            ? { create: Boolean(parsed.create ?? args.create) }
-            : {}),
-          ...(runtimeValue === 'docker' || runtimeValue === 'native'
-            ? { runtime: runtimeValue }
-            : {}),
-        }
-        if (!call.action) {
-          return {
-            ...result,
-            message: 'Agent meminta tool tanpa nama aksi yang valid. Tidak ada tindakan yang dijalankan. Coba kirim ulang dengan instruksi: gunakan marker LOCAL_AGENT_TOOL dengan field action yang jelas.',
-          }
-        }
-      } catch {
-        return { ...result, message: 'Agent menghasilkan permintaan tool dengan format tidak valid. Tidak ada tindakan yang dijalankan.' }
       }
 
       let toolResult: string
