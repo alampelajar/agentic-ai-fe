@@ -41,7 +41,12 @@ vi.mock('react-i18next', () => {
     'settingsPage.account.saveChanges': 'Save Changes',
   }
   const t = (key: string) => translations[key] ?? key
-  return { useTranslation: () => ({ t }) }
+  return {
+    useTranslation: () => ({
+      t,
+      i18n: { resolvedLanguage: 'en', language: 'en' },
+    }),
+  }
 })
 
 describe('AccountForm', () => {
@@ -68,6 +73,8 @@ describe('AccountForm', () => {
     await expect.element(nameInput).toHaveValue('Alam')
     await userEvent.fill(nameInput, 'Alam RPL')
     await userEvent.click(screen.getByRole('button', { name: 'Adventurer' }).nth(0))
+    // The component deliberately asks for confirmation before selecting a preset.
+    await userEvent.click(screen.getByRole('button', { name: 'Yes' }))
     await userEvent.click(screen.getByRole('button', { name: 'Save Changes' }))
 
     await vi.waitFor(() => {
