@@ -124,9 +124,6 @@ export function ProfileDropdown() {
               </Link>
             </DropdownMenuItem>
 
-            <DropdownMenuItem>
-              {t('navigation.newTeam')}
-            </DropdownMenuItem>
           </DropdownMenuGroup>
 
           <DropdownMenuSeparator />
