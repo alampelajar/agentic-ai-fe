@@ -71,6 +71,133 @@ type ChatResult = {
 
 type WorkflowStep = 'goal' | 'planning' | 'coding' | 'testing' | 'done'
 
+type LocalRunnerWorkspace = { id: string; name: string }
+type LocalRunnerToolCall = {
+  action: string
+  runtime?: 'native' | 'docker'
+  path?: string
+  content?: string
+  create?: boolean
+}
+
+const normalizeToolAction = (value: unknown) =>
+  String(value ?? '')
+    .trim()
+    .replace(/([a-z])([A-Z])/g, '$1-$2')
+    .replace(/[ _]+/g, '-')
+    .toLowerCase()
+
+function parseLocalAgentToolCall(raw: string): LocalRunnerToolCall {
+  const cleaned = raw
+    .trim()
+    .replace(/^`{3}(?:json)?\s*/i, '')
+    .replace(/\s*`{3}$/i, '')
+    .trim()
+
+  let decoded: unknown
+  try {
+    decoded = JSON.parse(cleaned)
+  } catch {
+    // A few models emit single-quoted or otherwise almost-JSON tool envelopes.
+    // Only recover explicit, read-only requests from that format; never recover
+    // file writes or command execution from malformed JSON.
+    const actionMatch = cleaned.match(
+      /(?:["']?(?:action|tool|name)["']?)\s*[:=]\s*["']([a-zA-Z][a-zA-Z _-]*)["']/i
+    )
+    if (!actionMatch) {
+      throw new Error('Tool payload is not valid JSON and has no explicit action.')
+    }
+
+    const action = normalizeToolAction(actionMatch[1])
+    const readOnlyAliases: Record<string, string> = {
+      'list-files': 'list-files',
+      'list-file': 'list-files',
+      'list-directory': 'list-files',
+      'list-dir': 'list-files',
+      'read-file': 'read-file',
+      'get-file': 'read-file',
+    }
+    const safeAction = readOnlyAliases[action]
+    if (!safeAction) {
+      throw new Error('Malformed payload recovery is restricted to read-only tools.')
+    }
+
+    let path: string | undefined
+    const pathMatch = cleaned.match(
+      /(?:["']?path["']?)\s*[:=]\s*("(?:\\\\.|[^"\\\\])*"|'[^'\\\\]*')/i
+    )
+    if (pathMatch) {
+      const encodedPath = pathMatch[1]
+      path = encodedPath.startsWith('"')
+        ? String(JSON.parse(encodedPath))
+        : encodedPath.slice(1, -1)
+    }
+    return { action: safeAction, ...(path !== undefined ? { path } : {}) }
+  }
+
+  // Some model adapters wrap the JSON payload as a JSON-encoded string.
+  if (typeof decoded === 'string') {
+    decoded = JSON.parse(decoded)
+  }
+  if (!decoded || typeof decoded !== 'object' || Array.isArray(decoded)) {
+    throw new Error('Tool payload must be a JSON object.')
+  }
+
+  const parsed = decoded as Record<string, unknown>
+  let functionValue = parsed.function
+  if (typeof functionValue === 'string') {
+    functionValue = { name: functionValue }
+  }
+  const functionObject =
+    functionValue && typeof functionValue === 'object' && !Array.isArray(functionValue)
+      ? (functionValue as Record<string, unknown>)
+      : {}
+  let argumentValue = parsed.arguments ?? parsed.input ?? functionObject.arguments
+  if (typeof argumentValue === 'string') {
+    try {
+      argumentValue = JSON.parse(argumentValue)
+    } catch {
+      // Arguments strings may be present in common function-call envelopes.
+      // Invalid argument JSON is not safe to interpret for write/execute tools.
+      argumentValue = undefined
+    }
+  }
+  const argumentObject =
+    argumentValue && typeof argumentValue === 'object' && !Array.isArray(argumentValue)
+      ? (argumentValue as Record<string, unknown>)
+      : {}
+
+  const rawAction =
+    parsed.action ??
+    parsed.tool ??
+    parsed.name ??
+    functionObject.name ??
+    argumentObject.action ??
+    argumentObject.tool ??
+    argumentObject.name
+  const action = normalizeToolAction(rawAction)
+  if (!action) {
+    throw new Error('Tool payload does not contain an explicit action.')
+  }
+
+  return {
+    action,
+    ...(typeof (parsed.path ?? argumentObject.path) === 'string'
+      ? { path: String(parsed.path ?? argumentObject.path) }
+      : {}),
+    ...(typeof (parsed.content ?? argumentObject.content) === 'string'
+      ? { content: String(parsed.content ?? argumentObject.content) }
+      : {}),
+    ...(typeof (parsed.create ?? argumentObject.create) === 'boolean'
+      ? { create: Boolean(parsed.create ?? argumentObject.create) }
+      : {}),
+    ...((parsed.runtime ?? argumentObject.runtime) === 'docker' ||
+    (parsed.runtime ?? argumentObject.runtime) === 'native'
+      ? { runtime: (parsed.runtime ?? argumentObject.runtime) as 'docker' | 'native' }
+      : {}),
+  }
+}
+
 const workflowSteps: WorkflowStep[] = [
   'goal',
   'planning',
@@ -133,6 +260,17 @@ export function AIAssistant() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
 
   const [running, setRunning] = useState(false)
+
+  // Local Agent Runner connection is session-only; never persist its bearer token.
+  const [runnerURL, setRunnerURL] = useState('http://127.0.0.1:8765')
+  const [runnerToken, setRunnerToken] = useState('')
+  const [runnerConnected, setRunnerConnected] = useState(false)
+  const [runnerConnecting, setRunnerConnecting] = useState(false)
+  const [runnerWorkspaces, setRunnerWorkspaces] = useState<LocalRunnerWorkspace[]>([])
+  const [runnerWorkspaceID, setRunnerWorkspaceID] = useState('')
+  const [githubRepoURL, setGithubRepoURL] = useState('')
+  const [runnerStatus, setRunnerStatus] = useState('')
+  const [runnerBusy, setRunnerBusy] = useState(false)
 
   const [currentStep, setCurrentStep] = useState<WorkflowStep | null>(null)
 
@@ -578,7 +716,16 @@ export function AIAssistant() {
     const data = await response.json().catch(() => ({}))
 
     if (!response.ok) {
-      throw new Error(data?.error || data?.message || t('agentic.errors.chatFailed'))
+      const baseMessage = String(
+        data?.error || data?.message || t('agentic.errors.chatFailed')
+      )
+      const detail = typeof data?.detail === 'string' ? data.detail.trim() : ''
+      const statusLabel = `HTTP ${response.status}`
+      throw new Error(
+        [`[${statusLabel}] ${baseMessage}`, detail ? `Detail: ${detail}` : 'Backend tidak mengirim detail penyebab.']
+          .filter(Boolean)
+          .join('\n')
+      )
     }
 
     if (!data?.message) {
@@ -607,6 +754,294 @@ export function AIAssistant() {
 
       agentId: Number(data.agent_id || agentId),
     }
+  }
+
+  // ============================================================
+  // LOCAL AGENT RUNNER
+  // ============================================================
+
+  const connectRunner = async () => {
+    const base = runnerURL.trim().replace(/\/+$/, '')
+    if (!base || !runnerToken.trim()) {
+      setRunnerStatus('Masukkan URL runner dan bearer token.')
+      return
+    }
+
+    setRunnerConnecting(true)
+    setRunnerStatus('')
+    try {
+      const response = await fetch(`${base}/api/workspaces`, {
+        headers: { Authorization: `Bearer ${runnerToken.trim()}` },
+      })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        throw new Error(data?.error || `Runner merespons HTTP ${response.status}`)
+      }
+
+      const workspaces = Array.isArray(data.workspaces)
+        ? (data.workspaces as LocalRunnerWorkspace[])
+        : []
+      setRunnerURL(base)
+      setRunnerWorkspaces(workspaces)
+      setRunnerWorkspaceID((current) =>
+        workspaces.some((workspace) => workspace.id === current)
+          ? current
+          : workspaces[0]?.id ?? ''
+      )
+      setRunnerConnected(true)
+      setRunnerStatus(`Terhubung · ${workspaces.length} workspace`)
+    } catch (error) {
+      setRunnerConnected(false)
+      setRunnerWorkspaces([])
+      setRunnerWorkspaceID('')
+      setRunnerStatus(
+        error instanceof Error
+          ? error.message
+          : 'Tidak dapat terhubung ke Local Agent Runner.'
+      )
+    } finally {
+      setRunnerConnecting(false)
+    }
+  }
+
+  const cloneGitHubRepository = async () => {
+    const url = githubRepoURL.trim()
+    if (!runnerConnected || !url) {
+      setRunnerStatus('Hubungkan runner dan masukkan URL repository GitHub publik.')
+      return
+    }
+
+    setRunnerConnecting(true)
+    setRunnerStatus('Meng-clone repository GitHub...')
+    try {
+      const response = await fetch(`${runnerURL.replace(/\/+$/, '')}/api/workspaces/clone`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${runnerToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url }),
+      })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        throw new Error(data?.error || 'Gagal meng-clone repository.')
+      }
+
+      const listResponse = await fetch(`${runnerURL.replace(/\/+$/, '')}/api/workspaces`, {
+        headers: { Authorization: `Bearer ${runnerToken}` },
+      })
+      const listData = await listResponse.json().catch(() => ({}))
+      if (!listResponse.ok) throw new Error(listData?.error || 'Repository berhasil di-clone, tetapi daftar workspace gagal dimuat.')
+      const workspaces = Array.isArray(listData.workspaces)
+        ? (listData.workspaces as LocalRunnerWorkspace[])
+        : []
+      setRunnerWorkspaces(workspaces)
+      setRunnerWorkspaceID(String(data?.workspace?.id || workspaces[0]?.id || ''))
+      setGithubRepoURL('')
+      setRunnerStatus(`Repository ${data?.workspace?.name || url} berhasil ditambahkan.`)
+    } catch (error) {
+      setRunnerStatus(error instanceof Error ? error.message : 'Gagal meng-clone repository.')
+    } finally {
+      setRunnerConnecting(false)
+    }
+  }
+
+  const runLocalTool = async (call: LocalRunnerToolCall): Promise<string> => {
+    if (!runnerConnected || !runnerToken || !runnerWorkspaceID) {
+      throw new Error('Local Agent Runner belum terhubung atau workspace belum dipilih.')
+    }
+
+    const allowedExecution = [
+      'git-status',
+      'go-test',
+      'go-build',
+      'npm-test',
+      'npm-build',
+      'npm-lint',
+      'python-test',
+    ]
+    const allowedFileTools = ['list-files', 'read-file', 'write-file']
+    if (!allowedExecution.includes(call.action) && !allowedFileTools.includes(call.action)) {
+      throw new Error(`Tool tidak diizinkan: ${call.action}`)
+    }
+
+    const base = runnerURL.replace(/\/+$/, '')
+    const workspace = encodeURIComponent(runnerWorkspaceID)
+    const headers = {
+      Authorization: `Bearer ${runnerToken}`,
+      'Content-Type': 'application/json',
+    }
+
+    if (call.action === 'list-files') {
+      const path = encodeURIComponent(call.path || '.')
+      const response = await fetch(`${base}/api/workspaces/${workspace}/tree?path=${path}`, { headers })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(data?.error || 'Gagal membaca daftar file.')
+      return JSON.stringify(data)
+    }
+
+    if (call.action === 'read-file') {
+      if (!call.path) throw new Error('Tool read-file wajib menyertakan path relatif.')
+      const path = encodeURIComponent(call.path)
+      const response = await fetch(`${base}/api/workspaces/${workspace}/file?path=${path}`, { headers })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(data?.error || 'Gagal membaca file.')
+      return JSON.stringify(data)
+    }
+
+    if (call.action === 'write-file') {
+      if (!call.path || typeof call.content !== 'string') {
+        throw new Error('Tool write-file wajib menyertakan path dan content.')
+      }
+      const approved = window.confirm(
+        `Izinkan Coding Agent menulis file berikut?\n\nWorkspace: ${runnerWorkspaceID}\nFile: ${call.path}\n\nPerubahan file akan langsung diterapkan ke disk.`
+      )
+      if (!approved) return 'DIBATALKAN: pengguna menolak perubahan file.'
+      const response = await fetch(`${base}/api/workspaces/${workspace}/file`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({
+          path: call.path,
+          content: call.content,
+          create: Boolean(call.create),
+        }),
+      })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(data?.error || 'Gagal menulis file.')
+      return JSON.stringify(data)
+    }
+
+    const runtime = call.runtime === 'docker' ? 'docker' : 'native'
+    const approved = window.confirm(
+      `Izinkan Local Agent Runner menjalankan ${call.action}?\n\nWorkspace: ${runnerWorkspaceID}\nRuntime: ${runtime}\n\nPerintah dapat menjalankan kode dari project. Jalankan hanya kode yang dipercaya.`
+    )
+    if (!approved) return 'DIBATALKAN: pengguna menolak eksekusi perintah.'
+    setRunnerBusy(true)
+    setRunnerStatus(`Menjalankan ${call.action} (${runtime})...`)
+    try {
+      const response = await fetch(`${base}/api/workspaces/${workspace}/execute`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ action: call.action, runtime }),
+      })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(data?.error || 'Eksekusi tool gagal.')
+      setRunnerStatus(`${call.action}: ${data.status} (exit ${data.exit_code})`)
+      return JSON.stringify(data)
+    } finally {
+      setRunnerBusy(false)
+    }
+  }
+
+  const runAgentToolLoop = async (
+    initial: ChatResult,
+    originalText: string,
+    originalHistory: ChatHistoryItem[],
+    files: File[],
+    agentId: number,
+    modelId: number
+  ): Promise<ChatResult> => {
+    let result = initial
+    const toolHistory: ChatHistoryItem[] = [
+      ...originalHistory,
+      { role: 'user', content: originalText },
+    ]
+
+    const maxToolCalls = 8
+    let toolCalls = 0
+    let promptedForFirstTool = false
+
+    while (toolCalls < maxToolCalls) {
+      const match = result.message.match(/<LOCAL_AGENT_TOOL>([\s\S]*?)<\/LOCAL_AGENT_TOOL>/)
+      if (!match) {
+        const looksLikeWorkspaceTask =
+          /\b(repository|repo|workspace|local agent runner|struktur|daftar file|list-files|baca file|membaca|package\.json|konfigurasi|inspect|periksa|pemeriksaan|pengujian|testing|test)\b/i.test(originalText)
+
+        // Some models first narrate a plan instead of emitting a tool marker.
+        // For an explicit repository-inspection request, nudge once to the
+        // required tool protocol rather than falsely treating the plan as work.
+        if (toolCalls === 0 && !promptedForFirstTool && looksLikeWorkspaceTask) {
+          promptedForFirstTool = true
+          toolHistory.push({ role: 'assistant', content: result.message })
+          const toolRequestPrompt =
+            'Permintaan pengguna ini membutuhkan pemeriksaan workspace. Jangan menjawab dengan rencana atau narasi. Segera panggil tool read-only pertama memakai marker persis berikut, tanpa Markdown fence atau teks di dalam marker selain JSON valid: <LOCAL_AGENT_TOOL>{"action":"list-files","path":"."}</LOCAL_AGENT_TOOL>. Jangan mengubah file dan jangan menjalankan perintah terminal.'
+          toolHistory.push({ role: 'user', content: toolRequestPrompt })
+          result = await sendChat(
+            toolRequestPrompt,
+            files,
+            toolHistory.slice(0, -1),
+            agentId,
+            modelId
+          )
+          continue
+        }
+
+        if (promptedForFirstTool && toolCalls === 0) {
+          return {
+            ...result,
+            message:
+              'Saya belum bisa memeriksa workspace karena model tidak menghasilkan marker tool yang valid setelah satu kali diminta ulang. Tidak ada file yang dibaca atau diubah. Coba ulangi permintaan atau pilih model lain yang lebih patuh pada format tool.',
+          }
+        }
+        return result
+      }
+
+      if (!runnerConnected || !runnerWorkspaceID) {
+        return {
+          ...result,
+          message: 'Local Agent Runner belum terhubung. Hubungkan runner dan pilih workspace, lalu kirim ulang permintaan.\\n\\nPermintaan tool tidak dijalankan.',
+        }
+      }
+
+      let call: LocalRunnerToolCall
+      try {
+        call = parseLocalAgentToolCall(match[1])
+      } catch (error) {
+        const detail = error instanceof Error ? error.message : 'format tidak dikenali'
+        setRunnerStatus(`Format tool tidak valid: ${detail}`)
+        return {
+          ...result,
+          message: `Agent menghasilkan permintaan tool yang tidak valid (${detail}). Tidak ada tindakan yang dijalankan. Coba ulangi sekali dengan meminta format persis: <LOCAL_AGENT_TOOL>{"action":"list-files","path":"."}</LOCAL_AGENT_TOOL>.`,
+        }
+      }
+
+      let toolResult: string
+      try {
+        toolResult = await runLocalTool(call)
+      } catch (error) {
+        toolResult = `TOOL_ERROR: ${error instanceof Error ? error.message : 'Kesalahan tool tidak diketahui'}`
+      }
+      toolCalls += 1
+
+      setRunnerStatus(`Tool ${call.action} selesai (${toolCalls}/${maxToolCalls}); meminta agent melanjutkan...`)
+      const assistantToolCall = result.message
+      toolHistory.push({ role: 'assistant', content: assistantToolCall })
+      const followup = `Hasil Local Agent Runner untuk tool ${call.action}:\\n\\n${toolResult}\\n\\nGunakan hanya hasil tool di atas sebagai bukti. Jika perlu tindakan lain, keluarkan satu marker <LOCAL_AGENT_TOOL> yang valid. Jika sudah selesai, jawab pengguna tanpa marker.`
+      toolHistory.push({ role: 'user', content: followup })
+      result = await sendChat(followup, files, toolHistory.slice(0, -1), agentId, modelId)
+    }
+
+    if (/<LOCAL_AGENT_TOOL>/.test(result.message)) {
+      setRunnerStatus('Batas tool tercapai; meminta ringkasan dari hasil yang sudah terkumpul...')
+      const finalPrompt = `Batas aman ${maxToolCalls} pemanggilan tool telah tercapai. JANGAN meminta atau mengeluarkan tool marker lagi. Buat jawaban akhir sekarang hanya berdasarkan output Local Agent Runner yang sudah ada di riwayat percakapan. Ringkas file yang benar-benar berhasil dibaca, temuan yang didukung output, dan hal yang belum dapat dipastikan. Jangan mengklaim file sudah dibaca atau perintah sudah dijalankan jika tidak ada hasilnya. Permintaan awal pengguna: ${originalText}`
+      try {
+        const finalResult = await sendChat(finalPrompt, files, toolHistory, agentId, modelId)
+        if (!/<LOCAL_AGENT_TOOL>/.test(finalResult.message)) {
+          setRunnerStatus(`Selesai dengan ${toolCalls} pemanggilan tool`)
+          return finalResult
+        }
+        return {
+          ...finalResult,
+          message: `Pemeriksaan mencapai batas ${maxToolCalls} pemanggilan tool. Ringkasan AI masih meminta tool tambahan, jadi saya tidak menjalankannya lagi. Minta agent merangkum bukti yang sudah terkumpul atau lanjutkan pemeriksaan dalam pesan baru.`,
+        }
+      } catch (error) {
+        return {
+          ...result,
+          message: `Pemeriksaan mencapai batas ${maxToolCalls} pemanggilan tool dan ringkasan akhir gagal dibuat: ${error instanceof Error ? error.message : 'kesalahan tidak diketahui'}. Tidak ada tool tambahan yang dijalankan.`,
+        }
+      }
+    }
+    return result
   }
 
   // ============================================================
@@ -767,14 +1202,39 @@ export function AIAssistant() {
         addAgentMessage(content, { file: generated })
         await persistMessage(taskId, 'assistant', content)
       } else {
-        const result = await sendChat(
-          text,
+        const agentSlug = selectedAgent.slug.toLowerCase()
+        const isCodingAgent = agentSlug.includes('coding') || agentSlug.includes('code')
+        const isTestingAgent = agentSlug.includes('testing') || agentSlug.includes('test')
+        setCurrentStep(isCodingAgent ? 'coding' : isTestingAgent ? 'testing' : 'planning')
+        setProgress(35)
+
+        const runnerContext = runnerConnected && runnerWorkspaceID
+          ? `[LOCAL RUNNER CONTEXT: connected=true; workspace=${runnerWorkspaceID}; base_url=${runnerURL}. You may request one allowed Local Agent Runner tool at a time using the exact <LOCAL_AGENT_TOOL>{JSON}</LOCAL_AGENT_TOOL> protocol. File writes and command execution require user approval.]`
+          : '[LOCAL RUNNER CONTEXT: connected=false. Do not emit Local Agent Runner tool markers. Explain the required manual steps instead.]'
+        const effectivePrompt = `${text}\n\n${runnerContext}`
+
+        let result = await sendChat(
+          effectivePrompt,
           files,
           history,
           selectedAgent.id,
           selectedModel.id
         )
 
+        if (runnerConnected && runnerWorkspaceID && (isCodingAgent || isTestingAgent)) {
+          setProgress(55)
+          result = await runAgentToolLoop(
+            result,
+            effectivePrompt,
+            history,
+            files,
+            selectedAgent.id,
+            selectedModel.id
+          )
+        }
+
+        setCurrentStep('done')
+        setProgress(100)
         addAgentMessage(result.message, {
           model: result.model,
           modelId: result.modelId,
@@ -897,6 +1357,102 @@ export function AIAssistant() {
                       })
                     : t('agentic.status.selectEmployee')}
             </div>
+
+            <details className='mt-3 rounded-lg border border-border/70 bg-muted/10 px-3 py-2'>
+              <summary className='cursor-pointer select-none text-xs font-medium'>
+                Local Agent Runner {runnerConnected ? '· Terhubung' : '· Belum terhubung'}
+              </summary>
+              <div className='mt-3 grid gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]'>
+                <label className='grid gap-1 text-xs text-muted-foreground'>
+                  URL runner
+                  <input
+                    value={runnerURL}
+                    onChange={(event) => {
+                      setRunnerURL(event.target.value)
+                      setRunnerConnected(false)
+                    }}
+                    placeholder='http://127.0.0.1:8765'
+                    className='h-9 min-w-0 rounded-md border border-input bg-background px-3 text-sm text-foreground'
+                    spellCheck={false}
+                  />
+                </label>
+                <label className='grid gap-1 text-xs text-muted-foreground'>
+                  Bearer token
+                  <input
+                    type='password'
+                    value={runnerToken}
+                    onChange={(event) => {
+                      setRunnerToken(event.target.value)
+                      setRunnerConnected(false)
+                    }}
+                    placeholder='Token dari LOCAL_RUNNER_TOKEN'
+                    className='h-9 min-w-0 rounded-md border border-input bg-background px-3 text-sm text-foreground'
+                    autoComplete='off'
+                  />
+                </label>
+                <div className='flex items-end'>
+                  <button
+                    type='button'
+                    onClick={connectRunner}
+                    disabled={runnerConnecting || runnerBusy || !runnerToken.trim()}
+                    className='h-9 w-full rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground disabled:opacity-50'
+                  >
+                    {runnerConnecting ? 'Menghubungkan…' : runnerConnected ? 'Hubungkan ulang' : 'Hubungkan'}
+                  </button>
+                </div>
+              </div>
+
+              {runnerConnected && (
+                <label className='mt-3 grid max-w-xl gap-1 text-xs text-muted-foreground'>
+                  Workspace lokal
+                  <select
+                    value={runnerWorkspaceID}
+                    onChange={(event) => setRunnerWorkspaceID(event.target.value)}
+                    className='h-9 rounded-md border border-input bg-background px-3 text-sm text-foreground'
+                  >
+                    {runnerWorkspaces.map((workspace) => (
+                      <option key={workspace.id} value={workspace.id}>
+                        {workspace.name} ({workspace.id})
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              )}
+
+              {runnerConnected && (
+                <div className='mt-3 grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]'>
+                  <label className='grid gap-1 text-xs text-muted-foreground'>
+                    Clone repository GitHub publik
+                    <input
+                      value={githubRepoURL}
+                      onChange={(event) => setGithubRepoURL(event.target.value)}
+                      placeholder='https://github.com/owner/repository'
+                      className='h-9 min-w-0 rounded-md border border-input bg-background px-3 text-sm text-foreground'
+                      spellCheck={false}
+                    />
+                  </label>
+                  <div className='flex items-end'>
+                    <button
+                      type='button'
+                      onClick={cloneGitHubRepository}
+                      disabled={runnerConnecting || !githubRepoURL.trim()}
+                      className='h-9 w-full rounded-md border px-3 text-sm font-medium disabled:opacity-50'
+                    >
+                      Clone repository
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <p className='mt-2 text-xs text-muted-foreground'>
+                {runnerStatus || 'Token hanya disimpan di memori halaman ini. File write dan setiap perintah terminal akan meminta persetujuan.'}
+              </p>
+              {runnerConnected && runnerWorkspaces.length === 0 && (
+                <p className='mt-1 text-xs text-destructive'>
+                  Runner terhubung tetapi belum memiliki workspace. Daftarkan folder melalui konfigurasi runner lalu hubungkan ulang.
+                </p>
+              )}
+            </details>
           </div>
         </section>
 
