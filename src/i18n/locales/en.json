@@ -1114,6 +1114,7 @@
       "completed": "Completed",
       "rejected": "Rejected"
     },
-    "rateAdminReply": "Rate the admin's response"
+    "rateAdminReply": "Rate the admin's response",
+    "selectCategory": "Select a category"
   }
 }
