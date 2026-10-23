@@ -1113,6 +1113,7 @@
       "processing": "In progress",
       "completed": "Completed",
       "rejected": "Rejected"
-    }
+    },
+    "rateAdminReply": "Rate the admin's response"
   }
 }
