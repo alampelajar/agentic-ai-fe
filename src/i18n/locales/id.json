@@ -1114,6 +1114,7 @@
       "completed": "Selesai",
       "rejected": "Ditolak"
     },
-    "rateAdminReply": "Beri nilai untuk balasan admin"
+    "rateAdminReply": "Beri nilai untuk balasan admin",
+    "selectCategory": "Pilih kategori"
   }
 }
