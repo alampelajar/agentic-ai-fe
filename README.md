@@ -62,7 +62,7 @@ Frontend aplikasi **Agentic AI** yang menyediakan antarmuka untuk menggunakan AI
 4. Sesuaikan nilai di file `.env`:
 
    ```env
-   VITE_API_BASE_URL=http://localhost:8080
+   VITE_API_BASE_URL=http://localhost:8081
    VITE_GOOGLE_CLIENT_ID=
    ```
 
@@ -89,7 +89,7 @@ Frontend aplikasi **Agentic AI** yang menyediakan antarmuka untuk menggunakan AI
 
 ## Integrasi backend
 
-Secara default, frontend mengirim request ke `http://localhost:8080`. Ubah `VITE_API_BASE_URL` di `.env` jika backend berjalan pada alamat lain, lalu mulai ulang server Vite.
+Secara default, frontend mengirim request ke `http://localhost:8081`. Ubah `VITE_API_BASE_URL` di `.env` jika backend berjalan pada alamat lain, lalu mulai ulang server Vite.
 
 Pastikan backend mengizinkan origin frontend melalui konfigurasi CORS. Jangan memasukkan API key rahasia ke variabel frontend berawalan `VITE_`, karena nilainya akan ikut terekspos di browser.
 
