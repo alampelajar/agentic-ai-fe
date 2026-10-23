@@ -1113,6 +1113,7 @@
       "processing": "Diproses",
       "completed": "Selesai",
       "rejected": "Ditolak"
-    }
+    },
+    "rateAdminReply": "Beri nilai untuk balasan admin"
   }
 }
