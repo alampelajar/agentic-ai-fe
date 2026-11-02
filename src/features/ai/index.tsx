@@ -19,6 +19,7 @@ import { Main } from '@/components/layout/main'
 import { PageLoading } from '@/components/layout/page-loading'
 import { approveDesktopAction, denyDesktopAction, emergencyStopDesktop, requestDesktopAction, type DesktopAction } from '@/features/desktop-runtime/api'
 import { describeDesktopAction } from './approval-details'
+import { DESKTOP_TOOLS, parseLocalAgentToolCall, READ_ONLY_DESKTOP_TOOLS, type LocalRunnerToolCall } from './tool-call'
 import {
   AgentSelector,
   type Agent,
@@ -74,146 +75,6 @@ type ChatResult = {
 type WorkflowStep = 'goal' | 'planning' | 'coding' | 'testing' | 'done'
 
 type LocalRunnerWorkspace = { id: string; name: string }
-type LocalRunnerToolCall = {
-  action: string
-  runtime?: 'native' | 'docker'
-  path?: string
-  content?: string
-  create?: boolean
-  window?: string
-  target?: Record<string, unknown>
-  text?: string
-  keys?: string[]
-  skill?: string
-}
-
-const normalizeToolAction = (value: unknown) =>
-  String(value ?? '')
-    .trim()
-    .replace(/([a-z])([A-Z])/g, '$1-$2')
-    .replace(/[ _]+/g, '-')
-    .toLowerCase()
-
-function parseLocalAgentToolCall(raw: string): LocalRunnerToolCall {
-  const cleaned = raw
-    .trim()
-    .replace(/^`{3}(?:json)?\s*/i, '')
-    .replace(/\s*`{3}$/i, '')
-    .trim()
-
-  let decoded: unknown
-  try {
-    decoded = JSON.parse(cleaned)
-  } catch {
-    // A few models emit single-quoted or otherwise almost-JSON tool envelopes.
-    // Only recover explicit, read-only requests from that format; never recover
-    // file writes or command execution from malformed JSON.
-    const actionMatch = cleaned.match(
-      /(?:["']?(?:action|tool|name)["']?)\s*[:=]\s*["']([a-zA-Z][a-zA-Z _-]*)["']/i
-    )
-    if (!actionMatch) {
-      throw new Error('Tool payload is not valid JSON and has no explicit action.')
-    }
-
-    const action = normalizeToolAction(actionMatch[1])
-    const readOnlyAliases: Record<string, string> = {
-      'list-files': 'list-files',
-      'list-file': 'list-files',
-      'list-directory': 'list-files',
-      'list-dir': 'list-files',
-      'read-file': 'read-file',
-      'get-file': 'read-file',
-    }
-    const safeAction = readOnlyAliases[action]
-    if (!safeAction) {
-      throw new Error('Malformed payload recovery is restricted to read-only tools.')
-    }
-
-    let path: string | undefined
-    const pathMatch = cleaned.match(
-      /(?:["']?path["']?)\s*[:=]\s*("(?:\\\\.|[^"\\\\])*"|'[^'\\\\]*')/i
-    )
-    if (pathMatch) {
-      const encodedPath = pathMatch[1]
-      path = encodedPath.startsWith('"')
-        ? String(JSON.parse(encodedPath))
-        : encodedPath.slice(1, -1)
-    }
-    return { action: safeAction, ...(path !== undefined ? { path } : {}) }
-  }
-
-  // Some model adapters wrap the JSON payload as a JSON-encoded string.
-  if (typeof decoded === 'string') {
-    decoded = JSON.parse(decoded)
-  }
-  if (!decoded || typeof decoded !== 'object' || Array.isArray(decoded)) {
-    throw new Error('Tool payload must be a JSON object.')
-  }
-
-  const parsed = decoded as Record<string, unknown>
-  let functionValue = parsed.function
-  if (typeof functionValue === 'string') {
-    functionValue = { name: functionValue }
-  }
-  const functionObject =
-    functionValue && typeof functionValue === 'object' && !Array.isArray(functionValue)
-      ? (functionValue as Record<string, unknown>)
-      : {}
-  let argumentValue = parsed.arguments ?? parsed.input ?? functionObject.arguments
-  if (typeof argumentValue === 'string') {
-    try {
-      argumentValue = JSON.parse(argumentValue)
-    } catch {
-      // Arguments strings may be present in common function-call envelopes.
-      // Invalid argument JSON is not safe to interpret for write/execute tools.
-      argumentValue = undefined
-    }
-  }
-  const argumentObject =
-    argumentValue && typeof argumentValue === 'object' && !Array.isArray(argumentValue)
-      ? (argumentValue as Record<string, unknown>)
-      : {}
-
-  const rawAction =
-    parsed.action ??
-    parsed.tool ??
-    parsed.name ??
-    functionObject.name ??
-    argumentObject.action ??
-    argumentObject.tool ??
-    argumentObject.name
-  const action = normalizeToolAction(rawAction)
-  if (!action) {
-    throw new Error('Tool payload does not contain an explicit action.')
-  }
-
-  return {
-    action,
-    ...(typeof (parsed.path ?? argumentObject.path) === 'string'
-      ? { path: String(parsed.path ?? argumentObject.path) }
-      : {}),
-    ...(typeof (parsed.content ?? argumentObject.content) === 'string'
-      ? { content: String(parsed.content ?? argumentObject.content) }
-      : {}),
-    ...(() => {
-      const rawWindow = parsed.window ?? argumentObject.window
-      // Models often send window handles as JSON numbers even though the schema says string.
-      if (typeof rawWindow === 'string') return { window: rawWindow }
-      if (typeof rawWindow === 'number' && Number.isSafeInteger(rawWindow)) return { window: String(rawWindow) }
-      return {}
-    })(),
-    ...(typeof (parsed.text ?? argumentObject.text) === 'string' ? { text: String(parsed.text ?? argumentObject.text) } : {}),
-    ...(Array.isArray(parsed.keys ?? argumentObject.keys) ? { keys: (parsed.keys ?? argumentObject.keys) as string[] } : {}),
-    ...(typeof (parsed.skill ?? argumentObject.skill) === 'string' ? { skill: String(parsed.skill ?? argumentObject.skill) } : {}),
-    ...(typeof (parsed.create ?? argumentObject.create) === 'boolean'
-      ? { create: Boolean(parsed.create ?? argumentObject.create) }
-      : {}),
-    ...((parsed.runtime ?? argumentObject.runtime) === 'docker' ||
-    (parsed.runtime ?? argumentObject.runtime) === 'native'
-      ? { runtime: (parsed.runtime ?? argumentObject.runtime) as 'docker' | 'native' }
-      : {}),
-  }
-}
 
 const workflowSteps: WorkflowStep[] = [
   'goal',
@@ -290,7 +151,7 @@ export function AIAssistant() {
   const [runnerBusy, setRunnerBusy] = useState(false)
   const [pendingApproval, setPendingApproval] = useState<DesktopAction | null>(null)
   const [pendingApprovalSkill, setPendingApprovalSkill] = useState('Desktop Control')
-  const approvalResolver = useRef<((decision: 'once' | 'session' | 'deny') => void) | null>(null)
+  const approvalResolver = useRef<((decision: 'once' | 'deny') => void) | null>(null)
 
   const [currentStep, setCurrentStep] = useState<WorkflowStep | null>(null)
 
@@ -956,9 +817,9 @@ export function AIAssistant() {
   const runDesktopTool = async (call: LocalRunnerToolCall, agentId: number): Promise<string> => {
     if (!runnerConnected || !runnerToken) throw new Error('Local Agent Runner belum terhubung.')
     const action = call.action
-    const allowed = ['desktop.status', 'desktop.screenshot', 'desktop.windows', 'desktop.inspect', 'desktop.click', 'desktop.double_click', 'desktop.scroll', 'desktop.type', 'desktop.hotkey', 'desktop.focus_window']
+    const allowed: readonly string[] = DESKTOP_TOOLS
     if (!allowed.includes(action)) throw new Error(`Desktop tool tidak diizinkan: ${action}`)
-    const mutating = !['desktop.status', 'desktop.screenshot', 'desktop.windows', 'desktop.inspect'].includes(action)
+    const mutating = !READ_ONLY_DESKTOP_TOOLS.includes(action)
     const base = runnerURL.replace(/\/+$/, '')
     const logActivity = async (approvalStatus: string, executionStatus: string, error?: string) => {
       await fetch(`${API_BASE_URL}/api/tool-activities`, { method: 'POST', headers: { Authorization: `Bearer ${accessToken || ''}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ agent_id: agentId, tool_name: action, arguments: { window: call.window, text: call.text ? '[redacted-by-client]' : undefined, keys: call.keys }, target_application: call.window || '', approval_status: approvalStatus, execution_status: executionStatus, error: error || '' }) }).catch(() => undefined)
@@ -975,10 +836,10 @@ export function AIAssistant() {
       }
       return JSON.stringify(data)
     }
-    const requested = await requestDesktopAction(base, runnerToken, { action, agent: `Agent ${agentId}`, reason: 'AI Agent requested this desktop action for the current user task.', window: call.window, arguments: { text: call.text, keys: call.keys } })
+    const requested = await requestDesktopAction(base, runnerToken, { action, agent: `Agent ${agentId}`, reason: 'AI Agent requested this desktop action for the current user task.', window: call.window, target: call.target, arguments: { text: call.text, keys: call.keys, amount: call.amount, direction: call.direction } })
     setPendingApproval(requested.action)
     setPendingApprovalSkill(call.skill || 'Desktop Control')
-    const decision = await new Promise<'once' | 'session' | 'deny'>((resolve) => { approvalResolver.current = resolve })
+    const decision = await new Promise<'once' | 'deny'>((resolve) => { approvalResolver.current = resolve })
     setPendingApproval(null)
     approvalResolver.current = null
     if (decision === 'deny') { await denyDesktopAction(base, runnerToken, requested.action.id); await logActivity('denied', 'cancelled'); return 'TOOL_DENIED: pengguna menolak tindakan desktop.' }
@@ -1852,9 +1713,9 @@ export function AIAssistant() {
                 </div>
               ))}
             </dl>
+            <p className='mt-4 text-xs text-muted-foreground'>Hanya tindakan ini yang dijalankan; tindakan desktop berikutnya tetap meminta persetujuan. Setelah disetujui, agent ini memegang kendali desktop sampai Anda menekan Emergency Stop.</p>
             <div className='mt-5 flex flex-wrap justify-end gap-2'>
               <button type='button' className='rounded-md border px-3 py-2 text-sm' onClick={() => approvalResolver.current?.('deny')}>Deny</button>
-              <button type='button' className='rounded-md border px-3 py-2 text-sm' onClick={() => approvalResolver.current?.('session')}>Allow This Session</button>
               <button type='button' className='rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground' onClick={() => approvalResolver.current?.('once')}>Allow Once</button>
             </div>
             <button type='button' className='mt-3 w-full rounded-md border border-destructive/40 px-3 py-2 text-sm text-destructive' onClick={() => { void emergencyStopDesktop(runnerURL, runnerToken).catch(() => undefined); approvalResolver.current?.('deny') }}>Emergency Stop</button>
