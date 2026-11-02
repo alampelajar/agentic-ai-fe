@@ -17,8 +17,9 @@ import { useAuthStore } from '@/stores/auth-store'
 import { addTaskMessage, createTask, getTask, getTaskMessages, updateTask } from '@/features/tasks/data/api'
 import { Main } from '@/components/layout/main'
 import { PageLoading } from '@/components/layout/page-loading'
-import { approveDesktopAction, denyDesktopAction, emergencyStopDesktop, requestDesktopAction, type DesktopAction } from '@/features/desktop-runtime/api'
-import { describeDesktopAction } from './approval-details'
+import { approveDesktopAction, denyDesktopAction, emergencyStopDesktop, getDesktopWindows, requestDesktopAction, type DesktopAction } from '@/features/desktop-runtime/api'
+import { ApprovalDetailList } from '@/features/desktop-runtime/approval-detail-list'
+import { describeDesktopAction, type WindowInfo } from '@/features/desktop-runtime/approval-details'
 import { DESKTOP_TOOLS, parseLocalAgentToolCall, READ_ONLY_DESKTOP_TOOLS, type LocalRunnerToolCall } from './tool-call'
 import {
   AgentSelector,
@@ -151,6 +152,7 @@ export function AIAssistant() {
   const [runnerBusy, setRunnerBusy] = useState(false)
   const [pendingApproval, setPendingApproval] = useState<DesktopAction | null>(null)
   const [pendingApprovalSkill, setPendingApprovalSkill] = useState('Desktop Control')
+  const [pendingWindows, setPendingWindows] = useState<WindowInfo[] | undefined>(undefined)
   const approvalResolver = useRef<((decision: 'once' | 'deny') => void) | null>(null)
 
   const [currentStep, setCurrentStep] = useState<WorkflowStep | null>(null)
@@ -837,6 +839,8 @@ export function AIAssistant() {
       return JSON.stringify(data)
     }
     const requested = await requestDesktopAction(base, runnerToken, { action, agent: `Agent ${agentId}`, reason: 'AI Agent requested this desktop action for the current user task.', window: call.window, target: call.target, arguments: { text: call.text, keys: call.keys, amount: call.amount, direction: call.direction } })
+    // Window names are read-only metadata; they let the dialog show the application and not only a handle.
+    setPendingWindows(await getDesktopWindows(base, runnerToken).then((response) => response.data?.windows, () => undefined))
     setPendingApproval(requested.action)
     setPendingApprovalSkill(call.skill || 'Desktop Control')
     const decision = await new Promise<'once' | 'deny'>((resolve) => { approvalResolver.current = resolve })
@@ -1701,18 +1705,11 @@ export function AIAssistant() {
               <div><dt className='text-muted-foreground'>Agent</dt><dd className='font-medium'>{pendingApproval.agent || selectedAgent?.name || 'Unknown agent'}</dd></div>
               <div><dt className='text-muted-foreground'>Skill</dt><dd className='font-medium'>{pendingApprovalSkill}</dd></div>
               <div><dt className='text-muted-foreground'>Tool / tindakan</dt><dd className='font-medium'>{pendingApproval.action}</dd></div>
-              <div><dt className='text-muted-foreground'>Target aplikasi</dt><dd>{pendingApproval.window || 'Desktop session'}</dd></div>
               <div><dt className='text-muted-foreground'>Alasan</dt><dd>{pendingApproval.reason}</dd></div>
-              {describeDesktopAction(pendingApproval).map((detail) => (
-                <div key={detail.label} data-testid='approval-detail'>
-                  <dt className='text-muted-foreground'>{detail.label}</dt>
-                  <dd className='max-h-32 overflow-y-auto whitespace-pre-wrap break-all rounded bg-background/60 px-2 py-1 font-mono text-xs'>
-                    {detail.value}
-                    {detail.truncated && <span className='ml-1 font-sans text-amber-700'>(dipotong; teks penuh lebih panjang)</span>}
-                  </dd>
-                </div>
-              ))}
             </dl>
+            <div className='mt-2'>
+              <ApprovalDetailList key={pendingApproval.id} lang='id' details={describeDesktopAction(pendingApproval, { windows: pendingWindows, lang: 'id' })} />
+            </div>
             <p className='mt-4 text-xs text-muted-foreground'>Hanya tindakan ini yang dijalankan; tindakan desktop berikutnya tetap meminta persetujuan. Setelah disetujui, agent ini memegang kendali desktop sampai Anda menekan Emergency Stop.</p>
             <div className='mt-5 flex flex-wrap justify-end gap-2'>
               <button type='button' className='rounded-md border px-3 py-2 text-sm' onClick={() => approvalResolver.current?.('deny')}>Deny</button>
