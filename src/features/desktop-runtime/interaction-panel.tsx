@@ -1,13 +1,14 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { AlertTriangle, Check, ShieldAlert, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { approveDesktopAction, denyDesktopAction, emergencyStopDesktop, getDesktopWindows, requestDesktopAction, revokeDesktopPermission, type DesktopAction } from './api'
+import { approveDesktopAction, denyDesktopAction, emergencyStopDesktop, getDesktopWindows, requestDesktopAction, revokeDesktopPermission, RunnerRequestError, type DesktopAction } from './api'
+import { ApprovalCountdown } from './approval-countdown'
 import { ApprovalDetailList } from './approval-detail-list'
-import { buildDesktopActionRequest, describeDesktopAction, type DesktopActionForm, type WindowInfo } from './approval-details'
+import { buildDesktopActionRequest, describeDesktopAction, isExpired, type DesktopActionForm, type WindowInfo } from './approval-details'
 
 export function DesktopInteractionPanel({ baseUrl, token, disabled }: { baseUrl: string; token: string; disabled: boolean }) {
   const [action, setAction] = useState('desktop.focus_window')
@@ -30,18 +31,83 @@ export function DesktopInteractionPanel({ baseUrl, token, disabled }: { baseUrl:
   const formIncomplete = (isClick && !targetValue.trim()) || (isScroll && !(Number.isInteger(scrollAmount) && scrollAmount >= 1 && scrollAmount <= 20))
 
   const run = async (operation: () => Promise<void>) => { try { await operation() } catch (error) { toast.error(error instanceof Error ? error.message : 'Desktop action failed.') } }
+  const note = (message: string) => setEvents((items) => [message, ...items].slice(0, 20))
+
+  // The dialog's life. The ref is the source of truth so a late callback (a timer, a slow
+  // response) can never touch a newer dialog: everything is keyed by the approval's id.
+  const pendingRef = useRef<DesktopAction | null>(null)
+  const busyRef = useRef(false)
+  const [busy, setBusy] = useState(false)
+  const openApproval = (approval: DesktopAction) => { pendingRef.current = approval; busyRef.current = false; setBusy(false); setPending(approval) }
+  // Idempotent: closes only if this approval is still the one on screen, and says whether it did.
+  const closeApproval = (id: string) => {
+    if (pendingRef.current?.id !== id) return false
+    pendingRef.current = null
+    busyRef.current = false
+    setBusy(false)
+    setPending(null)
+    return true
+  }
+  const EXPIRED = 'Approval expired. Request a new one to continue.'
+  const expireApproval = (approval: DesktopAction) => {
+    // An approval already on its way to the runner is settled by the runner's answer instead.
+    if (busyRef.current) return
+    if (closeApproval(approval.id)) { note(`Approval expired: ${approval.action}`); toast.error(EXPIRED) }
+  }
+
   const request = () => void run(async () => {
     const form: DesktopActionForm = { action, agent, reason, window: windowTitle, text, targetKind, targetValue, direction, amount }
     const result = await requestDesktopAction(baseUrl, token, buildDesktopActionRequest(form))
     // Window names are read-only metadata; they let the dialog show the application and not only a handle.
     const list = await getDesktopWindows(baseUrl, token).then((response) => response.data?.windows, () => undefined)
     setPendingWindows(list)
-    setPending(result.action)
-    setEvents((items) => [`Approval requested: ${result.action.action}`, ...items].slice(0, 20))
+    openApproval(result.action)
+    note(`Approval requested: ${result.action.action}`)
   })
-  const resolve = (mode: 'once') => void run(async () => { if (!pending) return; await approveDesktopAction(baseUrl, token, pending.id, mode); setEvents((items) => [`Approved ${pending.action} (${mode})`, ...items].slice(0, 20)); setPending(null) })
-  const deny = () => void run(async () => { if (!pending) return; await denyDesktopAction(baseUrl, token, pending.id); setEvents((items) => [`Denied ${pending.action}`, ...items].slice(0, 20)); setPending(null) })
-  const emergency = () => void run(async () => { await emergencyStopDesktop(baseUrl, token); setPending(null); setEvents((items) => ['Emergency stop: queue cancelled and permission revoked.', ...items].slice(0, 20)); toast.success('Emergency stop activated.') })
+
+  const resolve = (mode: 'once') => {
+    const approval = pendingRef.current
+    if (!approval || busyRef.current) return
+    // Past the deadline there is nothing to approve, so nothing is sent.
+    if (isExpired(approval.expires_at)) { expireApproval(approval); return }
+    busyRef.current = true
+    setBusy(true)
+    void approveDesktopAction(baseUrl, token, approval.id, mode).then(
+      () => { note(`Approved ${approval.action} (${mode})`); closeApproval(approval.id) },
+      (error: unknown) => {
+        if (error instanceof RunnerRequestError) {
+          // The runner answered, so it no longer holds this approval (it drops it before answering). Never retry.
+          if (closeApproval(approval.id)) {
+            note(error.status === 410 ? `Approval expired: ${approval.action}` : `Approval failed: ${error.message}`)
+            toast.error(error.status === 410 ? EXPIRED : error.message)
+          }
+          return
+        }
+        // Not an answer from the runner (network): the approval may still be valid, so keep the dialog.
+        if (pendingRef.current?.id === approval.id) { busyRef.current = false; setBusy(false) }
+        toast.error(error instanceof Error ? error.message : 'Desktop action failed.')
+      }
+    )
+  }
+
+  const deny = () => {
+    const approval = pendingRef.current
+    if (!approval || busyRef.current) return
+    // Close first: from this moment the approval cannot be approved from this screen.
+    closeApproval(approval.id)
+    note(`Denied ${approval.action}`)
+    void denyDesktopAction(baseUrl, token, approval.id).catch((error: unknown) => {
+      // 404 or 410 mean the runner already dropped it, which is what a deny wants.
+      if (!(error instanceof RunnerRequestError)) toast.error(error instanceof Error ? error.message : 'Desktop action failed.')
+    })
+  }
+
+  const emergency = () => {
+    // Close first, so no approval can be given after the button is pressed, even if the request below fails.
+    const approval = pendingRef.current
+    if (approval) closeApproval(approval.id)
+    void run(async () => { await emergencyStopDesktop(baseUrl, token); note('Emergency stop: queue cancelled and permission revoked.'); toast.success('Emergency stop activated.') })
+  }
 
   return (
     <Card>
@@ -132,19 +198,19 @@ export function DesktopInteractionPanel({ baseUrl, token, disabled }: { baseUrl:
                 <p className='mt-1 text-sm'>{pending.agent} requests <strong>{pending.action}</strong></p>
                 <p className='mt-1 text-sm text-muted-foreground'>{pending.reason}</p>
               </div>
-              <Button variant='ghost' size='icon' aria-label='Deny action' onClick={deny}>
+              <Button variant='ghost' size='icon' aria-label='Deny action' disabled={busy} onClick={deny}>
                 <X className='size-4' />
               </Button>
             </div>
             <div className='mt-3'>
               <ApprovalDetailList key={pending.id} lang='en' details={describeDesktopAction(pending, { windows: pendingWindows, lang: 'en' })} />
             </div>
-            <p className='mt-2 text-xs text-muted-foreground'>Valid until {new Date(pending.expires_at).toLocaleTimeString()}. Nothing is done until you choose Allow once.</p>
+            <ApprovalCountdown key={pending.id} expiresAt={pending.expires_at} lang='en' onExpire={() => expireApproval(pending)} />
             <div className='mt-4 flex flex-wrap gap-2'>
-              <Button onClick={() => void resolve('once')}>
+              <Button disabled={busy} onClick={() => resolve('once')}>
                 <Check className='mr-2 size-4' />Allow once
               </Button>
-              <Button variant='destructive' onClick={deny}>Deny</Button>
+              <Button variant='destructive' disabled={busy} onClick={deny}>Deny</Button>
             </div>
           </div>
         )}

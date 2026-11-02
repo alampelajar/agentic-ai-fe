@@ -17,9 +17,10 @@ import { useAuthStore } from '@/stores/auth-store'
 import { addTaskMessage, createTask, getTask, getTaskMessages, updateTask } from '@/features/tasks/data/api'
 import { Main } from '@/components/layout/main'
 import { PageLoading } from '@/components/layout/page-loading'
-import { approveDesktopAction, denyDesktopAction, emergencyStopDesktop, getDesktopWindows, requestDesktopAction, type DesktopAction } from '@/features/desktop-runtime/api'
-import { ApprovalDetailList } from '@/features/desktop-runtime/approval-detail-list'
-import { describeDesktopAction, type WindowInfo } from '@/features/desktop-runtime/approval-details'
+import { approveDesktopAction, denyDesktopAction, emergencyStopDesktop, getDesktopWindows, requestDesktopAction, RunnerRequestError, type DesktopAction } from '@/features/desktop-runtime/api'
+import { type WindowInfo } from '@/features/desktop-runtime/approval-details'
+import { ChatApprovalDialog, type ApprovalDecision } from '@/features/desktop-runtime/chat-approval-dialog'
+import { toast } from 'sonner'
 import { DESKTOP_TOOLS, parseLocalAgentToolCall, READ_ONLY_DESKTOP_TOOLS, type LocalRunnerToolCall } from './tool-call'
 import {
   AgentSelector,
@@ -153,7 +154,7 @@ export function AIAssistant() {
   const [pendingApproval, setPendingApproval] = useState<DesktopAction | null>(null)
   const [pendingApprovalSkill, setPendingApprovalSkill] = useState('Desktop Control')
   const [pendingWindows, setPendingWindows] = useState<WindowInfo[] | undefined>(undefined)
-  const approvalResolver = useRef<((decision: 'once' | 'deny') => void) | null>(null)
+  const approvalResolver = useRef<((decision: ApprovalDecision) => void) | null>(null)
 
   const [currentStep, setCurrentStep] = useState<WorkflowStep | null>(null)
 
@@ -843,11 +844,30 @@ export function AIAssistant() {
     setPendingWindows(await getDesktopWindows(base, runnerToken).then((response) => response.data?.windows, () => undefined))
     setPendingApproval(requested.action)
     setPendingApprovalSkill(call.skill || 'Desktop Control')
-    const decision = await new Promise<'once' | 'deny'>((resolve) => { approvalResolver.current = resolve })
+    const decision = await new Promise<ApprovalDecision>((resolve) => { approvalResolver.current = resolve })
     setPendingApproval(null)
     approvalResolver.current = null
-    if (decision === 'deny') { await denyDesktopAction(base, runnerToken, requested.action.id); await logActivity('denied', 'cancelled'); return 'TOOL_DENIED: pengguna menolak tindakan desktop.' }
-    const result = await approveDesktopAction(base, runnerToken, requested.action.id, decision); await logActivity(`approved_${decision}`, 'completed'); return JSON.stringify(result)
+    const expired = async () => {
+      // The approval is gone. Say so, and never retry or approve it again on the user's behalf.
+      toast.error('Persetujuan tindakan desktop kedaluwarsa. Minta agent mengajukan permintaan baru.')
+      await logActivity('expired', 'cancelled')
+      return 'TOOL_EXPIRED: persetujuan pengguna kedaluwarsa dan tindakan desktop tidak dijalankan. Jangan mengulang otomatis; tanyakan apakah pengguna ingin mengajukan permintaan baru.'
+    }
+    if (decision === 'expired') return expired()
+    if (decision === 'deny' || decision === 'emergency') {
+      // The runner may already have dropped the approval (for example after Emergency Stop). The action cannot run either way.
+      await denyDesktopAction(base, runnerToken, requested.action.id).catch(() => undefined)
+      await logActivity('denied', 'cancelled')
+      return decision === 'emergency' ? 'TOOL_DENIED: pengguna menghentikan desktop dengan Emergency Stop. Tidak ada tindakan yang dijalankan.' : 'TOOL_DENIED: pengguna menolak tindakan desktop.'
+    }
+    try {
+      const result = await approveDesktopAction(base, runnerToken, requested.action.id, decision)
+      await logActivity(`approved_${decision}`, 'completed')
+      return JSON.stringify(result)
+    } catch (error) {
+      if (error instanceof RunnerRequestError && error.status === 410) return expired()
+      throw error
+    }
   }
 
   const runAgentToolLoop = async (
@@ -1695,29 +1715,15 @@ export function AIAssistant() {
         </div>
       </div>
       {pendingApproval && (
-        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4' role='dialog' aria-modal='true' aria-label='Desktop action approval'>
-          <div className='w-full max-w-lg rounded-xl border bg-background p-5 shadow-xl'>
-            <div className='mb-4 flex items-start justify-between gap-4'>
-              <div><h2 className='text-lg font-semibold'>Persetujuan tindakan desktop</h2><p className='text-sm text-muted-foreground'>AI meminta izin sebelum mengubah desktop.</p></div>
-              <span className='rounded-full bg-amber-500/15 px-2 py-1 text-xs text-amber-700'>Menunggu</span>
-            </div>
-            <dl className='grid gap-2 rounded-lg bg-muted/40 p-3 text-sm'>
-              <div><dt className='text-muted-foreground'>Agent</dt><dd className='font-medium'>{pendingApproval.agent || selectedAgent?.name || 'Unknown agent'}</dd></div>
-              <div><dt className='text-muted-foreground'>Skill</dt><dd className='font-medium'>{pendingApprovalSkill}</dd></div>
-              <div><dt className='text-muted-foreground'>Tool / tindakan</dt><dd className='font-medium'>{pendingApproval.action}</dd></div>
-              <div><dt className='text-muted-foreground'>Alasan</dt><dd>{pendingApproval.reason}</dd></div>
-            </dl>
-            <div className='mt-2'>
-              <ApprovalDetailList key={pendingApproval.id} lang='id' details={describeDesktopAction(pendingApproval, { windows: pendingWindows, lang: 'id' })} />
-            </div>
-            <p className='mt-4 text-xs text-muted-foreground'>Hanya tindakan ini yang dijalankan; tindakan desktop berikutnya tetap meminta persetujuan. Setelah disetujui, agent ini memegang kendali desktop sampai Anda menekan Emergency Stop.</p>
-            <div className='mt-5 flex flex-wrap justify-end gap-2'>
-              <button type='button' className='rounded-md border px-3 py-2 text-sm' onClick={() => approvalResolver.current?.('deny')}>Deny</button>
-              <button type='button' className='rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground' onClick={() => approvalResolver.current?.('once')}>Allow Once</button>
-            </div>
-            <button type='button' className='mt-3 w-full rounded-md border border-destructive/40 px-3 py-2 text-sm text-destructive' onClick={() => { void emergencyStopDesktop(runnerURL, runnerToken).catch(() => undefined); approvalResolver.current?.('deny') }}>Emergency Stop</button>
-          </div>
-        </div>
+        <ChatApprovalDialog
+          key={pendingApproval.id}
+          action={pendingApproval}
+          agentName={pendingApproval.agent || selectedAgent?.name || 'Unknown agent'}
+          skill={pendingApprovalSkill}
+          windows={pendingWindows}
+          onDecision={(decision) => approvalResolver.current?.(decision)}
+          onEmergencyStop={() => void emergencyStopDesktop(runnerURL, runnerToken).catch(() => undefined)}
+        />
       )}
     </Main>
   )

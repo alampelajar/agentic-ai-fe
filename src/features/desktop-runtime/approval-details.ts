@@ -100,6 +100,18 @@ const LABELS: Record<ApprovalLang, Labels> = {
   },
 }
 
+/** Milliseconds until the deadline the runner gave, or null if it is not a valid date. */
+export function msUntilExpiry(expiresAt: string, now: number = Date.now()): number | null {
+  const deadline = Date.parse(expiresAt)
+  return Number.isNaN(deadline) ? null : deadline - now
+}
+
+/** True once the runner's deadline has passed. An unreadable deadline is never "expired" here; the runner still enforces it. */
+export function isExpired(expiresAt: string, now: number = Date.now()): boolean {
+  const remaining = msUntilExpiry(expiresAt, now)
+  return remaining !== null && remaining <= 0
+}
+
 // Mirrors the sidecar (desktop_sidecar.py) so the dialog states what will really happen.
 export const ALLOWED_HOTKEYS = ['CTRL+A', 'CTRL+C', 'CTRL+V', 'CTRL+S', 'ALT+TAB', 'ESC'] as const
 const SENSITIVE_WINDOW = /password|credential|otp|one[- ]time|authenticator|password manager/i

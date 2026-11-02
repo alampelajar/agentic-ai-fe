@@ -2,40 +2,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
 import { DesktopInteractionPanel } from './interaction-panel'
+import { stubRunner, type RunnerCall } from './runner-stub'
 
 const mocks = vi.hoisted(() => ({ toastError: vi.fn(), toastSuccess: vi.fn() }))
 vi.mock('sonner', () => ({ toast: { error: mocks.toastError, success: mocks.toastSuccess } }))
 
-type Call = { path: string; method: string; body: Record<string, unknown> | null }
-
-// Stands in for the Local Agent Runner. Like the real one it stores a request and
-// returns that copy, which is what the dialog renders.
-function stubRunner(options: { approve?: { ok: boolean; status: number; body: unknown } } = {}) {
-  const calls: Call[] = []
-  const fetchStub = vi.fn(async (url: string, init?: RequestInit) => {
-    const path = new URL(url).pathname.replace('/api/desktop', '')
-    const method = init?.method ?? 'GET'
-    const body = typeof init?.body === 'string' ? (JSON.parse(init.body) as Record<string, unknown>) : null
-    calls.push({ path, method, body })
-    const reply = (payload: unknown, ok = true, status = 200) => ({ ok, status, json: async () => payload })
-    if (path === '/actions/request') {
-      return reply({ ok: true, approval_required: true, action: { ...body, id: `desktop-${calls.length}`, expires_at: new Date(Date.now() + 60_000).toISOString() } }, true, 202)
-    }
-    if (path === '/windows') {
-      return reply({ ok: true, data: { windows: [{ handle: 131406, title: 'agentic-ai-be', class_name: 'CabinetWClass' }, { handle: 900, title: 'Password Manager' }] } })
-    }
-    if (path.endsWith('/approve')) {
-      const configured = options.approve
-      return configured ? reply(configured.body, configured.ok, configured.status) : reply({ ok: true, result: { ok: true } })
-    }
-    return reply({ ok: true, status: 'denied' })
-  })
-  vi.stubGlobal('fetch', fetchStub)
-  return calls
-}
-
-const requestOf = (calls: Call[]) => calls.find((call) => call.path === '/actions/request')!.body!
-const paths = (calls: Call[]) => calls.map((call) => call.path.replace(/desktop-\d+/, ':id'))
+const requestOf = (calls: RunnerCall[]) => calls.find((call) => call.path === '/actions/request')!.body!
+const paths = (calls: RunnerCall[]) => calls.map((call) => call.path.replace(/desktop-\d+/, ':id'))
 
 async function openPanel() {
   const screen = await render(<DesktopInteractionPanel baseUrl='http://127.0.0.1:8765' token='test-token' disabled={false} />)
@@ -54,7 +27,7 @@ describe('DesktopInteractionPanel approval dialog', () => {
   afterEach(() => vi.unstubAllGlobals())
 
   it('focus window: shows the application and its handle', async () => {
-    const calls = stubRunner()
+    const calls = stubRunner().calls
     const screen = await openPanel()
     await userEvent.fill(screen.getByLabelText('Target window'), '131406')
     const dialog = await request(screen)
@@ -66,7 +39,7 @@ describe('DesktopInteractionPanel approval dialog', () => {
   })
 
   it('click: shows the control that will be clicked', async () => {
-    const calls = stubRunner()
+    const calls = stubRunner().calls
     const screen = await openPanel()
     await userEvent.selectOptions(screen.getByLabelText('Action'), 'desktop.click')
     await userEvent.fill(screen.getByLabelText('Target window'), 'agentic-ai-be')
@@ -90,7 +63,7 @@ describe('DesktopInteractionPanel approval dialog', () => {
   })
 
   it('scroll: shows the control, direction and amount', async () => {
-    const calls = stubRunner()
+    const calls = stubRunner().calls
     const screen = await openPanel()
     await userEvent.selectOptions(screen.getByLabelText('Action'), 'desktop.scroll')
     await userEvent.fill(screen.getByLabelText('Target window'), '131406')
@@ -107,7 +80,7 @@ describe('DesktopInteractionPanel approval dialog', () => {
   })
 
   it('type: shows the exact text', async () => {
-    const calls = stubRunner()
+    const calls = stubRunner().calls
     const screen = await openPanel()
     await userEvent.selectOptions(screen.getByLabelText('Action'), 'desktop.type')
     await userEvent.fill(screen.getByLabelText('Target window'), '131406')
@@ -136,7 +109,7 @@ describe('DesktopInteractionPanel approval dialog', () => {
   })
 
   it('hotkey: sends the combination as keys and shows it', async () => {
-    const calls = stubRunner()
+    const calls = stubRunner().calls
     const screen = await openPanel()
     await userEvent.selectOptions(screen.getByLabelText('Action'), 'desktop.hotkey')
     await userEvent.fill(screen.getByLabelText('Target window'), '131406')
@@ -159,7 +132,7 @@ describe('DesktopInteractionPanel approval dialog', () => {
   })
 
   it('shows the details before anything is approved, and Deny never approves', async () => {
-    const calls = stubRunner()
+    const calls = stubRunner().calls
     const screen = await openPanel()
     await userEvent.fill(screen.getByLabelText('Target window'), '131406')
     const dialog = await request(screen)
@@ -175,7 +148,7 @@ describe('DesktopInteractionPanel approval dialog', () => {
   })
 
   it('Allow once approves exactly the stored action with mode once', async () => {
-    const calls = stubRunner()
+    const calls = stubRunner().calls
     const screen = await openPanel()
     await userEvent.fill(screen.getByLabelText('Target window'), '131406')
     const dialog = await request(screen)
@@ -189,19 +162,20 @@ describe('DesktopInteractionPanel approval dialog', () => {
     expect(calls.filter((call) => call.path.endsWith('/approve'))).toHaveLength(1)
   })
 
-  it('an expired approval is refused by the runner and the error is shown', async () => {
-    const calls = stubRunner({ approve: { ok: false, status: 410, body: { ok: false, error: 'approval expired' } } })
+  it('an expired approval is refused by the runner, the dialog is cleaned up and nothing is retried', async () => {
+    const calls = stubRunner({ approve: { ok: false, status: 410, body: { ok: false, error: 'approval expired' } } }).calls
     const screen = await openPanel()
     await userEvent.fill(screen.getByLabelText('Target window'), '131406')
     const dialog = await request(screen)
     await userEvent.click(dialog.getByRole('button', { name: 'Allow once' }))
 
-    await vi.waitFor(() => expect(mocks.toastError).toHaveBeenCalledWith('approval expired'))
+    await vi.waitFor(() => expect(mocks.toastError).toHaveBeenCalledWith('Approval expired. Request a new one to continue.'))
+    await expect.element(screen.getByRole('dialog', { name: 'Desktop action approval' })).not.toBeInTheDocument()
     expect(calls.filter((call) => call.path.endsWith('/approve'))).toHaveLength(1)
   })
 
   it('Emergency stop clears the pending request and calls the runner', async () => {
-    const calls = stubRunner()
+    const calls = stubRunner().calls
     const screen = await openPanel()
     await userEvent.fill(screen.getByLabelText('Target window'), '131406')
     await request(screen)

@@ -2,13 +2,27 @@ export type DesktopWindow = { handle: number; title: string; class_name?: string
 export type DesktopStatus = { status: string; data?: { device_name?: string; windows_version?: string; sidecar?: string } }
 export type DesktopAction = { id: string; action: string; agent: string; reason: string; window?: string; target?: Record<string, unknown>; arguments?: Record<string, unknown>; expires_at: string }
 
+/**
+ * The runner answered with an HTTP error. Callers can tell this apart from a
+ * network failure: the runner did receive the request, so for approve and deny
+ * it no longer holds that approval (it removes it before it answers).
+ */
+export class RunnerRequestError extends Error {
+  readonly status: number
+  constructor(message: string, status: number) {
+    super(message)
+    this.name = 'RunnerRequestError'
+    this.status = status
+  }
+}
+
 async function runnerFetch<T>(baseUrl: string, token: string, path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${baseUrl.replace(/\/+$/, '')}${path}`, {
     ...options,
     headers: { Accept: 'application/json', Authorization: `Bearer ${token}`, ...options?.headers },
   })
   const body = await response.json().catch(() => ({}))
-  if (!response.ok) throw new Error(body.error || 'Local Agent Runner request failed.')
+  if (!response.ok) throw new RunnerRequestError(body.error || 'Local Agent Runner request failed.', response.status)
   return body as T
 }
 
