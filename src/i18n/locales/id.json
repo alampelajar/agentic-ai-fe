@@ -1067,7 +1067,7 @@
     "newReport": "Laporan baru",
     "history": "Laporan saya",
     "submitSuccess": "Laporan berhasil disimpan.",
-    "localStorageNotice": "Mode prototipe: laporan saat ini hanya disimpan di browser ini. Laporan belum dikirim ke admin atau disinkronkan ke perangkat lain.",
+    "localStorageNotice": "Laporan tersimpan di akunmu dan dapat dilihat oleh tim admin.",
     "formTitle": "Kirim feedback",
     "formDescription": "Ceritakan yang terjadi. Kolom wajib harus diisi.",
     "name": "Nama",
@@ -1093,7 +1093,7 @@
     "requiredFields": "Kolom wajib harus diisi.",
     "submit": "Kirim laporan",
     "historyTitle": "Riwayat laporan saya",
-    "historyDescription": "Lihat status dan balasan untuk laporan yang tersimpan di browser ini.",
+    "historyDescription": "Lihat status dan balasan untuk laporan yang sudah kamu kirim.",
     "emptyTitle": "Belum ada laporan",
     "emptyDescription": "Feedback yang kamu kirim akan muncul di sini.",
     "createFirst": "Buat laporan",
@@ -1115,6 +1115,9 @@
       "rejected": "Ditolak"
     },
     "rateAdminReply": "Beri nilai untuk balasan admin",
-    "selectCategory": "Pilih kategori"
+    "selectCategory": "Pilih kategori",
+    "submitting": "Mengirim...",
+    "loading": "Memuat riwayat feedback...",
+    "noSubject": "(Tanpa judul)"
   }
 }
