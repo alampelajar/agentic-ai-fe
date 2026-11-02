@@ -1067,7 +1067,7 @@
     "newReport": "New report",
     "history": "My reports",
     "submitSuccess": "Your report has been saved.",
-    "localStorageNotice": "Prototype mode: reports are stored only in this browser for now. They are not sent to the admin team or synced to other devices yet.",
+    "localStorageNotice": "Your reports are securely saved to your account and can be viewed by the admin team.",
     "formTitle": "Send feedback",
     "formDescription": "Share what happened. Required fields must be completed.",
     "name": "Name",
@@ -1093,7 +1093,7 @@
     "requiredFields": "Required fields must be completed.",
     "submit": "Submit report",
     "historyTitle": "My report history",
-    "historyDescription": "Check the status and replies for reports saved in this browser.",
+    "historyDescription": "Check the status and replies to your submitted reports.",
     "emptyTitle": "No reports yet",
     "emptyDescription": "Your submitted feedback will appear here.",
     "createFirst": "Create a report",
@@ -1115,6 +1115,9 @@
       "rejected": "Rejected"
     },
     "rateAdminReply": "Rate the admin's response",
-    "selectCategory": "Select a category"
+    "selectCategory": "Select a category",
+    "submitting": "Submitting...",
+    "loading": "Loading feedback history...",
+    "noSubject": "(No subject)"
   }
 }
