@@ -37,6 +37,7 @@ import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_auth
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
+import { Route as AuthenticatedSettingsDesktopRouteImport } from './routes/_authenticated/settings/desktop'
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
@@ -193,6 +194,12 @@ const AuthenticatedSettingsAppearanceRoute =
     path: '/appearance',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
+const AuthenticatedSettingsDesktopRoute =
+  AuthenticatedSettingsDesktopRouteImport.update({
+    id: '/desktop',
+    path: '/desktop',
+    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any)
 const AuthenticatedSettingsDisplayRoute =
   AuthenticatedSettingsDisplayRouteImport.update({
     id: '/display',
@@ -278,6 +285,7 @@ export interface FileRoutesByFullPath {
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/settings/desktop': typeof AuthenticatedSettingsDesktopRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/clerk/sign-in': typeof ClerkauthSignInRoute
@@ -315,6 +323,7 @@ export interface FileRoutesByTo {
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/settings/desktop': typeof AuthenticatedSettingsDesktopRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/clerk/sign-in': typeof ClerkauthSignInRoute
@@ -357,6 +366,7 @@ export interface FileRoutesById {
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/_authenticated/settings/desktop': typeof AuthenticatedSettingsDesktopRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/clerk/(auth)/sign-in': typeof ClerkauthSignInRoute
@@ -397,6 +407,7 @@ export interface FileRouteTypes {
     | '/errors/$error'
     | '/settings/account'
     | '/settings/appearance'
+    | '/settings/desktop'
     | '/settings/display'
     | '/settings/notifications'
     | '/clerk/sign-in'
@@ -434,6 +445,7 @@ export interface FileRouteTypes {
     | '/errors/$error'
     | '/settings/account'
     | '/settings/appearance'
+    | '/settings/desktop'
     | '/settings/display'
     | '/settings/notifications'
     | '/clerk/sign-in'
@@ -475,6 +487,7 @@ export interface FileRouteTypes {
     | '/_authenticated/errors/$error'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
+    | '/_authenticated/settings/desktop'
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/notifications'
     | '/clerk/(auth)/sign-in'
@@ -705,6 +718,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsAppearanceRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/settings/desktop': {
+      id: '/_authenticated/settings/desktop'
+      path: '/desktop'
+      fullPath: '/settings/desktop'
+      preLoaderRoute: typeof AuthenticatedSettingsDesktopRouteImport
+      parentRoute: typeof AuthenticatedSettingsRouteRoute
+    }
     '/_authenticated/settings/display': {
       id: '/_authenticated/settings/display'
       path: '/display'
@@ -788,6 +808,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedSettingsRouteRouteChildren {
   AuthenticatedSettingsAccountRoute: typeof AuthenticatedSettingsAccountRoute
   AuthenticatedSettingsAppearanceRoute: typeof AuthenticatedSettingsAppearanceRoute
+  AuthenticatedSettingsDesktopRoute: typeof AuthenticatedSettingsDesktopRoute
   AuthenticatedSettingsDisplayRoute: typeof AuthenticatedSettingsDisplayRoute
   AuthenticatedSettingsNotificationsRoute: typeof AuthenticatedSettingsNotificationsRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
@@ -797,6 +818,7 @@ const AuthenticatedSettingsRouteRouteChildren: AuthenticatedSettingsRouteRouteCh
   {
     AuthenticatedSettingsAccountRoute: AuthenticatedSettingsAccountRoute,
     AuthenticatedSettingsAppearanceRoute: AuthenticatedSettingsAppearanceRoute,
+    AuthenticatedSettingsDesktopRoute: AuthenticatedSettingsDesktopRoute,
     AuthenticatedSettingsDisplayRoute: AuthenticatedSettingsDisplayRoute,
     AuthenticatedSettingsNotificationsRoute:
       AuthenticatedSettingsNotificationsRoute,

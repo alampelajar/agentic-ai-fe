@@ -2,6 +2,7 @@
 import {
   LayoutDashboard,
   Monitor,
+  MonitorCog,
   ListTodo,
   Bell,
   Package,
@@ -113,6 +114,11 @@ export const sidebarData: SidebarData = {
               title: "display",
               url: "/settings/display",
               icon: Monitor,
+            },
+            {
+              title: "desktopAccess",
+              url: "/settings/desktop",
+              icon: MonitorCog,
             },
           ],
         },
