@@ -13,6 +13,7 @@ import {
   GalleryVerticalEnd,
   AudioWaveform,
   Bot,
+  Sparkles,
 } from "lucide-react";
 
 import { type SidebarData } from "../types";
@@ -73,6 +74,11 @@ export const sidebarData: SidebarData = {
           title: "appsMenu",
           url: "/apps",
           icon: Package,
+        },
+        {
+          title: "skills",
+          url: "/skills",
+          icon: Sparkles,
         },
       ],
     },
