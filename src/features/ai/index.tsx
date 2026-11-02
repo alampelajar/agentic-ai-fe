@@ -17,6 +17,7 @@ import { useAuthStore } from '@/stores/auth-store'
 import { addTaskMessage, createTask, getTask, getTaskMessages, updateTask } from '@/features/tasks/data/api'
 import { Main } from '@/components/layout/main'
 import { PageLoading } from '@/components/layout/page-loading'
+import { approveDesktopAction, denyDesktopAction, emergencyStopDesktop, requestDesktopAction, type DesktopAction } from '@/features/desktop-runtime/api'
 import {
   AgentSelector,
   type Agent,
@@ -78,6 +79,11 @@ type LocalRunnerToolCall = {
   path?: string
   content?: string
   create?: boolean
+  window?: string
+  target?: Record<string, unknown>
+  text?: string
+  keys?: string[]
+  skill?: string
 }
 
 const normalizeToolAction = (value: unknown) =>
@@ -188,6 +194,16 @@ function parseLocalAgentToolCall(raw: string): LocalRunnerToolCall {
     ...(typeof (parsed.content ?? argumentObject.content) === 'string'
       ? { content: String(parsed.content ?? argumentObject.content) }
       : {}),
+    ...(() => {
+      const rawWindow = parsed.window ?? argumentObject.window
+      // Models often send window handles as JSON numbers even though the schema says string.
+      if (typeof rawWindow === 'string') return { window: rawWindow }
+      if (typeof rawWindow === 'number' && Number.isSafeInteger(rawWindow)) return { window: String(rawWindow) }
+      return {}
+    })(),
+    ...(typeof (parsed.text ?? argumentObject.text) === 'string' ? { text: String(parsed.text ?? argumentObject.text) } : {}),
+    ...(Array.isArray(parsed.keys ?? argumentObject.keys) ? { keys: (parsed.keys ?? argumentObject.keys) as string[] } : {}),
+    ...(typeof (parsed.skill ?? argumentObject.skill) === 'string' ? { skill: String(parsed.skill ?? argumentObject.skill) } : {}),
     ...(typeof (parsed.create ?? argumentObject.create) === 'boolean'
       ? { create: Boolean(parsed.create ?? argumentObject.create) }
       : {}),
@@ -271,6 +287,9 @@ export function AIAssistant() {
   const [githubRepoURL, setGithubRepoURL] = useState('')
   const [runnerStatus, setRunnerStatus] = useState('')
   const [runnerBusy, setRunnerBusy] = useState(false)
+  const [pendingApproval, setPendingApproval] = useState<DesktopAction | null>(null)
+  const [pendingApprovalSkill, setPendingApprovalSkill] = useState('Desktop Control')
+  const approvalResolver = useRef<((decision: 'once' | 'session' | 'deny') => void) | null>(null)
 
   const [currentStep, setCurrentStep] = useState<WorkflowStep | null>(null)
 
@@ -933,6 +952,38 @@ export function AIAssistant() {
     }
   }
 
+  const runDesktopTool = async (call: LocalRunnerToolCall, agentId: number): Promise<string> => {
+    if (!runnerConnected || !runnerToken) throw new Error('Local Agent Runner belum terhubung.')
+    const action = call.action
+    const allowed = ['desktop.status', 'desktop.screenshot', 'desktop.windows', 'desktop.inspect', 'desktop.click', 'desktop.double_click', 'desktop.scroll', 'desktop.type', 'desktop.hotkey', 'desktop.focus_window']
+    if (!allowed.includes(action)) throw new Error(`Desktop tool tidak diizinkan: ${action}`)
+    const mutating = !['desktop.status', 'desktop.screenshot', 'desktop.windows', 'desktop.inspect'].includes(action)
+    const base = runnerURL.replace(/\/+$/, '')
+    const logActivity = async (approvalStatus: string, executionStatus: string, error?: string) => {
+      await fetch(`${API_BASE_URL}/api/tool-activities`, { method: 'POST', headers: { Authorization: `Bearer ${accessToken || ''}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ agent_id: agentId, tool_name: action, arguments: { window: call.window, text: call.text ? '[redacted-by-client]' : undefined, keys: call.keys }, target_application: call.window || '', approval_status: approvalStatus, execution_status: executionStatus, error: error || '' }) }).catch(() => undefined)
+    }
+    if (!mutating) {
+      const path = action === 'desktop.status' ? '/api/desktop/status' : action === 'desktop.screenshot' ? '/api/desktop/screenshot' : action === 'desktop.windows' ? '/api/desktop/windows' : '/api/desktop/inspect'
+      const response = await fetch(`${base}${path}`, { method: action === 'desktop.inspect' ? 'POST' : 'GET', headers: { Authorization: `Bearer ${runnerToken}`, 'Content-Type': 'application/json' }, body: action === 'desktop.inspect' ? JSON.stringify({ window: call.window }) : undefined })
+      const data = await response.json().catch(() => ({})); if (!response.ok) { await logActivity('not_required', 'failed', data?.error); throw new Error(data?.error || 'Desktop read failed.') }; await logActivity('not_required', 'completed')
+      // Screenshot pixels stay on this machine: the model only receives metadata, never the image payload.
+      const image = action === 'desktop.screenshot' ? data?.data : undefined
+      if (image && typeof image.base64 === 'string') {
+        const { base64, ...rest } = image
+        return JSON.stringify({ ...data, data: { ...rest, base64_bytes: base64.length, image_withheld: 'Image data was captured successfully but is not sent to the model.' } })
+      }
+      return JSON.stringify(data)
+    }
+    const requested = await requestDesktopAction(base, runnerToken, { action, agent: `Agent ${agentId}`, reason: 'AI Agent requested this desktop action for the current user task.', window: call.window, arguments: { text: call.text, keys: call.keys } })
+    setPendingApproval(requested.action)
+    setPendingApprovalSkill(call.skill || 'Desktop Control')
+    const decision = await new Promise<'once' | 'session' | 'deny'>((resolve) => { approvalResolver.current = resolve })
+    setPendingApproval(null)
+    approvalResolver.current = null
+    if (decision === 'deny') { await denyDesktopAction(base, runnerToken, requested.action.id); await logActivity('denied', 'cancelled'); return 'TOOL_DENIED: pengguna menolak tindakan desktop.' }
+    const result = await approveDesktopAction(base, runnerToken, requested.action.id, decision); await logActivity(`approved_${decision}`, 'completed'); return JSON.stringify(result)
+  }
+
   const runAgentToolLoop = async (
     initial: ChatResult,
     originalText: string,
@@ -952,8 +1003,10 @@ export function AIAssistant() {
     let promptedForFirstTool = false
 
     while (toolCalls < maxToolCalls) {
+      const desktopMatch = result.message.match(/<AGENT_TOOL>([\s\S]*?)<\/AGENT_TOOL>/)
       const match = result.message.match(/<LOCAL_AGENT_TOOL>([\s\S]*?)<\/LOCAL_AGENT_TOOL>/)
-      if (!match) {
+      const toolMatch = desktopMatch || match
+      if (!toolMatch) {
         const looksLikeWorkspaceTask =
           /\b(repository|repo|workspace|local agent runner|struktur|daftar file|list-files|baca file|membaca|package\.json|konfigurasi|inspect|periksa|pemeriksaan|pengujian|testing|test)\b/i.test(originalText)
 
@@ -995,7 +1048,7 @@ export function AIAssistant() {
 
       let call: LocalRunnerToolCall
       try {
-        call = parseLocalAgentToolCall(match[1])
+        call = parseLocalAgentToolCall(toolMatch[1])
       } catch (error) {
         const detail = error instanceof Error ? error.message : 'format tidak dikenali'
         setRunnerStatus(`Format tool tidak valid: ${detail}`)
@@ -1007,7 +1060,7 @@ export function AIAssistant() {
 
       let toolResult: string
       try {
-        toolResult = await runLocalTool(call)
+        toolResult = desktopMatch ? await runDesktopTool(call, agentId) : await runLocalTool(call)
       } catch (error) {
         toolResult = `TOOL_ERROR: ${error instanceof Error ? error.message : 'Kesalahan tool tidak diketahui'}`
       }
@@ -1016,17 +1069,17 @@ export function AIAssistant() {
       setRunnerStatus(`Tool ${call.action} selesai (${toolCalls}/${maxToolCalls}); meminta agent melanjutkan...`)
       const assistantToolCall = result.message
       toolHistory.push({ role: 'assistant', content: assistantToolCall })
-      const followup = `Hasil Local Agent Runner untuk tool ${call.action}:\\n\\n${toolResult}\\n\\nGunakan hanya hasil tool di atas sebagai bukti. Jika perlu tindakan lain, keluarkan satu marker <LOCAL_AGENT_TOOL> yang valid. Jika sudah selesai, jawab pengguna tanpa marker.`
+      const followup = `Hasil Local Agent Runner untuk tool ${call.action}:\\n\\n${toolResult}\\n\\nGunakan hanya hasil tool di atas sebagai bukti. Jika perlu tindakan workspace, keluarkan <LOCAL_AGENT_TOOL>; jika perlu tindakan desktop dari skill aktif, keluarkan <AGENT_TOOL>. Jika sudah selesai, jawab pengguna tanpa marker.`
       toolHistory.push({ role: 'user', content: followup })
       result = await sendChat(followup, files, toolHistory.slice(0, -1), agentId, modelId)
     }
 
-    if (/<LOCAL_AGENT_TOOL>/.test(result.message)) {
+    if (/<LOCAL_AGENT_TOOL>|<AGENT_TOOL>/.test(result.message)) {
       setRunnerStatus('Batas tool tercapai; meminta ringkasan dari hasil yang sudah terkumpul...')
       const finalPrompt = `Batas aman ${maxToolCalls} pemanggilan tool telah tercapai. JANGAN meminta atau mengeluarkan tool marker lagi. Buat jawaban akhir sekarang hanya berdasarkan output Local Agent Runner yang sudah ada di riwayat percakapan. Ringkas file yang benar-benar berhasil dibaca, temuan yang didukung output, dan hal yang belum dapat dipastikan. Jangan mengklaim file sudah dibaca atau perintah sudah dijalankan jika tidak ada hasilnya. Permintaan awal pengguna: ${originalText}`
       try {
         const finalResult = await sendChat(finalPrompt, files, toolHistory, agentId, modelId)
-        if (!/<LOCAL_AGENT_TOOL>/.test(finalResult.message)) {
+        if (!/<LOCAL_AGENT_TOOL>|<AGENT_TOOL>/.test(finalResult.message)) {
           setRunnerStatus(`Selesai dengan ${toolCalls} pemanggilan tool`)
           return finalResult
         }
@@ -1775,6 +1828,29 @@ export function AIAssistant() {
           </div>
         </div>
       </div>
+      {pendingApproval && (
+        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4' role='dialog' aria-modal='true' aria-label='Desktop action approval'>
+          <div className='w-full max-w-lg rounded-xl border bg-background p-5 shadow-xl'>
+            <div className='mb-4 flex items-start justify-between gap-4'>
+              <div><h2 className='text-lg font-semibold'>Persetujuan tindakan desktop</h2><p className='text-sm text-muted-foreground'>AI meminta izin sebelum mengubah desktop.</p></div>
+              <span className='rounded-full bg-amber-500/15 px-2 py-1 text-xs text-amber-700'>Menunggu</span>
+            </div>
+            <dl className='grid gap-2 rounded-lg bg-muted/40 p-3 text-sm'>
+              <div><dt className='text-muted-foreground'>Agent</dt><dd className='font-medium'>{pendingApproval.agent || selectedAgent?.name || 'Unknown agent'}</dd></div>
+              <div><dt className='text-muted-foreground'>Skill</dt><dd className='font-medium'>{pendingApprovalSkill}</dd></div>
+              <div><dt className='text-muted-foreground'>Tool / tindakan</dt><dd className='font-medium'>{pendingApproval.action}</dd></div>
+              <div><dt className='text-muted-foreground'>Target aplikasi</dt><dd>{pendingApproval.window || 'Desktop session'}</dd></div>
+              <div><dt className='text-muted-foreground'>Alasan</dt><dd>{pendingApproval.reason}</dd></div>
+            </dl>
+            <div className='mt-5 flex flex-wrap justify-end gap-2'>
+              <button type='button' className='rounded-md border px-3 py-2 text-sm' onClick={() => approvalResolver.current?.('deny')}>Deny</button>
+              <button type='button' className='rounded-md border px-3 py-2 text-sm' onClick={() => approvalResolver.current?.('session')}>Allow This Session</button>
+              <button type='button' className='rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground' onClick={() => approvalResolver.current?.('once')}>Allow Once</button>
+            </div>
+            <button type='button' className='mt-3 w-full rounded-md border border-destructive/40 px-3 py-2 text-sm text-destructive' onClick={() => { void emergencyStopDesktop(runnerURL, runnerToken).catch(() => undefined); approvalResolver.current?.('deny') }}>Emergency Stop</button>
+          </div>
+        </div>
+      )}
     </Main>
   )
 }
