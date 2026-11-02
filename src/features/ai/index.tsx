@@ -18,6 +18,7 @@ import { addTaskMessage, createTask, getTask, getTaskMessages, updateTask } from
 import { Main } from '@/components/layout/main'
 import { PageLoading } from '@/components/layout/page-loading'
 import { approveDesktopAction, denyDesktopAction, emergencyStopDesktop, requestDesktopAction, type DesktopAction } from '@/features/desktop-runtime/api'
+import { describeDesktopAction } from './approval-details'
 import {
   AgentSelector,
   type Agent,
@@ -1841,6 +1842,15 @@ export function AIAssistant() {
               <div><dt className='text-muted-foreground'>Tool / tindakan</dt><dd className='font-medium'>{pendingApproval.action}</dd></div>
               <div><dt className='text-muted-foreground'>Target aplikasi</dt><dd>{pendingApproval.window || 'Desktop session'}</dd></div>
               <div><dt className='text-muted-foreground'>Alasan</dt><dd>{pendingApproval.reason}</dd></div>
+              {describeDesktopAction(pendingApproval).map((detail) => (
+                <div key={detail.label} data-testid='approval-detail'>
+                  <dt className='text-muted-foreground'>{detail.label}</dt>
+                  <dd className='max-h-32 overflow-y-auto whitespace-pre-wrap break-all rounded bg-background/60 px-2 py-1 font-mono text-xs'>
+                    {detail.value}
+                    {detail.truncated && <span className='ml-1 font-sans text-amber-700'>(dipotong; teks penuh lebih panjang)</span>}
+                  </dd>
+                </div>
+              ))}
             </dl>
             <div className='mt-5 flex flex-wrap justify-end gap-2'>
               <button type='button' className='rounded-md border px-3 py-2 text-sm' onClick={() => approvalResolver.current?.('deny')}>Deny</button>
