@@ -80,10 +80,14 @@ function FeedbackPage() {
   }
 
   function updateRatingDraft(report: Report, patch: Partial<RatingDraft>) {
-    setRatingDrafts((current) => ({
-      ...current,
-      [report.id]: { ...getRatingDraft(report), ...patch },
-    }));
+    setRatingDrafts((current) => {
+      const existing = current[report.id] || {
+        rating: report.rating || 0,
+        reasons: report.rating_reasons || [],
+        comment: report.rating_comment || "",
+      };
+      return { ...current, [report.id]: { ...existing, ...patch } };
+    });
   }
 
   async function saveRating(reportId: number, draft: RatingDraft) {
