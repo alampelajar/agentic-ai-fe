@@ -15,6 +15,7 @@ import {
   AudioWaveform,
   Bot,
   Sparkles,
+  MessageSquareText,
 } from "lucide-react";
 
 import { type SidebarData } from "../types";
@@ -122,6 +123,7 @@ export const sidebarData: SidebarData = {
             },
           ],
         },
+        { title: "feedback", url: "/feedback", icon: MessageSquareText },
       ],
     },
   ],
