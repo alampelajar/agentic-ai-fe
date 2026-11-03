@@ -10,7 +10,9 @@ import { apiFetch } from "@/lib/api";
 
 type Status = "new" | "processing" | "completed" | "rejected";
 type Reply = { id: number; message: string; created_at: string };
-type Report = { id: number; category: string; subject: string; description: string; rating: number; related_page: string; attachment: string; status: Status; created_at: string; replies: Reply[] };
+type Report = { id: number; category: string; subject: string; description: string; rating: number; rating_reasons?: string[]; rating_comment?: string; related_page: string; attachment: string; status: Status; created_at: string; replies: Reply[] };
+type RatingDraft = { rating: number; reasons: string[]; comment: string };
+const ratingReasons = ["admin_ramah", "pengerjaan_cepat", "solusi_tepat", "komunikasi_jelas", "responsif", "masalah_terselesaikan"] as const;
 const categories = ["feature", "bug", "service", "aiExperience", "help"] as const;
 
 function FeedbackPage() {
@@ -21,6 +23,8 @@ function FeedbackPage() {
   const [page, setPage] = useState(""), [attachment, setAttachment] = useState<File | null>(null);
   const [submitted, setSubmitted] = useState(false), [loading, setLoading] = useState(true), [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [ratingDrafts, setRatingDrafts] = useState<Record<number, RatingDraft>>({});
+  const [savingRating, setSavingRating] = useState<number | null>(null);
 
   async function loadReports() {
     setLoading(true);
@@ -67,18 +71,50 @@ function FeedbackPage() {
     }
   }
 
-  async function saveRating(reportId: number, value: number) {
+  function getRatingDraft(report: Report): RatingDraft {
+    return ratingDrafts[report.id] || {
+      rating: report.rating || 0,
+      reasons: report.rating_reasons || [],
+      comment: report.rating_comment || "",
+    };
+  }
+
+  function updateRatingDraft(report: Report, patch: Partial<RatingDraft>) {
+    setRatingDrafts((current) => ({
+      ...current,
+      [report.id]: { ...getRatingDraft(report), ...patch },
+    }));
+  }
+
+  async function saveRating(reportId: number, draft: RatingDraft) {
+    if (draft.rating < 1 || draft.rating > 5) {
+      setError(t("feedbackPage.ratingRequired"));
+      return;
+    }
+    if (draft.comment.trim() && draft.comment.trim().length < 10) {
+      setError(t("feedbackPage.reasonMinLength"));
+      return;
+    }
+    setSavingRating(reportId);
     setError("");
     try {
       const response = await apiFetch(`/api/feedback/${reportId}/rating`, {
         method: "PATCH",
-        body: JSON.stringify({ rating: value }),
+        body: JSON.stringify({
+          rating: draft.rating,
+          rating_reasons: draft.reasons,
+          rating_comment: draft.comment.trim(),
+        }),
       });
       const result = await response.json().catch(() => ({}));
       if (!response.ok || !result.ok) throw new Error(result.message || "Gagal menyimpan rating.");
-      setReports((current) => current.map((report) => report.id === reportId ? { ...report, rating: value } : report));
+      setReports((current) => current.map((report) => report.id === reportId
+        ? { ...report, rating: draft.rating, rating_reasons: draft.reasons, rating_comment: draft.comment.trim() }
+        : report));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal menyimpan rating.");
+    } finally {
+      setSavingRating(null);
     }
   }
 
@@ -96,7 +132,22 @@ function FeedbackPage() {
       <div className="space-y-2"><label htmlFor="fb-description" className="text-sm font-medium">{t("feedbackPage.description")}</label><Textarea id="fb-description" value={description} onChange={(e) => setDescription(e.target.value)} minLength={10} rows={6} maxLength={5000} placeholder={t("feedbackPage.descriptionPlaceholder")} required /><p className="text-right text-xs text-muted-foreground">{description.length}/5000</p></div>
       <div className="space-y-2"><label htmlFor="fb-file" className="text-sm font-medium">{t("feedbackPage.attachment")}</label><label htmlFor="fb-file" className="flex cursor-pointer items-center gap-3 rounded-lg border border-dashed p-4 hover:bg-muted/50"><span className="flex size-10 items-center justify-center rounded-lg bg-muted"><Paperclip className="size-5" /></span><span className="min-w-0 flex-1"><span className="block truncate text-sm font-medium">{attachment?.name || t("feedbackPage.attachmentPrompt")}</span><span className="text-xs text-muted-foreground">{t("feedbackPage.attachmentHelp")}</span></span><span className="text-sm font-medium text-primary">{t("feedbackPage.browse")}</span></label><input id="fb-file" type="file" accept="image/png,image/jpeg,image/webp" className="sr-only" onChange={(e) => setAttachment(e.target.files?.[0] || null)} /><p className="text-xs text-muted-foreground">{t("feedbackPage.attachmentPrototypeNotice")}</p></div>
       <div className="flex flex-col-reverse gap-3 border-t pt-5 sm:flex-row sm:items-center sm:justify-between"><p className="text-xs text-muted-foreground">{t("feedbackPage.requiredFields")}</p><Button type="submit" disabled={submitting} className="gap-2"><Send className="size-4" />{submitting ? t("feedbackPage.submitting") : t("feedbackPage.submit")}</Button></div>
-    </form></CardContent></Card> : <Card><CardHeader><CardTitle>{t("feedbackPage.historyTitle")}</CardTitle><CardDescription>{t("feedbackPage.historyDescription")}</CardDescription></CardHeader><CardContent>{loading ? <p className="py-10 text-center text-sm text-muted-foreground">{t("feedbackPage.loading")}</p> : reports.length === 0 ? <div className="flex flex-col items-center rounded-xl border border-dashed px-6 py-14 text-center"><FileText className="mb-4 size-8 text-muted-foreground" /><h3 className="font-medium">{t("feedbackPage.emptyTitle")}</h3><p className="mt-1 max-w-sm text-sm text-muted-foreground">{t("feedbackPage.emptyDescription")}</p><Button className="mt-5" onClick={() => setTab("form")}>{t("feedbackPage.createFirst")}</Button></div> : <div className="space-y-4">{reports.map((r) => <article key={r.id} className="rounded-xl border p-4 sm:p-5"><div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"><div className="min-w-0 space-y-2"><div className="flex flex-wrap items-center gap-2"><span className="rounded-md bg-muted px-2 py-1 text-xs font-medium">FB-{r.id}</span><span className="text-xs text-muted-foreground">{t(`feedbackPage.categories.${r.category}`)}</span></div><h3 className="font-semibold">{r.subject || t("feedbackPage.noSubject")}</h3><p className="whitespace-pre-wrap text-sm text-muted-foreground">{r.description}</p></div><span className={`inline-flex shrink-0 items-center gap-1.5 self-start rounded-full px-2.5 py-1 text-xs font-medium ${r.status === "completed" ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400" : r.status === "rejected" ? "bg-destructive/10 text-destructive" : "bg-amber-500/10 text-amber-700 dark:text-amber-400"}`}>{r.status === "completed" ? <CheckCircle2 className="size-3.5" /> : r.status === "rejected" ? <AlertCircle className="size-3.5" /> : <Clock3 className="size-3.5" />}{t(`feedbackPage.statuses.${r.status}`)}</span></div><div className="mt-4 flex flex-wrap gap-3 border-t pt-3 text-xs text-muted-foreground"><span>{new Date(r.created_at).toLocaleString()}</span>{r.related_page && <span>{t("feedbackPage.relatedPage")}: {r.related_page}</span>}{r.rating > 0 && <span>{t("feedbackPage.ratingValue", { count: r.rating })}</span>}{r.attachment && <span className="inline-flex items-center gap-1"><Paperclip className="size-3" />{r.attachment}</span>}</div><div className="mt-4 rounded-lg bg-muted/50 p-3 text-sm"><p className="font-medium">{t("feedbackPage.adminReply")}</p>{r.replies?.length ? <div className="mt-2 space-y-2">{r.replies.map((reply) => <div key={reply.id} className="whitespace-pre-wrap text-muted-foreground">{reply.message}<p className="mt-1 text-xs">{new Date(reply.created_at).toLocaleString()}</p></div>)}</div> : <p className="mt-1 text-muted-foreground">{t("feedbackPage.noReplyYet")}</p>}</div>{r.replies?.length > 0 && <div className="mt-4 border-t pt-4"><p className="text-sm font-medium">{t("feedbackPage.rateAdminReply")}</p><p className="mt-1 text-xs text-muted-foreground">{t("feedbackPage.ratingOptional")}</p><div className="mt-2 flex items-center gap-1">{[1,2,3,4,5].map((n) => <button key={n} type="button" aria-label={t("feedbackPage.starRating", { count: n })} aria-pressed={r.rating === n} onClick={() => saveRating(r.id, n)} className="rounded-md p-1 focus-visible:ring-2 focus-visible:ring-ring"><Star className={`size-6 ${n <= r.rating ? "fill-amber-400 text-amber-500" : "text-muted-foreground/40"}`} /></button>)}{r.rating > 0 && <span className="ms-2 text-sm text-muted-foreground">{t("feedbackPage.ratingValue", { count: r.rating })}</span>}</div></div>}</article>)}<div className="text-center"><Button variant="outline" onClick={() => setTab("form")}>{t("feedbackPage.sendAnother")}</Button></div></div>}</CardContent></Card>}
+    </form></CardContent></Card> : <Card><CardHeader><CardTitle>{t("feedbackPage.historyTitle")}</CardTitle><CardDescription>{t("feedbackPage.historyDescription")}</CardDescription></CardHeader><CardContent>{loading ? <p className="py-10 text-center text-sm text-muted-foreground">{t("feedbackPage.loading")}</p> : reports.length === 0 ? <div className="flex flex-col items-center rounded-xl border border-dashed px-6 py-14 text-center"><FileText className="mb-4 size-8 text-muted-foreground" /><h3 className="font-medium">{t("feedbackPage.emptyTitle")}</h3><p className="mt-1 max-w-sm text-sm text-muted-foreground">{t("feedbackPage.emptyDescription")}</p><Button className="mt-5" onClick={() => setTab("form")}>{t("feedbackPage.createFirst")}</Button></div> : <div className="space-y-4">{reports.map((r) => <article key={r.id} className="rounded-xl border p-4 sm:p-5"><div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"><div className="min-w-0 space-y-2"><div className="flex flex-wrap items-center gap-2"><span className="rounded-md bg-muted px-2 py-1 text-xs font-medium">FB-{r.id}</span><span className="text-xs text-muted-foreground">{t(`feedbackPage.categories.${r.category}`)}</span></div><h3 className="font-semibold">{r.subject || t("feedbackPage.noSubject")}</h3><p className="whitespace-pre-wrap text-sm text-muted-foreground">{r.description}</p></div><span className={`inline-flex shrink-0 items-center gap-1.5 self-start rounded-full px-2.5 py-1 text-xs font-medium ${r.status === "completed" ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400" : r.status === "rejected" ? "bg-destructive/10 text-destructive" : "bg-amber-500/10 text-amber-700 dark:text-amber-400"}`}>{r.status === "completed" ? <CheckCircle2 className="size-3.5" /> : r.status === "rejected" ? <AlertCircle className="size-3.5" /> : <Clock3 className="size-3.5" />}{t(`feedbackPage.statuses.${r.status}`)}</span></div><div className="mt-4 flex flex-wrap gap-3 border-t pt-3 text-xs text-muted-foreground"><span>{new Date(r.created_at).toLocaleString()}</span>{r.related_page && <span>{t("feedbackPage.relatedPage")}: {r.related_page}</span>}{r.rating > 0 && <span>{t("feedbackPage.ratingValue", { count: r.rating })}</span>}{r.attachment && <span className="inline-flex items-center gap-1"><Paperclip className="size-3" />{r.attachment}</span>}</div><div className="mt-4 rounded-lg bg-muted/50 p-3 text-sm"><p className="font-medium">{t("feedbackPage.adminReply")}</p>{r.replies?.length ? <div className="mt-2 space-y-2">{r.replies.map((reply) => <div key={reply.id} className="whitespace-pre-wrap text-muted-foreground">{reply.message}<p className="mt-1 text-xs">{new Date(reply.created_at).toLocaleString()}</p></div>)}</div> : <p className="mt-1 text-muted-foreground">{t("feedbackPage.noReplyYet")}</p>}</div>{r.status === "completed" && (() => {
+        const draft = getRatingDraft(r);
+        return <div className="mt-4 space-y-4 border-t pt-4">
+          <div><p className="text-sm font-semibold">{t("feedbackPage.rateCompleted")}</p><p className="mt-1 text-xs text-muted-foreground">{t("feedbackPage.ratingOptional")}</p>
+            <div className="mt-2 flex items-center gap-1">{[1,2,3,4,5].map((n) => <button key={n} type="button" aria-label={t("feedbackPage.starRating", { count: n })} aria-pressed={draft.rating === n} onClick={() => updateRatingDraft(r, { rating: n })} className="rounded-md p-1 focus-visible:ring-2 focus-visible:ring-ring"><Star className={`size-7 ${n <= draft.rating ? "fill-amber-400 text-amber-500" : "text-muted-foreground/40"}`} /></button>)}{draft.rating > 0 && <span className="ms-2 text-sm text-muted-foreground">{t("feedbackPage.ratingValue", { count: draft.rating })}</span>}</div>
+          </div>
+          <div className="space-y-2"><p className="text-sm font-medium">{t("feedbackPage.reasonOptions")}</p><p className="text-xs text-muted-foreground">{t("feedbackPage.reasonOptionsHelp")}</p>
+            <div className="flex flex-wrap gap-2">{ratingReasons.map((reason) => {
+              const active = draft.reasons.includes(reason);
+              return <button key={reason} type="button" aria-pressed={active} onClick={() => updateRatingDraft(r, { reasons: active ? draft.reasons.filter((value) => value !== reason) : [...draft.reasons, reason] })} className={`rounded-full border px-3 py-1.5 text-xs transition ${active ? "border-primary bg-primary/10 text-primary" : "border-input text-muted-foreground hover:bg-muted"}`}>{t(`feedbackPage.reasons.${reason}`)}</button>;
+            })}</div>
+          </div>
+          <div className="space-y-2"><label htmlFor={`rating-comment-${r.id}`} className="text-sm font-medium">{t("feedbackPage.manualReason")}</label><Textarea id={`rating-comment-${r.id}`} value={draft.comment} onChange={(e) => updateRatingDraft(r, { comment: e.target.value })} minLength={draft.comment.trim() ? 10 : undefined} maxLength={1000} rows={3} placeholder={t("feedbackPage.manualReasonPlaceholder")} /><p className="text-xs text-muted-foreground">{draft.comment.trim() ? t("feedbackPage.reasonMinLength") : t("feedbackPage.manualReasonOptional")} · {draft.comment.length}/1000</p></div>
+          <div className="flex flex-wrap items-center justify-between gap-3"><p className="text-xs text-muted-foreground">{r.rating > 0 ? t("feedbackPage.ratingSaved") : t("feedbackPage.ratingNotSaved")}</p><Button type="button" disabled={savingRating === r.id || draft.rating < 1 || (draft.comment.trim().length > 0 && draft.comment.trim().length < 10)} onClick={() => saveRating(r.id, draft)}>{savingRating === r.id ? t("feedbackPage.savingRating") : t("feedbackPage.saveRating")}</Button></div>
+        </div>;
+      })()}</article>)}<div className="text-center"><Button variant="outline" onClick={() => setTab("form")}>{t("feedbackPage.sendAnother")}</Button></div></div>}</CardContent></Card>}
     <p className="text-center text-xs text-muted-foreground">{t("feedbackPage.footerNote")}</p>
   </main>;
 }
