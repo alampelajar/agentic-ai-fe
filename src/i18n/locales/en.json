@@ -1118,6 +1118,26 @@
     "selectCategory": "Select a category",
     "submitting": "Submitting...",
     "loading": "Loading feedback history...",
-    "noSubject": "(No subject)"
+    "noSubject": "(No subject)",
+    "rateCompleted": "Rate this completed report",
+    "reasonOptions": "What went well?",
+    "reasonOptionsHelp": "Choose one or more reasons (optional).",
+    "manualReason": "Additional comment",
+    "manualReasonPlaceholder": "Briefly describe your experience...",
+    "manualReasonOptional": "Optional. If provided, use at least 10 characters.",
+    "reasonMinLength": "The additional comment must be at least 10 characters.",
+    "ratingRequired": "Choose a rating from 1 to 5 first.",
+    "ratingNotSaved": "You haven't submitted a rating yet.",
+    "ratingSaved": "Your rating is saved. You can still update it.",
+    "saveRating": "Submit rating",
+    "savingRating": "Saving...",
+    "reasons": {
+      "admin_ramah": "Friendly admin",
+      "pengerjaan_cepat": "Fast resolution",
+      "solusi_tepat": "Effective solution",
+      "komunikasi_jelas": "Clear communication",
+      "responsif": "Responsive support",
+      "masalah_terselesaikan": "Issue resolved"
+    }
   }
 }
