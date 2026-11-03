@@ -12,17 +12,21 @@ export function AgentSkills({ agentId }: { agentId: number }) {
   const [skills, setSkills] = useState<Skill[]>([])
   const [selectedSkill, setSelectedSkill] = useState('')
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
   const [working, setWorking] = useState(false)
 
   const refresh = async () => {
     setLoading(true)
+    setLoadError(null)
     try {
       const [assigned, available] = await Promise.all([getAgentSkills(agentId), getSkills()])
       setAssignments(assigned)
       setSkills(available)
       setSelectedSkill(available.find((skill) => !assigned.some((item) => item.skill_id === skill.id))?.id.toString() || '')
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Assignment skill gagal dimuat.')
+      const message = error instanceof Error ? error.message : 'Assignment skill gagal dimuat.'
+      setLoadError(message)
+      toast.error(message)
     } finally { setLoading(false) }
   }
 
@@ -37,7 +41,7 @@ export function AgentSkills({ agentId }: { agentId: number }) {
     <Card>
       <CardHeader><CardTitle>Skills agent</CardTitle><CardDescription>Assignment hanya berlaku untuk agent ini dan user yang sedang login. Skill tidak otomatis dipasang ke agent lain.</CardDescription></CardHeader>
       <CardContent className='space-y-5'>
-        {loading ? <div className='flex items-center gap-2 text-sm text-muted-foreground'><Loader2 className='size-4 animate-spin' />Memuat assignment…</div> : <>
+        {loading ? <div className='flex items-center gap-2 text-sm text-muted-foreground'><Loader2 className='size-4 animate-spin' />Memuat assignment…</div> : loadError ? <div role='alert' className='rounded-lg border border-dashed p-5 text-center'><p className='font-medium'>Assignment skill gagal dimuat</p><p className='mt-1 text-sm text-muted-foreground'>{loadError}</p><Button className='mt-4' variant='outline' onClick={() => void refresh()}>Coba lagi</Button></div> : <>
           <div className='flex flex-col gap-2 sm:flex-row sm:items-end'>
             <div className='grid flex-1 gap-2'><Label htmlFor='agent-skill-select'>Tambahkan skill</Label><select id='agent-skill-select' value={selectedSkill} onChange={(event) => setSelectedSkill(event.target.value)} className='h-9 rounded-md border bg-background px-3 text-sm' disabled={!available.length || working}><option value=''>{available.length ? 'Pilih skill' : 'Semua skill sudah terpasang'}</option>{available.map((skill) => <option key={skill.id} value={skill.id}>{skill.name} · v{skill.current_version || '—'}</option>)}</select></div>
             <Button disabled={!selectedSkill || working} onClick={() => void run(async () => { await assignSkillToAgent(agentId, Number(selectedSkill)); toast.success('Skill dipasang ke agent.') })}><Plus className='mr-2 size-4' />Pasang</Button>
