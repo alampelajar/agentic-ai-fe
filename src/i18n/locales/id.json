@@ -1221,5 +1221,32 @@
       "disabled": "Memori Persisten nonaktif.",
       "failed": "Aksi memori gagal."
     }
+  },
+  "delegation": {
+    "button": "Delegasikan ke agent lain",
+    "title": "Delegasikan ke agent lain",
+    "description": "Minta salah satu agent Anda yang lain untuk mengerjakan sebagian tugas. Jawabannya ditambahkan ke percakapan ini.",
+    "agent": "Agent",
+    "chooseAgent": "Pilih agent",
+    "loadingAgents": "Memuat agent...",
+    "agentsFailed": "Agent gagal dimuat.",
+    "noOtherAgents": "Anda tidak punya agent lain untuk didelegasikan.",
+    "instruction": "Apa yang harus dikerjakan?",
+    "instructionPlaceholder": "Contoh: Tinjau alur login di atas dan daftarkan risikonya.",
+    "includeContext": "Sertakan percakapan terakhir",
+    "contextHint": "Beberapa pesan terakhir dikirim sebagai referensi.",
+    "noContext": "Belum ada percakapan.",
+    "safety": "Agent lain menjawab dengan teks saja. Ia tidak dapat memakai tool, menjalankan aksi desktop, atau mendelegasikan lagi, dan tidak ada yang dikatakannya yang dijalankan.",
+    "send": "Delegasikan",
+    "sending": "Menunggu jawaban...",
+    "cancel": "Batal",
+    "answerFrom": "Jawaban dari {{name}}",
+    "toast": "{{name}} menjawab delegasi Anda.",
+    "errors": {
+      "chooseAgent": "Pilih agent yang akan mengerjakannya.",
+      "instructionRequired": "Jelaskan apa yang harus dikerjakan agent lain.",
+      "instructionTooLong": "Instruksi dibatasi {{max}} karakter.",
+      "failed": "Delegasi gagal."
+    }
   }
 }
