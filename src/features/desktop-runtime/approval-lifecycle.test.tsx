@@ -324,4 +324,20 @@ describe('approval lifecycle on the Desktop Runtime panel', () => {
       expect(runner.count('/approve')).toBe(0)
     })
   })
+
+  describe('activity list', () => {
+    it('lists repeated identical events as separate rows without duplicate-key errors', async () => {
+      stubRunner()
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+      const screen = await openPanel()
+      for (let round = 0; round < 2; round++) {
+        const dialog = await request(screen)
+        await userEvent.click(dialog.getByRole('button', { name: 'Deny', exact: true }))
+        await closed(screen)
+      }
+      expect(screen.getByText('Denied desktop.focus_window').elements()).toHaveLength(2)
+      expect(consoleError.mock.calls.filter(([message]) => String(message).includes('same key'))).toHaveLength(0)
+      consoleError.mockRestore()
+    })
+  })
 })

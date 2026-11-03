@@ -22,7 +22,8 @@ export function DesktopInteractionPanel({ baseUrl, token, disabled }: { baseUrl:
   const [amount, setAmount] = useState('1')
   const [pending, setPending] = useState<DesktopAction | null>(null)
   const [pendingWindows, setPendingWindows] = useState<WindowInfo[] | undefined>(undefined)
-  const [events, setEvents] = useState<string[]>([])
+  const [events, setEvents] = useState<{ id: number; text: string }[]>([])
+  const eventSeq = useRef(0)
 
   const isClick = action === 'desktop.click' || action === 'desktop.double_click'
   const isScroll = action === 'desktop.scroll'
@@ -31,7 +32,7 @@ export function DesktopInteractionPanel({ baseUrl, token, disabled }: { baseUrl:
   const formIncomplete = (isClick && !targetValue.trim()) || (isScroll && !(Number.isInteger(scrollAmount) && scrollAmount >= 1 && scrollAmount <= 20))
 
   const run = async (operation: () => Promise<void>) => { try { await operation() } catch (error) { toast.error(error instanceof Error ? error.message : 'Desktop action failed.') } }
-  const note = (message: string) => setEvents((items) => [message, ...items].slice(0, 20))
+  const note = (message: string) => setEvents((items) => [{ id: ++eventSeq.current, text: message }, ...items].slice(0, 20))
 
   // The dialog's life. The ref is the source of truth so a late callback (a timer, a slow
   // response) can never touch a newer dialog: everything is keyed by the approval's id.
@@ -188,7 +189,7 @@ export function DesktopInteractionPanel({ baseUrl, token, disabled }: { baseUrl:
           <Button variant='destructive' onClick={emergency}>
             <AlertTriangle className='mr-2 size-4' />Emergency stop
           </Button>
-          <Button variant='outline' disabled={disabled || !token} onClick={() => void run(async () => { await revokeDesktopPermission(baseUrl, token); setEvents((items) => ['Desktop control released.', ...items]) })}>Release desktop control</Button>
+          <Button variant='outline' disabled={disabled || !token} onClick={() => void run(async () => { await revokeDesktopPermission(baseUrl, token); note('Desktop control released.') })}>Release desktop control</Button>
         </div>
         {pending && (
           <div role='dialog' aria-label='Desktop action approval' className='rounded-lg border-2 border-amber-500/50 bg-amber-500/5 p-4'>
@@ -216,7 +217,7 @@ export function DesktopInteractionPanel({ baseUrl, token, disabled }: { baseUrl:
         )}
         <div className='rounded-md bg-muted p-3'>
           <p className='mb-2 text-sm font-medium'>Activity</p>
-          {events.length ? events.map((event) => <p key={event} className='text-xs text-muted-foreground'>{event}</p>) : <p className='text-xs text-muted-foreground'>No desktop actions yet.</p>}
+          {events.length ? events.map((event) => <p key={event.id} className='text-xs text-muted-foreground'>{event.text}</p>) : <p className='text-xs text-muted-foreground'>No desktop actions yet.</p>}
         </div>
       </CardContent>
     </Card>
