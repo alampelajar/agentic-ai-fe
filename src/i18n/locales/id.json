@@ -1118,5 +1118,108 @@
     },
     "rateAdminReply": "Beri nilai untuk balasan admin",
     "selectCategory": "Pilih kategori"
+  },
+  "memoryMenu": "Memori",
+  "memoryPage": {
+    "title": "Memori",
+    "subtitle": "Hal-hal yang harus diingat agent Anda lintas percakapan dan task. Tidak ada yang disimpan kecuali Anda menambahkannya di sini.",
+    "enable": {
+      "title": "Memori Persisten",
+      "description": "Jika aktif, memori aktif yang relevan ditambahkan ke konteks agent pada setiap chat. Fitur ini nonaktif sampai Anda mengaktifkannya.",
+      "label": "Gunakan memori di chat",
+      "notice": "Memori Persisten nonaktif. Anda tetap dapat mengelola memori, tetapi agent tidak akan memakainya sampai fitur ini diaktifkan."
+    },
+    "privacy": "Jangan simpan password, OTP, API key, token, atau kredensial lain. Memori diperlakukan sebagai catatan untuk agent, bukan instruksi yang mengubah izin.",
+    "filters": {
+      "searchPlaceholder": "Cari memori",
+      "searchLabel": "Cari memori",
+      "category": "Kategori",
+      "allCategories": "Semua kategori",
+      "agent": "Agent",
+      "allAgents": "Semua agent",
+      "globalOnly": "Hanya global",
+      "status": "Status",
+      "statusAll": "Semua",
+      "statusActive": "Aktif",
+      "statusArchived": "Diarsipkan"
+    },
+    "categories": {
+      "profile": "Profil",
+      "preference": "Preferensi",
+      "project": "Proyek",
+      "technical_context": "Konteks teknis",
+      "decision": "Keputusan",
+      "instruction": "Instruksi"
+    },
+    "scope": {
+      "global": "Global",
+      "globalHint": "Dipakai semua agent Anda",
+      "agent": "Agent: {{name}}",
+      "unknownAgent": "Agent #{{id}}",
+      "agentHint": "Hanya dipakai agent ini"
+    },
+    "card": {
+      "importance": "Kepentingan {{value}}/5",
+      "archived": "Diarsipkan",
+      "updated": "Diperbarui {{date}}",
+      "lastUsed": "Terakhir dipakai {{date}}",
+      "neverUsed": "Belum pernah dipakai"
+    },
+    "actions": {
+      "add": "Tambah memori",
+      "edit": "Edit",
+      "archive": "Arsipkan",
+      "restore": "Pulihkan",
+      "delete": "Hapus",
+      "save": "Simpan memori",
+      "saving": "Menyimpan...",
+      "cancel": "Batal",
+      "retry": "Coba lagi"
+    },
+    "form": {
+      "addTitle": "Tambah memori",
+      "editTitle": "Edit memori",
+      "description": "Tulis sesuatu yang singkat dan berguna. Hanya Anda dan agent yang Anda pilih yang dapat memakainya.",
+      "title": "Judul",
+      "titlePlaceholder": "Contoh: Stack backend Conelo",
+      "content": "Isi",
+      "contentPlaceholder": "Contoh: Backend memakai Go, Gin, dan GORM dengan PostgreSQL.",
+      "category": "Kategori",
+      "scope": "Cakupan",
+      "scopeGlobal": "Global (semua agent)",
+      "importance": "Kepentingan",
+      "importanceHint": "5 selalu dipertimbangkan; nilai lebih rendah hanya jika terkait pesan Anda.",
+      "errors": {
+        "titleRequired": "Judul wajib diisi.",
+        "contentRequired": "Isi wajib diisi.",
+        "titleTooLong": "Judul dibatasi {{max}} karakter.",
+        "contentTooLong": "Isi dibatasi {{max}} karakter."
+      }
+    },
+    "delete": {
+      "title": "Hapus memori ini?",
+      "description": "\"{{title}}\" akan dihapus permanen. Agent tidak akan mengingatnya lagi.",
+      "confirm": "Hapus"
+    },
+    "empty": {
+      "title": "Belum ada memori",
+      "description": "Tambahkan memori agar agent Anda mengingat proyek, preferensi, dan keputusan Anda.",
+      "filtered": "Tidak ada memori yang cocok dengan filter ini."
+    },
+    "loading": "Memuat memori...",
+    "error": {
+      "title": "Memori gagal dimuat",
+      "settings": "Pengaturan memori gagal dimuat."
+    },
+    "toast": {
+      "created": "Memori disimpan.",
+      "updated": "Memori diperbarui.",
+      "archived": "Memori diarsipkan.",
+      "restored": "Memori dipulihkan.",
+      "deleted": "Memori dihapus.",
+      "enabled": "Memori Persisten aktif.",
+      "disabled": "Memori Persisten nonaktif.",
+      "failed": "Aksi memori gagal."
+    }
   }
 }

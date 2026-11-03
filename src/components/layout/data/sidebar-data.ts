@@ -15,6 +15,7 @@ import {
   AudioWaveform,
   Bot,
   Sparkles,
+  BrainCircuit,
   MessageSquareText,
 } from "lucide-react";
 
@@ -81,6 +82,11 @@ export const sidebarData: SidebarData = {
           title: "skills",
           url: "/skills",
           icon: Sparkles,
+        },
+        {
+          title: "memoryMenu",
+          url: "/memory",
+          icon: BrainCircuit,
         },
       ],
     },

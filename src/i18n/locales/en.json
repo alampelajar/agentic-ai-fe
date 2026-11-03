@@ -1118,5 +1118,108 @@
     },
     "rateAdminReply": "Rate the admin's response",
     "selectCategory": "Select a category"
+  },
+  "memoryMenu": "Memory",
+  "memoryPage": {
+    "title": "Memory",
+    "subtitle": "Things your agents should remember across conversations and tasks. Nothing is saved unless you add it here.",
+    "enable": {
+      "title": "Persistent Memory",
+      "description": "When on, relevant active memories are added to the agent's context in every chat. It is off until you turn it on.",
+      "label": "Use memory in chats",
+      "notice": "Persistent Memory is off. You can still manage memories, but agents will not use them until you turn it on."
+    },
+    "privacy": "Do not store passwords, OTPs, API keys, tokens or other credentials. Memories are treated as notes for the agent, never as instructions that change permissions.",
+    "filters": {
+      "searchPlaceholder": "Search memories",
+      "searchLabel": "Search memories",
+      "category": "Category",
+      "allCategories": "All categories",
+      "agent": "Agent",
+      "allAgents": "All agents",
+      "globalOnly": "Global only",
+      "status": "Status",
+      "statusAll": "All",
+      "statusActive": "Active",
+      "statusArchived": "Archived"
+    },
+    "categories": {
+      "profile": "Profile",
+      "preference": "Preference",
+      "project": "Project",
+      "technical_context": "Technical context",
+      "decision": "Decision",
+      "instruction": "Instruction"
+    },
+    "scope": {
+      "global": "Global",
+      "globalHint": "Used by all your agents",
+      "agent": "Agent: {{name}}",
+      "unknownAgent": "Agent #{{id}}",
+      "agentHint": "Used only by this agent"
+    },
+    "card": {
+      "importance": "Importance {{value}}/5",
+      "archived": "Archived",
+      "updated": "Updated {{date}}",
+      "lastUsed": "Last used {{date}}",
+      "neverUsed": "Not used yet"
+    },
+    "actions": {
+      "add": "Add memory",
+      "edit": "Edit",
+      "archive": "Archive",
+      "restore": "Restore",
+      "delete": "Delete",
+      "save": "Save memory",
+      "saving": "Saving...",
+      "cancel": "Cancel",
+      "retry": "Try again"
+    },
+    "form": {
+      "addTitle": "Add memory",
+      "editTitle": "Edit memory",
+      "description": "Write something short and useful. Only you and the agents you choose can use it.",
+      "title": "Title",
+      "titlePlaceholder": "For example: Conelo backend stack",
+      "content": "Content",
+      "contentPlaceholder": "For example: The backend uses Go, Gin and GORM with PostgreSQL.",
+      "category": "Category",
+      "scope": "Scope",
+      "scopeGlobal": "Global (all agents)",
+      "importance": "Importance",
+      "importanceHint": "5 is always considered; lower values only when related to your message.",
+      "errors": {
+        "titleRequired": "Title is required.",
+        "contentRequired": "Content is required.",
+        "titleTooLong": "Title is limited to {{max}} characters.",
+        "contentTooLong": "Content is limited to {{max}} characters."
+      }
+    },
+    "delete": {
+      "title": "Delete this memory?",
+      "description": "\"{{title}}\" will be permanently deleted. Agents will no longer remember it.",
+      "confirm": "Delete"
+    },
+    "empty": {
+      "title": "No memories yet",
+      "description": "Add a memory so your agents can remember your project, preferences and decisions.",
+      "filtered": "No memories match these filters."
+    },
+    "loading": "Loading memories...",
+    "error": {
+      "title": "Memories could not be loaded",
+      "settings": "The memory setting could not be loaded."
+    },
+    "toast": {
+      "created": "Memory saved.",
+      "updated": "Memory updated.",
+      "archived": "Memory archived.",
+      "restored": "Memory restored.",
+      "deleted": "Memory deleted.",
+      "enabled": "Persistent Memory is on.",
+      "disabled": "Persistent Memory is off.",
+      "failed": "The memory action failed."
+    }
   }
 }
