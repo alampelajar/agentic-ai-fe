@@ -1139,6 +1139,10 @@
       "responsif": "Responsif",
       "masalah_terselesaikan": "Masalah terselesaikan"
     },
-    "ratingSubmitSuccess": "Penilaian berhasil dikirim dan disimpan. Terima kasih atas ulasanmu!"
+    "ratingSubmitSuccess": "Penilaian berhasil dikirim dan disimpan. Terima kasih atas ulasanmu!",
+    "ratingDone": "Selesai",
+    "editRating": "Edit",
+    "cancelEdit": "Batal",
+    "saveRatingChanges": "Simpan perubahan"
   }
 }
