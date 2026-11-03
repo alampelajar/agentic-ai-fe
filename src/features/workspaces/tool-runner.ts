@@ -16,6 +16,7 @@ const CLOUD_TOOLS = new Set([
   'workspace.get_changes',
   'workspace.run_test',
   'workspace.build',
+  'workspace.install_dependencies',
   'workspace.get_execution',
 ])
 
@@ -30,6 +31,10 @@ const LEGACY_ACTIONS: Record<string, (args: Record<string, unknown>) => CloudToo
   'python-test': () => ({ tool: 'workspace.run_test', args: { target: 'python' } }),
   'go-build': () => ({ tool: 'workspace.build', args: { target: 'go' } }),
   'npm-build': () => ({ tool: 'workspace.build', args: { target: 'node' } }),
+  // Installing is approval-gated like every other run, so a model that asks for it by its command name is routed to the tool.
+  'npm-install': () => ({ tool: 'workspace.install_dependencies', args: { target: 'node' } }),
+  'pip-install': () => ({ tool: 'workspace.install_dependencies', args: { target: 'python' } }),
+  'go-deps': () => ({ tool: 'workspace.install_dependencies', args: { target: 'go' } }),
 }
 
 function pick(source: Record<string, unknown>, ...keys: string[]) {

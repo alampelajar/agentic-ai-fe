@@ -1336,6 +1336,8 @@
       "newFilePath": "New file path",
       "newFile": "New file",
       "protected": "protected",
+      "dependencies": "dependencies",
+      "dependenciesHint": "Installed dependencies are not listed. Run Install dependencies in the Console tab to refresh them.",
       "selectFile": "Select a file to read or edit it.",
       "readingFile": "Reading file...",
       "editor": "File editor",
@@ -1370,7 +1372,10 @@
         "npm-test": "Node: test",
         "npm-build": "Node: build",
         "npm-lint": "Node: lint",
-        "python-test": "Python: test"
+        "python-test": "Python: test",
+        "go-deps": "Go: install dependencies",
+        "npm-install": "Node: install dependencies",
+        "pip-install": "Python: install dependencies"
       },
       "statuses": {
         "queued": "Queued",
@@ -1387,6 +1392,7 @@
       "cancelling": "Cancelling...",
       "noOutput": "(no output yet)",
       "empty": "No jobs yet. Run a test or a build to see its output here.",
+      "installHint": "Tests and builds run without internet access. If the project has dependencies, run Install dependencies first: it can reach package registries only and runs no project scripts.",
       "loading": "Loading jobs...",
       "loadFailed": "Jobs could not be loaded",
       "startFailed": "The job could not be started.",

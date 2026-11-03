@@ -1336,6 +1336,8 @@
       "newFilePath": "Path file baru",
       "newFile": "File baru",
       "protected": "terlindungi",
+      "dependencies": "dependensi",
+      "dependenciesHint": "Dependensi yang terpasang tidak ditampilkan. Jalankan Install dependencies di tab Konsol untuk memperbaruinya.",
       "selectFile": "Pilih file untuk membaca atau mengeditnya.",
       "readingFile": "Membaca file...",
       "editor": "Editor file",
@@ -1370,7 +1372,10 @@
         "npm-test": "Node: test",
         "npm-build": "Node: build",
         "npm-lint": "Node: lint",
-        "python-test": "Python: test"
+        "python-test": "Python: test",
+        "go-deps": "Go: pasang dependensi",
+        "npm-install": "Node: pasang dependensi",
+        "pip-install": "Python: pasang dependensi"
       },
       "statuses": {
         "queued": "Antre",
@@ -1387,6 +1392,7 @@
       "cancelling": "Membatalkan...",
       "noOutput": "(belum ada output)",
       "empty": "Belum ada job. Jalankan test atau build untuk melihat outputnya di sini.",
+      "installHint": "Test dan build berjalan tanpa akses internet. Jika proyek punya dependensi, jalankan Pasang dependensi lebih dulu: hanya dapat menjangkau registry paket dan tidak menjalankan skrip proyek.",
       "loading": "Memuat job...",
       "loadFailed": "Job gagal dimuat",
       "startFailed": "Job tidak dapat dimulai.",

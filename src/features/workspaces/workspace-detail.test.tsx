@@ -82,6 +82,22 @@ describe('Workspace explorer', () => {
     await expect.element(screen.getByRole('button', { name: 'main.go' })).toBeInTheDocument()
   })
 
+  it('shows a dependency folder as a closed, labelled entry that cannot be opened', async () => {
+    mocks.getWorkspace.mockResolvedValue(workspace)
+    mocks.getTree.mockResolvedValue({ entries: [...entries, { path: 'node_modules', name: 'node_modules', type: 'dir', size: 0, generated: true }], truncated: false })
+    mocks.getChanges.mockResolvedValue([])
+    mocks.getExecutions.mockResolvedValue({ jobs: [], executionEnabled: false })
+    const screen = await render(<WorkspaceDetailPage workspaceId={3} />)
+    const folder = screen.getByTestId('generated-folder')
+    await expect.element(folder).toHaveTextContent('node_modules')
+    await expect.element(folder).toHaveTextContent('dependencies')
+    // Not a button: clicking it must not try to list or open anything inside.
+    await expect.element(screen.getByRole('button', { name: /node_modules/ })).not.toBeInTheDocument()
+    await userEvent.click(folder)
+    expect(mocks.getTree).toHaveBeenCalledTimes(1)
+    expect(mocks.readFile).not.toHaveBeenCalled()
+  })
+
   it('opens a file, edits it and saves it', async () => {
     mocks.readFile.mockResolvedValueOnce({ path: 'README.md', content: '# Hello', size: 7 })
     mocks.writeFile.mockResolvedValueOnce({ created: false, size: 12, workspace })

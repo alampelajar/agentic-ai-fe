@@ -94,6 +94,22 @@ describe('Execution console', () => {
     await expect.element(screen.getByTestId('job-detail')).toHaveTextContent('Queued')
   })
 
+  it('offers the install commands, explains them, and starts the one chosen', async () => {
+    mocks.getExecutions.mockResolvedValue({ jobs: [], executionEnabled: true })
+    mocks.startExecution.mockResolvedValueOnce(job({ id: 4, job_type: 'npm-install', command: 'npm install --ignore-scripts', status: 'queued', exit_code: null, stdout: '' }))
+    const screen = await render(<ExecutionConsole workspaceId={3} />)
+    await expect.element(screen.getByTestId('install-hint')).not.toBeInTheDocument()
+    for (const label of ['Go: install dependencies', 'Node: install dependencies', 'Python: install dependencies']) {
+      await expect.element(screen.getByRole('option', { name: label })).toBeInTheDocument()
+    }
+    await userEvent.selectOptions(screen.getByLabelText('Command'), 'npm-install')
+    await expect.element(screen.getByTestId('install-hint')).toHaveTextContent(/package registries only and runs no project scripts/)
+    await userEvent.click(screen.getByRole('button', { name: 'Run' }))
+    await vi.waitFor(() => expect(mocks.startExecution).toHaveBeenCalledExactlyOnceWith(3, 'npm-install'))
+    await userEvent.selectOptions(screen.getByLabelText('Command'), 'go-test')
+    await expect.element(screen.getByTestId('install-hint')).not.toBeInTheDocument()
+  })
+
   it('shows the reason when a job cannot be started', async () => {
     mocks.getExecutions.mockResolvedValue({ jobs: [], executionEnabled: true })
     mocks.startExecution.mockRejectedValueOnce(new Error('this workspace has no go.mod'))

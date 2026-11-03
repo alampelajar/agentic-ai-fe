@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ACTIVE_JOB_STATUSES, cancelExecution, getExecutions, JOB_TYPES, startExecution, type ExecutionJob, type JobType } from './data/api'
+import { ACTIVE_JOB_STATUSES, cancelExecution, getExecutions, INSTALL_JOB_TYPES, JOB_TYPES, startExecution, type ExecutionJob, type JobType } from './data/api'
 
 /** How often a running job is refreshed. */
 export const POLL_INTERVAL_MS = 2000
@@ -95,6 +95,7 @@ export function ExecutionConsole({ workspaceId }: { workspaceId: number }) {
           {t('workspacePage.console.run')}
         </Button>
       </div>
+      {INSTALL_JOB_TYPES.includes(jobType) && <p data-testid='install-hint' className='text-xs text-muted-foreground'>{t('workspacePage.console.installHint')}</p>}
       {startError && <p role='alert' className='text-sm text-destructive'>{startError}</p>}
 
       {loading ? (

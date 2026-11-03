@@ -19,7 +19,7 @@ export type Workspace = {
   last_accessed_at: string | null
 }
 
-export type TreeEntry = { path: string; name: string; type: 'file' | 'dir'; size: number; sensitive?: boolean }
+export type TreeEntry = { path: string; name: string; type: 'file' | 'dir'; size: number; sensitive?: boolean; generated?: boolean }
 export type FileChange = { path: string; status: 'added' | 'modified' | 'deleted' }
 
 export type JobStatus = 'queued' | 'preparing' | 'running' | 'completed' | 'failed' | 'timed_out' | 'cancelled'
@@ -44,7 +44,9 @@ export type ExecutionJob = {
   completed_at: string | null
 }
 
-export const JOB_TYPES = ['go-test', 'go-build', 'npm-test', 'npm-build', 'npm-lint', 'python-test'] as const
+export const JOB_TYPES = ['go-test', 'go-build', 'npm-test', 'npm-build', 'npm-lint', 'python-test', 'go-deps', 'npm-install', 'pip-install'] as const
+/** Jobs that download packages. They run on a registry-only network and execute no project code. */
+export const INSTALL_JOB_TYPES: readonly JobType[] = ['go-deps', 'npm-install', 'pip-install']
 export type JobType = (typeof JOB_TYPES)[number]
 
 export class WorkspaceRequestError extends Error {

@@ -235,7 +235,13 @@ export function WorkspaceDetailPage({ workspaceId }: { workspaceId: number }) {
                     const depth = entry.path.split('/').length - 1
                     return (
                       <li key={entry.path} style={{ paddingLeft: `${depth * 12}px` }}>
-                        {entry.type === 'dir' ? (
+                        {entry.generated ? (
+                          <div className='flex w-full items-center gap-1 px-1 py-0.5 text-muted-foreground' title={t('workspacePage.explorer.dependenciesHint')} data-testid='generated-folder'>
+                            <Folder className='ml-4 size-3.5' />
+                            <span className='truncate'>{entry.name}</span>
+                            <Badge variant='outline' className='ml-auto text-[10px]'>{t('workspacePage.explorer.dependencies')}</Badge>
+                          </div>
+                        ) : entry.type === 'dir' ? (
                           <button type='button' className='flex w-full items-center gap-1 rounded px-1 py-0.5 text-left hover:bg-muted' onClick={() => toggle(entry.path)} aria-expanded={expanded.has(entry.path)}>
                             {expanded.has(entry.path) ? <ChevronDown className='size-3.5' /> : <ChevronRight className='size-3.5' />}
                             <Folder className='size-3.5 text-muted-foreground' />

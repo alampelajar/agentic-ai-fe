@@ -51,6 +51,16 @@ describe('parseCloudToolCall', () => {
     expect(parseCloudToolCall('{"action":"go-test"}', false)).toBeNull()
   })
 
+  it('reads the install tool, and sends an install command to it instead of the runner', () => {
+    expect(parseCloudToolCall('{"action":"workspace.install_dependencies","arguments":{"target":"node"}}', true)).toEqual({ tool: 'workspace.install_dependencies', args: { target: 'node' } })
+    expect(parseCloudToolCall('{"action":"workspace_install_dependencies","arguments":{}}', true)?.tool).toBe('workspace.install_dependencies')
+    expect(parseCloudToolCall('{"action":"npm-install"}', true)).toEqual({ tool: 'workspace.install_dependencies', args: { target: 'node' } })
+    expect(parseCloudToolCall('{"action":"pip-install"}', true)).toEqual({ tool: 'workspace.install_dependencies', args: { target: 'python' } })
+    expect(parseCloudToolCall('{"action":"go-deps"}', true)).toEqual({ tool: 'workspace.install_dependencies', args: { target: 'go' } })
+    // Without a cloud workspace these are not ours to handle.
+    expect(parseCloudToolCall('{"action":"npm-install"}', false)).toBeNull()
+  })
+
   it('refuses shells and Docker even when asked in the old format', () => {
     for (const action of ['bash', 'powershell', 'docker', 'npm-lint']) {
       expect(() => parseCloudToolCall(`{"action":"${action}","arguments":{"command":"id"}}`, true)).toThrow()
@@ -66,6 +76,25 @@ describe('parseCloudToolCall', () => {
 
 describe('runCloudToolCall', () => {
   beforeEach(() => vi.resetAllMocks())
+
+  it('holds an install for the user, and sends nothing when they refuse', async () => {
+    const installApproval: ToolApproval = { ...approval, id: 'wsa-9', tool: 'workspace.install_dependencies', summary: 'Install dependencies (npm-install) in the cloud sandbox; only package registries are reachable' }
+    mocks.runWorkspaceTool.mockResolvedValueOnce({ kind: 'approval', approval: installApproval })
+    mocks.denyWorkspaceTool.mockResolvedValue(undefined)
+    const seen: string[] = []
+    const result = await runCloudToolCall({ tool: 'workspace.install_dependencies', args: { target: 'node' } }, {
+      workspaceId: 3,
+      agentId: 9,
+      requestApproval: async (shown) => {
+        seen.push(shown.summary)
+        return 'deny'
+      },
+    })
+    expect(seen).toEqual([installApproval.summary])
+    expect(result).toMatch(/^TOOL_DENIED/)
+    expect(mocks.approveWorkspaceTool).not.toHaveBeenCalled()
+    expect(mocks.denyWorkspaceTool).toHaveBeenCalledExactlyOnceWith('wsa-9')
+  })
   const context = (decision?: 'allow' | 'deny' | 'expired') => ({
     workspaceId: 3,
     agentId: 9,
