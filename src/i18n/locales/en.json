@@ -1143,6 +1143,7 @@
     "ratingDone": "Completed",
     "editRating": "Edit",
     "cancelEdit": "Cancel",
-    "saveRatingChanges": "Save changes"
+    "saveRatingChanges": "Save changes",
+    "attachmentTooLarge": "The image must be 5 MB or smaller."
   }
 }
