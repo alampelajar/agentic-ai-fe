@@ -10,6 +10,7 @@ import {
   Send,
   Sparkles,
   User,
+  Users,
   X,
 } from 'lucide-react'
 import { API_BASE_URL } from '@/lib/api-config'
@@ -19,6 +20,8 @@ import { Main } from '@/components/layout/main'
 import { PageLoading } from '@/components/layout/page-loading'
 import { approveDesktopAction, denyDesktopAction, emergencyStopDesktop, getDesktopWindows, requestDesktopAction, RunnerRequestError, type DesktopAction } from '@/features/desktop-runtime/api'
 import { type WindowInfo } from '@/features/desktop-runtime/approval-details'
+import { DelegateDialog } from '@/features/delegation/delegate-dialog'
+import { buildDelegationContext } from '@/features/delegation/data/api'
 import { ChatApprovalDialog, type ApprovalDecision } from '@/features/desktop-runtime/chat-approval-dialog'
 import { toast } from 'sonner'
 import { DESKTOP_TOOLS, parseLocalAgentToolCall, READ_ONLY_DESKTOP_TOOLS, type LocalRunnerToolCall } from './tool-call'
@@ -161,6 +164,7 @@ export function AIAssistant() {
   const [progress, setProgress] = useState(0)
 
   const [currentTaskId, setCurrentTaskId] = useState<string | null>(null)
+  const [delegateOpen, setDelegateOpen] = useState(false)
 
   const [taskTitle, setTaskTitle] = useState('')
   const [historyLoading, setHistoryLoading] = useState(false)
@@ -1692,7 +1696,19 @@ export function AIAssistant() {
                   <Paperclip className='size-4' />
                 </button>
 
-                {/* SEND */}
+                {/* DELEGATE + SEND */}
+
+                <div className='flex items-center gap-1'>
+                <button
+                  type='button'
+                  onClick={() => setDelegateOpen(true)}
+                  disabled={!selectedAgent || running}
+                  title={t('delegation.button')}
+                  aria-label={t('delegation.button')}
+                  className='flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted disabled:opacity-50'
+                >
+                  <Users className='size-4' />
+                </button>
 
                 <button
                   type='button'
@@ -1707,6 +1723,7 @@ export function AIAssistant() {
                 >
                   <Send className='size-4' />
                 </button>
+                </div>
               </div>
             </div>
 
@@ -1714,6 +1731,21 @@ export function AIAssistant() {
           </div>
         </div>
       </div>
+      <DelegateDialog
+        open={delegateOpen}
+        onOpenChange={setDelegateOpen}
+        currentAgentId={selectedAgent ? Number(selectedAgent.id) : null}
+        taskId={currentTaskId && /^\d+$/.test(currentTaskId) ? Number(currentTaskId) : null}
+        defaultInstruction={message.trim()}
+        context={buildDelegationContext(messages)}
+        onDelegated={({ agent, message: answer }) => {
+          const content = [t('delegation.answerFrom', { name: agent.name }), answer].join('\n\n')
+          addAgentMessage(content)
+          if (currentTaskId) void persistMessage(currentTaskId, 'assistant', content).catch(() => undefined)
+          toast.success(t('delegation.toast', { name: agent.name }))
+          setDelegateOpen(false)
+        }}
+      />
       {pendingApproval && (
         <ChatApprovalDialog
           key={pendingApproval.id}

@@ -1221,5 +1221,32 @@
       "disabled": "Persistent Memory is off.",
       "failed": "The memory action failed."
     }
+  },
+  "delegation": {
+    "button": "Delegate to another agent",
+    "title": "Delegate to another agent",
+    "description": "Ask one of your other agents to handle a piece of work. Its answer is added to this conversation.",
+    "agent": "Agent",
+    "chooseAgent": "Choose an agent",
+    "loadingAgents": "Loading agents...",
+    "agentsFailed": "Agents could not be loaded.",
+    "noOtherAgents": "You have no other agent to delegate to.",
+    "instruction": "What should it do?",
+    "instructionPlaceholder": "For example: Review the login flow described above and list the risks.",
+    "includeContext": "Include the recent conversation",
+    "contextHint": "The last few messages are sent as reference.",
+    "noContext": "There is no conversation yet.",
+    "safety": "The other agent answers in text only. It cannot use tools, run desktop actions or delegate further, and nothing it says is executed.",
+    "send": "Delegate",
+    "sending": "Waiting for the answer...",
+    "cancel": "Cancel",
+    "answerFrom": "Answer from {{name}}",
+    "toast": "{{name}} answered your delegation.",
+    "errors": {
+      "chooseAgent": "Choose which agent should do this.",
+      "instructionRequired": "Describe what the other agent should do.",
+      "instructionTooLong": "The instruction is limited to {{max}} characters.",
+      "failed": "The delegation failed."
+    }
   }
 }
