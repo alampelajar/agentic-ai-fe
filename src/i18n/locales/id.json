@@ -1143,6 +1143,7 @@
     "ratingDone": "Selesai",
     "editRating": "Edit",
     "cancelEdit": "Batal",
-    "saveRatingChanges": "Simpan perubahan"
+    "saveRatingChanges": "Simpan perubahan",
+    "attachmentTooLarge": "Ukuran foto maksimal 5 MB."
   }
 }
