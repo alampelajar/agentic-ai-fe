@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, type RenderResult } from 'vitest-browser-react'
 import { userEvent, type Locator } from 'vitest/browser'
 import i18n from '@/i18n'
+import { API_BASE_URL } from '@/lib/api-config'
 import { ForgotPasswordForm } from './forgot-password-form'
 
 const navigateMock = vi.fn()
@@ -52,7 +53,7 @@ describe('ForgotPasswordForm', () => {
 
     await vi.waitFor(() => {
       expect(fetchMock).toHaveBeenCalledWith(
-        'http://localhost:8081/api/auth/forgot-password/request',
+        `${API_BASE_URL}/api/auth/forgot-password/request`,
         expect.objectContaining({
           method: 'POST',
           body: JSON.stringify({ email: 'a@b.com' }),
