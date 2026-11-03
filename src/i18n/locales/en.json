@@ -1139,6 +1139,10 @@
       "responsif": "Responsive support",
       "masalah_terselesaikan": "Issue resolved"
     },
-    "ratingSubmitSuccess": "Your rating was submitted and saved successfully. Thank you for your feedback!"
+    "ratingSubmitSuccess": "Your rating was submitted and saved successfully. Thank you for your feedback!",
+    "ratingDone": "Completed",
+    "editRating": "Edit",
+    "cancelEdit": "Cancel",
+    "saveRatingChanges": "Save changes"
   }
 }
