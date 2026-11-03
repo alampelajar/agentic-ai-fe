@@ -1138,6 +1138,7 @@
       "komunikasi_jelas": "Clear communication",
       "responsif": "Responsive support",
       "masalah_terselesaikan": "Issue resolved"
-    }
+    },
+    "ratingSubmitSuccess": "Your rating was submitted and saved successfully. Thank you for your feedback!"
   }
 }
