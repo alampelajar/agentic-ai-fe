@@ -1118,6 +1118,26 @@
     "selectCategory": "Pilih kategori",
     "submitting": "Mengirim...",
     "loading": "Memuat riwayat feedback...",
-    "noSubject": "(Tanpa judul)"
+    "noSubject": "(Tanpa judul)",
+    "rateCompleted": "Nilai penyelesaian laporan ini",
+    "reasonOptions": "Apa yang berjalan dengan baik?",
+    "reasonOptionsHelp": "Pilih satu atau beberapa alasan (opsional).",
+    "manualReason": "Alasan tambahan",
+    "manualReasonPlaceholder": "Ceritakan pengalamanmu secara singkat...",
+    "manualReasonOptional": "Opsional. Jika diisi, minimal 10 karakter.",
+    "reasonMinLength": "Alasan manual harus minimal 10 karakter.",
+    "ratingRequired": "Pilih rating 1 sampai 5 terlebih dahulu.",
+    "ratingNotSaved": "Kamu belum mengirim penilaian.",
+    "ratingSaved": "Penilaian sudah tersimpan. Kamu masih bisa memperbaruinya.",
+    "saveRating": "Kirim penilaian",
+    "savingRating": "Menyimpan...",
+    "reasons": {
+      "admin_ramah": "Admin ramah",
+      "pengerjaan_cepat": "Pengerjaan cepat",
+      "solusi_tepat": "Solusi tepat",
+      "komunikasi_jelas": "Komunikasi jelas",
+      "responsif": "Responsif",
+      "masalah_terselesaikan": "Masalah terselesaikan"
+    }
   }
 }
