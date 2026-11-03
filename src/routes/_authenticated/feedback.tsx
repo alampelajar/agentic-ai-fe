@@ -25,6 +25,7 @@ function FeedbackPage() {
   const [error, setError] = useState("");
   const [ratingDrafts, setRatingDrafts] = useState<Record<number, RatingDraft>>({});
   const [savingRating, setSavingRating] = useState<number | null>(null);
+  const [ratingSuccess, setRatingSuccess] = useState("");
 
   async function loadReports() {
     setLoading(true);
@@ -101,6 +102,7 @@ function FeedbackPage() {
     }
     setSavingRating(reportId);
     setError("");
+    setRatingSuccess("");
     try {
       const response = await apiFetch(`/api/feedback/${reportId}/rating`, {
         method: "PATCH",
@@ -115,6 +117,11 @@ function FeedbackPage() {
       setReports((current) => current.map((report) => report.id === reportId
         ? { ...report, rating: draft.rating, rating_reasons: draft.reasons, rating_comment: draft.comment.trim() }
         : report));
+      setRatingDrafts((current) => ({
+        ...current,
+        [reportId]: { ...draft, comment: draft.comment.trim() },
+      }));
+      setRatingSuccess(t("feedbackPage.ratingSubmitSuccess"));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal menyimpan rating.");
     } finally {
@@ -128,6 +135,7 @@ function FeedbackPage() {
     <header className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between"><div className="space-y-2"><div className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary"><MessageSquareText className="size-5" /></div><h1 className="text-2xl font-semibold tracking-tight">{t("feedbackPage.title")}</h1><p className="max-w-2xl text-sm text-muted-foreground">{t("feedbackPage.subtitle")}</p></div>
     <div className="grid grid-cols-3 gap-2 sm:min-w-72">{[["feedbackPage.totalReports", reports.length], ["feedbackPage.inProgress", openCount], ["feedbackPage.completed", doneCount]].map(([label, value]) => <Card key={String(label)} className="gap-2 py-4"><CardContent className="px-3"><p className="text-xs text-muted-foreground">{t(String(label))}</p><p className="mt-1 text-2xl font-semibold">{value}</p></CardContent></Card>)}</div></header>
     <nav className="flex gap-2 border-b"><button type="button" onClick={() => { setTab("form"); setSubmitted(false); }} className={`border-b-2 px-4 py-3 text-sm font-medium ${tab === "form" ? "border-primary" : "border-transparent text-muted-foreground"}`}>{t("feedbackPage.newReport")}</button><button type="button" onClick={() => setTab("history")} className={`border-b-2 px-4 py-3 text-sm font-medium ${tab === "history" ? "border-primary" : "border-transparent text-muted-foreground"}`}>{t("feedbackPage.history")} <span className="ms-1 rounded-full bg-muted px-2 py-0.5 text-xs">{reports.length}</span></button></nav>
+    {ratingSuccess && <div role="status" className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-3 text-sm text-emerald-700 dark:text-emerald-400">{ratingSuccess}</div>}
     {error && <div role="alert" className="flex gap-2 rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive"><AlertCircle className="size-4 shrink-0" />{error}</div>}
     {submitted && <div role="status" className="flex gap-3 rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-4 text-sm"><CheckCircle2 className="size-5 shrink-0 text-emerald-600" /><div><p className="font-medium">{t("feedbackPage.submitSuccess")}</p></div></div>}
     {tab === "form" ? <Card><CardHeader><CardTitle>{t("feedbackPage.formTitle")}</CardTitle><CardDescription>{t("feedbackPage.formDescription")}</CardDescription></CardHeader><CardContent><form onSubmit={submit} className="space-y-6">
