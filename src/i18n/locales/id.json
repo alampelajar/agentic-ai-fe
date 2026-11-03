@@ -852,7 +852,6 @@
   "paidModels": "Model Berbayar",
   "appsMenu": "Aplikasi",
   "skills": "Skills",
-  "desktopAccess": "Akses Desktop",
   "appDirectory": {
     "badge": "DIREKTORI SUMBER DAYA AI",
     "title": "Aplikasi",
@@ -1407,6 +1406,109 @@
       "needed": "Pilih atau buat workspace cloud terlebih dahulu.",
       "create": "Buat baru",
       "unavailable": "Workspace yang dipilih sudah tidak tersedia."
+    }
+  },
+  "integrationsMenu": "Integrasi",
+  "desktopRuntime": {
+    "pageTitle": "Integrasi",
+    "pageSubtitle": "Koneksi opsional ke alat di luar cloud. Tidak ada yang di sini yang diperlukan untuk memakai Workspace Cloud.",
+    "title": "Desktop Runtime",
+    "optional": "Opsional",
+    "summary": "Desktop Runtime adalah integrasi opsional yang memungkinkan Agentic AI mengontrol aplikasi dan desktop di komputer lokal Anda. Integrasi ini tidak diperlukan untuk menggunakan Cloud Workspace.",
+    "compare": {
+      "cloud": {
+        "title": "Cloud Workspace",
+        "items": [
+          "Membuka dan mengelola workspace",
+          "Mengedit file kode",
+          "Menjalankan test dan build melalui Cloud Execution Worker",
+          "Tidak memerlukan Local Agent Runner"
+        ]
+      },
+      "desktop": {
+        "title": "Desktop Runtime",
+        "items": [
+          "Mengakses desktop lokal",
+          "Mengontrol aplikasi dan jendela pada komputer Anda",
+          "Mengambil screenshot atau berinteraksi dengan desktop",
+          "Memerlukan Local Agent Runner yang berjalan di komputer Anda"
+        ]
+      }
+    },
+    "connection": {
+      "title": "Koneksi",
+      "url": "URL runner",
+      "token": "Bearer token",
+      "tokenPlaceholder": "Nilai LOCAL_RUNNER_TOKEN",
+      "tokenNote": "Token hanya disimpan di tab browser ini dan dilupakan saat Anda memuat ulang atau memutuskan koneksi. Setiap penulisan, perintah, dan aksi desktop tetap meminta persetujuan Anda.",
+      "connect": "Hubungkan",
+      "reconnect": "Hubungkan ulang",
+      "connecting": "Menghubungkan...",
+      "disconnect": "Putuskan",
+      "status": "Status",
+      "connected": "Terhubung",
+      "notConnected": "Belum terhubung",
+      "device": "Komputer",
+      "desktopControl": "Kontrol desktop",
+      "desktopStates": {
+        "available": "Tersedia",
+        "disabled": "Dimatikan di runner",
+        "unknown": "Belum diperiksa"
+      },
+      "stopped": "Dihentikan. Hubungkan lagi untuk memakainya.",
+      "disconnected": "Terputus dari browser ini. Runner tetap berjalan di komputer Anda."
+    },
+    "problems": {
+      "missing-credentials": "Isi URL runner dan bearer token.",
+      "unreachable": "Tidak ada yang menjawab di URL ini. Pastikan Local Agent Runner berjalan dan alamatnya benar.",
+      "unauthorized": "Runner berjalan tetapi menolak token. Periksa LOCAL_RUNNER_TOKEN.",
+      "http-error": "Runner menjawab dengan galat: {{detail}}",
+      "unknown": "Koneksi gagal. {{detail}}"
+    },
+    "localFolders": {
+      "title": "Folder proyek lokal (lanjutan)",
+      "description": "Folder yang didaftarkan di runner, hanya dipakai oleh tool file dan terminalnya sendiri. Cloud Workspace tidak memakainya.",
+      "select": "Folder lokal",
+      "none": "Runner terhubung tetapi belum punya folder terdaftar. Tambahkan lewat LOCAL_RUNNER_WORKSPACES_JSON lalu hubungkan ulang.",
+      "clone": "Clone repository GitHub publik",
+      "cloneButton": "Clone",
+      "cloning": "Meng-clone...",
+      "notConnected": "Hubungkan runner terlebih dahulu.",
+      "cloned": "{{name}} ditambahkan.",
+      "cloneFailed": "Clone gagal: {{detail}}"
+    },
+    "guide": {
+      "title": "Menyiapkan Desktop Runtime",
+      "intro": "Runner adalah program kecil yang berjalan di komputer Windows Anda dan hanya mendengarkan di komputer itu. Jalankan dari proyek backend:",
+      "step1": "Pilih rahasia acak yang panjang dan simpan baik-baik. Itulah bearer token Anda.",
+      "step2": "Atur pengaturan, lalu jalankan runner:",
+      "step3": "Aktifkan kontrol desktop hanya bila Anda memerlukannya, dengan Python 3.11 dan kebutuhan desktop terpasang:",
+      "step4": "Masukkan URL dan token di atas, lalu tekan Hubungkan.",
+      "docs": "Penjelasan lengkap ada di docs/local-agent-runner.md pada proyek backend."
+    },
+    "troubleshooting": {
+      "title": "Jika tidak terhubung",
+      "items": [
+        "\"Tidak ada yang menjawab\": jalankan runner dan periksa alamat serta port (default 127.0.0.1:8765).",
+        "\"Menolak token\": pakai persis nilai yang Anda atur di LOCAL_RUNNER_TOKEN.",
+        "Terhubung tetapi diblokir browser: tambahkan alamat situs ini ke LOCAL_RUNNER_ALLOWED_ORIGINS lalu mulai ulang runner.",
+        "\"Dimatikan di runner\": atur LOCAL_RUNNER_DESKTOP_ENABLED=true dan konfigurasikan sidecar Python.",
+        "Emergency Stop pada dialog menghentikan aksi desktop seketika; hubungkan lagi sesudahnya."
+      ]
+    },
+    "panels": {
+      "heading": "Kontrol desktop",
+      "description": "Amati desktop Windows (jendela, screenshot, elemen UI) dan ajukan interaksi. Pengamatan berjalan langsung; setiap pindah fokus, klik, pengetikan, hotkey, atau scroll membutuhkan persetujuan sendiri.",
+      "connectFirst": "Hubungkan Desktop Runtime di atas untuk memakai kontrol desktop.",
+      "unavailable": "Kontrol desktop dimatikan di runner, jadi belum ada yang bisa ditampilkan."
+    },
+    "chat": {
+      "statusLabel": "Desktop Runtime (opsional)",
+      "connected": "terhubung",
+      "notConnected": "belum terhubung",
+      "manage": "Kelola di Settings",
+      "desktopNeedsRuntime": "Ini membutuhkan Desktop Runtime yang belum terhubung. Hubungkan di Settings → Integrasi → Desktop Runtime, lalu kirim ulang permintaan.\n\nPermintaan tool tidak dijalankan.",
+      "localNeedsFolder": "Ini membutuhkan folder proyek lokal pada Desktop Runtime. Pilih di Settings → Integrasi, atau pilih Cloud Workspace.\n\nPermintaan tool tidak dijalankan."
     }
   }
 }

@@ -1,6 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { DesktopRuntime } from '@/features/desktop-runtime'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
+// The Desktop Runtime now lives under Settings → Integrations. This keeps old links and bookmarks working.
 export const Route = createFileRoute('/_authenticated/settings/desktop')({
-  component: DesktopRuntime,
+  beforeLoad: () => {
+    throw redirect({ to: '/settings/integrations', replace: true })
+  },
 })

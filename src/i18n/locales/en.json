@@ -852,7 +852,6 @@
   "paidModels": "Paid Models",
   "appsMenu": "Apps",
   "skills": "Skills",
-  "desktopAccess": "Desktop Access",
   "appDirectory": {
     "badge": "AI RESOURCE DIRECTORY",
     "title": "Apps",
@@ -1407,6 +1406,109 @@
       "needed": "Choose or create a cloud workspace first.",
       "create": "Create one",
       "unavailable": "The selected workspace is not available any more."
+    }
+  },
+  "integrationsMenu": "Integrations",
+  "desktopRuntime": {
+    "pageTitle": "Integrations",
+    "pageSubtitle": "Optional connections to tools outside the cloud. Nothing here is needed to use Cloud Workspaces.",
+    "title": "Desktop Runtime",
+    "optional": "Optional",
+    "summary": "Desktop Runtime is an optional integration that lets Agentic AI control applications and the desktop on your local computer. It is not needed to use Cloud Workspaces.",
+    "compare": {
+      "cloud": {
+        "title": "Cloud Workspace",
+        "items": [
+          "Open and manage workspaces",
+          "Edit code files",
+          "Run tests and builds through the Cloud Execution Worker",
+          "Needs no Local Agent Runner"
+        ]
+      },
+      "desktop": {
+        "title": "Desktop Runtime",
+        "items": [
+          "Reach your local desktop",
+          "Control applications and windows on your computer",
+          "Take screenshots or interact with the desktop",
+          "Needs the Local Agent Runner running on your computer"
+        ]
+      }
+    },
+    "connection": {
+      "title": "Connection",
+      "url": "Runner URL",
+      "token": "Bearer token",
+      "tokenPlaceholder": "The value of LOCAL_RUNNER_TOKEN",
+      "tokenNote": "The token is kept in this browser tab only and is forgotten when you reload or disconnect. Every write, command and desktop action still asks for your approval.",
+      "connect": "Connect",
+      "reconnect": "Reconnect",
+      "connecting": "Connecting...",
+      "disconnect": "Disconnect",
+      "status": "Status",
+      "connected": "Connected",
+      "notConnected": "Not connected",
+      "device": "Computer",
+      "desktopControl": "Desktop control",
+      "desktopStates": {
+        "available": "Available",
+        "disabled": "Switched off on the runner",
+        "unknown": "Not checked"
+      },
+      "stopped": "Stopped. Connect again to use it.",
+      "disconnected": "Disconnected from this browser. The runner keeps running on your computer."
+    },
+    "problems": {
+      "missing-credentials": "Enter the runner URL and the bearer token.",
+      "unreachable": "Nothing answered at this URL. Check that the Local Agent Runner is running and that the address is right.",
+      "unauthorized": "The runner is running but refused the token. Check LOCAL_RUNNER_TOKEN.",
+      "http-error": "The runner answered with an error: {{detail}}",
+      "unknown": "The connection failed. {{detail}}"
+    },
+    "localFolders": {
+      "title": "Local project folders (advanced)",
+      "description": "Folders registered on the runner, used only by its own file and terminal tools. Cloud Workspaces do not use them.",
+      "select": "Local folder",
+      "none": "The runner is connected but has no registered folders. Add them with LOCAL_RUNNER_WORKSPACES_JSON and reconnect.",
+      "clone": "Clone a public GitHub repository",
+      "cloneButton": "Clone",
+      "cloning": "Cloning...",
+      "notConnected": "Connect the runner first.",
+      "cloned": "Added {{name}}.",
+      "cloneFailed": "Cloning failed: {{detail}}"
+    },
+    "guide": {
+      "title": "Set up the Desktop Runtime",
+      "intro": "The runner is a small program that runs on your Windows computer and only listens on that computer. Start it from the backend project:",
+      "step1": "Choose a long random secret and keep it private. This is your bearer token.",
+      "step2": "Set the settings, then start the runner:",
+      "step3": "Turn on desktop control only if you want it, with Python 3.11 and the desktop requirements installed:",
+      "step4": "Enter the URL and the token above and press Connect.",
+      "docs": "More detail is in docs/local-agent-runner.md in the backend project."
+    },
+    "troubleshooting": {
+      "title": "If it does not connect",
+      "items": [
+        "\"Nothing answered\": start the runner and check the address and port (default 127.0.0.1:8765).",
+        "\"Refused the token\": use exactly the value you set in LOCAL_RUNNER_TOKEN.",
+        "Connected but the browser blocks it: add this site's address to LOCAL_RUNNER_ALLOWED_ORIGINS and restart the runner.",
+        "\"Switched off on the runner\": set LOCAL_RUNNER_DESKTOP_ENABLED=true and configure the Python sidecar.",
+        "Emergency Stop in a dialog stops desktop actions at once; connect again afterwards."
+      ]
+    },
+    "panels": {
+      "heading": "Desktop control",
+      "description": "Observe the Windows desktop (windows, screenshot, UI elements) and request interactions. Observation runs directly; every focus change, click, typing, hotkey or scroll needs its own approval.",
+      "connectFirst": "Connect the Desktop Runtime above to use desktop control.",
+      "unavailable": "Desktop control is switched off on the runner, so there is nothing to show here."
+    },
+    "chat": {
+      "statusLabel": "Desktop Runtime (optional)",
+      "connected": "connected",
+      "notConnected": "not connected",
+      "manage": "Manage in Settings",
+      "desktopNeedsRuntime": "This needs the Desktop Runtime, which is not connected. Connect it in Settings → Integrations → Desktop Runtime, then send the request again.\n\nThe tool request was not run.",
+      "localNeedsFolder": "This needs a local project folder on the Desktop Runtime. Choose one in Settings → Integrations, or select a Cloud Workspace instead.\n\nThe tool request was not run."
     }
   }
 }
