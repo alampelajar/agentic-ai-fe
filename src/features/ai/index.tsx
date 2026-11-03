@@ -17,6 +17,11 @@ import { useAuthStore } from '@/stores/auth-store'
 import { addTaskMessage, createTask, getTask, getTaskMessages, updateTask } from '@/features/tasks/data/api'
 import { Main } from '@/components/layout/main'
 import { PageLoading } from '@/components/layout/page-loading'
+import { approveDesktopAction, denyDesktopAction, emergencyStopDesktop, getDesktopWindows, requestDesktopAction, RunnerRequestError, type DesktopAction } from '@/features/desktop-runtime/api'
+import { type WindowInfo } from '@/features/desktop-runtime/approval-details'
+import { ChatApprovalDialog, type ApprovalDecision } from '@/features/desktop-runtime/chat-approval-dialog'
+import { toast } from 'sonner'
+import { DESKTOP_TOOLS, parseLocalAgentToolCall, READ_ONLY_DESKTOP_TOOLS, type LocalRunnerToolCall } from './tool-call'
 import {
   AgentSelector,
   type Agent,
@@ -72,131 +77,6 @@ type ChatResult = {
 type WorkflowStep = 'goal' | 'planning' | 'coding' | 'testing' | 'done'
 
 type LocalRunnerWorkspace = { id: string; name: string }
-type LocalRunnerToolCall = {
-  action: string
-  runtime?: 'native' | 'docker'
-  path?: string
-  content?: string
-  create?: boolean
-}
-
-const normalizeToolAction = (value: unknown) =>
-  String(value ?? '')
-    .trim()
-    .replace(/([a-z])([A-Z])/g, '$1-$2')
-    .replace(/[ _]+/g, '-')
-    .toLowerCase()
-
-function parseLocalAgentToolCall(raw: string): LocalRunnerToolCall {
-  const cleaned = raw
-    .trim()
-    .replace(/^`{3}(?:json)?\s*/i, '')
-    .replace(/\s*`{3}$/i, '')
-    .trim()
-
-  let decoded: unknown
-  try {
-    decoded = JSON.parse(cleaned)
-  } catch {
-    // A few models emit single-quoted or otherwise almost-JSON tool envelopes.
-    // Only recover explicit, read-only requests from that format; never recover
-    // file writes or command execution from malformed JSON.
-    const actionMatch = cleaned.match(
-      /(?:["']?(?:action|tool|name)["']?)\s*[:=]\s*["']([a-zA-Z][a-zA-Z _-]*)["']/i
-    )
-    if (!actionMatch) {
-      throw new Error('Tool payload is not valid JSON and has no explicit action.')
-    }
-
-    const action = normalizeToolAction(actionMatch[1])
-    const readOnlyAliases: Record<string, string> = {
-      'list-files': 'list-files',
-      'list-file': 'list-files',
-      'list-directory': 'list-files',
-      'list-dir': 'list-files',
-      'read-file': 'read-file',
-      'get-file': 'read-file',
-    }
-    const safeAction = readOnlyAliases[action]
-    if (!safeAction) {
-      throw new Error('Malformed payload recovery is restricted to read-only tools.')
-    }
-
-    let path: string | undefined
-    const pathMatch = cleaned.match(
-      /(?:["']?path["']?)\s*[:=]\s*("(?:\\\\.|[^"\\\\])*"|'[^'\\\\]*')/i
-    )
-    if (pathMatch) {
-      const encodedPath = pathMatch[1]
-      path = encodedPath.startsWith('"')
-        ? String(JSON.parse(encodedPath))
-        : encodedPath.slice(1, -1)
-    }
-    return { action: safeAction, ...(path !== undefined ? { path } : {}) }
-  }
-
-  // Some model adapters wrap the JSON payload as a JSON-encoded string.
-  if (typeof decoded === 'string') {
-    decoded = JSON.parse(decoded)
-  }
-  if (!decoded || typeof decoded !== 'object' || Array.isArray(decoded)) {
-    throw new Error('Tool payload must be a JSON object.')
-  }
-
-  const parsed = decoded as Record<string, unknown>
-  let functionValue = parsed.function
-  if (typeof functionValue === 'string') {
-    functionValue = { name: functionValue }
-  }
-  const functionObject =
-    functionValue && typeof functionValue === 'object' && !Array.isArray(functionValue)
-      ? (functionValue as Record<string, unknown>)
-      : {}
-  let argumentValue = parsed.arguments ?? parsed.input ?? functionObject.arguments
-  if (typeof argumentValue === 'string') {
-    try {
-      argumentValue = JSON.parse(argumentValue)
-    } catch {
-      // Arguments strings may be present in common function-call envelopes.
-      // Invalid argument JSON is not safe to interpret for write/execute tools.
-      argumentValue = undefined
-    }
-  }
-  const argumentObject =
-    argumentValue && typeof argumentValue === 'object' && !Array.isArray(argumentValue)
-      ? (argumentValue as Record<string, unknown>)
-      : {}
-
-  const rawAction =
-    parsed.action ??
-    parsed.tool ??
-    parsed.name ??
-    functionObject.name ??
-    argumentObject.action ??
-    argumentObject.tool ??
-    argumentObject.name
-  const action = normalizeToolAction(rawAction)
-  if (!action) {
-    throw new Error('Tool payload does not contain an explicit action.')
-  }
-
-  return {
-    action,
-    ...(typeof (parsed.path ?? argumentObject.path) === 'string'
-      ? { path: String(parsed.path ?? argumentObject.path) }
-      : {}),
-    ...(typeof (parsed.content ?? argumentObject.content) === 'string'
-      ? { content: String(parsed.content ?? argumentObject.content) }
-      : {}),
-    ...(typeof (parsed.create ?? argumentObject.create) === 'boolean'
-      ? { create: Boolean(parsed.create ?? argumentObject.create) }
-      : {}),
-    ...((parsed.runtime ?? argumentObject.runtime) === 'docker' ||
-    (parsed.runtime ?? argumentObject.runtime) === 'native'
-      ? { runtime: (parsed.runtime ?? argumentObject.runtime) as 'docker' | 'native' }
-      : {}),
-  }
-}
 
 const workflowSteps: WorkflowStep[] = [
   'goal',
@@ -271,6 +151,10 @@ export function AIAssistant() {
   const [githubRepoURL, setGithubRepoURL] = useState('')
   const [runnerStatus, setRunnerStatus] = useState('')
   const [runnerBusy, setRunnerBusy] = useState(false)
+  const [pendingApproval, setPendingApproval] = useState<DesktopAction | null>(null)
+  const [pendingApprovalSkill, setPendingApprovalSkill] = useState('Desktop Control')
+  const [pendingWindows, setPendingWindows] = useState<WindowInfo[] | undefined>(undefined)
+  const approvalResolver = useRef<((decision: ApprovalDecision) => void) | null>(null)
 
   const [currentStep, setCurrentStep] = useState<WorkflowStep | null>(null)
 
@@ -933,6 +817,59 @@ export function AIAssistant() {
     }
   }
 
+  const runDesktopTool = async (call: LocalRunnerToolCall, agentId: number): Promise<string> => {
+    if (!runnerConnected || !runnerToken) throw new Error('Local Agent Runner belum terhubung.')
+    const action = call.action
+    const allowed: readonly string[] = DESKTOP_TOOLS
+    if (!allowed.includes(action)) throw new Error(`Desktop tool tidak diizinkan: ${action}`)
+    const mutating = !READ_ONLY_DESKTOP_TOOLS.includes(action)
+    const base = runnerURL.replace(/\/+$/, '')
+    const logActivity = async (approvalStatus: string, executionStatus: string, error?: string) => {
+      await fetch(`${API_BASE_URL}/api/tool-activities`, { method: 'POST', headers: { Authorization: `Bearer ${accessToken || ''}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ agent_id: agentId, tool_name: action, arguments: { window: call.window, text: call.text ? '[redacted-by-client]' : undefined, keys: call.keys }, target_application: call.window || '', approval_status: approvalStatus, execution_status: executionStatus, error: error || '' }) }).catch(() => undefined)
+    }
+    if (!mutating) {
+      const path = action === 'desktop.status' ? '/api/desktop/status' : action === 'desktop.screenshot' ? '/api/desktop/screenshot' : action === 'desktop.windows' ? '/api/desktop/windows' : '/api/desktop/inspect'
+      const response = await fetch(`${base}${path}`, { method: action === 'desktop.inspect' ? 'POST' : 'GET', headers: { Authorization: `Bearer ${runnerToken}`, 'Content-Type': 'application/json' }, body: action === 'desktop.inspect' ? JSON.stringify({ window: call.window }) : undefined })
+      const data = await response.json().catch(() => ({})); if (!response.ok) { await logActivity('not_required', 'failed', data?.error); throw new Error(data?.error || 'Desktop read failed.') }; await logActivity('not_required', 'completed')
+      // Screenshot pixels stay on this machine: the model only receives metadata, never the image payload.
+      const image = action === 'desktop.screenshot' ? data?.data : undefined
+      if (image && typeof image.base64 === 'string') {
+        const { base64, ...rest } = image
+        return JSON.stringify({ ...data, data: { ...rest, base64_bytes: base64.length, image_withheld: 'Image data was captured successfully but is not sent to the model.' } })
+      }
+      return JSON.stringify(data)
+    }
+    const requested = await requestDesktopAction(base, runnerToken, { action, agent: `Agent ${agentId}`, reason: 'AI Agent requested this desktop action for the current user task.', window: call.window, target: call.target, arguments: { text: call.text, keys: call.keys, amount: call.amount, direction: call.direction } })
+    // Window names are read-only metadata; they let the dialog show the application and not only a handle.
+    setPendingWindows(await getDesktopWindows(base, runnerToken).then((response) => response.data?.windows, () => undefined))
+    setPendingApproval(requested.action)
+    setPendingApprovalSkill(call.skill || 'Desktop Control')
+    const decision = await new Promise<ApprovalDecision>((resolve) => { approvalResolver.current = resolve })
+    setPendingApproval(null)
+    approvalResolver.current = null
+    const expired = async () => {
+      // The approval is gone. Say so, and never retry or approve it again on the user's behalf.
+      toast.error('Persetujuan tindakan desktop kedaluwarsa. Minta agent mengajukan permintaan baru.')
+      await logActivity('expired', 'cancelled')
+      return 'TOOL_EXPIRED: persetujuan pengguna kedaluwarsa dan tindakan desktop tidak dijalankan. Jangan mengulang otomatis; tanyakan apakah pengguna ingin mengajukan permintaan baru.'
+    }
+    if (decision === 'expired') return expired()
+    if (decision === 'deny' || decision === 'emergency') {
+      // The runner may already have dropped the approval (for example after Emergency Stop). The action cannot run either way.
+      await denyDesktopAction(base, runnerToken, requested.action.id).catch(() => undefined)
+      await logActivity('denied', 'cancelled')
+      return decision === 'emergency' ? 'TOOL_DENIED: pengguna menghentikan desktop dengan Emergency Stop. Tidak ada tindakan yang dijalankan.' : 'TOOL_DENIED: pengguna menolak tindakan desktop.'
+    }
+    try {
+      const result = await approveDesktopAction(base, runnerToken, requested.action.id, decision)
+      await logActivity(`approved_${decision}`, 'completed')
+      return JSON.stringify(result)
+    } catch (error) {
+      if (error instanceof RunnerRequestError && error.status === 410) return expired()
+      throw error
+    }
+  }
+
   const runAgentToolLoop = async (
     initial: ChatResult,
     originalText: string,
@@ -952,8 +889,10 @@ export function AIAssistant() {
     let promptedForFirstTool = false
 
     while (toolCalls < maxToolCalls) {
+      const desktopMatch = result.message.match(/<AGENT_TOOL>([\s\S]*?)<\/AGENT_TOOL>/)
       const match = result.message.match(/<LOCAL_AGENT_TOOL>([\s\S]*?)<\/LOCAL_AGENT_TOOL>/)
-      if (!match) {
+      const toolMatch = desktopMatch || match
+      if (!toolMatch) {
         const looksLikeWorkspaceTask =
           /\b(repository|repo|workspace|local agent runner|struktur|daftar file|list-files|baca file|membaca|package\.json|konfigurasi|inspect|periksa|pemeriksaan|pengujian|testing|test)\b/i.test(originalText)
 
@@ -995,7 +934,7 @@ export function AIAssistant() {
 
       let call: LocalRunnerToolCall
       try {
-        call = parseLocalAgentToolCall(match[1])
+        call = parseLocalAgentToolCall(toolMatch[1])
       } catch (error) {
         const detail = error instanceof Error ? error.message : 'format tidak dikenali'
         setRunnerStatus(`Format tool tidak valid: ${detail}`)
@@ -1007,7 +946,7 @@ export function AIAssistant() {
 
       let toolResult: string
       try {
-        toolResult = await runLocalTool(call)
+        toolResult = desktopMatch ? await runDesktopTool(call, agentId) : await runLocalTool(call)
       } catch (error) {
         toolResult = `TOOL_ERROR: ${error instanceof Error ? error.message : 'Kesalahan tool tidak diketahui'}`
       }
@@ -1016,17 +955,17 @@ export function AIAssistant() {
       setRunnerStatus(`Tool ${call.action} selesai (${toolCalls}/${maxToolCalls}); meminta agent melanjutkan...`)
       const assistantToolCall = result.message
       toolHistory.push({ role: 'assistant', content: assistantToolCall })
-      const followup = `Hasil Local Agent Runner untuk tool ${call.action}:\\n\\n${toolResult}\\n\\nGunakan hanya hasil tool di atas sebagai bukti. Jika perlu tindakan lain, keluarkan satu marker <LOCAL_AGENT_TOOL> yang valid. Jika sudah selesai, jawab pengguna tanpa marker.`
+      const followup = `Hasil Local Agent Runner untuk tool ${call.action}:\\n\\n${toolResult}\\n\\nGunakan hanya hasil tool di atas sebagai bukti. Jika perlu tindakan workspace, keluarkan <LOCAL_AGENT_TOOL>; jika perlu tindakan desktop dari skill aktif, keluarkan <AGENT_TOOL>. Jika sudah selesai, jawab pengguna tanpa marker.`
       toolHistory.push({ role: 'user', content: followup })
       result = await sendChat(followup, files, toolHistory.slice(0, -1), agentId, modelId)
     }
 
-    if (/<LOCAL_AGENT_TOOL>/.test(result.message)) {
+    if (/<LOCAL_AGENT_TOOL>|<AGENT_TOOL>/.test(result.message)) {
       setRunnerStatus('Batas tool tercapai; meminta ringkasan dari hasil yang sudah terkumpul...')
       const finalPrompt = `Batas aman ${maxToolCalls} pemanggilan tool telah tercapai. JANGAN meminta atau mengeluarkan tool marker lagi. Buat jawaban akhir sekarang hanya berdasarkan output Local Agent Runner yang sudah ada di riwayat percakapan. Ringkas file yang benar-benar berhasil dibaca, temuan yang didukung output, dan hal yang belum dapat dipastikan. Jangan mengklaim file sudah dibaca atau perintah sudah dijalankan jika tidak ada hasilnya. Permintaan awal pengguna: ${originalText}`
       try {
         const finalResult = await sendChat(finalPrompt, files, toolHistory, agentId, modelId)
-        if (!/<LOCAL_AGENT_TOOL>/.test(finalResult.message)) {
+        if (!/<LOCAL_AGENT_TOOL>|<AGENT_TOOL>/.test(finalResult.message)) {
           setRunnerStatus(`Selesai dengan ${toolCalls} pemanggilan tool`)
           return finalResult
         }
@@ -1775,6 +1714,17 @@ export function AIAssistant() {
           </div>
         </div>
       </div>
+      {pendingApproval && (
+        <ChatApprovalDialog
+          key={pendingApproval.id}
+          action={pendingApproval}
+          agentName={pendingApproval.agent || selectedAgent?.name || 'Unknown agent'}
+          skill={pendingApprovalSkill}
+          windows={pendingWindows}
+          onDecision={(decision) => approvalResolver.current?.(decision)}
+          onEmergencyStop={() => void emergencyStopDesktop(runnerURL, runnerToken).catch(() => undefined)}
+        />
+      )}
     </Main>
   )
 }

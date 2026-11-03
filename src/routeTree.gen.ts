@@ -27,6 +27,7 @@ import { Route as AuthenticatedOverviewRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedPaidModelsRouteImport } from './routes/_authenticated/paid-models'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
+import { Route as AuthenticatedSkillsRouteImport } from './routes/_authenticated/skills'
 import { Route as AuthenticatedSubscriptionPremiumRouteImport } from './routes/_authenticated/subscription-premium'
 import { Route as ClerkauthRouteRouteImport } from './routes/clerk/(auth)/route'
 import { Route as ClerkAuthenticatedRouteRouteImport } from './routes/clerk/_authenticated/route'
@@ -37,6 +38,7 @@ import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_auth
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
+import { Route as AuthenticatedSettingsDesktopRouteImport } from './routes/_authenticated/settings/desktop'
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
@@ -47,6 +49,7 @@ import { Route as ClerkAuthenticatedUserManagementRouteImport } from './routes/c
 import { Route as AuthenticatedAiAgentsAgentsRouteImport } from './routes/_authenticated/ai/agents/agents'
 import { Route as AuthenticatedAiAgentsCreateRouteImport } from './routes/_authenticated/ai/agents/create'
 import { Route as AuthenticatedAiAgentsDetailRouteImport } from './routes/_authenticated/ai/agents/detail'
+import { Route as AuthenticatedAiAgentsIdSkillsRouteImport } from './routes/_authenticated/ai/agents/$id/skills'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -138,6 +141,11 @@ const AuthenticatedSettingsRouteRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedSkillsRoute = AuthenticatedSkillsRouteImport.update({
+  id: '/skills',
+  path: '/skills',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSubscriptionPremiumRoute =
   AuthenticatedSubscriptionPremiumRouteImport.update({
     id: '/subscription-premium',
@@ -190,6 +198,12 @@ const AuthenticatedSettingsAppearanceRoute =
   AuthenticatedSettingsAppearanceRouteImport.update({
     id: '/appearance',
     path: '/appearance',
+    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any)
+const AuthenticatedSettingsDesktopRoute =
+  AuthenticatedSettingsDesktopRouteImport.update({
+    id: '/desktop',
+    path: '/desktop',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
 const AuthenticatedSettingsDisplayRoute =
@@ -248,6 +262,12 @@ const AuthenticatedAiAgentsDetailRoute =
     path: '/ai/agents/detail',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAiAgentsIdSkillsRoute =
+  AuthenticatedAiAgentsIdSkillsRouteImport.update({
+    id: '/ai/agents/$id/skills',
+    path: '/ai/agents/$id/skills',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -267,10 +287,12 @@ export interface FileRoutesByFullPath {
   '/overview': typeof AuthenticatedOverviewRoute
   '/paid-models': typeof AuthenticatedPaidModelsRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/skills': typeof AuthenticatedSkillsRoute
   '/subscription-premium': typeof AuthenticatedSubscriptionPremiumRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/settings/desktop': typeof AuthenticatedSettingsDesktopRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/clerk/sign-in': typeof ClerkauthSignInRoute
@@ -285,6 +307,7 @@ export interface FileRoutesByFullPath {
   '/ai/agents/agents': typeof AuthenticatedAiAgentsAgentsRoute
   '/ai/agents/create': typeof AuthenticatedAiAgentsCreateRoute
   '/ai/agents/detail': typeof AuthenticatedAiAgentsDetailRoute
+  '/ai/agents/$id/skills': typeof AuthenticatedAiAgentsIdSkillsRoute
 }
 export interface FileRoutesByTo {
   '/clerk': typeof ClerkauthRouteRouteWithChildren
@@ -302,11 +325,13 @@ export interface FileRoutesByTo {
   '/overview': typeof AuthenticatedOverviewRoute
   '/paid-models': typeof AuthenticatedPaidModelsRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/skills': typeof AuthenticatedSkillsRoute
   '/subscription-premium': typeof AuthenticatedSubscriptionPremiumRoute
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/settings/desktop': typeof AuthenticatedSettingsDesktopRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/clerk/sign-in': typeof ClerkauthSignInRoute
@@ -321,6 +346,7 @@ export interface FileRoutesByTo {
   '/ai/agents/agents': typeof AuthenticatedAiAgentsAgentsRoute
   '/ai/agents/create': typeof AuthenticatedAiAgentsCreateRoute
   '/ai/agents/detail': typeof AuthenticatedAiAgentsDetailRoute
+  '/ai/agents/$id/skills': typeof AuthenticatedAiAgentsIdSkillsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -343,11 +369,13 @@ export interface FileRoutesById {
   '/_authenticated/overview': typeof AuthenticatedOverviewRoute
   '/_authenticated/paid-models': typeof AuthenticatedPaidModelsRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/skills': typeof AuthenticatedSkillsRoute
   '/_authenticated/subscription-premium': typeof AuthenticatedSubscriptionPremiumRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/_authenticated/settings/desktop': typeof AuthenticatedSettingsDesktopRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/clerk/(auth)/sign-in': typeof ClerkauthSignInRoute
@@ -362,6 +390,7 @@ export interface FileRoutesById {
   '/_authenticated/ai/agents/agents': typeof AuthenticatedAiAgentsAgentsRoute
   '/_authenticated/ai/agents/create': typeof AuthenticatedAiAgentsCreateRoute
   '/_authenticated/ai/agents/detail': typeof AuthenticatedAiAgentsDetailRoute
+  '/_authenticated/ai/agents/$id/skills': typeof AuthenticatedAiAgentsIdSkillsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -383,10 +412,12 @@ export interface FileRouteTypes {
     | '/overview'
     | '/paid-models'
     | '/profile'
+    | '/skills'
     | '/subscription-premium'
     | '/errors/$error'
     | '/settings/account'
     | '/settings/appearance'
+    | '/settings/desktop'
     | '/settings/display'
     | '/settings/notifications'
     | '/clerk/sign-in'
@@ -401,6 +432,7 @@ export interface FileRouteTypes {
     | '/ai/agents/agents'
     | '/ai/agents/create'
     | '/ai/agents/detail'
+    | '/ai/agents/$id/skills'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/clerk'
@@ -418,11 +450,13 @@ export interface FileRouteTypes {
     | '/overview'
     | '/paid-models'
     | '/profile'
+    | '/skills'
     | '/subscription-premium'
     | '/'
     | '/errors/$error'
     | '/settings/account'
     | '/settings/appearance'
+    | '/settings/desktop'
     | '/settings/display'
     | '/settings/notifications'
     | '/clerk/sign-in'
@@ -437,6 +471,7 @@ export interface FileRouteTypes {
     | '/ai/agents/agents'
     | '/ai/agents/create'
     | '/ai/agents/detail'
+    | '/ai/agents/$id/skills'
   id:
     | '__root__'
     | '/_authenticated'
@@ -458,11 +493,13 @@ export interface FileRouteTypes {
     | '/_authenticated/overview'
     | '/_authenticated/paid-models'
     | '/_authenticated/profile'
+    | '/_authenticated/skills'
     | '/_authenticated/subscription-premium'
     | '/_authenticated/'
     | '/_authenticated/errors/$error'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
+    | '/_authenticated/settings/desktop'
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/notifications'
     | '/clerk/(auth)/sign-in'
@@ -477,6 +514,7 @@ export interface FileRouteTypes {
     | '/_authenticated/ai/agents/agents'
     | '/_authenticated/ai/agents/create'
     | '/_authenticated/ai/agents/detail'
+    | '/_authenticated/ai/agents/$id/skills'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -622,6 +660,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/skills': {
+      id: '/_authenticated/skills'
+      path: '/skills'
+      fullPath: '/skills'
+      preLoaderRoute: typeof AuthenticatedSkillsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/subscription-premium': {
       id: '/_authenticated/subscription-premium'
       path: '/subscription-premium'
@@ -690,6 +735,13 @@ declare module '@tanstack/react-router' {
       path: '/appearance'
       fullPath: '/settings/appearance'
       preLoaderRoute: typeof AuthenticatedSettingsAppearanceRouteImport
+      parentRoute: typeof AuthenticatedSettingsRouteRoute
+    }
+    '/_authenticated/settings/desktop': {
+      id: '/_authenticated/settings/desktop'
+      path: '/desktop'
+      fullPath: '/settings/desktop'
+      preLoaderRoute: typeof AuthenticatedSettingsDesktopRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
     '/_authenticated/settings/display': {
@@ -762,12 +814,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAiAgentsDetailRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/ai/agents/$id/skills': {
+      id: '/_authenticated/ai/agents/$id/skills'
+      path: '/ai/agents/$id/skills'
+      fullPath: '/ai/agents/$id/skills'
+      preLoaderRoute: typeof AuthenticatedAiAgentsIdSkillsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedSettingsRouteRouteChildren {
   AuthenticatedSettingsAccountRoute: typeof AuthenticatedSettingsAccountRoute
   AuthenticatedSettingsAppearanceRoute: typeof AuthenticatedSettingsAppearanceRoute
+  AuthenticatedSettingsDesktopRoute: typeof AuthenticatedSettingsDesktopRoute
   AuthenticatedSettingsDisplayRoute: typeof AuthenticatedSettingsDisplayRoute
   AuthenticatedSettingsNotificationsRoute: typeof AuthenticatedSettingsNotificationsRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
@@ -777,6 +837,7 @@ const AuthenticatedSettingsRouteRouteChildren: AuthenticatedSettingsRouteRouteCh
   {
     AuthenticatedSettingsAccountRoute: AuthenticatedSettingsAccountRoute,
     AuthenticatedSettingsAppearanceRoute: AuthenticatedSettingsAppearanceRoute,
+    AuthenticatedSettingsDesktopRoute: AuthenticatedSettingsDesktopRoute,
     AuthenticatedSettingsDisplayRoute: AuthenticatedSettingsDisplayRoute,
     AuthenticatedSettingsNotificationsRoute:
       AuthenticatedSettingsNotificationsRoute,
@@ -794,6 +855,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedOverviewRoute: typeof AuthenticatedOverviewRoute
   AuthenticatedPaidModelsRoute: typeof AuthenticatedPaidModelsRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedSkillsRoute: typeof AuthenticatedSkillsRoute
   AuthenticatedSubscriptionPremiumRoute: typeof AuthenticatedSubscriptionPremiumRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
@@ -805,6 +867,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAiAgentsAgentsRoute: typeof AuthenticatedAiAgentsAgentsRoute
   AuthenticatedAiAgentsCreateRoute: typeof AuthenticatedAiAgentsCreateRoute
   AuthenticatedAiAgentsDetailRoute: typeof AuthenticatedAiAgentsDetailRoute
+  AuthenticatedAiAgentsIdSkillsRoute: typeof AuthenticatedAiAgentsIdSkillsRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -813,6 +876,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedOverviewRoute: AuthenticatedOverviewRoute,
   AuthenticatedPaidModelsRoute: AuthenticatedPaidModelsRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedSkillsRoute: AuthenticatedSkillsRoute,
   AuthenticatedSubscriptionPremiumRoute: AuthenticatedSubscriptionPremiumRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
@@ -824,6 +888,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAiAgentsAgentsRoute: AuthenticatedAiAgentsAgentsRoute,
   AuthenticatedAiAgentsCreateRoute: AuthenticatedAiAgentsCreateRoute,
   AuthenticatedAiAgentsDetailRoute: AuthenticatedAiAgentsDetailRoute,
+  AuthenticatedAiAgentsIdSkillsRoute: AuthenticatedAiAgentsIdSkillsRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

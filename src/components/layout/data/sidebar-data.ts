@@ -2,6 +2,7 @@
 import {
   LayoutDashboard,
   Monitor,
+  MonitorCog,
   ListTodo,
   Bell,
   Package,
@@ -13,6 +14,7 @@ import {
   GalleryVerticalEnd,
   AudioWaveform,
   Bot,
+  Sparkles,
   MessageSquareText,
 } from "lucide-react";
 
@@ -75,6 +77,11 @@ export const sidebarData: SidebarData = {
           url: "/apps",
           icon: Package,
         },
+        {
+          title: "skills",
+          url: "/skills",
+          icon: Sparkles,
+        },
       ],
     },
     {
@@ -108,6 +115,11 @@ export const sidebarData: SidebarData = {
               title: "display",
               url: "/settings/display",
               icon: Monitor,
+            },
+            {
+              title: "desktopAccess",
+              url: "/settings/desktop",
+              icon: MonitorCog,
             },
           ],
         },

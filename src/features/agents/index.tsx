@@ -1972,7 +1972,7 @@ function AgentCard({
             asChild
             className='text-primary hover:bg-primary/10'
           >
-            <Link to='/ai/agents/detail'>
+            <Link to='/ai/agents/$id/skills' params={{ id: String(agent.id) }}>
               {t('agentPage.viewDetails')}
 
               <ArrowUpRight className='ms-1 size-3.5' />
