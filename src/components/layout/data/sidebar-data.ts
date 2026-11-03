@@ -16,6 +16,7 @@ import {
   Bot,
   Sparkles,
   BrainCircuit,
+  FolderGit2,
   MessageSquareText,
 } from "lucide-react";
 
@@ -87,6 +88,11 @@ export const sidebarData: SidebarData = {
           title: "memoryMenu",
           url: "/memory",
           icon: BrainCircuit,
+        },
+        {
+          title: "workspacesMenu",
+          url: "/workspaces",
+          icon: FolderGit2,
         },
       ],
     },

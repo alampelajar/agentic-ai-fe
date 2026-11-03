@@ -13,6 +13,7 @@ export type BackendTask = {
   priority: TaskPriority
   agent_id?: number | null
   model_id?: number | null
+  workspace_id?: number | null
   agent?: { id: number; name: string; slug: string } | null
   created_at: string
   updated_at: string
@@ -26,6 +27,7 @@ export type TaskMutationInput = {
   priority?: string;
   agent_id?: number | null;
   model_id?: number | null;
+  workspace_id?: number | null;
 };
 
 async function readJSON(response: Response) {
@@ -77,6 +79,7 @@ export async function createTask(payload: TaskMutationInput) {
       priority: payload.priority ?? 'medium',
       agent_id: payload.agent_id ?? null,
       model_id: payload.model_id ?? null,
+      workspace_id: payload.workspace_id ?? null,
     }),
   })
 

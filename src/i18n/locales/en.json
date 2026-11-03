@@ -1248,5 +1248,165 @@
       "instructionTooLong": "The instruction is limited to {{max}} characters.",
       "failed": "The delegation failed."
     }
+  },
+  "workspacesMenu": "Workspaces",
+  "workspacePage": {
+    "title": "Cloud Workspaces",
+    "subtitle": "Keep projects on the server so your agents can read, edit, build and test them from the browser. No Local Agent Runner is needed.",
+    "loading": "Loading workspaces...",
+    "error": {
+      "title": "Workspaces could not be loaded"
+    },
+    "empty": {
+      "title": "No workspaces yet",
+      "description": "Create an empty workspace, upload a ZIP of your project, or import a public GitHub repository."
+    },
+    "status": {
+      "creating": "Creating",
+      "ready": "Ready",
+      "unavailable": "Unavailable",
+      "deleting": "Deleting",
+      "failed": "Failed"
+    },
+    "card": {
+      "files": "Files",
+      "fileCount_one": "{{count}} file",
+      "fileCount_other": "{{count}} files",
+      "source": "Source",
+      "lastAccessed": "Last accessed",
+      "never": "Never"
+    },
+    "actions": {
+      "create": "New workspace",
+      "open": "Open",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "retry": "Try again"
+    },
+    "create": {
+      "title": "New workspace",
+      "description": "Your files are stored on the server and only you and the agents you use can reach them.",
+      "source": "Start from",
+      "sources": {
+        "empty": "Empty",
+        "zip": "ZIP file",
+        "github": "GitHub"
+      },
+      "name": "Name",
+      "namePlaceholder": "Library app",
+      "descriptionLabel": "Description (optional)",
+      "runtime": "Default runtime",
+      "runtimeNone": "Not set",
+      "zipFile": "ZIP file",
+      "zipHint": "Up to {{max}} MB. Secret files such as .env are left out.",
+      "githubUrl": "Repository URL",
+      "githubHint": "Public repositories on github.com only. Never paste a token here.",
+      "submit": "Create workspace",
+      "creating": "Creating...",
+      "errors": {
+        "nameRequired": "Name is required.",
+        "zipRequired": "Choose a ZIP file.",
+        "zipType": "The file must be a .zip archive.",
+        "zipSize": "The ZIP file is larger than {{max}} MB.",
+        "githubUrl": "Use a link like https://github.com/owner/repository.",
+        "failed": "The workspace could not be created."
+      }
+    },
+    "delete": {
+      "title": "Delete this workspace?",
+      "description": "\"{{name}}\" and all of its files will be permanently deleted. Tasks that used it keep their history.",
+      "confirm": "Delete"
+    },
+    "toast": {
+      "created": "Workspace \"{{name}}\" created.",
+      "deleted": "Workspace deleted.",
+      "saved": "Saved {{path}}.",
+      "failed": "The action failed."
+    },
+    "explorer": {
+      "back": "Back to workspaces",
+      "download": "Download ZIP",
+      "tabs": {
+        "files": "Files",
+        "changes": "Changes",
+        "console": "Console"
+      },
+      "tree": "Files",
+      "emptyTree": "This workspace has no files yet. Create one below.",
+      "truncated": "The list is shortened. Open a folder path to see more.",
+      "newFilePath": "New file path",
+      "newFile": "New file",
+      "protected": "protected",
+      "selectFile": "Select a file to read or edit it.",
+      "readingFile": "Reading file...",
+      "editor": "File editor",
+      "newBadge": "new",
+      "unsaved": "unsaved",
+      "save": "Save",
+      "revert": "Revert",
+      "showDiff": "Show changes",
+      "hideDiff": "Hide changes",
+      "diffTooLarge": "The edit is too large to compare here.",
+      "discardConfirm": "You have unsaved changes. Discard them?",
+      "noChanges": "No files have changed since this workspace was created.",
+      "changeStatus": {
+        "added": "Added",
+        "modified": "Modified",
+        "deleted": "Deleted"
+      },
+      "loadFailed": "The workspace could not be opened",
+      "treeFailed": "The file list could not be loaded.",
+      "readFailed": "The file could not be read.",
+      "saveFailed": "The file could not be saved.",
+      "exportFailed": "The ZIP could not be created."
+    },
+    "console": {
+      "command": "Command",
+      "jobs": "Jobs",
+      "run": "Run",
+      "disabled": "Running code in the cloud is not turned on on this server. You can still read and edit files.",
+      "jobTypes": {
+        "go-test": "Go: test",
+        "go-build": "Go: build",
+        "npm-test": "Node: test",
+        "npm-build": "Node: build",
+        "npm-lint": "Node: lint",
+        "python-test": "Python: test"
+      },
+      "statuses": {
+        "queued": "Queued",
+        "preparing": "Preparing",
+        "running": "Running",
+        "completed": "Completed",
+        "failed": "Failed",
+        "timed_out": "Timed out",
+        "cancelled": "Cancelled"
+      },
+      "exitCode": "exit code {{code}}",
+      "duration": "{{seconds}} s",
+      "cancel": "Cancel",
+      "cancelling": "Cancelling...",
+      "noOutput": "(no output yet)",
+      "empty": "No jobs yet. Run a test or a build to see its output here.",
+      "loading": "Loading jobs...",
+      "loadFailed": "Jobs could not be loaded",
+      "startFailed": "The job could not be started.",
+      "cancelFailed": "The job could not be cancelled."
+    },
+    "approval": {
+      "title": "Allow this workspace action?",
+      "description": "{{agent}} wants to change or run something in \"{{workspace}}\". Nothing happens until you allow it.",
+      "file": "File",
+      "allow": "Allow once",
+      "deny": "Deny"
+    },
+    "chat": {
+      "label": "Cloud workspace",
+      "none": "No workspace",
+      "hint": "Agents work in this workspace on the server. The Local Agent Runner is not needed.",
+      "needed": "Choose or create a cloud workspace first.",
+      "create": "Create one",
+      "unavailable": "The selected workspace is not available any more."
+    }
   }
 }

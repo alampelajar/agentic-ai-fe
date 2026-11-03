@@ -21,6 +21,10 @@ import { PageLoading } from '@/components/layout/page-loading'
 import { approveDesktopAction, denyDesktopAction, emergencyStopDesktop, getDesktopWindows, requestDesktopAction, RunnerRequestError, type DesktopAction } from '@/features/desktop-runtime/api'
 import { type WindowInfo } from '@/features/desktop-runtime/approval-details'
 import { DelegateDialog } from '@/features/delegation/delegate-dialog'
+import type { ToolApproval } from '@/features/workspaces/data/api'
+import { parseCloudToolCall, runCloudToolCall, type ApprovalDecision as WorkspaceDecision } from '@/features/workspaces/tool-runner'
+import { WorkspaceApprovalDialog } from '@/features/workspaces/workspace-approval-dialog'
+import { WorkspaceSelector } from '@/features/workspaces/workspace-selector'
 import { buildDelegationContext } from '@/features/delegation/data/api'
 import { ChatApprovalDialog, type ApprovalDecision } from '@/features/desktop-runtime/chat-approval-dialog'
 import { toast } from 'sonner'
@@ -165,6 +169,10 @@ export function AIAssistant() {
 
   const [currentTaskId, setCurrentTaskId] = useState<string | null>(null)
   const [delegateOpen, setDelegateOpen] = useState(false)
+  // The cloud workspace this chat works in. Agents use it on the server, so no Local Agent Runner is needed.
+  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<number | null>(null)
+  const [pendingWorkspaceApproval, setPendingWorkspaceApproval] = useState<ToolApproval | null>(null)
+  const workspaceApprovalResolver = useRef<((decision: WorkspaceDecision) => void) | null>(null)
 
   const [taskTitle, setTaskTitle] = useState('')
   const [historyLoading, setHistoryLoading] = useState(false)
@@ -252,6 +260,7 @@ export function AIAssistant() {
 
         setCurrentTaskId(String(task.id))
         setTaskTitle(task.title)
+        setSelectedWorkspaceId(task.workspace_id ?? null)
 
         // Tampilkan isi history SECEPATNYA, tanpa menunggu
         // request Agent selesai.
@@ -396,6 +405,7 @@ export function AIAssistant() {
       priority: 'medium',
       agent_id: selectedAgent.id,
       model_id: selectedModel?.id ?? null,
+      workspace_id: selectedWorkspaceId,
     })
 
     const id = String(created.id)
@@ -588,6 +598,10 @@ export function AIAssistant() {
 
     if (modelId && modelId > 0) {
       formData.append('model_id', String(modelId))
+    }
+
+    if (selectedWorkspaceId) {
+      formData.append('workspace_id', String(selectedWorkspaceId))
     }
 
     files.forEach((file) => formData.append('images', file))
@@ -927,6 +941,44 @@ export function AIAssistant() {
           }
         }
         return result
+      }
+
+      // Cloud workspace tools run on the server and need no Local Agent Runner.
+      let cloudCall: ReturnType<typeof parseCloudToolCall> = null
+      let cloudError: string | null = null
+      try {
+        cloudCall = parseCloudToolCall(toolMatch[1], selectedWorkspaceId !== null)
+      } catch (error) {
+        cloudError = error instanceof Error ? error.message : 'format tidak dikenali'
+      }
+      if (cloudError !== null) {
+        return { ...result, message: `Permintaan tool workspace tidak valid (${cloudError}). Tidak ada tindakan yang dijalankan.` }
+      }
+      if (cloudCall) {
+        if (selectedWorkspaceId === null) {
+          return { ...result, message: `${t('workspacePage.chat.needed')}\n\nPermintaan tool tidak dijalankan.` }
+        }
+        let toolResult: string
+        try {
+          toolResult = await runCloudToolCall(cloudCall, {
+            workspaceId: selectedWorkspaceId,
+            agentId,
+            taskId: currentTaskId && /^\d+$/.test(currentTaskId) ? Number(currentTaskId) : null,
+            requestApproval: (approval) => new Promise<WorkspaceDecision>((resolve) => {
+              workspaceApprovalResolver.current = resolve
+              setPendingWorkspaceApproval(approval)
+            }),
+          })
+        } catch (error) {
+          toolResult = `TOOL_ERROR: ${error instanceof Error ? error.message : 'Kesalahan tool tidak diketahui'}`
+        }
+        toolCalls += 1
+        setRunnerStatus(`Tool ${cloudCall.tool} selesai (${toolCalls}/${maxToolCalls}); meminta agent melanjutkan...`)
+        toolHistory.push({ role: 'assistant', content: result.message })
+        const cloudFollowup = `Hasil tool ${cloudCall.tool} pada workspace cloud:\n\n${toolResult}\n\nGunakan hanya hasil tool di atas sebagai bukti. Jangan menyatakan pekerjaan berhasil jika hasil tool menunjukkan kegagalan, penolakan, atau kedaluwarsa. Jika perlu tindakan workspace berikutnya, panggil satu tool lagi; jika sudah cukup, berikan jawaban akhir.`
+        toolHistory.push({ role: 'user', content: cloudFollowup })
+        result = await sendChat(cloudFollowup, files, toolHistory.slice(0, -1), agentId, modelId)
+        continue
       }
 
       if (!runnerConnected || !runnerWorkspaceID) {
@@ -1281,6 +1333,18 @@ export function AIAssistant() {
               onSelect={setSelectedAgent}
               selectedModel={selectedModel}
               onModelSelect={setSelectedModel}
+            />
+
+            <WorkspaceSelector
+              value={selectedWorkspaceId}
+              disabled={running}
+              onChange={(workspace) => {
+                setSelectedWorkspaceId(workspace?.id ?? null)
+                // Keep the task pointing at the workspace the user is using.
+                if (currentTaskId) {
+                  void updateTask(currentTaskId, { workspace_id: workspace?.id ?? 0 }).catch((error) => toast.error(error instanceof Error ? error.message : t('workspacePage.toast.failed')))
+                }
+              }}
             />
 
             <div className='mt-2 text-center text-xs text-muted-foreground'>
@@ -1746,6 +1810,19 @@ export function AIAssistant() {
           setDelegateOpen(false)
         }}
       />
+      {pendingWorkspaceApproval && (
+        <WorkspaceApprovalDialog
+          key={pendingWorkspaceApproval.id}
+          approval={pendingWorkspaceApproval}
+          agentName={selectedAgent?.name ?? 'Agent'}
+          onDecision={(decision) => {
+            setPendingWorkspaceApproval(null)
+            const resolve = workspaceApprovalResolver.current
+            workspaceApprovalResolver.current = null
+            resolve?.(decision)
+          }}
+        />
+      )}
       {pendingApproval && (
         <ChatApprovalDialog
           key={pendingApproval.id}
