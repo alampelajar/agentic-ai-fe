@@ -1,18 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
-import { Link, useLocation } from '@tanstack/react-router'
+import { Fragment, useEffect, useRef, useState } from 'react'
+import { useLocation } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import {
-  Check,
-  Download,
-  FileArchive,
-  Paperclip,
-  Plus,
-  Send,
-  Sparkles,
-  User,
-  Users,
-  X,
-} from 'lucide-react'
 import { API_BASE_URL } from '@/lib/api-config'
 import { useAuthStore } from '@/stores/auth-store'
 import { addTaskMessage, createTask, getTask, getTaskMessages, updateTask } from '@/features/tasks/data/api'
@@ -24,6 +12,7 @@ import { DelegateDialog } from '@/features/delegation/delegate-dialog'
 import type { ToolApproval } from '@/features/workspaces/data/api'
 import { parseCloudToolCall, runCloudToolCall, type ApprovalDecision as WorkspaceDecision } from '@/features/workspaces/tool-runner'
 import { WorkspaceApprovalDialog } from '@/features/workspaces/workspace-approval-dialog'
+import { useReadyWorkspaces } from '@/features/workspaces/use-ready-workspaces'
 import { WorkspaceSelector } from '@/features/workspaces/workspace-selector'
 import { useDesktopRuntime } from '@/stores/desktop-runtime-store'
 import { buildContextHints, firstToolMarker, shouldRunTools } from './tool-context'
@@ -36,6 +25,13 @@ import {
   type Agent,
   type AgentModel,
 } from './components/agent-selector'
+import { describeArgs, outcomeOf, type ActivityItem } from './components/activity'
+import { ActivityList } from './components/activity-list'
+import { Composer } from './components/composer'
+import { MessageItem, type ChatMessageView, type GeneratedFile } from './components/message-item'
+import { RunProgress } from './components/run-progress'
+import { SessionBar, type SessionStatus } from './components/session-bar'
+import { ThreadEmpty } from './components/thread-empty'
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024
 
@@ -51,24 +47,7 @@ const ALLOWED_IMAGE_TYPES = [
 // TYPES
 // ============================================================
 
-type GeneratedFile = {
-  id: number
-  name: string
-  size: number
-  blobUrl: string
-}
-
-type Message = {
-  id: number
-  role: 'user' | 'agent'
-  content: string
-  file?: GeneratedFile
-
-  // Informasi model yang digunakan
-  model?: string
-  modelId?: number
-  provider?: string
-}
+type Message = ChatMessageView
 
 type ChatHistoryItem = {
   role: 'user' | 'assistant'
@@ -97,18 +76,6 @@ const workflowSteps: WorkflowStep[] = [
 // ============================================================
 // HELPERS
 // ============================================================
-
-function formatFileSize(size: number) {
-  if (size < 1024) {
-    return `${size} B`
-  }
-
-  if (size < 1024 * 1024) {
-    return `${(size / 1024).toFixed(1)} KB`
-  }
-
-  return `${(size / (1024 * 1024)).toFixed(1)} MB`
-}
 
 // ============================================================
 // COMPONENT
@@ -148,6 +115,14 @@ export function AIAssistant() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
 
   const [running, setRunning] = useState(false)
+
+  // The tool calls of the current run, shown under the conversation so a person can
+  // see what the agent really did. Not saved with the task: it describes this run.
+  const { workspaces: readyWorkspaces } = useReadyWorkspaces()
+  const [activity, setActivity] = useState<ActivityItem[]>([])
+  // The id of the message the activity answers: it is drawn right under it, before the agent's reply.
+  const [activityAfter, setActivityAfter] = useState<number | null>(null)
+  const threadRef = useRef<HTMLDivElement | null>(null)
 
   // The optional Desktop Runtime (Local Agent Runner). Its connection is made in
   // Settings -> Integrations and kept in a session-only store; the token is never persisted.
@@ -491,6 +466,8 @@ export function AIAssistant() {
     clearGeneratedUrls()
 
     setMessages([])
+    setActivity([])
+    setActivityAfter(null)
     setMessage('')
     setSelectedFiles([])
 
@@ -654,6 +631,17 @@ export function AIAssistant() {
 
       agentId: Number(data.agent_id || agentId),
     }
+  }
+
+  // One row in the activity list per tool call: started now, finished when its result is known.
+  const startActivity = (tool: string, detail: string) => {
+    const id = Date.now() + Math.random()
+    setActivity((current) => [...current, { id, tool, detail, state: 'running' }])
+    return id
+  }
+  const finishActivity = (id: number, result: string) => {
+    const state = outcomeOf(result)
+    setActivity((current) => current.map((item) => (item.id === id ? { ...item, state } : item)))
   }
 
   // ============================================================
@@ -866,6 +854,7 @@ export function AIAssistant() {
           return { ...result, message: `${t('workspacePage.chat.needed')}\n\nPermintaan tool tidak dijalankan.` }
         }
         let toolResult: string
+        const activityId = startActivity(cloudCall.tool, describeArgs(cloudCall.args))
         try {
           toolResult = await runCloudToolCall(cloudCall, {
             workspaceId: selectedWorkspaceId,
@@ -879,6 +868,7 @@ export function AIAssistant() {
         } catch (error) {
           toolResult = `TOOL_ERROR: ${error instanceof Error ? error.message : 'Kesalahan tool tidak diketahui'}`
         }
+        finishActivity(activityId, toolResult)
         toolCalls += 1
         setRunnerStatus(`Tool ${cloudCall.tool} selesai (${toolCalls}/${maxToolCalls}); meminta agent melanjutkan...`)
         toolHistory.push({ role: 'assistant', content: result.message })
@@ -910,11 +900,13 @@ export function AIAssistant() {
       }
 
       let toolResult: string
+      const localActivityId = startActivity(call.action, '')
       try {
         toolResult = desktopMatch ? await runDesktopTool(call, agentId) : await runLocalTool(call)
       } catch (error) {
         toolResult = `TOOL_ERROR: ${error instanceof Error ? error.message : 'Kesalahan tool tidak diketahui'}`
       }
+      finishActivity(localActivityId, toolResult)
       toolCalls += 1
 
       setRunnerStatus(`Tool ${call.action} selesai (${toolCalls}/${maxToolCalls}); meminta agent melanjutkan...`)
@@ -1081,12 +1073,15 @@ export function AIAssistant() {
       content: item.content,
     }))
 
+    const userMessageId = Date.now()
     setMessages((current) => [
       ...current,
-      { id: Date.now(), role: 'user', content: text },
+      { id: userMessageId, role: 'user', content: text },
     ])
     setMessage('')
     setSelectedFiles([])
+    setActivity([])
+    setActivityAfter(userMessageId)
     setTaskTitle((current) => current || text)
     setRunning(true)
 
@@ -1176,6 +1171,19 @@ export function AIAssistant() {
     }
   }
 
+  // Keep the newest message, tool call or status in view, unless the person has
+  // scrolled up to read: only follow when they were already at the bottom.
+  const lastCount = useRef(0)
+  useEffect(() => {
+    const element = threadRef.current
+    if (!element) return
+    const total = messages.length + activity.length
+    const grew = total > lastCount.current
+    lastCount.current = total
+    const nearBottom = element.scrollHeight - element.scrollTop - element.clientHeight < 160
+    if (grew && (nearBottom || total <= 2)) element.scrollTo({ top: element.scrollHeight })
+  }, [messages, activity])
+
   // ============================================================
   // WORKFLOW INDEX
   // ============================================================
@@ -1203,417 +1211,96 @@ export function AIAssistant() {
   // UI
   // ============================================================
 
+  const selectedWorkspaceName = readyWorkspaces?.find((workspace) => workspace.id === selectedWorkspaceId)?.name ?? null
+
+  const sessionStatus: SessionStatus = running
+    ? 'working'
+    : !selectedAgent
+      ? 'chooseAgent'
+      : !selectedModel
+        ? 'chooseModel'
+        : 'ready'
+
+  const progressStatus = runnerStatus || (selectedAgent ? t('agentic.status.thinking', { agent: selectedAgent.name, model: selectedModel?.name }) : '')
+
   return (
     <Main className='agentic-workspace flex min-h-0 flex-1 flex-col overflow-hidden bg-background p-0'>
       <div className='flex min-h-0 flex-1 flex-col'>
-        {/* ======================================================
-            HEADER
-        ====================================================== */}
+        <SessionBar status={sessionStatus} onNewChat={handleNewChat} newChatDisabled={running}>
+          <AgentSelector
+            selectedAgent={selectedAgent}
+            onSelect={setSelectedAgent}
+            selectedModel={selectedModel}
+            onModelSelect={setSelectedModel}
+          />
 
-        <header className='shrink-0 border-b border-border/70 bg-background'>
-          <div className='mx-auto flex w-full max-w-5xl items-center gap-3 px-4 py-3 sm:px-6'>
-            <div className='flex size-8 items-center justify-center rounded-md border border-border/70 bg-muted/40 text-primary'>
-              <Sparkles className='size-4' />
-            </div>
+          <WorkspaceSelector
+            variant='bar'
+            value={selectedWorkspaceId}
+            disabled={running}
+            onChange={(workspace) => {
+              setSelectedWorkspaceId(workspace?.id ?? null)
+              // Keep the task pointing at the workspace the user is using.
+              if (currentTaskId) {
+                void updateTask(currentTaskId, { workspace_id: workspace?.id ?? 0 }).catch((error) => toast.error(error instanceof Error ? error.message : t('workspacePage.toast.failed')))
+              }
+            }}
+          />
+        </SessionBar>
 
-            <div className='flex-1 min-w-0'>
-              <div className='truncate text-sm font-medium'>{t('agentic.workspaceLabel')}</div>
-              <div className='truncate text-xs text-muted-foreground'>{t('agentic.workspaceLabel')}</div>
-            </div>
-
-            <button
-              type='button'
-              onClick={handleNewChat}
-              disabled={running}
-              className='agentic-subtle-button flex h-9 items-center gap-2 rounded-md border px-3 text-sm transition-colors disabled:opacity-50'
-            >
-              <Plus className='size-4' />
-
-              <span className='hidden sm:inline'>{t('agentic.newChat')}</span>
-            </button>
-          </div>
-        </header>
-
-        {/* Agent and model selection stays above the conversation. */}
-        <section className='shrink-0 border-b border-border/70 bg-background/95'>
-          <div className='mx-auto w-full max-w-5xl px-4 py-3 sm:px-6'>
-            <AgentSelector
-              selectedAgent={selectedAgent}
-              onSelect={setSelectedAgent}
-              selectedModel={selectedModel}
-              onModelSelect={setSelectedModel}
-            />
-
-            <WorkspaceSelector
-              value={selectedWorkspaceId}
-              disabled={running}
-              onChange={(workspace) => {
-                setSelectedWorkspaceId(workspace?.id ?? null)
-                // Keep the task pointing at the workspace the user is using.
-                if (currentTaskId) {
-                  void updateTask(currentTaskId, { workspace_id: workspace?.id ?? 0 }).catch((error) => toast.error(error instanceof Error ? error.message : t('workspacePage.toast.failed')))
-                }
-              }}
-            />
-
-            <div className='mt-2 text-center text-xs text-muted-foreground'>
-              {running && selectedAgent
-                ? t('agentic.status.thinking', {
-                    agent: selectedAgent.name,
-                    model: selectedModel?.name,
-                  })
-                : selectedAgent && selectedModel
-                  ? t('agentic.status.ready', {
-                      agent: selectedAgent.name,
-                      model: selectedModel.name,
-                    })
-                  : selectedAgent
-                    ? t('agentic.status.selectModel', {
-                        agent: selectedAgent.name,
-                      })
-                    : t('agentic.status.selectEmployee')}
-            </div>
-
-            <p className='mt-2 text-center text-xs text-muted-foreground' data-testid='desktop-runtime-status'>
-              {t('desktopRuntime.chat.statusLabel')}: {runnerConnected ? t('desktopRuntime.chat.connected') : t('desktopRuntime.chat.notConnected')}
-              {' | '}
-              <Link to='/settings/integrations' className='underline'>{t('desktopRuntime.chat.manage')}</Link>
-            </p>
-            {runnerStatus && <p className='mt-1 text-center text-xs text-muted-foreground'>{runnerStatus}</p>}
-          </div>
-        </section>
-
-        {/* ======================================================
-            WORKFLOW PROGRESS
-        ====================================================== */}
-
-        {currentStep && (
-          <div className='shrink-0 border-b border-border/70 bg-background'>
-            <div className='mx-auto w-full max-w-4xl px-4 py-2.5'>
-              <div className='mb-2 flex justify-between text-xs'>
-                <span>{currentTaskId}</span>
-
-                <span>{progress}%</span>
-              </div>
-
-              <div className='mb-3 h-1 overflow-hidden rounded-full bg-muted'>
-                <div
-                  className='h-full rounded-full bg-primary transition-all'
-                  style={{
-                    width: `${progress}%`,
-                  }}
-                />
-              </div>
-
-              <div className='flex justify-between'>
-                {workflowSteps.map((step, index) => {
-                  const done = index < currentStepIndex
-
-                  const active = index === currentStepIndex
-
-                  return (
-                    <div key={step} className='flex items-center gap-2'>
-                      <div
-                        className={`flex size-7 items-center justify-center rounded-full border text-xs ${
-                          done || active
-                            ? 'border-primary bg-primary text-primary-foreground'
-                            : ''
-                        }`}
-                      >
-                        {done ? <Check className='size-3' /> : index + 1}
-                      </div>
-
-                      <span className='hidden text-xs sm:block'>
-                        {workflowLabels[step]}
-                      </span>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ======================================================
-            CHAT AREA
-        ====================================================== */}
-
-        <div className='min-h-0 flex-1 overflow-y-auto px-4 py-6 sm:px-6'>
-          <div className='mx-auto flex w-full max-w-4xl flex-col'>
+        <div ref={threadRef} className='flex min-h-0 flex-1 flex-col overflow-y-auto px-4 py-6 sm:px-6' role='log' aria-label={t('agentic.thread.label')}>
+          {/* Before the first message the empty state sits in the middle of the free space, so the space around it is placed, not left over. */}
+          <div className={`mx-auto flex w-full max-w-4xl flex-col ${messages.length === 0 && !historyLoading && !historyError ? 'my-auto' : ''}`}>
             {historyLoading ? (
-              <div className='flex min-h-[52vh] flex-col items-center justify-center px-4 text-center'>
-                <div className='mb-5 flex size-10 items-center justify-center rounded-md border border-border/70 bg-muted/40 text-primary'>
-                  <Sparkles className='size-5 animate-pulse' />
-                </div>
-
-                <h1 className='text-xl font-semibold tracking-tight sm:text-2xl'>
-                  Memuat riwayat chat...
-                </h1>
-
-                <p className='mt-2 max-w-lg text-sm text-muted-foreground'>
-                  Tunggu sebentar, percakapan Task sedang dipulihkan.
-                </p>
-              </div>
+              <p className='max-w-[46rem] py-10 text-sm text-muted-foreground' role='status'>{t('agentic.thread.loading')}</p>
             ) : historyError ? (
-              <div className='flex min-h-[52vh] flex-col items-center justify-center px-4 text-center'>
-                <div className='mb-5 flex size-10 items-center justify-center rounded-md border border-destructive/30 bg-destructive/10 text-destructive'>
-                  <X className='size-5' />
-                </div>
-
-                <h1 className='text-xl font-semibold tracking-tight sm:text-2xl'>
-                  Gagal memuat riwayat
-                </h1>
-
-                <p className='mt-2 max-w-lg text-sm text-muted-foreground'>
-                  {historyError}
-                </p>
+              <div className='max-w-[46rem] py-10' role='alert'>
+                <h2 className='text-lg font-semibold'>{t('agentic.thread.loadError')}</h2>
+                <p className='mt-1 text-sm text-muted-foreground'>{historyError}</p>
               </div>
             ) : messages.length === 0 ? (
-              <div className='flex min-h-[52vh] flex-col items-center justify-center px-4 text-center'>
-                <div className='mb-5 flex size-10 items-center justify-center rounded-md border border-border/70 bg-muted/40 text-primary'>
-                  <Sparkles className='size-5' />
-                </div>
-
-                <h1 className='text-xl font-semibold tracking-tight sm:text-2xl'>
-                  {t('agentic.questionTitle')}
-                </h1>
-
-                <p className='mt-2 max-w-lg text-sm text-muted-foreground'>
-                  {t('agentic.questionDescription')}
-                </p>
-
-                {selectedAgent && selectedModel && (
-                  <div className='mt-4 inline-flex rounded-md border border-border/70 bg-muted/20 px-3 py-1.5 text-xs text-muted-foreground'>
-                    {selectedAgent.name}
-                    {' · '}
-                    {selectedModel.name}
-                    {' · '}
-                    {selectedModel.provider?.name}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className='flex flex-col gap-7'>
-                {messages.map((item) => (
-                  <div
-                    key={item.id}
-                    className={`flex gap-3 ${
-                      item.role === 'user' ? 'justify-end' : 'justify-start'
-                    }`}
-                  >
-                    {/* AI ICON */}
-
-                    {item.role === 'agent' && (
-                      <div className='flex size-7 shrink-0 items-center justify-center rounded-md border border-border/60 bg-muted/30 text-primary'>
-                        <Sparkles className='size-4' />
-                      </div>
-                    )}
-
-                    <div className='max-w-[min(80%,48rem)]'>
-                      <div
-                        className={`agentic-message rounded-lg border px-4 py-3 text-sm leading-6 whitespace-pre-wrap ${
-                          item.role === 'user'
-                            ? 'agentic-message-user border-transparent'
-                            : 'agentic-message-agent'
-                        }`}
-                      >
-                        {item.content}
-
-                        {/* ====================================
-                              GENERATED ZIP
-                          ==================================== */}
-
-                        {item.file && (
-                          <div className='mt-4 flex items-center gap-3 rounded-md border border-border/70 bg-background/60 p-3'>
-                            <div className='flex size-9 shrink-0 items-center justify-center rounded-md border border-border/70 bg-muted/30 text-primary'>
-                              <FileArchive className='size-5' />
-                            </div>
-
-                            <div className='min-w-0 flex-1'>
-                              <p className='truncate font-medium text-foreground'>
-                                {item.file.name}
-                              </p>
-
-                              <p className='text-xs text-muted-foreground'>
-                                {formatFileSize(item.file.size)}
-                              </p>
-                            </div>
-
-                            <a
-                              href={item.file.blobUrl}
-                              download={item.file.name}
-                              className='flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-xs font-medium text-primary-foreground transition-opacity hover:opacity-90'
-                            >
-                              <Download className='size-4' />
-                              {t('agentic.download')}
-                            </a>
-                          </div>
-                        )}
-
-                        {/* ====================================
-                              MODEL INFO
-                          ==================================== */}
-
-                        {item.role === 'agent' && item.model && (
-                          <div className='agentic-meta mt-3 flex flex-wrap items-center gap-2 border-t border-border/60 pt-2 text-[11px]'>
-                            <span>{t('agentic.model')}:</span>
-
-                            <span className='font-medium text-foreground'>
-                              {item.model}
-                            </span>
-
-                            {item.provider && (
-                              <>
-                                <span>·</span>
-
-                                <span>{item.provider}</span>
-                              </>
-                            )}
-
-                            {item.modelId && item.modelId > 0 && (
-                              <>
-                                <span>·</span>
-
-                                <span>ID {item.modelId}</span>
-                              </>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* USER ICON */}
-
-                    {item.role === 'user' && (
-                      <div className='flex size-7 shrink-0 items-center justify-center rounded-md border border-border/60 bg-muted/30'>
-                        <User className='size-4' />
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* ======================================================
-            INPUT
-        ====================================================== */}
-
-        <div className='shrink-0 border-t border-border/70 bg-background px-4 py-4 sm:px-6'>
-          <div className='mx-auto w-full max-w-4xl'>
-            {/* ==================================================
-                SELECTED FILES
-            ================================================== */}
-
-            {selectedFiles.length > 0 && (
-              <div className='mb-3 flex flex-wrap gap-2'>
-                {selectedFiles.map((file, index) => (
-                  <div
-                    key={`${file.name}-${index}`}
-                    className='flex items-center gap-2 rounded-md border border-border/70 bg-muted/20 px-3 py-2 text-xs'
-                  >
-                    <FileArchive className='size-4 text-primary' />
-
-                    <span className='max-w-[150px] truncate'>{file.name}</span>
-
-                    <button
-                      onClick={() => handleRemoveFile(index)}
-                      type='button'
-                    >
-                      <X className='size-3' />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* ==================================================
-                TEXTAREA
-            ================================================== */}
-
-            <div className='agentic-composer rounded-lg border bg-background transition-[border-color,box-shadow]'>
-              <textarea
-                rows={2}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault()
-
-                    handleSend()
-                  }
-                }}
-                disabled={!selectedAgent || !selectedModel || running}
-                placeholder={
-                  !selectedAgent
-                    ? t('agentic.input.selectEmployee')
-                    : !selectedModel
-                      ? t('agentic.input.selectModel')
-                      : running
-                        ? t('agentic.input.processing')
-                        : t('agentic.input.writeMessage', {
-                            model: selectedModel.name,
-                          })
-                }
-                className='min-h-[80px] w-full resize-none border-0 bg-transparent px-4 py-3 text-sm outline-none'
+              <ThreadEmpty
+                agent={selectedAgent}
+                model={selectedModel}
+                workspaceName={selectedWorkspaceName}
+                onPick={setMessage}
               />
-
-              <div className='flex items-center justify-between px-3 pb-3'>
-                {/* FILE INPUT */}
-
-                <input
-                  ref={fileInputRef}
-                  type='file'
-                  accept='image/png,image/jpeg,image/jpg,image/webp,image/gif'
-                  multiple
-                  onChange={handleSelectFiles}
-                  className='hidden'
-                />
-
-                <button
-                  type='button'
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={!selectedAgent || !selectedModel || running}
-                  className='flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted disabled:opacity-40'
-                >
-                  <Paperclip className='size-4' />
-                </button>
-
-                {/* DELEGATE + SEND */}
-
-                <div className='flex items-center gap-1'>
-                <button
-                  type='button'
-                  onClick={() => setDelegateOpen(true)}
-                  disabled={!selectedAgent || running}
-                  title={t('delegation.button')}
-                  aria-label={t('delegation.button')}
-                  className='flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted disabled:opacity-50'
-                >
-                  <Users className='size-4' />
-                </button>
-
-                <button
-                  type='button'
-                  onClick={handleSend}
-                  disabled={
-                    !selectedAgent ||
-                    !selectedModel ||
-                    !message.trim() ||
-                    running
-                  }
-                  className='flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-40'
-                >
-                  <Send className='size-4' />
-                </button>
-                </div>
+            ) : (
+              <div className='flex flex-col gap-6'>
+                {messages.map((item) => (
+                  <Fragment key={item.id}>
+                    <MessageItem message={item} agentName={selectedAgent?.name ?? 'Agent'} />
+                    {item.id === activityAfter && <ActivityList items={activity} />}
+                  </Fragment>
+                ))}
               </div>
-            </div>
-
-
+            )}
           </div>
         </div>
+
+        <RunProgress
+          steps={workflowSteps.map((step) => ({ key: step, label: workflowLabels[step] }))}
+          currentIndex={currentStepIndex}
+          progress={progress}
+          status={progressStatus}
+          running={running}
+        />
+
+        <Composer
+          value={message}
+          onChange={setMessage}
+          onSend={handleSend}
+          ready={Boolean(selectedAgent && selectedModel)}
+          running={running}
+          modelName={selectedModel?.name}
+          files={selectedFiles}
+          onFiles={handleSelectFiles}
+          onRemoveFile={handleRemoveFile}
+          fileInputRef={fileInputRef}
+          onDelegate={() => setDelegateOpen(true)}
+          delegateDisabled={!selectedAgent || running}
+          runtimeConnected={runnerConnected}
+        />
       </div>
       <DelegateDialog
         open={delegateOpen}

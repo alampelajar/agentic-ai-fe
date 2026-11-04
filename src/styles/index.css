@@ -88,57 +88,9 @@
 
 
 /* --------------------------------------------------------------------------
-   Agentic workspace: restrained product UI
+   Agentic workspace: flat surfaces, no glow. The layout lives in the components
+   under src/features/ai; only the motion rule below is global.
    -------------------------------------------------------------------------- */
-.agentic-workspace {
-  --agentic-panel: color-mix(in oklch, var(--background) 94%, white);
-  --agentic-panel-strong: color-mix(in oklch, var(--background) 90%, white);
-  --agentic-line: color-mix(in oklch, var(--foreground) 9%, transparent);
-}
-
-.agentic-workspace .agentic-surface {
-  background: var(--agentic-panel);
-  border-color: var(--agentic-line);
-}
-
-.agentic-workspace .agentic-composer {
-  box-shadow: 0 10px 35px color-mix(in oklch, black 16%, transparent);
-}
-
-.agentic-workspace .agentic-composer:focus-within {
-  border-color: color-mix(in oklch, var(--primary) 42%, var(--border));
-  box-shadow:
-    0 10px 35px color-mix(in oklch, black 16%, transparent),
-    0 0 0 3px color-mix(in oklch, var(--primary) 8%, transparent);
-}
-
-.agentic-workspace .agentic-message {
-  letter-spacing: -0.005em;
-}
-
-.agentic-workspace .agentic-message-agent {
-  background: color-mix(in oklch, var(--foreground) 3%, var(--background));
-  border-color: var(--agentic-line);
-}
-
-.agentic-workspace .agentic-message-user {
-  background: color-mix(in oklch, var(--primary) 92%, black);
-  color: var(--primary-foreground);
-}
-
-.agentic-workspace .agentic-meta {
-  color: var(--muted-foreground);
-}
-
-.agentic-workspace .agentic-subtle-button {
-  border-color: var(--agentic-line);
-  background: transparent;
-}
-
-.agentic-workspace .agentic-subtle-button:hover {
-  background: color-mix(in oklch, var(--foreground) 5%, transparent);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .agentic-workspace *,
   .agentic-workspace *::before,

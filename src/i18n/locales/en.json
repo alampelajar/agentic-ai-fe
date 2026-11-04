@@ -333,6 +333,61 @@
       "emptyZip": "ZIP file is empty.",
       "generic": "An error occurred."
     },
+    "title": "Agentic",
+    "bar": {
+      "ready": "Ready",
+      "working": "Working",
+      "chooseAgent": "Choose an agent",
+      "chooseModel": "Choose a model"
+    },
+    "empty": {
+      "chooseAgentTitle": "Choose an agent to begin",
+      "chooseAgentBody": "Each agent has a role. Coding can edit files and run tests in a cloud workspace; Review and Planning only read.",
+      "chooseModelTitle": "Choose a model for {{agent}}",
+      "chooseModelBody": "The model writes the answers and decides which tools to call.",
+      "readyTitle": "What should {{agent}} work on?",
+      "factAgent": "Agent",
+      "factModel": "Model",
+      "factWorkspace": "Workspace",
+      "noWorkspace": "None. The agent can answer, but cannot read or change files.",
+      "withWorkspace": "Files are read and written on the server. Every write and every run asks for your approval first.",
+      "startersLabel": "Try one of these",
+      "starters": {
+        "structure": "Describe the structure of this project.",
+        "review": "Review the code and list the problems you find, most serious first.",
+        "readme": "Write a README that explains what this project does and how to run it."
+      }
+    },
+    "activity": {
+      "title": "Activity",
+      "running": "Working",
+      "done": "Done",
+      "denied": "Not allowed",
+      "expired": "Expired",
+      "failed": "Failed",
+      "tools": {
+        "workspace_list_files": "Listed files",
+        "workspace_read_file": "Read file",
+        "workspace_write_file": "Write file",
+        "workspace_get_changes": "Checked changes",
+        "workspace_run_test": "Run tests",
+        "workspace_build": "Build",
+        "workspace_install_dependencies": "Install dependencies",
+        "workspace_get_execution": "Read job result"
+      }
+    },
+    "composer": {
+      "attach": "Attach an image",
+      "send": "Send",
+      "hint": "Enter to send, Shift+Enter for a new line",
+      "needAgent": "Choose an agent and a model to start.",
+      "removeFile": "Remove {{name}}"
+    },
+    "thread": {
+      "label": "Conversation",
+      "loading": "Restoring the conversation...",
+      "loadError": "The conversation could not be restored"
+    },
     "workspaceLabel": "AI Workspace"
   },
   "tasksPage": {

@@ -51,6 +51,22 @@ type DropdownPosition = {
   width: number;
 };
 
+// The trigger is a compact control, so the list under it is never narrower than
+// a readable width, and never runs off the right edge of the window.
+const DROPDOWN_MIN_WIDTH = 360;
+
+function dropdownBox(rect: DOMRect) {
+  const width = Math.min(
+    Math.max(rect.width, DROPDOWN_MIN_WIDTH),
+    window.innerWidth - 16,
+  );
+
+  return {
+    width,
+    left: Math.max(8, Math.min(rect.left, window.innerWidth - width - 8)),
+  };
+}
+
 // ============================================================
 // COMPONENT
 // ============================================================
@@ -196,8 +212,7 @@ export function AgentSelector({
 
     setAgentPosition({
       top,
-      left: rect.left,
-      width: rect.width,
+      ...dropdownBox(rect),
     });
   };
 
@@ -229,8 +244,7 @@ export function AgentSelector({
 
     setModelPosition({
       top,
-      left: rect.left,
-      width: rect.width,
+      ...dropdownBox(rect),
     });
   };
 
@@ -606,8 +620,11 @@ export function AgentSelector({
   // MAIN UI
   // ============================================================
 
+  const control =
+    "flex h-9 w-full min-w-0 items-center gap-2 rounded-md border border-border bg-transparent px-3 text-left text-sm transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-expanded:border-primary";
+
   return (
-    <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+    <>
       {/* ========================================================
           AGENT
       ======================================================== */}
@@ -615,45 +632,24 @@ export function AgentSelector({
       <button
         ref={agentTriggerRef}
         type="button"
+        aria-haspopup="listbox"
+        aria-expanded={openAgent}
         onClick={() => {
           setOpenModel(false);
 
           setOpenAgent((value) => !value);
         }}
-        className="flex min-w-0 flex-1 items-center gap-3 rounded-md border border-border/70 bg-background/60 px-3 py-2 text-left transition-colors hover:bg-muted/40"
+        className={`${control} sm:w-auto sm:max-w-[15rem]`}
       >
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/70 bg-muted/30">
-          <Bot className="h-5 w-5" />
-        </div>
+        <Bot aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />
 
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <span className="truncate text-sm font-medium">
-              {selectedAgent ? selectedAgent.name : t("agentSelector.noAgentSelected")}
-            </span>
-
-            {selectedAgent && (
-              <>
-                <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-500" />
-
-                <span className="shrink-0 text-xs text-muted-foreground">
-                  {selectedAgent.status === "ready"
-                    ? t("agentSelector.ready")
-                    : selectedAgent.status}
-                </span>
-              </>
-            )}
-          </div>
-
-          <p className="truncate text-xs text-muted-foreground">
-            {selectedAgent
-              ? selectedAgent.description
-              : t("agentSelector.selectAgent")}
-          </p>
-        </div>
+        <span className="truncate font-medium">
+          {selectedAgent ? selectedAgent.name : t("agentSelector.noAgentSelected")}
+        </span>
 
         <ChevronDown
-          className={`h-5 w-5 shrink-0 text-muted-foreground transition-transform ${
+          aria-hidden="true"
+          className={`size-4 shrink-0 text-muted-foreground transition-transform ${
             openAgent ? "rotate-180" : ""
           }`}
         />
@@ -667,31 +663,30 @@ export function AgentSelector({
         <button
           ref={modelTriggerRef}
           type="button"
+          aria-haspopup="listbox"
+          aria-expanded={openModel}
           onClick={() => {
             setOpenAgent(false);
 
             setOpenModel((value) => !value);
           }}
-          className="flex min-w-0 flex-1 items-center gap-2 rounded-md border border-border/70 bg-background/60 px-3 py-2 text-left transition-colors hover:bg-muted/40"
+          className={`${control} sm:w-auto sm:max-w-[18rem]`}
         >
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted/40">
-            <Cpu className="h-4 w-4" />
-          </div>
+          <Cpu aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />
 
-          <div className="min-w-0 flex-1">
-            <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-              {t("agentSelector.model")}
-            </p>
+          <span className="shrink-0 text-xs text-muted-foreground">
+            {t("agentSelector.model")}
+          </span>
 
-            <p className="truncate text-sm font-medium">
-              {internalSelectedModel
-                ? internalSelectedModel.name
-                : t("agentSelector.modelDropdown.title")}
-            </p>
-          </div>
+          <span className="truncate font-medium">
+            {internalSelectedModel
+              ? internalSelectedModel.name
+              : t("agentSelector.modelDropdown.title")}
+          </span>
 
           <ChevronDown
-            className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${
+            aria-hidden="true"
+            className={`size-4 shrink-0 text-muted-foreground transition-transform ${
               openModel ? "rotate-180" : ""
             }`}
           />
@@ -702,6 +697,6 @@ export function AgentSelector({
 
       {agentDropdown}
       {modelDropdown}
-    </div>
+    </>
   );
 }
