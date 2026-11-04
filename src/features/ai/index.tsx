@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useLocation } from '@tanstack/react-router'
+import { Link, useLocation } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import {
   Check,
@@ -21,6 +21,12 @@ import { PageLoading } from '@/components/layout/page-loading'
 import { approveDesktopAction, denyDesktopAction, emergencyStopDesktop, getDesktopWindows, requestDesktopAction, RunnerRequestError, type DesktopAction } from '@/features/desktop-runtime/api'
 import { type WindowInfo } from '@/features/desktop-runtime/approval-details'
 import { DelegateDialog } from '@/features/delegation/delegate-dialog'
+import type { ToolApproval } from '@/features/workspaces/data/api'
+import { parseCloudToolCall, runCloudToolCall, type ApprovalDecision as WorkspaceDecision } from '@/features/workspaces/tool-runner'
+import { WorkspaceApprovalDialog } from '@/features/workspaces/workspace-approval-dialog'
+import { WorkspaceSelector } from '@/features/workspaces/workspace-selector'
+import { useDesktopRuntime } from '@/stores/desktop-runtime-store'
+import { buildContextHints, firstToolMarker, shouldRunTools } from './tool-context'
 import { buildDelegationContext } from '@/features/delegation/data/api'
 import { ChatApprovalDialog, type ApprovalDecision } from '@/features/desktop-runtime/chat-approval-dialog'
 import { toast } from 'sonner'
@@ -79,7 +85,6 @@ type ChatResult = {
 
 type WorkflowStep = 'goal' | 'planning' | 'coding' | 'testing' | 'done'
 
-type LocalRunnerWorkspace = { id: string; name: string }
 
 const workflowSteps: WorkflowStep[] = [
   'goal',
@@ -144,16 +149,13 @@ export function AIAssistant() {
 
   const [running, setRunning] = useState(false)
 
-  // Local Agent Runner connection is session-only; never persist its bearer token.
-  const [runnerURL, setRunnerURL] = useState('http://127.0.0.1:8765')
-  const [runnerToken, setRunnerToken] = useState('')
-  const [runnerConnected, setRunnerConnected] = useState(false)
-  const [runnerConnecting, setRunnerConnecting] = useState(false)
-  const [runnerWorkspaces, setRunnerWorkspaces] = useState<LocalRunnerWorkspace[]>([])
-  const [runnerWorkspaceID, setRunnerWorkspaceID] = useState('')
-  const [githubRepoURL, setGithubRepoURL] = useState('')
+  // The optional Desktop Runtime (Local Agent Runner). Its connection is made in
+  // Settings -> Integrations and kept in a session-only store; the token is never persisted.
+  const runnerURL = useDesktopRuntime((state) => state.url)
+  const runnerToken = useDesktopRuntime((state) => state.token)
+  const runnerConnected = useDesktopRuntime((state) => state.connected)
+  const runnerWorkspaceID = useDesktopRuntime((state) => state.localWorkspaceId)
   const [runnerStatus, setRunnerStatus] = useState('')
-  const [runnerBusy, setRunnerBusy] = useState(false)
   const [pendingApproval, setPendingApproval] = useState<DesktopAction | null>(null)
   const [pendingApprovalSkill, setPendingApprovalSkill] = useState('Desktop Control')
   const [pendingWindows, setPendingWindows] = useState<WindowInfo[] | undefined>(undefined)
@@ -165,6 +167,10 @@ export function AIAssistant() {
 
   const [currentTaskId, setCurrentTaskId] = useState<string | null>(null)
   const [delegateOpen, setDelegateOpen] = useState(false)
+  // The cloud workspace this chat works in. Agents use it on the server, so no Local Agent Runner is needed.
+  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<number | null>(null)
+  const [pendingWorkspaceApproval, setPendingWorkspaceApproval] = useState<ToolApproval | null>(null)
+  const workspaceApprovalResolver = useRef<((decision: WorkspaceDecision) => void) | null>(null)
 
   const [taskTitle, setTaskTitle] = useState('')
   const [historyLoading, setHistoryLoading] = useState(false)
@@ -252,6 +258,7 @@ export function AIAssistant() {
 
         setCurrentTaskId(String(task.id))
         setTaskTitle(task.title)
+        setSelectedWorkspaceId(task.workspace_id ?? null)
 
         // Tampilkan isi history SECEPATNYA, tanpa menunggu
         // request Agent selesai.
@@ -396,6 +403,7 @@ export function AIAssistant() {
       priority: 'medium',
       agent_id: selectedAgent.id,
       model_id: selectedModel?.id ?? null,
+      workspace_id: selectedWorkspaceId,
     })
 
     const id = String(created.id)
@@ -590,6 +598,10 @@ export function AIAssistant() {
       formData.append('model_id', String(modelId))
     }
 
+    if (selectedWorkspaceId) {
+      formData.append('workspace_id', String(selectedWorkspaceId))
+    }
+
     files.forEach((file) => formData.append('images', file))
 
     const headers: HeadersInit = {}
@@ -645,94 +657,8 @@ export function AIAssistant() {
   }
 
   // ============================================================
-  // LOCAL AGENT RUNNER
+  // LOCAL AGENT RUNNER TOOLS (optional Desktop Runtime)
   // ============================================================
-
-  const connectRunner = async () => {
-    const base = runnerURL.trim().replace(/\/+$/, '')
-    if (!base || !runnerToken.trim()) {
-      setRunnerStatus('Masukkan URL runner dan bearer token.')
-      return
-    }
-
-    setRunnerConnecting(true)
-    setRunnerStatus('')
-    try {
-      const response = await fetch(`${base}/api/workspaces`, {
-        headers: { Authorization: `Bearer ${runnerToken.trim()}` },
-      })
-      const data = await response.json().catch(() => ({}))
-      if (!response.ok) {
-        throw new Error(data?.error || `Runner merespons HTTP ${response.status}`)
-      }
-
-      const workspaces = Array.isArray(data.workspaces)
-        ? (data.workspaces as LocalRunnerWorkspace[])
-        : []
-      setRunnerURL(base)
-      setRunnerWorkspaces(workspaces)
-      setRunnerWorkspaceID((current) =>
-        workspaces.some((workspace) => workspace.id === current)
-          ? current
-          : workspaces[0]?.id ?? ''
-      )
-      setRunnerConnected(true)
-      setRunnerStatus(`Terhubung · ${workspaces.length} workspace`)
-    } catch (error) {
-      setRunnerConnected(false)
-      setRunnerWorkspaces([])
-      setRunnerWorkspaceID('')
-      setRunnerStatus(
-        error instanceof Error
-          ? error.message
-          : 'Tidak dapat terhubung ke Local Agent Runner.'
-      )
-    } finally {
-      setRunnerConnecting(false)
-    }
-  }
-
-  const cloneGitHubRepository = async () => {
-    const url = githubRepoURL.trim()
-    if (!runnerConnected || !url) {
-      setRunnerStatus('Hubungkan runner dan masukkan URL repository GitHub publik.')
-      return
-    }
-
-    setRunnerConnecting(true)
-    setRunnerStatus('Meng-clone repository GitHub...')
-    try {
-      const response = await fetch(`${runnerURL.replace(/\/+$/, '')}/api/workspaces/clone`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${runnerToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ url }),
-      })
-      const data = await response.json().catch(() => ({}))
-      if (!response.ok) {
-        throw new Error(data?.error || 'Gagal meng-clone repository.')
-      }
-
-      const listResponse = await fetch(`${runnerURL.replace(/\/+$/, '')}/api/workspaces`, {
-        headers: { Authorization: `Bearer ${runnerToken}` },
-      })
-      const listData = await listResponse.json().catch(() => ({}))
-      if (!listResponse.ok) throw new Error(listData?.error || 'Repository berhasil di-clone, tetapi daftar workspace gagal dimuat.')
-      const workspaces = Array.isArray(listData.workspaces)
-        ? (listData.workspaces as LocalRunnerWorkspace[])
-        : []
-      setRunnerWorkspaces(workspaces)
-      setRunnerWorkspaceID(String(data?.workspace?.id || workspaces[0]?.id || ''))
-      setGithubRepoURL('')
-      setRunnerStatus(`Repository ${data?.workspace?.name || url} berhasil ditambahkan.`)
-    } catch (error) {
-      setRunnerStatus(error instanceof Error ? error.message : 'Gagal meng-clone repository.')
-    } finally {
-      setRunnerConnecting(false)
-    }
-  }
 
   const runLocalTool = async (call: LocalRunnerToolCall): Promise<string> => {
     if (!runnerConnected || !runnerToken || !runnerWorkspaceID) {
@@ -804,21 +730,16 @@ export function AIAssistant() {
       `Izinkan Local Agent Runner menjalankan ${call.action}?\n\nWorkspace: ${runnerWorkspaceID}\nRuntime: ${runtime}\n\nPerintah dapat menjalankan kode dari project. Jalankan hanya kode yang dipercaya.`
     )
     if (!approved) return 'DIBATALKAN: pengguna menolak eksekusi perintah.'
-    setRunnerBusy(true)
     setRunnerStatus(`Menjalankan ${call.action} (${runtime})...`)
-    try {
-      const response = await fetch(`${base}/api/workspaces/${workspace}/execute`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ action: call.action, runtime }),
-      })
-      const data = await response.json().catch(() => ({}))
-      if (!response.ok) throw new Error(data?.error || 'Eksekusi tool gagal.')
-      setRunnerStatus(`${call.action}: ${data.status} (exit ${data.exit_code})`)
-      return JSON.stringify(data)
-    } finally {
-      setRunnerBusy(false)
-    }
+    const response = await fetch(`${base}/api/workspaces/${workspace}/execute`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ action: call.action, runtime }),
+    })
+    const data = await response.json().catch(() => ({}))
+    if (!response.ok) throw new Error(data?.error || 'Eksekusi tool gagal.')
+    setRunnerStatus(`${call.action}: ${data.status} (exit ${data.exit_code})`)
+    return JSON.stringify(data)
   }
 
   const runDesktopTool = async (call: LocalRunnerToolCall, agentId: number): Promise<string> => {
@@ -907,7 +828,7 @@ export function AIAssistant() {
           promptedForFirstTool = true
           toolHistory.push({ role: 'assistant', content: result.message })
           const toolRequestPrompt =
-            'Permintaan pengguna ini membutuhkan pemeriksaan workspace. Jangan menjawab dengan rencana atau narasi. Segera panggil tool read-only pertama memakai marker persis berikut, tanpa Markdown fence atau teks di dalam marker selain JSON valid: <LOCAL_AGENT_TOOL>{"action":"list-files","path":"."}</LOCAL_AGENT_TOOL>. Jangan mengubah file dan jangan menjalankan perintah terminal.'
+            `Permintaan pengguna ini membutuhkan pemeriksaan workspace. Jangan menjawab dengan rencana atau narasi. Segera panggil tool read-only pertama memakai marker persis berikut, tanpa Markdown fence atau teks di dalam marker selain JSON valid: ${firstToolMarker(selectedWorkspaceId !== null)}. Jangan mengubah file dan jangan menjalankan perintah terminal.`
           toolHistory.push({ role: 'user', content: toolRequestPrompt })
           result = await sendChat(
             toolRequestPrompt,
@@ -929,11 +850,51 @@ export function AIAssistant() {
         return result
       }
 
-      if (!runnerConnected || !runnerWorkspaceID) {
-        return {
-          ...result,
-          message: 'Local Agent Runner belum terhubung. Hubungkan runner dan pilih workspace, lalu kirim ulang permintaan.\\n\\nPermintaan tool tidak dijalankan.',
+      // Cloud workspace tools run on the server and need no Local Agent Runner.
+      let cloudCall: ReturnType<typeof parseCloudToolCall> = null
+      let cloudError: string | null = null
+      try {
+        cloudCall = parseCloudToolCall(toolMatch[1], selectedWorkspaceId !== null)
+      } catch (error) {
+        cloudError = error instanceof Error ? error.message : 'format tidak dikenali'
+      }
+      if (cloudError !== null) {
+        return { ...result, message: `Permintaan tool workspace tidak valid (${cloudError}). Tidak ada tindakan yang dijalankan.` }
+      }
+      if (cloudCall) {
+        if (selectedWorkspaceId === null) {
+          return { ...result, message: `${t('workspacePage.chat.needed')}\n\nPermintaan tool tidak dijalankan.` }
         }
+        let toolResult: string
+        try {
+          toolResult = await runCloudToolCall(cloudCall, {
+            workspaceId: selectedWorkspaceId,
+            agentId,
+            taskId: currentTaskId && /^\d+$/.test(currentTaskId) ? Number(currentTaskId) : null,
+            requestApproval: (approval) => new Promise<WorkspaceDecision>((resolve) => {
+              workspaceApprovalResolver.current = resolve
+              setPendingWorkspaceApproval(approval)
+            }),
+          })
+        } catch (error) {
+          toolResult = `TOOL_ERROR: ${error instanceof Error ? error.message : 'Kesalahan tool tidak diketahui'}`
+        }
+        toolCalls += 1
+        setRunnerStatus(`Tool ${cloudCall.tool} selesai (${toolCalls}/${maxToolCalls}); meminta agent melanjutkan...`)
+        toolHistory.push({ role: 'assistant', content: result.message })
+        const cloudFollowup = `Hasil tool ${cloudCall.tool} pada workspace cloud:\n\n${toolResult}\n\nGunakan hanya hasil tool di atas sebagai bukti. Jangan menyatakan pekerjaan berhasil jika hasil tool menunjukkan kegagalan, penolakan, atau kedaluwarsa. Jika perlu tindakan workspace berikutnya, panggil satu tool lagi; jika sudah cukup, berikan jawaban akhir.`
+        toolHistory.push({ role: 'user', content: cloudFollowup })
+        result = await sendChat(cloudFollowup, files, toolHistory.slice(0, -1), agentId, modelId)
+        continue
+      }
+
+      // Desktop tools need the Desktop Runtime to be connected. The older local file and
+      // terminal tools also need one of its project folders. Neither is needed for a Cloud Workspace.
+      if (!runnerConnected) {
+        return { ...result, message: t('desktopRuntime.chat.desktopNeedsRuntime') }
+      }
+      if (!desktopMatch && !runnerWorkspaceID) {
+        return { ...result, message: t('desktopRuntime.chat.localNeedsFolder') }
       }
 
       let call: LocalRunnerToolCall
@@ -1151,10 +1112,9 @@ export function AIAssistant() {
         setCurrentStep(isCodingAgent ? 'coding' : isTestingAgent ? 'testing' : 'planning')
         setProgress(35)
 
-        const runnerContext = runnerConnected && runnerWorkspaceID
-          ? `[LOCAL RUNNER CONTEXT: connected=true; workspace=${runnerWorkspaceID}; base_url=${runnerURL}. You may request one allowed Local Agent Runner tool at a time using the exact <LOCAL_AGENT_TOOL>{JSON}</LOCAL_AGENT_TOOL> protocol. File writes and command execution require user approval.]`
-          : '[LOCAL RUNNER CONTEXT: connected=false. Do not emit Local Agent Runner tool markers. Explain the required manual steps instead.]'
-        const effectivePrompt = `${text}\n\n${runnerContext}`
+        // A selected Cloud Workspace needs no mention of the Local Agent Runner at all.
+        const contextHints = buildContextHints({ cloudWorkspaceSelected: selectedWorkspaceId !== null, runtimeConnected: runnerConnected, localFolderId: runnerWorkspaceID, runtimeUrl: runnerURL })
+        const effectivePrompt = `${text}\n\n${contextHints.join('\n')}`
 
         let result = await sendChat(
           effectivePrompt,
@@ -1164,7 +1124,8 @@ export function AIAssistant() {
           selectedModel.id
         )
 
-        if (runnerConnected && runnerWorkspaceID && (isCodingAgent || isTestingAgent)) {
+        // Tools run for a selected Cloud Workspace, or (as before) for a connected Desktop Runtime.
+        if (shouldRunTools({ cloudWorkspaceSelected: selectedWorkspaceId !== null, runtimeConnected: runnerConnected, localFolderId: runnerWorkspaceID, codingOrTesting: isCodingAgent || isTestingAgent })) {
           setProgress(55)
           result = await runAgentToolLoop(
             result,
@@ -1283,6 +1244,18 @@ export function AIAssistant() {
               onModelSelect={setSelectedModel}
             />
 
+            <WorkspaceSelector
+              value={selectedWorkspaceId}
+              disabled={running}
+              onChange={(workspace) => {
+                setSelectedWorkspaceId(workspace?.id ?? null)
+                // Keep the task pointing at the workspace the user is using.
+                if (currentTaskId) {
+                  void updateTask(currentTaskId, { workspace_id: workspace?.id ?? 0 }).catch((error) => toast.error(error instanceof Error ? error.message : t('workspacePage.toast.failed')))
+                }
+              }}
+            />
+
             <div className='mt-2 text-center text-xs text-muted-foreground'>
               {running && selectedAgent
                 ? t('agentic.status.thinking', {
@@ -1301,101 +1274,12 @@ export function AIAssistant() {
                     : t('agentic.status.selectEmployee')}
             </div>
 
-            <details className='mt-3 rounded-lg border border-border/70 bg-muted/10 px-3 py-2'>
-              <summary className='cursor-pointer select-none text-xs font-medium'>
-                Local Agent Runner {runnerConnected ? '· Terhubung' : '· Belum terhubung'}
-              </summary>
-              <div className='mt-3 grid gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]'>
-                <label className='grid gap-1 text-xs text-muted-foreground'>
-                  URL runner
-                  <input
-                    value={runnerURL}
-                    onChange={(event) => {
-                      setRunnerURL(event.target.value)
-                      setRunnerConnected(false)
-                    }}
-                    placeholder='http://127.0.0.1:8765'
-                    className='h-9 min-w-0 rounded-md border border-input bg-background px-3 text-sm text-foreground'
-                    spellCheck={false}
-                  />
-                </label>
-                <label className='grid gap-1 text-xs text-muted-foreground'>
-                  Bearer token
-                  <input
-                    type='password'
-                    value={runnerToken}
-                    onChange={(event) => {
-                      setRunnerToken(event.target.value)
-                      setRunnerConnected(false)
-                    }}
-                    placeholder='Token dari LOCAL_RUNNER_TOKEN'
-                    className='h-9 min-w-0 rounded-md border border-input bg-background px-3 text-sm text-foreground'
-                    autoComplete='off'
-                  />
-                </label>
-                <div className='flex items-end'>
-                  <button
-                    type='button'
-                    onClick={connectRunner}
-                    disabled={runnerConnecting || runnerBusy || !runnerToken.trim()}
-                    className='h-9 w-full rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground disabled:opacity-50'
-                  >
-                    {runnerConnecting ? 'Menghubungkan…' : runnerConnected ? 'Hubungkan ulang' : 'Hubungkan'}
-                  </button>
-                </div>
-              </div>
-
-              {runnerConnected && (
-                <label className='mt-3 grid max-w-xl gap-1 text-xs text-muted-foreground'>
-                  Workspace lokal
-                  <select
-                    value={runnerWorkspaceID}
-                    onChange={(event) => setRunnerWorkspaceID(event.target.value)}
-                    className='h-9 rounded-md border border-input bg-background px-3 text-sm text-foreground'
-                  >
-                    {runnerWorkspaces.map((workspace) => (
-                      <option key={workspace.id} value={workspace.id}>
-                        {workspace.name} ({workspace.id})
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              )}
-
-              {runnerConnected && (
-                <div className='mt-3 grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]'>
-                  <label className='grid gap-1 text-xs text-muted-foreground'>
-                    Clone repository GitHub publik
-                    <input
-                      value={githubRepoURL}
-                      onChange={(event) => setGithubRepoURL(event.target.value)}
-                      placeholder='https://github.com/owner/repository'
-                      className='h-9 min-w-0 rounded-md border border-input bg-background px-3 text-sm text-foreground'
-                      spellCheck={false}
-                    />
-                  </label>
-                  <div className='flex items-end'>
-                    <button
-                      type='button'
-                      onClick={cloneGitHubRepository}
-                      disabled={runnerConnecting || !githubRepoURL.trim()}
-                      className='h-9 w-full rounded-md border px-3 text-sm font-medium disabled:opacity-50'
-                    >
-                      Clone repository
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              <p className='mt-2 text-xs text-muted-foreground'>
-                {runnerStatus || 'Token hanya disimpan di memori halaman ini. File write dan setiap perintah terminal akan meminta persetujuan.'}
-              </p>
-              {runnerConnected && runnerWorkspaces.length === 0 && (
-                <p className='mt-1 text-xs text-destructive'>
-                  Runner terhubung tetapi belum memiliki workspace. Daftarkan folder melalui konfigurasi runner lalu hubungkan ulang.
-                </p>
-              )}
-            </details>
+            <p className='mt-2 text-center text-xs text-muted-foreground' data-testid='desktop-runtime-status'>
+              {t('desktopRuntime.chat.statusLabel')}: {runnerConnected ? t('desktopRuntime.chat.connected') : t('desktopRuntime.chat.notConnected')}
+              {' | '}
+              <Link to='/settings/integrations' className='underline'>{t('desktopRuntime.chat.manage')}</Link>
+            </p>
+            {runnerStatus && <p className='mt-1 text-center text-xs text-muted-foreground'>{runnerStatus}</p>}
           </div>
         </section>
 
@@ -1746,6 +1630,19 @@ export function AIAssistant() {
           setDelegateOpen(false)
         }}
       />
+      {pendingWorkspaceApproval && (
+        <WorkspaceApprovalDialog
+          key={pendingWorkspaceApproval.id}
+          approval={pendingWorkspaceApproval}
+          agentName={selectedAgent?.name ?? 'Agent'}
+          onDecision={(decision) => {
+            setPendingWorkspaceApproval(null)
+            const resolve = workspaceApprovalResolver.current
+            workspaceApprovalResolver.current = null
+            resolve?.(decision)
+          }}
+        />
+      )}
       {pendingApproval && (
         <ChatApprovalDialog
           key={pendingApproval.id}

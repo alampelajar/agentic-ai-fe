@@ -852,7 +852,6 @@
   "paidModels": "Paid Models",
   "appsMenu": "Apps",
   "skills": "Skills",
-  "desktopAccess": "Desktop Access",
   "appDirectory": {
     "badge": "AI RESOURCE DIRECTORY",
     "title": "Apps",
@@ -1247,6 +1246,275 @@
       "instructionRequired": "Describe what the other agent should do.",
       "instructionTooLong": "The instruction is limited to {{max}} characters.",
       "failed": "The delegation failed."
+    }
+  },
+  "workspacesMenu": "Workspaces",
+  "workspacePage": {
+    "title": "Cloud Workspaces",
+    "subtitle": "Keep projects on the server so your agents can read, edit, build and test them from the browser. No Local Agent Runner is needed.",
+    "loading": "Loading workspaces...",
+    "error": {
+      "title": "Workspaces could not be loaded"
+    },
+    "empty": {
+      "title": "No workspaces yet",
+      "description": "Create an empty workspace, upload a ZIP of your project, or import a public GitHub repository."
+    },
+    "status": {
+      "creating": "Creating",
+      "ready": "Ready",
+      "unavailable": "Unavailable",
+      "deleting": "Deleting",
+      "failed": "Failed"
+    },
+    "card": {
+      "files": "Files",
+      "fileCount_one": "{{count}} file",
+      "fileCount_other": "{{count}} files",
+      "source": "Source",
+      "lastAccessed": "Last accessed",
+      "never": "Never"
+    },
+    "actions": {
+      "create": "New workspace",
+      "open": "Open",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "retry": "Try again"
+    },
+    "create": {
+      "title": "New workspace",
+      "description": "Your files are stored on the server and only you and the agents you use can reach them.",
+      "source": "Start from",
+      "sources": {
+        "empty": "Empty",
+        "zip": "ZIP file",
+        "github": "GitHub"
+      },
+      "name": "Name",
+      "namePlaceholder": "Library app",
+      "descriptionLabel": "Description (optional)",
+      "runtime": "Default runtime",
+      "runtimeNone": "Not set",
+      "zipFile": "ZIP file",
+      "zipHint": "Up to {{max}} MB. Secret files such as .env are left out.",
+      "githubUrl": "Repository URL",
+      "githubHint": "Public repositories on github.com only. Never paste a token here.",
+      "submit": "Create workspace",
+      "creating": "Creating...",
+      "errors": {
+        "nameRequired": "Name is required.",
+        "zipRequired": "Choose a ZIP file.",
+        "zipType": "The file must be a .zip archive.",
+        "zipSize": "The ZIP file is larger than {{max}} MB.",
+        "githubUrl": "Use a link like https://github.com/owner/repository.",
+        "failed": "The workspace could not be created."
+      }
+    },
+    "delete": {
+      "title": "Delete this workspace?",
+      "description": "\"{{name}}\" and all of its files will be permanently deleted. Tasks that used it keep their history.",
+      "confirm": "Delete"
+    },
+    "toast": {
+      "created": "Workspace \"{{name}}\" created.",
+      "deleted": "Workspace deleted.",
+      "saved": "Saved {{path}}.",
+      "failed": "The action failed."
+    },
+    "explorer": {
+      "back": "Back to workspaces",
+      "download": "Download ZIP",
+      "tabs": {
+        "files": "Files",
+        "changes": "Changes",
+        "console": "Console"
+      },
+      "tree": "Files",
+      "emptyTree": "This workspace has no files yet. Create one below.",
+      "truncated": "The list is shortened. Open a folder path to see more.",
+      "newFilePath": "New file path",
+      "newFile": "New file",
+      "protected": "protected",
+      "dependencies": "dependencies",
+      "dependenciesHint": "Installed dependencies are not listed. Run Install dependencies in the Console tab to refresh them.",
+      "selectFile": "Select a file to read or edit it.",
+      "readingFile": "Reading file...",
+      "editor": "File editor",
+      "newBadge": "new",
+      "unsaved": "unsaved",
+      "save": "Save",
+      "revert": "Revert",
+      "showDiff": "Show changes",
+      "hideDiff": "Hide changes",
+      "diffTooLarge": "The edit is too large to compare here.",
+      "discardConfirm": "You have unsaved changes. Discard them?",
+      "noChanges": "No files have changed since this workspace was created.",
+      "changeStatus": {
+        "added": "Added",
+        "modified": "Modified",
+        "deleted": "Deleted"
+      },
+      "loadFailed": "The workspace could not be opened",
+      "treeFailed": "The file list could not be loaded.",
+      "readFailed": "The file could not be read.",
+      "saveFailed": "The file could not be saved.",
+      "exportFailed": "The ZIP could not be created."
+    },
+    "console": {
+      "command": "Command",
+      "jobs": "Jobs",
+      "run": "Run",
+      "disabled": "Running code in the cloud is not turned on on this server. You can still read and edit files.",
+      "jobTypes": {
+        "go-test": "Go: test",
+        "go-build": "Go: build",
+        "npm-test": "Node: test",
+        "npm-build": "Node: build",
+        "npm-lint": "Node: lint",
+        "python-test": "Python: test",
+        "go-deps": "Go: install dependencies",
+        "npm-install": "Node: install dependencies",
+        "pip-install": "Python: install dependencies"
+      },
+      "statuses": {
+        "queued": "Queued",
+        "preparing": "Preparing",
+        "running": "Running",
+        "completed": "Completed",
+        "failed": "Failed",
+        "timed_out": "Timed out",
+        "cancelled": "Cancelled"
+      },
+      "exitCode": "exit code {{code}}",
+      "duration": "{{seconds}} s",
+      "cancel": "Cancel",
+      "cancelling": "Cancelling...",
+      "noOutput": "(no output yet)",
+      "empty": "No jobs yet. Run a test or a build to see its output here.",
+      "installHint": "Tests and builds run without internet access. If the project has dependencies, run Install dependencies first: it can reach package registries only and runs no project scripts.",
+      "loading": "Loading jobs...",
+      "loadFailed": "Jobs could not be loaded",
+      "startFailed": "The job could not be started.",
+      "cancelFailed": "The job could not be cancelled."
+    },
+    "approval": {
+      "title": "Allow this workspace action?",
+      "description": "{{agent}} wants to change or run something in \"{{workspace}}\". Nothing happens until you allow it.",
+      "file": "File",
+      "allow": "Allow once",
+      "deny": "Deny"
+    },
+    "chat": {
+      "label": "Cloud workspace",
+      "none": "No workspace",
+      "hint": "Agents work in this workspace on the server. The Local Agent Runner is not needed.",
+      "needed": "Choose or create a cloud workspace first.",
+      "create": "Create one",
+      "unavailable": "The selected workspace is not available any more."
+    }
+  },
+  "integrationsMenu": "Integrations",
+  "desktopRuntime": {
+    "pageTitle": "Integrations",
+    "pageSubtitle": "Optional connections to tools outside the cloud. Nothing here is needed to use Cloud Workspaces.",
+    "title": "Desktop Runtime",
+    "optional": "Optional",
+    "summary": "Desktop Runtime is an optional integration that lets Agentic AI control applications and the desktop on your local computer. It is not needed to use Cloud Workspaces.",
+    "compare": {
+      "cloud": {
+        "title": "Cloud Workspace",
+        "items": [
+          "Open and manage workspaces",
+          "Edit code files",
+          "Run tests and builds through the Cloud Execution Worker",
+          "Needs no Local Agent Runner"
+        ]
+      },
+      "desktop": {
+        "title": "Desktop Runtime",
+        "items": [
+          "Reach your local desktop",
+          "Control applications and windows on your computer",
+          "Take screenshots or interact with the desktop",
+          "Needs the Local Agent Runner running on your computer"
+        ]
+      }
+    },
+    "connection": {
+      "title": "Connection",
+      "url": "Runner URL",
+      "token": "Bearer token",
+      "tokenPlaceholder": "The value of LOCAL_RUNNER_TOKEN",
+      "tokenNote": "The token is kept in this browser tab only and is forgotten when you reload or disconnect. Every write, command and desktop action still asks for your approval.",
+      "connect": "Connect",
+      "reconnect": "Reconnect",
+      "connecting": "Connecting...",
+      "disconnect": "Disconnect",
+      "status": "Status",
+      "connected": "Connected",
+      "notConnected": "Not connected",
+      "device": "Computer",
+      "desktopControl": "Desktop control",
+      "desktopStates": {
+        "available": "Available",
+        "disabled": "Switched off on the runner",
+        "unknown": "Not checked"
+      },
+      "stopped": "Stopped. Connect again to use it.",
+      "disconnected": "Disconnected from this browser. The runner keeps running on your computer."
+    },
+    "problems": {
+      "missing-credentials": "Enter the runner URL and the bearer token.",
+      "unreachable": "Nothing answered at this URL. Check that the Local Agent Runner is running and that the address is right.",
+      "unauthorized": "The runner is running but refused the token. Check LOCAL_RUNNER_TOKEN.",
+      "http-error": "The runner answered with an error: {{detail}}",
+      "unknown": "The connection failed. {{detail}}"
+    },
+    "localFolders": {
+      "title": "Local project folders (advanced)",
+      "description": "Folders registered on the runner, used only by its own file and terminal tools. Cloud Workspaces do not use them.",
+      "select": "Local folder",
+      "none": "The runner is connected but has no registered folders. Add them with LOCAL_RUNNER_WORKSPACES_JSON and reconnect.",
+      "clone": "Clone a public GitHub repository",
+      "cloneButton": "Clone",
+      "cloning": "Cloning...",
+      "notConnected": "Connect the runner first.",
+      "cloned": "Added {{name}}.",
+      "cloneFailed": "Cloning failed: {{detail}}"
+    },
+    "guide": {
+      "title": "Set up the Desktop Runtime",
+      "intro": "The runner is a small program that runs on your Windows computer and only listens on that computer. Start it from the backend project:",
+      "step1": "Choose a long random secret and keep it private. This is your bearer token.",
+      "step2": "Set the settings, then start the runner:",
+      "step3": "Turn on desktop control only if you want it, with Python 3.11 and the desktop requirements installed:",
+      "step4": "Enter the URL and the token above and press Connect.",
+      "docs": "More detail is in docs/local-agent-runner.md in the backend project."
+    },
+    "troubleshooting": {
+      "title": "If it does not connect",
+      "items": [
+        "\"Nothing answered\": start the runner and check the address and port (default 127.0.0.1:8765).",
+        "\"Refused the token\": use exactly the value you set in LOCAL_RUNNER_TOKEN.",
+        "Connected but the browser blocks it: add this site's address to LOCAL_RUNNER_ALLOWED_ORIGINS and restart the runner.",
+        "\"Switched off on the runner\": set LOCAL_RUNNER_DESKTOP_ENABLED=true and configure the Python sidecar.",
+        "Emergency Stop in a dialog stops desktop actions at once; connect again afterwards."
+      ]
+    },
+    "panels": {
+      "heading": "Desktop control",
+      "description": "Observe the Windows desktop (windows, screenshot, UI elements) and request interactions. Observation runs directly; every focus change, click, typing, hotkey or scroll needs its own approval.",
+      "connectFirst": "Connect the Desktop Runtime above to use desktop control.",
+      "unavailable": "Desktop control is switched off on the runner, so there is nothing to show here."
+    },
+    "chat": {
+      "statusLabel": "Desktop Runtime (optional)",
+      "connected": "connected",
+      "notConnected": "not connected",
+      "manage": "Manage in Settings",
+      "desktopNeedsRuntime": "This needs the Desktop Runtime, which is not connected. Connect it in Settings → Integrations → Desktop Runtime, then send the request again.\n\nThe tool request was not run.",
+      "localNeedsFolder": "This needs a local project folder on the Desktop Runtime. Choose one in Settings → Integrations, or select a Cloud Workspace instead.\n\nThe tool request was not run."
     }
   }
 }

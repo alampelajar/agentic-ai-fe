@@ -2,7 +2,7 @@
 import {
   LayoutDashboard,
   Monitor,
-  MonitorCog,
+  Puzzle,
   ListTodo,
   Bell,
   Package,
@@ -16,6 +16,7 @@ import {
   Bot,
   Sparkles,
   BrainCircuit,
+  FolderGit2,
   MessageSquareText,
 } from "lucide-react";
 
@@ -88,6 +89,11 @@ export const sidebarData: SidebarData = {
           url: "/memory",
           icon: BrainCircuit,
         },
+        {
+          title: "workspacesMenu",
+          url: "/workspaces",
+          icon: FolderGit2,
+        },
       ],
     },
     {
@@ -123,9 +129,9 @@ export const sidebarData: SidebarData = {
               icon: Monitor,
             },
             {
-              title: "desktopAccess",
-              url: "/settings/desktop",
-              icon: MonitorCog,
+              title: "integrationsMenu",
+              url: "/settings/integrations",
+              icon: Puzzle,
             },
           ],
         },
