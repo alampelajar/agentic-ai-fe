@@ -25,7 +25,7 @@ import {
   type Agent,
   type AgentModel,
 } from './components/agent-selector'
-import { describeArgs, outcomeOf, type ActivityItem } from './components/activity'
+import { activityCount, addActivity, describeArgs, outcomeOf, settleActivity, type ActivityRuns } from './components/activity'
 import { ActivityList } from './components/activity-list'
 import { Composer } from './components/composer'
 import { MessageItem, type ChatMessageView, type GeneratedFile } from './components/message-item'
@@ -119,9 +119,10 @@ export function AIAssistant() {
   // The tool calls of the current run, shown under the conversation so a person can
   // see what the agent really did. Not saved with the task: it describes this run.
   const { workspaces: readyWorkspaces } = useReadyWorkspaces()
-  const [activity, setActivity] = useState<ActivityItem[]>([])
-  // The id of the message the activity answers: it is drawn right under it, before the agent's reply.
-  const [activityAfter, setActivityAfter] = useState<number | null>(null)
+  // One list per turn, keyed by the person's message that started it and drawn right under
+  // that message, before the agent's reply. runId is the turn in progress.
+  const [activityRuns, setActivityRuns] = useState<ActivityRuns>({})
+  const runId = useRef<number | null>(null)
   const threadRef = useRef<HTMLDivElement | null>(null)
 
   // The optional Desktop Runtime (Local Agent Runner). Its connection is made in
@@ -466,8 +467,8 @@ export function AIAssistant() {
     clearGeneratedUrls()
 
     setMessages([])
-    setActivity([])
-    setActivityAfter(null)
+    setActivityRuns({})
+    runId.current = null
     setMessage('')
     setSelectedFiles([])
 
@@ -636,12 +637,13 @@ export function AIAssistant() {
   // One row in the activity list per tool call: started now, finished when its result is known.
   const startActivity = (tool: string, detail: string) => {
     const id = Date.now() + Math.random()
-    setActivity((current) => [...current, { id, tool, detail, state: 'running' }])
+    const run = runId.current
+    if (run !== null) setActivityRuns((current) => addActivity(current, run, { id, tool, detail, state: 'running' }))
     return id
   }
   const finishActivity = (id: number, result: string) => {
     const state = outcomeOf(result)
-    setActivity((current) => current.map((item) => (item.id === id ? { ...item, state } : item)))
+    setActivityRuns((current) => settleActivity(current, id, state))
   }
 
   // ============================================================
@@ -1080,8 +1082,7 @@ export function AIAssistant() {
     ])
     setMessage('')
     setSelectedFiles([])
-    setActivity([])
-    setActivityAfter(userMessageId)
+    runId.current = userMessageId
     setTaskTitle((current) => current || text)
     setRunning(true)
 
@@ -1177,12 +1178,12 @@ export function AIAssistant() {
   useEffect(() => {
     const element = threadRef.current
     if (!element) return
-    const total = messages.length + activity.length
+    const total = messages.length + activityCount(activityRuns)
     const grew = total > lastCount.current
     lastCount.current = total
     const nearBottom = element.scrollHeight - element.scrollTop - element.clientHeight < 160
     if (grew && (nearBottom || total <= 2)) element.scrollTo({ top: element.scrollHeight })
-  }, [messages, activity])
+  }, [messages, activityRuns])
 
   // ============================================================
   // WORKFLOW INDEX
@@ -1270,7 +1271,7 @@ export function AIAssistant() {
                 {messages.map((item) => (
                   <Fragment key={item.id}>
                     <MessageItem message={item} agentName={selectedAgent?.name ?? 'Agent'} />
-                    {item.id === activityAfter && <ActivityList items={activity} />}
+                    {activityRuns[item.id] && <ActivityList items={activityRuns[item.id]} />}
                   </Fragment>
                 ))}
               </div>

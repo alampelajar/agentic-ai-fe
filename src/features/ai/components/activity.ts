@@ -8,6 +8,29 @@ export type ActivityItem = {
   state: ActivityState
 }
 
+/**
+ * The activity of every run in the conversation, keyed by the id of the message
+ * that started it, so each turn keeps its own trace under its own message.
+ */
+export type ActivityRuns = Record<number, ActivityItem[]>
+
+/** Adds a call to the run that started with message `runId`, leaving every other run as it was. */
+export function addActivity(runs: ActivityRuns, runId: number, item: ActivityItem): ActivityRuns {
+  return { ...runs, [runId]: [...(runs[runId] ?? []), item] }
+}
+
+/** Records how the call `id` ended, wherever in the conversation it is. */
+export function settleActivity(runs: ActivityRuns, id: number, state: Exclude<ActivityState, 'running'>): ActivityRuns {
+  const next: ActivityRuns = {}
+  for (const [runId, items] of Object.entries(runs)) {
+    next[Number(runId)] = items.map((item) => (item.id === id ? { ...item, state } : item))
+  }
+  return next
+}
+
+/** How many calls the whole conversation holds. */
+export const activityCount = (runs: ActivityRuns) => Object.values(runs).reduce((total, items) => total + items.length, 0)
+
 /** i18n keys cannot contain a dot, so `workspace.write_file` is looked up as `workspace_write_file`. */
 export const toolKey = (tool: string) => tool.replace('.', '_')
 
