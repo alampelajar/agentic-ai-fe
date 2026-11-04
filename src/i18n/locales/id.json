@@ -333,6 +333,61 @@
       "emptyZip": "File ZIP kosong.",
       "generic": "Terjadi kesalahan."
     },
+    "title": "Agentic",
+    "bar": {
+      "ready": "Siap",
+      "working": "Bekerja",
+      "chooseAgent": "Pilih agen",
+      "chooseModel": "Pilih model"
+    },
+    "empty": {
+      "chooseAgentTitle": "Pilih agen untuk memulai",
+      "chooseAgentBody": "Setiap agen punya peran. Coding dapat mengubah file dan menjalankan tes di workspace cloud; Review dan Planning hanya membaca.",
+      "chooseModelTitle": "Pilih model untuk {{agent}}",
+      "chooseModelBody": "Model menulis jawaban dan memutuskan tool mana yang dipanggil.",
+      "readyTitle": "Apa yang perlu dikerjakan {{agent}}?",
+      "factAgent": "Agen",
+      "factModel": "Model",
+      "factWorkspace": "Workspace",
+      "noWorkspace": "Tidak ada. Agen bisa menjawab, tetapi tidak bisa membaca atau mengubah file.",
+      "withWorkspace": "File dibaca dan ditulis di server. Setiap penulisan dan setiap eksekusi meminta persetujuan Anda lebih dulu.",
+      "startersLabel": "Coba salah satu",
+      "starters": {
+        "structure": "Jelaskan struktur proyek ini.",
+        "review": "Tinjau kodenya dan daftar masalah yang kamu temukan, dari yang paling serius.",
+        "readme": "Tulis README yang menjelaskan fungsi proyek ini dan cara menjalankannya."
+      }
+    },
+    "activity": {
+      "title": "Aktivitas",
+      "running": "Bekerja",
+      "done": "Selesai",
+      "denied": "Ditolak",
+      "expired": "Kedaluwarsa",
+      "failed": "Gagal",
+      "tools": {
+        "workspace_list_files": "Melihat daftar file",
+        "workspace_read_file": "Membaca file",
+        "workspace_write_file": "Menulis file",
+        "workspace_get_changes": "Memeriksa perubahan",
+        "workspace_run_test": "Menjalankan tes",
+        "workspace_build": "Build",
+        "workspace_install_dependencies": "Memasang dependensi",
+        "workspace_get_execution": "Membaca hasil job"
+      }
+    },
+    "composer": {
+      "attach": "Lampirkan gambar",
+      "send": "Kirim",
+      "hint": "Enter untuk kirim, Shift+Enter untuk baris baru",
+      "needAgent": "Pilih agen dan model untuk memulai.",
+      "removeFile": "Hapus {{name}}"
+    },
+    "thread": {
+      "label": "Percakapan",
+      "loading": "Memulihkan percakapan...",
+      "loadError": "Percakapan tidak dapat dipulihkan"
+    },
     "workspaceLabel": "Ruang Kerja AI"
   },
   "tasksPage": {

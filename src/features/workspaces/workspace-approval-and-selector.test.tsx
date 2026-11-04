@@ -133,6 +133,33 @@ describe('Workspace selector', () => {
     expect((screen.getByLabelText('Cloud workspace').element() as HTMLSelectElement).value).toBe('')
   })
 
+  describe('in the session bar', () => {
+    it('is one labelled control without the explanation, still selectable by its label', async () => {
+      mocks.getWorkspaces.mockResolvedValueOnce([ws(1, 'Ready one'), ws(3, 'Ready two')])
+      const onChange = vi.fn()
+      const screen = await render(<WorkspaceSelector variant='bar' value={1} onChange={onChange} />)
+      await expect.element(screen.getByRole('option', { name: 'Ready two' })).toBeInTheDocument()
+      // The sentence about the Local Agent Runner belongs to the start of the conversation, not the bar.
+      await expect.element(screen.getByText(/Local Agent Runner is not needed/)).not.toBeInTheDocument()
+      // The label is there for screen readers and for the test, but not drawn.
+      expect(screen.getByText('Cloud workspace').element().className).toContain('sr-only')
+
+      await userEvent.selectOptions(screen.getByLabelText('Cloud workspace'), '3')
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ id: 3 }))
+    })
+
+    it('still warns about a missing workspace and still points to creating one', async () => {
+      mocks.getWorkspaces.mockResolvedValueOnce([ws(1, 'Ready one')])
+      const missing = await render(<WorkspaceSelector variant='bar' value={99} onChange={vi.fn()} />)
+      await expect.element(missing.getByRole('alert')).toHaveTextContent('not available any more')
+      await missing.unmount()
+
+      mocks.getWorkspaces.mockResolvedValueOnce([])
+      const none = await render(<WorkspaceSelector variant='bar' value={null} onChange={vi.fn()} />)
+      expect(none.getByRole('link', { name: 'Create one' }).element().getAttribute('href')).toBe('/workspaces')
+    })
+  })
+
   it('can be disabled while the agent works, and survives a failed load', async () => {
     mocks.getWorkspaces.mockResolvedValueOnce([ws(1, 'Ready one')])
     const busy = await render(<WorkspaceSelector value={null} onChange={vi.fn()} disabled />)
