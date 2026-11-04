@@ -37,7 +37,20 @@ describe('MessageItem', () => {
 
   it('leaves out the model line when the message has none, such as an error', async () => {
     const screen = await render(<MessageItem agentName='Coding Agent' message={{ id: 3, role: 'agent', content: 'Maaf, terjadi kesalahan.' }} />)
-    expect(screen.getByRole('article').element().querySelectorAll('p').length).toBe(1) // only the agent's name
+    // Directly under the article there is only the agent's name: no model line after the answer.
+    expect(screen.getByRole('article').element().querySelectorAll(':scope > p').length).toBe(1)
+  })
+
+  it('formats the answer as Markdown but leaves the person own message as typed', async () => {
+    const table = ['| File | Isi |', '|---|---|', '| a.go | **utama** |'].join('\n')
+    const agent = await render(<MessageItem agentName='Coding Agent' message={{ id: 5, role: 'agent', content: table }} />)
+    await expect.element(agent.getByRole('table')).toBeInTheDocument()
+    expect(agent.getByRole('article').element().querySelector('strong')?.textContent).toBe('utama')
+    await agent.unmount()
+
+    const person = await render(<MessageItem agentName='Coding Agent' message={{ id: 6, role: 'user', content: 'tulis **tebal** dan | tabel |' }} />)
+    expect(person.getByRole('article').element().querySelector('strong')).toBeNull()
+    await expect.element(person.getByRole('article')).toHaveTextContent('tulis **tebal** dan | tabel |')
   })
 
   it('offers a generated file as a download with its size', async () => {
