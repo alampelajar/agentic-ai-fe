@@ -1,6 +1,7 @@
 import { Download, FileArchive } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { formatFileSize } from './format-file-size'
+import { Markdown } from './markdown'
 
 export type GeneratedFile = {
   id: number
@@ -21,8 +22,8 @@ export type ChatMessageView = {
 
 /**
  * One turn of the conversation. The person's message sits on the right in a quiet
- * surface; the agent's answer is plain text on the page under the agent's name,
- * with the model that wrote it as one small line at the end.
+ * surface and stays plain text; the agent's answer is formatted Markdown on the
+ * page under the agent's name, with the model that wrote it as one small line at the end.
  */
 export function MessageItem({ message, agentName }: { message: ChatMessageView; agentName: string }) {
   const { t } = useTranslation()
@@ -40,7 +41,7 @@ export function MessageItem({ message, agentName }: { message: ChatMessageView; 
   return (
     <article className='flex flex-col gap-1.5' data-role='agent'>
       <p className='text-xs font-medium text-muted-foreground'>{agentName}</p>
-      <div className='max-w-[46rem] whitespace-pre-wrap text-sm leading-6'>{message.content}</div>
+      <Markdown>{message.content}</Markdown>
 
       {message.file && (
         <div className='flex max-w-[46rem] items-center gap-3 rounded-md border border-border p-3'>
