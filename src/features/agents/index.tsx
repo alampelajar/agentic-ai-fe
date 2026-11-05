@@ -1,27 +1,21 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import {
-  Activity,
   ArrowUpRight,
   Bot,
   Check,
   CheckCircle2,
-  Clock3,
   Cpu,
-  Filter,
   Loader2,
   MoreHorizontal,
   Plus,
   Search,
   Server,
-  Sparkles,
   X,
-  Zap,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '@/stores/auth-store'
 import { API_BASE_URL } from '@/lib/api-config'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -889,37 +883,23 @@ export function Agents() {
             HEADER
         ====================================================== */}
 
-        <div className='relative mb-8 overflow-hidden rounded-2xl border bg-gradient-to-br from-violet-500/10 via-blue-500/5 to-cyan-500/10 p-6 md:p-8'>
-          <div className='pointer-events-none absolute -top-16 -right-16 size-40 rounded-full bg-violet-500/10 blur-3xl' />
+        <div className='mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end'>
+          <div>
+            <h1 className='text-2xl font-semibold tracking-tight'>
+              {t('agentPage.title')}
+            </h1>
 
-          <div className='pointer-events-none absolute -bottom-20 left-1/3 size-48 rounded-full bg-blue-500/10 blur-3xl' />
-
-          <div className='relative flex flex-col justify-between gap-6 md:flex-row md:items-center'>
-            <div>
-              <div className='mb-3 inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-600 dark:text-violet-400'>
-                <Sparkles className='size-3.5' />
-                Agentic AI
-              </div>
-
-              <h1 className='text-3xl font-bold tracking-tight'>
-                {t('agentPage.title')}
-              </h1>
-
-              <p className='mt-2 max-w-2xl text-muted-foreground'>
-                {t('agentPage.subtitle')}
-              </p>
-            </div>
-
-            <Button
-              asChild
-              className='shrink-0 bg-gradient-to-r from-violet-600 to-blue-600 shadow-lg shadow-violet-500/20 transition-all hover:from-violet-700 hover:to-blue-700'
-            >
-              <Link to='/ai/agents/create'>
-                <Plus className='me-2 size-4' />
-                {t('agentPage.create')}
-              </Link>
-            </Button>
+            <p className='mt-1 max-w-2xl text-muted-foreground'>
+              {t('agentPage.subtitle')}
+            </p>
           </div>
+
+          <Button asChild className='shrink-0'>
+            <Link to='/ai/agents/create'>
+              <Plus className='me-2 size-4' />
+              {t('agentPage.create')}
+            </Link>
+          </Button>
         </div>
 
         {/* ======================================================
@@ -948,37 +928,29 @@ export function Agents() {
             STATISTICS
         ====================================================== */}
 
-        <div className='mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+        <div className='mb-6 grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-border lg:grid-cols-4'>
           <AgentStat
             title={t('agentPage.total')}
             value={totalAgents}
             description={t('agentPage.totalDescription')}
-            icon={Bot}
-            color='violet'
           />
 
           <AgentStat
             title={t('agentPage.running')}
             value={runningAgents}
             description={t('agentPage.runningDescription')}
-            icon={Zap}
-            color='emerald'
           />
 
           <AgentStat
             title={t('agentPage.thinking')}
             value={thinkingAgents}
             description={t('agentPage.thinkingDescription')}
-            icon={Activity}
-            color='amber'
           />
 
           <AgentStat
             title={t('agentPage.availableModelsStat')}
             value={totalModels}
             description={t('agentPage.availableModelsDescription')}
-            icon={Cpu}
-            color='blue'
           />
         </div>
 
@@ -986,50 +958,38 @@ export function Agents() {
             SEARCH
         ====================================================== */}
 
-        <Card className='mb-6 overflow-hidden'>
-          <CardContent className='p-4'>
-            <div className='flex flex-col gap-3 md:flex-row'>
-              <div className='relative flex-1'>
-                <Search className='absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground' />
+        <div className='mb-6 flex flex-col gap-3 md:flex-row'>
+          <div className='relative flex-1'>
+            <Search className='absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground' />
 
-                <Input
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  placeholder={t('agentPage.search')}
-                  className='border-muted bg-muted/20 pl-9'
-                />
-              </div>
+            <Input
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder={t('agentPage.search')}
+              className='pl-9'
+            />
+          </div>
 
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className='w-full border-muted bg-muted/20 md:w-[180px]'>
-                  <Filter className='me-2 size-4 text-muted-foreground' />
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className='w-full md:w-[180px]'>
+              <SelectValue />
+            </SelectTrigger>
 
-                  <SelectValue />
-                </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='all'>{t('agentPage.allStatus')}</SelectItem>
 
-                <SelectContent>
-                  <SelectItem value='all'>
-                    {t('agentPage.allStatus')}
-                  </SelectItem>
+              <SelectItem value='Running'>{t('agentPage.running')}</SelectItem>
 
-                  <SelectItem value='Running'>
-                    {t('agentPage.running')}
-                  </SelectItem>
+              <SelectItem value='Thinking'>
+                {t('agentPage.thinking')}
+              </SelectItem>
 
-                  <SelectItem value='Thinking'>
-                    {t('agentPage.thinking')}
-                  </SelectItem>
+              <SelectItem value='Idle'>{t('agentPage.idle')}</SelectItem>
 
-                  <SelectItem value='Idle'>{t('agentPage.idle')}</SelectItem>
-
-                  <SelectItem value='Offline'>
-                    {t('agentPage.offline')}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-        </Card>
+              <SelectItem value='Offline'>{t('agentPage.offline')}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
         {/* ======================================================
             AGENT CARDS
@@ -1051,10 +1011,6 @@ export function Agents() {
         ) : (
           <Card>
             <CardContent className='flex flex-col items-center justify-center py-16 text-center'>
-              <div className='mb-4 flex size-12 items-center justify-center rounded-xl bg-muted'>
-                <Search className='size-5 text-muted-foreground' />
-              </div>
-
               <h3 className='font-medium'>
                 {error ? 'Tidak dapat memuat Agent' : t('agentPage.noAgents')}
               </h3>
@@ -1697,136 +1653,68 @@ function AgentCard({
 }) {
   const { t } = useTranslation()
 
-  const statusStyles: Record<
-    AgentStatus,
-    {
-      badge: string
-      icon: string
-      progress: string
-    }
-  > = {
-    Running: {
-      badge:
-        'border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
-      icon: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
-      progress: '[&>div]:bg-emerald-500',
-    },
-
-    Thinking: {
-      badge:
-        'border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-400',
-      icon: 'border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-400',
-      progress: '[&>div]:bg-amber-500',
-    },
-
-    Idle: {
-      badge:
-        'border-slate-500/20 bg-slate-500/10 text-slate-600 dark:text-slate-400',
-      icon: 'border-slate-500/20 bg-slate-500/10 text-slate-600 dark:text-slate-400',
-      progress: '[&>div]:bg-slate-400',
-    },
-
-    Offline: {
-      badge: 'border-red-500/20 bg-red-500/10 text-red-600 dark:text-red-400',
-      icon: 'border-red-500/20 bg-red-500/10 text-red-600 dark:text-red-400',
-      progress: '[&>div]:bg-red-500',
-    },
+  const statusDot: Record<AgentStatus, string> = {
+    Running: 'bg-emerald-500',
+    Thinking: 'bg-amber-500',
+    Idle: 'bg-muted-foreground',
+    Offline: 'bg-destructive',
   }
-
-  const status = statusStyles[agent.status]
 
   const [openModelMenu, setOpenModelMenu] = useState<number | null>(null)
 
   return (
-    <Card className='group overflow-hidden border-border/70 transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-lg'>
-      {/* ACCENT */}
-
-      <div
-        className={`h-1 w-full ${
-          agent.status === 'Running'
-            ? 'bg-emerald-500'
-            : agent.status === 'Thinking'
-              ? 'bg-amber-500'
-              : agent.status === 'Offline'
-                ? 'bg-red-500'
-                : 'bg-slate-400'
-        }`}
-      />
-
-      <CardHeader>
+    <Card className='flex flex-col gap-0 border-0 bg-muted/40 py-0 shadow-none'>
+      <CardHeader className='px-5 pt-5 pb-0'>
         <div className='flex items-start justify-between gap-3'>
-          <div className='flex min-w-0 items-center gap-3'>
-            <div
-              className={`flex size-11 shrink-0 items-center justify-center rounded-xl border transition-transform duration-300 group-hover:scale-105 ${status.icon}`}
-            >
-              <Bot className='size-5' />
-            </div>
+          <div className='min-w-0'>
+            <CardTitle className='truncate text-base'>{agent.name}</CardTitle>
 
-            <div className='min-w-0'>
-              <div className='flex items-center gap-2'>
-                <CardTitle className='truncate text-base'>
-                  {agent.name}
-                </CardTitle>
-
-                <Badge
-                  variant='outline'
-                  className={`shrink-0 text-[10px] ${status.badge}`}
-                >
-                  {t(`status.${agent.status.toLowerCase()}`)}
-                </Badge>
-              </div>
-
-              <p className='mt-1 text-xs text-muted-foreground'>{agent.type}</p>
-            </div>
+            <p className='mt-1 flex items-center gap-2 text-sm text-muted-foreground'>
+              <span
+                aria-hidden='true'
+                className={`size-2 shrink-0 rounded-full ${statusDot[agent.status]}`}
+              />
+              {t(`status.${agent.status.toLowerCase()}`)}
+              <span aria-hidden='true'>·</span>
+              <span className='truncate'>{agent.type}</span>
+            </p>
           </div>
-
-          <Button
-            variant='ghost'
-            size='icon'
-            className='shrink-0 text-muted-foreground'
-          >
-            <MoreHorizontal className='size-4' />
-          </Button>
         </div>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className='flex flex-1 flex-col px-5 pt-3 pb-5'>
         <CardDescription className='min-h-[40px] leading-5'>
           {agent.description}
         </CardDescription>
 
         {/* MODELS */}
 
-        <div className='mt-4 rounded-xl border bg-muted/20 p-3'>
-          <div className='mb-3 flex items-center gap-2'>
-            <Cpu className='size-4 text-primary' />
+        <div className='mt-4'>
+          <div className='mb-2 flex items-baseline justify-between'>
+            <span className='text-sm font-medium'>{t('agentPage.models')}</span>
 
-            <span className='text-xs font-medium'>{t('agentPage.models')}</span>
-
-            <span className='ml-auto text-xs text-muted-foreground'>
+            <span className='text-sm text-muted-foreground'>
               {agent.models.length}
             </span>
           </div>
 
           {agent.models.length > 0 ? (
-            <div className='space-y-1.5'>
+            <ul className='space-y-0.5'>
               {agent.models.map((model) => (
-                <div
+                <li
                   key={model.id}
-                  className='relative flex items-center gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-muted/50'
+                  className='relative flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm transition-colors hover:bg-muted'
                 >
-                  <span className='size-1.5 shrink-0 rounded-full bg-emerald-500' />
+                  <span className='min-w-0 flex-1 truncate'>{model.name}</span>
 
-                  <span className='min-w-0 flex-1 truncate text-xs text-muted-foreground'>
-                    {model.name}
-                  </span>
-
-                  <span className='hidden max-w-[100px] truncate text-[9px] text-muted-foreground sm:inline'>
+                  <span className='hidden max-w-[110px] truncate text-xs text-muted-foreground sm:inline'>
                     {model.provider?.name}
                   </span>
 
                   {model.is_system && (
-                    <span className='text-[9px] text-primary'>{t('agentPage.system')}</span>
+                    <span className='text-xs text-muted-foreground'>
+                      {t('agentPage.system')}
+                    </span>
                   )}
 
                   {!model.is_system && (
@@ -1859,7 +1747,7 @@ function AgentCard({
                           <div className='absolute top-8 right-0 z-50 w-44 overflow-hidden rounded-xl border bg-popover p-1 text-popover-foreground shadow-lg'>
                             <button
                               type='button'
-                              className='flex w-full items-center rounded-lg px-3 py-2 text-left text-xs transition-colors hover:bg-muted'
+                              className='flex w-full items-center rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-muted'
                               onClick={() => {
                                 setOpenModelMenu(null)
                                 onEditModel(agent, model)
@@ -1870,7 +1758,7 @@ function AgentCard({
 
                             <button
                               type='button'
-                              className='flex w-full items-center rounded-lg px-3 py-2 text-left text-xs transition-colors hover:bg-muted'
+                              className='flex w-full items-center rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-muted'
                               onClick={() => {
                                 setOpenModelMenu(null)
                                 onRemoveModel(agent, model)
@@ -1883,7 +1771,7 @@ function AgentCard({
 
                             <button
                               type='button'
-                              className='flex w-full items-center rounded-lg px-3 py-2 text-left text-xs text-destructive transition-colors hover:bg-destructive/10'
+                              className='flex w-full items-center rounded-lg px-3 py-2 text-left text-sm text-destructive transition-colors hover:bg-destructive/10'
                               onClick={() => {
                                 setOpenModelMenu(null)
                                 onDeleteModel(model)
@@ -1896,20 +1784,20 @@ function AgentCard({
                       )}
                     </div>
                   )}
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           ) : (
-            <p className='text-xs text-muted-foreground'>{t('agentPage.noModels')}</p>
+            <p className='text-sm text-muted-foreground'>
+              {t('agentPage.noModels')}
+            </p>
           )}
-
-          {/* ADD MODEL BUTTON */}
 
           <Button
             type='button'
             variant='outline'
             size='sm'
-            className='mt-3 w-full border-dashed'
+            className='mt-3 w-full'
             onClick={() => onAddModel(agent)}
           >
             <Plus className='me-2 size-3.5' />
@@ -1919,59 +1807,50 @@ function AgentCard({
 
         {/* PROGRESS */}
 
-        <div className='mt-5 space-y-3'>
-          <div className='flex items-center justify-between text-xs'>
+        <div className='mt-5 space-y-2'>
+          <div className='flex items-center justify-between text-sm'>
             <span className='text-muted-foreground'>
               {t('agentPage.currentProgress')}
             </span>
 
-            <span className='font-semibold'>{agent.progress}%</span>
+            <span className='font-medium tabular-nums'>{agent.progress}%</span>
           </div>
 
-          <Progress
-            value={agent.progress}
-            className={`h-2 bg-muted ${status.progress}`}
-          />
+          <Progress value={agent.progress} className='h-1.5 bg-border' />
         </div>
 
-        {/* TASK */}
+        {/* TASKS */}
 
-        <div className='mt-5 grid grid-cols-2 gap-3'>
-          <div className='rounded-xl border border-blue-500/10 bg-blue-500/5 p-3'>
-            <p className='text-xs text-muted-foreground'>
+        <dl className='mt-5 grid grid-cols-2 gap-4'>
+          <div>
+            <dt className='text-sm text-muted-foreground'>
               {t('agentPage.activeTasks')}
-            </p>
+            </dt>
 
-            <p className='mt-1 text-lg font-semibold text-blue-600 dark:text-blue-400'>
+            <dd className='mt-0.5 text-xl font-semibold tabular-nums'>
               {agent.tasks}
-            </p>
+            </dd>
           </div>
 
-          <div className='rounded-xl border border-violet-500/10 bg-violet-500/5 p-3'>
-            <p className='text-xs text-muted-foreground'>
+          <div>
+            <dt className='text-sm text-muted-foreground'>
               {t('agentPage.completed')}
-            </p>
+            </dt>
 
-            <p className='mt-1 text-lg font-semibold text-violet-600 dark:text-violet-400'>
+            <dd className='mt-0.5 text-xl font-semibold tabular-nums'>
               {agent.completed}
-            </p>
+            </dd>
           </div>
-        </div>
+        </dl>
 
         {/* FOOTER */}
 
-        <div className='mt-5 flex items-center justify-between'>
-          <span className='flex items-center gap-1.5 text-xs text-muted-foreground'>
-            <Clock3 className='size-3.5' />
+        <div className='mt-auto flex items-center justify-between pt-5'>
+          <span className='text-sm text-muted-foreground'>
             {t('agentPage.agentId')}: {agent.id}
           </span>
 
-          <Button
-            variant='ghost'
-            size='sm'
-            asChild
-            className='text-primary hover:bg-primary/10'
-          >
+          <Button variant='ghost' size='sm' asChild>
             <Link to='/ai/agents/$id/skills' params={{ id: String(agent.id) }}>
               {t('agentPage.viewDetails')}
 
@@ -1985,69 +1864,27 @@ function AgentCard({
 }
 
 // ============================================================
-// STAT CARD
+// STAT
 // ============================================================
 
 function AgentStat({
   title,
   value,
   description,
-  icon: Icon,
-  color,
 }: {
   title: string
   value: number
   description: string
-  icon: React.ElementType
-  color: 'violet' | 'emerald' | 'amber' | 'blue'
 }) {
-  const styles = {
-    violet: {
-      wrapper: 'border-violet-500/20 bg-violet-500/5',
-      icon: 'bg-violet-500/10 text-violet-600 dark:text-violet-400',
-      value: 'text-violet-600 dark:text-violet-400',
-    },
-
-    emerald: {
-      wrapper: 'border-emerald-500/20 bg-emerald-500/5',
-      icon: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
-      value: 'text-emerald-600 dark:text-emerald-400',
-    },
-
-    amber: {
-      wrapper: 'border-amber-500/20 bg-amber-500/5',
-      icon: 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
-      value: 'text-amber-600 dark:text-amber-400',
-    },
-
-    blue: {
-      wrapper: 'border-blue-500/20 bg-blue-500/5',
-      icon: 'bg-blue-500/10 text-blue-600 dark:text-blue-400',
-      value: 'text-blue-600 dark:text-blue-400',
-    },
-  }
-
-  const style = styles[color]
-
   return (
-    <Card
-      className={`overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md ${style.wrapper} `}
-    >
-      <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-        <CardTitle className='text-sm font-medium'>{title}</CardTitle>
+    <div className='bg-card p-5'>
+      <p className='text-sm text-muted-foreground'>{title}</p>
 
-        <div
-          className={`flex size-9 items-center justify-center rounded-xl ${style.icon}`}
-        >
-          <Icon className='size-4' />
-        </div>
-      </CardHeader>
+      <p className='mt-2 text-3xl font-semibold tracking-tight tabular-nums'>
+        {value}
+      </p>
 
-      <CardContent>
-        <div className={`text-2xl font-bold ${style.value}`}>{value}</div>
-
-        <p className='mt-1 text-xs text-muted-foreground'>{description}</p>
-      </CardContent>
-    </Card>
+      <p className='mt-1 text-sm text-muted-foreground'>{description}</p>
+    </div>
   )
 }
