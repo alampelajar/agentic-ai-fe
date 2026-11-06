@@ -1714,5 +1714,27 @@
       "desktopNeedsRuntime": "Ini membutuhkan Desktop Runtime yang belum terhubung. Hubungkan di Settings → Integrasi → Desktop Runtime, lalu kirim ulang permintaan.\n\nPermintaan tool tidak dijalankan.",
       "localNeedsFolder": "Ini membutuhkan folder proyek lokal pada Desktop Runtime. Pilih di Settings → Integrasi, atau pilih Cloud Workspace.\n\nPermintaan tool tidak dijalankan."
     }
+  },
+  "emailOtp": {
+    "sentTo": "Kami mengirim kode 6 digit ke",
+    "code": "Kode verifikasi",
+    "verify": "Verifikasi",
+    "verifyFailed": "Verifikasi gagal.",
+    "resent": "Kode baru telah dikirim.",
+    "resendFailed": "Gagal mengirim ulang kode.",
+    "resend": "Kirim ulang kode",
+    "resendIn": "Kirim ulang dalam {{seconds}} detik",
+    "back": "Kembali",
+    "createAccount": "Verifikasi dan buat akun"
+  },
+  "changeEmail": {
+    "title": "Ganti email",
+    "description": "Email Anda saat ini {{email}}. Kami akan mengirim kode ke alamat baru untuk memastikannya. Setelah itu Anda akan keluar dari akun.",
+    "newEmail": "Email baru",
+    "password": "Password saat ini",
+    "sendCode": "Kirim kode",
+    "confirm": "Konfirmasi email baru",
+    "failure": "Gagal memulai penggantian email.",
+    "success": "Email diganti. Silakan masuk kembali."
   }
 }
