@@ -3,7 +3,6 @@ import {
   LayoutDashboard,
   Monitor,
   Puzzle,
-  ListTodo,
   Bell,
   Package,
   Palette,
@@ -69,11 +68,6 @@ export const sidebarData: SidebarData = {
           title: "agents",
           url: "/users",
           icon: Bot,
-        },
-        {
-          title: "tasks",
-          url: "/tasks",
-          icon: ListTodo,
         },
         {
           title: "appsMenu",
