@@ -1232,6 +1232,10 @@
         "name": "Fallback",
         "description": "Mencoba model secara berurutan. Model berikutnya dipakai hanya jika model sebelumnya gagal."
       },
+      "pipeline": {
+        "name": "Pipeline",
+        "description": "Semua model bekerja bergantian: tiap model menyempurnakan draf sebelumnya dan model terakhir menjawab Anda. Lebih lambat dan memakai lebih banyak panggilan per pesan."
+      },
       "round_robin": {
         "name": "Round-robin",
         "description": "Bergantian antar model, sehingga tidak ada satu model yang cepat kena batas. Jika satu gagal, model berikutnya yang menjawab."
@@ -1254,6 +1258,9 @@
       "strategy": "Cara model bekerja sama",
       "models": "Model ({{count}} dari {{max}})",
       "modelsHintFallback": "Urutan di bawah adalah urutan percobaannya.",
+      "modelsHintPipeline": "Model terakhir yang menjawab Anda dan satu-satunya yang boleh memakai tool. Model sebelumnya menulis draf, sesuai urutan ini.",
+      "stageDraft": "Menulis draf",
+      "stageFinal": "Menjawab",
       "modelsHintRoundRobin": "Bobot menentukan seberapa sering model mendapat giliran (bobot 3 berarti tiga giliran untuk setiap satu giliran model berbobot 1).",
       "order": "Model terpilih, berurutan",
       "weight": "Bobot",
@@ -1269,6 +1276,7 @@
       "errors": {
         "nameRequired": "Beri nama combo.",
         "nameTooLong": "Nama maksimal {{max}} karakter.",
+        "pipelineNeedsTwo": "Pipeline butuh minimal dua model: draf dulu, jawaban akhir terakhir.",
         "modelsRequired": "Pilih minimal satu model.",
         "agentsRequired": "Pilih minimal satu agent.",
         "tooManyModels": "Combo maksimal berisi {{max}} model."
@@ -1285,6 +1293,8 @@
       "failed": "Gagal. Coba lagi."
     },
     "answer": {
+      "draftsBy": "draf dari {{names}}",
+      "draftsMissed": "tanpa draf dari {{names}}",
       "failedFirst": "{{names}} gagal lebih dulu"
     }
   },

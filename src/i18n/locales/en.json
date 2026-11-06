@@ -1232,6 +1232,10 @@
         "name": "Fallback",
         "description": "Tries the models in order. The next one is used only when the one before fails."
       },
+      "pipeline": {
+        "name": "Pipeline",
+        "description": "Every model works in turn: each one improves the previous draft and the last one answers you. Slower and uses more calls per message."
+      },
       "round_robin": {
         "name": "Round-robin",
         "description": "Takes turns between the models, so no single model hits its limit. If one fails, the next one answers."
@@ -1254,6 +1258,9 @@
       "strategy": "How the models work together",
       "models": "Models ({{count}} of {{max}})",
       "modelsHintFallback": "The order below is the order they are tried in.",
+      "modelsHintPipeline": "The last model answers you and is the only one that can use tools. The ones before it write drafts, in this order.",
+      "stageDraft": "Writes a draft",
+      "stageFinal": "Answers",
       "modelsHintRoundRobin": "The weight says how often a model takes its turn (3 means three turns for each turn of a model with weight 1).",
       "order": "Chosen models, in order",
       "weight": "Weight",
@@ -1269,6 +1276,7 @@
       "errors": {
         "nameRequired": "Give the combo a name.",
         "nameTooLong": "The name can be at most {{max}} characters.",
+        "pipelineNeedsTwo": "A pipeline needs at least two models: drafts first, the final answer last.",
         "modelsRequired": "Choose at least one model.",
         "agentsRequired": "Choose at least one agent.",
         "tooManyModels": "A combo can hold at most {{max}} models."
@@ -1285,6 +1293,8 @@
       "failed": "That did not work. Try again."
     },
     "answer": {
+      "draftsBy": "drafts by {{names}}",
+      "draftsMissed": "no draft from {{names}}",
       "failedFirst": "{{names}} failed first"
     }
   },

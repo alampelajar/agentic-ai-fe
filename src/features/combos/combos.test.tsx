@@ -155,6 +155,35 @@ describe('Combos page', () => {
       })
     })
 
+    it('needs two models for a pipeline and sends them in the order chosen', async () => {
+      mocks.createCombo.mockResolvedValue(combo())
+      const screen = await openForm()
+      await userEvent.type(screen.getByLabelText('Name'), 'Berantai')
+      await userEvent.click(screen.getByRole('radio', { name: /Pipeline/ }))
+      await userEvent.click(screen.getByRole('checkbox', { name: /Model A/ }))
+      await userEvent.click(screen.getByRole('checkbox', { name: 'Coding Agent' }))
+      await userEvent.click(screen.getByRole('button', { name: 'Save combo' }))
+      await expect.element(screen.getByRole('alert')).toHaveTextContent('A pipeline needs at least two models')
+      expect(mocks.createCombo).not.toHaveBeenCalled()
+
+      await userEvent.click(screen.getByRole('checkbox', { name: /Model B/ }))
+      const chosen = screen.getByLabelText('Chosen models, in order')
+      await expect.element(chosen).toHaveTextContent('Writes a draft')
+      await expect.element(chosen).toHaveTextContent('Answers')
+      await userEvent.click(screen.getByRole('button', { name: 'Save combo' }))
+      expect(mocks.createCombo).toHaveBeenCalledWith({
+        name: 'Berantai',
+        description: '',
+        strategy: 'pipeline',
+        max_attempts: 2,
+        members: [
+          { ai_model_id: 11, weight: 1 },
+          { ai_model_id: 12, weight: 1 },
+        ],
+        agent_ids: [7],
+      })
+    })
+
     it('does not let more models than the limit be chosen', async () => {
       const screen = await openForm()
       for (const name of ['Model A', 'Model B', 'Model C']) await userEvent.click(screen.getByRole('checkbox', { name: new RegExp(name) }))
