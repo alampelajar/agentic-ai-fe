@@ -377,6 +377,7 @@
       }
     },
     "composer": {
+      "skills": "Skill",
       "attach": "Lampirkan gambar",
       "send": "Kirim",
       "hint": "Enter untuk kirim, Shift+Enter untuk baris baru",

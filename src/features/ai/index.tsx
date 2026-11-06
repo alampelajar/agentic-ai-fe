@@ -12,6 +12,7 @@ import { DelegateDialog } from '@/features/delegation/delegate-dialog'
 import type { ToolApproval } from '@/features/workspaces/data/api'
 import { parseCloudToolCall, runCloudToolCall, type ApprovalDecision as WorkspaceDecision } from '@/features/workspaces/tool-runner'
 import { WorkspaceApprovalDialog } from '@/features/workspaces/workspace-approval-dialog'
+import { getSkills } from '@/features/skills/data/api'
 import { useReadyWorkspaces } from '@/features/workspaces/use-ready-workspaces'
 import { WorkspaceSelector } from '@/features/workspaces/workspace-selector'
 import { useDesktopRuntime } from '@/stores/desktop-runtime-store'
@@ -28,6 +29,7 @@ import {
 import { activityCount, addActivity, describeArgs, outcomeOf, settleActivity, type ActivityRuns } from './components/activity'
 import { ActivityList } from './components/activity-list'
 import { Composer } from './components/composer'
+import type { SkillOption } from './components/skill-command'
 import { MessageItem, type ChatMessageView, type GeneratedFile } from './components/message-item'
 import { RunProgress } from './components/run-progress'
 import { SessionBar, type SessionStatus } from './components/session-bar'
@@ -143,6 +145,28 @@ export function AIAssistant() {
 
   const [currentTaskId, setCurrentTaskId] = useState<string | null>(null)
   const [delegateOpen, setDelegateOpen] = useState(false)
+  // The person's skills that a slash command can call (enabled and valid ones only).
+  const [skillOptions, setSkillOptions] = useState<SkillOption[]>([])
+
+  useEffect(() => {
+    if (!accessToken) return
+    let cancelled = false
+    getSkills()
+      .then((list) => {
+        if (cancelled) return
+        setSkillOptions(
+          list
+            .filter((skill) => skill.is_enabled && (skill.validation_status ?? 'valid') === 'valid')
+            .map((skill) => ({ slug: skill.slug, name: skill.name, description: skill.description }))
+        )
+      })
+      .catch(() => {
+        // Without the list the slash menu stays closed; typing a command still works.
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [accessToken])
   // The cloud workspace this chat works in. Agents use it on the server, so no Local Agent Runner is needed.
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<number | null>(null)
   const [pendingWorkspaceApproval, setPendingWorkspaceApproval] = useState<ToolApproval | null>(null)
@@ -1301,6 +1325,7 @@ export function AIAssistant() {
           onDelegate={() => setDelegateOpen(true)}
           delegateDisabled={!selectedAgent || running}
           runtimeConnected={runnerConnected}
+          skills={skillOptions}
         />
       </div>
       <DelegateDialog
