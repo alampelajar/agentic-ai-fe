@@ -377,6 +377,7 @@
       }
     },
     "composer": {
+      "skills": "Skills",
       "attach": "Attach an image",
       "send": "Send",
       "hint": "Enter to send, Shift+Enter for a new line",

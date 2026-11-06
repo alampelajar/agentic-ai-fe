@@ -115,4 +115,65 @@ describe('Composer', () => {
     const short = await render(<Harness initial='satu baris' />)
     expect(parseInt((short.getByRole('textbox').element() as HTMLTextAreaElement).style.height, 10)).toBeLessThan(height)
   })
+
+  describe('slash commands', () => {
+    const skills = [
+      { slug: 'desktop-control', name: 'Desktop Control', description: 'Control the desktop' },
+      { slug: 'code-review', name: 'Code Review', description: 'Review code' },
+    ]
+
+    it('offers the skills when a message starts with a slash and narrows them as the person types', async () => {
+      const screen = await render(<Harness skills={skills} />)
+      const box = screen.getByRole('textbox')
+      await userEvent.click(box)
+      await userEvent.keyboard('/')
+      await expect.element(screen.getByRole('option', { name: /desktop-control/ })).toBeInTheDocument()
+      await expect.element(screen.getByRole('option', { name: /code-review/ })).toBeInTheDocument()
+
+      await userEvent.keyboard('cod')
+      await expect.element(screen.getByRole('option', { name: /code-review/ })).toBeInTheDocument()
+      expect(screen.getByRole('option', { name: /desktop-control/ }).query()).toBeNull()
+    })
+
+    it('completes the command with Enter instead of sending, then Enter sends the message', async () => {
+      const onSend = vi.fn()
+      const screen = await render(<Harness skills={skills} onSend={onSend} />)
+      const box = screen.getByRole('textbox')
+      await userEvent.click(box)
+      await userEvent.keyboard('/des')
+      await userEvent.keyboard('{Enter}')
+      expect(onSend).not.toHaveBeenCalled()
+      expect((box.element() as HTMLTextAreaElement).value).toBe('/desktop-control ')
+
+      await userEvent.keyboard('buka notepad')
+      await userEvent.keyboard('{Enter}')
+      expect(onSend).toHaveBeenCalledOnce()
+    })
+
+    it('moves with the arrow keys and closes with Escape', async () => {
+      const screen = await render(<Harness skills={skills} />)
+      const box = screen.getByRole('textbox')
+      await userEvent.click(box)
+      await userEvent.keyboard('/')
+      await userEvent.keyboard('{ArrowDown}{Enter}')
+      expect((box.element() as HTMLTextAreaElement).value).toBe('/code-review ')
+
+      await userEvent.clear(box)
+      await userEvent.keyboard('/')
+      await userEvent.keyboard('{Escape}')
+      expect(screen.getByRole('listbox').query()).toBeNull()
+    })
+
+    it('stays closed for a slash inside the message or when there are no skills', async () => {
+      const screen = await render(<Harness skills={skills} initial='buka ' />)
+      const box = screen.getByRole('textbox')
+      await userEvent.click(box)
+      await userEvent.keyboard('/')
+      expect(screen.getByRole('listbox').query()).toBeNull()
+
+      await userEvent.clear(box)
+      await userEvent.keyboard('/')
+      await expect.element(screen.getByRole('listbox')).toBeInTheDocument()
+    })
+  })
 })

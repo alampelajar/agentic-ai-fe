@@ -1,8 +1,9 @@
-import { useLayoutEffect, useRef, type ChangeEvent, type RefObject } from 'react'
+import { useLayoutEffect, useMemo, useRef, useState, type ChangeEvent, type RefObject } from 'react'
 import { Link } from '@tanstack/react-router'
 import { Paperclip, Send, Users, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
+import { filterSkills, insertSkillCommand, matchSkillCommand, type SkillOption } from './skill-command'
 
 type Props = {
   value: string
@@ -19,6 +20,8 @@ type Props = {
   onDelegate: () => void
   delegateDisabled: boolean
   runtimeConnected: boolean
+  /** Skills the person may call with a slash command. */
+  skills?: SkillOption[]
 }
 
 const MAX_HEIGHT = 220
@@ -43,6 +46,7 @@ export function Composer({
   onDelegate,
   delegateDisabled,
   runtimeConnected,
+  skills = [],
 }: Props) {
   const { t } = useTranslation()
   const textarea = useRef<HTMLTextAreaElement>(null)
@@ -56,6 +60,34 @@ export function Composer({
 
   const locked = !ready || running
   const canSend = ready && !running && value.trim() !== ''
+
+  // Slash commands: "/" at the start offers the person's skills.
+  const [caret, setCaret] = useState(0)
+  const [activeIndex, setActiveIndex] = useState(0)
+  // The text for which the menu was closed with Escape; typing again reopens it.
+  const [dismissedFor, setDismissedFor] = useState<string | null>(null)
+  const pendingCaret = useRef<number | null>(null)
+
+  const command = useMemo(() => matchSkillCommand(value, caret), [value, caret])
+  const options = useMemo(() => (command ? filterSkills(skills, command.query) : []), [command, skills])
+  const menuOpen = !locked && command !== null && options.length > 0 && dismissedFor !== value
+  const safeIndex = Math.min(activeIndex, Math.max(options.length - 1, 0))
+
+  useLayoutEffect(() => {
+    if (pendingCaret.current === null || !textarea.current) return
+    textarea.current.setSelectionRange(pendingCaret.current, pendingCaret.current)
+    pendingCaret.current = null
+  }, [value])
+
+  const chooseSkill = (skill: SkillOption) => {
+    if (!command) return
+    const next = insertSkillCommand(value, caret, command, skill.slug)
+    pendingCaret.current = next.caret
+    setCaret(next.caret)
+    setActiveIndex(0)
+    onChange(next.value)
+    textarea.current?.focus()
+  }
 
   return (
     <div className='shrink-0 bg-background px-4 pb-4 pt-2 sm:px-6'>
@@ -78,7 +110,37 @@ export function Composer({
           </ul>
         )}
 
-        <div className='rounded-lg border border-border bg-card transition-colors focus-within:border-ring'>
+        <div className='relative rounded-lg border border-border bg-card transition-colors focus-within:border-ring'>
+          {menuOpen && (
+            <ul
+              id='skill-command-list'
+              role='listbox'
+              aria-label={t('agentic.composer.skills')}
+              className='absolute inset-x-0 bottom-full z-20 mb-2 max-h-64 overflow-y-auto rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-lg'
+            >
+              {options.map((skill, index) => (
+                <li
+                  key={skill.slug}
+                  id={`skill-command-${skill.slug}`}
+                  role='option'
+                  aria-selected={index === safeIndex}
+                  onMouseDown={(event) => {
+                    // Keep the focus in the text box so the caret stays where it was.
+                    event.preventDefault()
+                    chooseSkill(skill)
+                  }}
+                  onMouseEnter={() => setActiveIndex(index)}
+                  className={`flex cursor-pointer items-baseline gap-3 rounded-md px-3 py-2 text-sm ${
+                    index === safeIndex ? 'bg-muted' : ''
+                  }`}
+                >
+                  <span className='shrink-0 font-medium'>/{skill.slug}</span>
+                  <span className='min-w-0 truncate text-muted-foreground'>{skill.description || skill.name}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+
           {!ready && (
             <p id='composer-hint' className='px-4 pt-3 text-sm text-muted-foreground'>
               {t('agentic.composer.needAgent')}
@@ -89,8 +151,34 @@ export function Composer({
             ref={textarea}
             rows={2}
             value={value}
-            onChange={(event) => onChange(event.target.value)}
+            onChange={(event) => {
+              setCaret(event.target.selectionStart)
+              setActiveIndex(0)
+              onChange(event.target.value)
+            }}
+            onSelect={(event) => setCaret(event.currentTarget.selectionStart)}
+            aria-autocomplete={skills.length > 0 ? 'list' : undefined}
+            aria-controls={menuOpen ? 'skill-command-list' : undefined}
+            aria-activedescendant={menuOpen ? `skill-command-${options[safeIndex].slug}` : undefined}
             onKeyDown={(event) => {
+              if (menuOpen && !event.nativeEvent.isComposing) {
+                if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+                  event.preventDefault()
+                  const step = event.key === 'ArrowDown' ? 1 : -1
+                  setActiveIndex((safeIndex + step + options.length) % options.length)
+                  return
+                }
+                if (event.key === 'Enter' || event.key === 'Tab') {
+                  event.preventDefault()
+                  chooseSkill(options[safeIndex])
+                  return
+                }
+                if (event.key === 'Escape') {
+                  event.preventDefault()
+                  setDismissedFor(value)
+                  return
+                }
+              }
               if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
                 event.preventDefault()
                 if (canSend) onSend()
