@@ -145,6 +145,12 @@ export function AIAssistant() {
   const [progress, setProgress] = useState(0)
 
   const [currentTaskId, setCurrentTaskId] = useState<string | null>(null)
+  // The conversation's task id as soon as it exists, so a request sent in the same tick that
+  // created the task can already name it (state would still be one render behind).
+  const activeTaskRef = useRef<string | null>(null)
+  useEffect(() => {
+    activeTaskRef.current = currentTaskId
+  }, [currentTaskId])
   const [delegateOpen, setDelegateOpen] = useState(false)
   // The person's skills that a slash command can call (enabled and valid ones only).
   const [skillOptions, setSkillOptions] = useState<SkillOption[]>([])
@@ -408,6 +414,7 @@ export function AIAssistant() {
     })
 
     const id = String(created.id)
+    activeTaskRef.current = id
     setCurrentTaskId(id)
     setTaskTitle(created.title)
     return id
@@ -603,6 +610,11 @@ export function AIAssistant() {
 
     if (selectedWorkspaceId) {
       formData.append('workspace_id', String(selectedWorkspaceId))
+    }
+
+    // A round-robin combo keeps one model for the whole conversation.
+    if (activeTaskRef.current && /^\d+$/.test(activeTaskRef.current)) {
+      formData.append('task_id', activeTaskRef.current)
     }
 
     files.forEach((file) => formData.append('images', file))
