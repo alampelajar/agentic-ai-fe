@@ -1203,6 +1203,91 @@
     }
   },
   "memoryMenu": "Memori",
+  "combosMenu": "Combo",
+  "comboPage": {
+    "title": "Combo",
+    "subtitle": "Gabungkan beberapa model menjadi satu. Pilih combo seperti model biasa, dan combo yang menentukan model mana yang menjawab.",
+    "loading": "Memuat combo...",
+    "privacy": "Combo mengirim pesan Anda ke penyedia dari model di dalamnya. Model milik Anda memakai key Anda sendiri; model sistem dihitung dalam kuota harian.",
+    "disabledNotice": "Combo sedang dinonaktifkan oleh administrator.",
+    "limitReached": "Anda sudah mencapai batas {{max}} combo. Hapus satu untuk membuat yang baru.",
+    "actions": {
+      "add": "Combo baru",
+      "edit": "Edit",
+      "delete": "Hapus",
+      "cancel": "Batal",
+      "save": "Simpan combo",
+      "saving": "Menyimpan...",
+      "retry": "Coba lagi"
+    },
+    "empty": {
+      "title": "Belum ada combo",
+      "description": "Combo menjaga chat tetap jalan saat satu model sibuk atau kehabisan kuota, atau membagi permintaan Anda ke beberapa model."
+    },
+    "error": {
+      "title": "Combo tidak dapat dimuat"
+    },
+    "strategy": {
+      "fallback": {
+        "name": "Fallback",
+        "description": "Mencoba model secara berurutan. Model berikutnya dipakai hanya jika model sebelumnya gagal."
+      },
+      "round_robin": {
+        "name": "Round-robin",
+        "description": "Bergantian antar model, sehingga tidak ada satu model yang cepat kena batas. Jika satu gagal, model berikutnya yang menjawab."
+      }
+    },
+    "card": {
+      "activeFor": "Aktifkan atau matikan {{name}}",
+      "usedBy": "Dipakai di: {{names}}",
+      "noAgents": "Belum dipakai di agent mana pun.",
+      "unavailable": "Tidak tersedia sekarang: {{names}}. Edit combo untuk menggantinya."
+    },
+    "form": {
+      "addTitle": "Combo baru",
+      "editTitle": "Edit combo",
+      "description": "Pilih model yang digabung, caranya, dan di mana combo ini dipakai.",
+      "name": "Nama",
+      "namePlaceholder": "Contoh: Coding dengan cadangan",
+      "descriptionLabel": "Catatan (opsional)",
+      "descriptionPlaceholder": "Kegunaan combo ini",
+      "strategy": "Cara model bekerja sama",
+      "models": "Model ({{count}} dari {{max}})",
+      "modelsHintFallback": "Urutan di bawah adalah urutan percobaannya.",
+      "modelsHintRoundRobin": "Bobot menentukan seberapa sering model mendapat giliran (bobot 3 berarti tiga giliran untuk setiap satu giliran model berbobot 1).",
+      "order": "Model terpilih, berurutan",
+      "weight": "Bobot",
+      "weightFor": "Bobot {{name}}",
+      "moveUp": "Naikkan {{name}}",
+      "moveDown": "Turunkan {{name}}",
+      "missing": "Sudah tidak tersedia dan akan dibuang saat disimpan: {{names}}.",
+      "noModels": "Anda belum punya model. Tambahkan model dulu.",
+      "systemModel": "sistem",
+      "ownModel": "milik Anda",
+      "agents": "Pakai di agent",
+      "agentsHint": "Combo muncul di daftar model agent yang dipilih.",
+      "errors": {
+        "nameRequired": "Beri nama combo.",
+        "nameTooLong": "Nama maksimal {{max}} karakter.",
+        "modelsRequired": "Pilih minimal satu model.",
+        "agentsRequired": "Pilih minimal satu agent.",
+        "tooManyModels": "Combo maksimal berisi {{max}} model."
+      }
+    },
+    "delete": {
+      "title": "Hapus combo ini?",
+      "description": "\"{{name}}\" akan dilepas dari semua agent. Model di dalamnya tidak ikut terhapus."
+    },
+    "toast": {
+      "created": "Combo dibuat.",
+      "updated": "Combo disimpan.",
+      "deleted": "Combo dihapus.",
+      "failed": "Gagal. Coba lagi."
+    },
+    "answer": {
+      "failedFirst": "{{names}} gagal lebih dulu"
+    }
+  },
   "memoryPage": {
     "title": "Memori",
     "subtitle": "Hal-hal yang harus diingat agent Anda lintas percakapan dan task. Tidak ada yang disimpan kecuali Anda menambahkannya di sini.",

@@ -31,7 +31,7 @@ describe('main navigation', () => {
 
   it('keeps the other menus: Workspaces, Agents, Skills, Memory and the settings pages', () => {
     const urls = entries.map((entry) => entry.url)
-    for (const url of ['/workspaces', '/skills', '/memory', '/tasks', '/settings/account', '/settings/appearance', '/settings/notifications', '/settings/display', '/profile', '/feedback']) {
+    for (const url of ['/workspaces', '/skills', '/memory', '/combos', '/tasks', '/settings/account', '/settings/appearance', '/settings/notifications', '/settings/display', '/profile', '/feedback']) {
       expect(urls, url).toContain(url)
     }
     expect(entries.some((entry) => entry.title === 'workspacesMenu')).toBe(true)
