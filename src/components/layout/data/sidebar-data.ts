@@ -17,6 +17,7 @@ import {
   Sparkles,
   BrainCircuit,
   FolderGit2,
+  Shuffle,
   MessageSquareText,
 } from "lucide-react";
 
@@ -88,6 +89,11 @@ export const sidebarData: SidebarData = {
           title: "memoryMenu",
           url: "/memory",
           icon: BrainCircuit,
+        },
+        {
+          title: "combosMenu",
+          url: "/combos",
+          icon: Shuffle,
         },
         {
           title: "workspacesMenu",

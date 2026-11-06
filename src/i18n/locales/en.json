@@ -1203,6 +1203,91 @@
     }
   },
   "memoryMenu": "Memory",
+  "combosMenu": "Combos",
+  "comboPage": {
+    "title": "Combos",
+    "subtitle": "Join several models into one. Pick the combo like any model, and it picks which model answers.",
+    "loading": "Loading combos...",
+    "privacy": "A combo sends your messages to the providers of the models in it. Your own models use your own keys; system models count against a daily allowance.",
+    "disabledNotice": "Combos are switched off by the administrator for now.",
+    "limitReached": "You have reached the limit of {{max}} combos. Delete one to make another.",
+    "actions": {
+      "add": "New combo",
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "save": "Save combo",
+      "saving": "Saving...",
+      "retry": "Try again"
+    },
+    "empty": {
+      "title": "No combos yet",
+      "description": "A combo keeps a chat going when one model is busy or out of quota, or spreads your requests over several models."
+    },
+    "error": {
+      "title": "Combos could not be loaded"
+    },
+    "strategy": {
+      "fallback": {
+        "name": "Fallback",
+        "description": "Tries the models in order. The next one is used only when the one before fails."
+      },
+      "round_robin": {
+        "name": "Round-robin",
+        "description": "Takes turns between the models, so no single model hits its limit. If one fails, the next one answers."
+      }
+    },
+    "card": {
+      "activeFor": "Switch {{name}} on or off",
+      "usedBy": "Used with: {{names}}",
+      "noAgents": "Not used with any agent yet.",
+      "unavailable": "Not available now: {{names}}. Edit the combo to replace them."
+    },
+    "form": {
+      "addTitle": "New combo",
+      "editTitle": "Edit combo",
+      "description": "Choose the models it joins, in what way, and where it can be used.",
+      "name": "Name",
+      "namePlaceholder": "For example: Coding with backup",
+      "descriptionLabel": "Note (optional)",
+      "descriptionPlaceholder": "What this combo is for",
+      "strategy": "How the models work together",
+      "models": "Models ({{count}} of {{max}})",
+      "modelsHintFallback": "The order below is the order they are tried in.",
+      "modelsHintRoundRobin": "The weight says how often a model takes its turn (3 means three turns for each turn of a model with weight 1).",
+      "order": "Chosen models, in order",
+      "weight": "Weight",
+      "weightFor": "Weight of {{name}}",
+      "moveUp": "Move {{name}} up",
+      "moveDown": "Move {{name}} down",
+      "missing": "No longer available and left out when you save: {{names}}.",
+      "noModels": "You have no models yet. Add a model first.",
+      "systemModel": "system",
+      "ownModel": "yours",
+      "agents": "Use with agents",
+      "agentsHint": "The combo appears in the model list of these agents.",
+      "errors": {
+        "nameRequired": "Give the combo a name.",
+        "nameTooLong": "The name can be at most {{max}} characters.",
+        "modelsRequired": "Choose at least one model.",
+        "agentsRequired": "Choose at least one agent.",
+        "tooManyModels": "A combo can hold at most {{max}} models."
+      }
+    },
+    "delete": {
+      "title": "Delete this combo?",
+      "description": "\"{{name}}\" will be removed from every agent. The models in it are not deleted."
+    },
+    "toast": {
+      "created": "Combo created.",
+      "updated": "Combo saved.",
+      "deleted": "Combo deleted.",
+      "failed": "That did not work. Try again."
+    },
+    "answer": {
+      "failedFirst": "{{names}} failed first"
+    }
+  },
   "memoryPage": {
     "title": "Memory",
     "subtitle": "Things your agents should remember across conversations and tasks. Nothing is saved unless you add it here.",

@@ -12,6 +12,7 @@ import { DelegateDialog } from '@/features/delegation/delegate-dialog'
 import type { ToolApproval } from '@/features/workspaces/data/api'
 import { parseCloudToolCall, runCloudToolCall, type ApprovalDecision as WorkspaceDecision } from '@/features/workspaces/tool-runner'
 import { WorkspaceApprovalDialog } from '@/features/workspaces/workspace-approval-dialog'
+import { describeComboAnswer } from '@/features/combos/combo-answer'
 import { getSkills } from '@/features/skills/data/api'
 import { useReadyWorkspaces } from '@/features/workspaces/use-ready-workspaces'
 import { WorkspaceSelector } from '@/features/workspaces/workspace-selector'
@@ -639,8 +640,10 @@ export function AIAssistant() {
 
       // UI memakai nama model yang dipilih user.
       // Backend/provider tetap menggunakan model_id API.
+      // Untuk combo: nama combo, model yang benar-benar menjawab, dan model yang gagal lebih dulu.
       model: String(
-        selectedModel?.name ||
+        describeComboAnswer(data, t) ||
+          selectedModel?.name ||
           data.model ||
           selectedModel?.model_id ||
           'unknown'
