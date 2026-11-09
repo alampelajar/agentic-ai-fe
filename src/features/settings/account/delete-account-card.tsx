@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { deleteCurrentUserAccount, verifyCurrentUserPasswordForDeletion } from '@/lib/api-auth'
+import { deleteCurrentUserAccount, requestAccountDeletionCode, verifyCurrentUserPasswordForDeletion } from '@/lib/api-auth'
 import { useAuthStore } from '@/stores/auth-store'
 
 export function DeleteAccountCard() {
@@ -19,9 +19,15 @@ export function DeleteAccountCard() {
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [password, setPassword] = useState('')
   const [verifiedPassword, setVerifiedPassword] = useState('')
+  // Google accounts have no password: they confirm with a code e-mailed to the account.
+  const [codeMode, setCodeMode] = useState(false)
+  const [sendingCode, setSendingCode] = useState(false)
+  const [code, setCode] = useState('')
+  const [verifiedCode, setVerifiedCode] = useState('')
   const [verifying, setVerifying] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [passwordError, setPasswordError] = useState('')
+  const [notice, setNotice] = useState('')
   const [deleteError, setDeleteError] = useState('')
   const [countdown, setCountdown] = useState(5)
 
@@ -43,6 +49,16 @@ export function DeleteAccountCard() {
         wait: (seconds: number) => `Tunggu ${seconds} detik...`,
         deleting: 'Menghapus akun...',
         fallbackError: 'Gagal menghapus akun. Silakan coba lagi.',
+        noPassword: 'Tidak punya kata sandi (masuk dengan Google)? Kirim kode ke email',
+        codeTitle: 'Verifikasi lewat email',
+        codeDescription: 'Kami mengirim kode 6 digit ke email akun Anda. Masukkan kode itu untuk melanjutkan. Akun belum dihapus pada tahap ini.',
+        codeLabel: 'Kode verifikasi',
+        codePlaceholder: '123456',
+        sendingCode: 'Mengirim kode...',
+        codeSent: 'Kode dikirim ke email akun Anda.',
+        usePassword: 'Gunakan kata sandi',
+        resendCode: 'Kirim ulang kode',
+        next: 'Lanjut',
       }
     : {
         sectionTitle: 'Danger zone',
@@ -61,6 +77,16 @@ export function DeleteAccountCard() {
         wait: (seconds: number) => `Wait ${seconds} seconds...`,
         deleting: 'Deleting account...',
         fallbackError: 'Could not delete your account. Please try again.',
+        noPassword: 'No password (signed in with Google)? E-mail me a code',
+        codeTitle: 'Verify by e-mail',
+        codeDescription: 'We sent a 6-digit code to your account e-mail. Enter it to continue. Your account has not been deleted yet.',
+        codeLabel: 'Verification code',
+        codePlaceholder: '123456',
+        sendingCode: 'Sending code...',
+        codeSent: 'A code was sent to your account e-mail.',
+        usePassword: 'Use my password',
+        resendCode: 'Resend code',
+        next: 'Continue',
       }
 
   useEffect(() => {
@@ -90,12 +116,39 @@ export function DeleteAccountCard() {
     }
   }
 
+  async function handleSendCode() {
+    if (sendingCode) return
+    setSendingCode(true)
+    setPasswordError('')
+    try {
+      await requestAccountDeletionCode()
+      setCodeMode(true)
+      setCode('')
+      setNotice(copy.codeSent)
+    } catch (error) {
+      setPasswordError(error instanceof Error ? error.message : copy.fallbackError)
+    } finally {
+      setSendingCode(false)
+    }
+  }
+
+  // The code is single-use, so the server checks it only when the account is deleted.
+  function handleContinueWithCode() {
+    if (!/^\d{6}$/.test(code)) return
+    setVerifiedCode(code)
+    setPasswordOpen(false)
+    setCountdown(5)
+    setDeleteError('')
+    setConfirmOpen(true)
+    setCode('')
+  }
+
   async function handleDeleteAccount() {
-    if (countdown > 0 || deleting || !verifiedPassword) return
+    if (countdown > 0 || deleting || (!verifiedPassword && !verifiedCode)) return
     setDeleting(true)
     setDeleteError('')
     try {
-      await deleteCurrentUserAccount(verifiedPassword)
+      await deleteCurrentUserAccount(verifiedCode ? { otp: verifiedCode } : { password: verifiedPassword })
       resetAuth()
       await navigate({ to: '/sign-in', replace: true })
     } catch (error) {
@@ -110,6 +163,9 @@ export function DeleteAccountCard() {
     if (!nextOpen) {
       setPassword('')
       setPasswordError('')
+      setCodeMode(false)
+      setCode('')
+      setNotice('')
     }
   }
 
@@ -118,6 +174,7 @@ export function DeleteAccountCard() {
     setConfirmOpen(nextOpen)
     if (!nextOpen) {
       setVerifiedPassword('')
+      setVerifiedCode('')
       setDeleteError('')
       setCountdown(5)
     }
@@ -133,7 +190,7 @@ export function DeleteAccountCard() {
           </h3>
           <p className='text-sm text-muted-foreground'>{copy.sectionDescription}</p>
         </div>
-        <Button type='button' variant='destructive' onClick={() => { setPassword(''); setPasswordError(''); setPasswordOpen(true) }}>
+        <Button type='button' variant='destructive' onClick={() => { setPassword(''); setPasswordError(''); setCodeMode(false); setCode(''); setNotice(''); setPasswordOpen(true) }}>
           <Trash2 className='me-2 size-4' />
           {copy.openButton}
         </Button>
@@ -142,27 +199,76 @@ export function DeleteAccountCard() {
       <AlertDialog open={passwordOpen} onOpenChange={handlePasswordOpenChange}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{copy.passwordTitle}</AlertDialogTitle>
-            <AlertDialogDescription>{copy.passwordDescription}</AlertDialogDescription>
+            <AlertDialogTitle>{codeMode ? copy.codeTitle : copy.passwordTitle}</AlertDialogTitle>
+            <AlertDialogDescription>{codeMode ? copy.codeDescription : copy.passwordDescription}</AlertDialogDescription>
           </AlertDialogHeader>
-          <form onSubmit={(event) => { event.preventDefault(); void handleVerifyPassword() }} className='space-y-3'>
-            <label htmlFor='delete-account-password' className='text-sm font-medium'>{copy.passwordLabel}</label>
-            <Input
-              id='delete-account-password'
-              type='password'
-              autoComplete='current-password'
-              value={password}
-              placeholder={copy.passwordPlaceholder}
-              onChange={(event) => setPassword(event.target.value)}
-              disabled={verifying}
-              required
-            />
+          <form
+            onSubmit={(event) => {
+              event.preventDefault()
+              if (codeMode) handleContinueWithCode()
+              else void handleVerifyPassword()
+            }}
+            className='space-y-3'
+          >
+            {codeMode ? (
+              <>
+                <label htmlFor='delete-account-code' className='text-sm font-medium'>{copy.codeLabel}</label>
+                <Input
+                  id='delete-account-code'
+                  inputMode='numeric'
+                  autoComplete='one-time-code'
+                  maxLength={6}
+                  value={code}
+                  placeholder={copy.codePlaceholder}
+                  onChange={(event) => setCode(event.target.value.replace(/\D/g, ''))}
+                  required
+                />
+                {notice && <p className='text-sm text-muted-foreground'>{notice}</p>}
+              </>
+            ) : (
+              <>
+                <label htmlFor='delete-account-password' className='text-sm font-medium'>{copy.passwordLabel}</label>
+                <Input
+                  id='delete-account-password'
+                  type='password'
+                  autoComplete='current-password'
+                  value={password}
+                  placeholder={copy.passwordPlaceholder}
+                  onChange={(event) => setPassword(event.target.value)}
+                  disabled={verifying}
+                  required
+                />
+              </>
+            )}
             {passwordError && <p role='alert' className='text-sm text-destructive'>{passwordError}</p>}
+            <div className='flex flex-wrap items-center gap-x-4 gap-y-1 text-sm'>
+              {codeMode ? (
+                <>
+                  <button type='button' className='text-muted-foreground underline-offset-4 hover:underline' disabled={sendingCode} onClick={() => void handleSendCode()}>
+                    {sendingCode ? copy.sendingCode : copy.resendCode}
+                  </button>
+                  <button type='button' className='text-muted-foreground underline-offset-4 hover:underline' onClick={() => { setCodeMode(false); setCode(''); setNotice(''); setPasswordError('') }}>
+                    {copy.usePassword}
+                  </button>
+                </>
+              ) : (
+                <button type='button' className='text-muted-foreground underline-offset-4 hover:underline' disabled={sendingCode} onClick={() => void handleSendCode()}>
+                  {sendingCode ? copy.sendingCode : copy.noPassword}
+                </button>
+              )}
+            </div>
             <AlertDialogFooter>
               <AlertDialogCancel type='button' disabled={verifying}>{copy.cancel}</AlertDialogCancel>
-              <Button type='submit' disabled={!password || verifying}>
-                {verifying ? <><LoaderCircle className='me-2 size-4 animate-spin' />{copy.verifying}</> : <><ShieldCheck className='me-2 size-4' />{copy.verify}</>}
-              </Button>
+              {codeMode ? (
+                <Button type='submit' disabled={!/^\d{6}$/.test(code)}>
+                  <ShieldCheck className='me-2 size-4' />
+                  {copy.next}
+                </Button>
+              ) : (
+                <Button type='submit' disabled={!password || verifying}>
+                  {verifying ? <><LoaderCircle className='me-2 size-4 animate-spin' />{copy.verifying}</> : <><ShieldCheck className='me-2 size-4' />{copy.verify}</>}
+                </Button>
+              )}
             </AlertDialogFooter>
           </form>
         </AlertDialogContent>
