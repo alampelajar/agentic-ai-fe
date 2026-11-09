@@ -18,6 +18,7 @@ import {
   FolderGit2,
   Shuffle,
   MessageSquareText,
+  PenTool,
 } from "lucide-react";
 
 import { type SidebarData } from "../types";
@@ -93,6 +94,11 @@ export const sidebarData: SidebarData = {
           title: "workspacesMenu",
           url: "/workspaces",
           icon: FolderGit2,
+        },
+        {
+          title: "designStudioMenu",
+          url: "/design-studio",
+          icon: PenTool,
         },
       ],
     },

@@ -35,6 +35,8 @@ import { Route as ClerkauthRouteRouteImport } from './routes/clerk/(auth)/route'
 import { Route as ClerkAuthenticatedRouteRouteImport } from './routes/clerk/_authenticated/route'
 import { Route as AuthenticatedAiIndexRouteImport } from './routes/_authenticated/ai/index'
 import { Route as AuthenticatedAppsIndexRouteImport } from './routes/_authenticated/apps/index'
+import { Route as AuthenticatedDesignStudioIndexRouteImport } from './routes/_authenticated/design-studio/index'
+import { Route as AuthenticatedDesignStudioProjectIdRouteImport } from './routes/_authenticated/design-studio/$projectId'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
@@ -185,6 +187,18 @@ const AuthenticatedAppsIndexRoute = AuthenticatedAppsIndexRouteImport.update({
   path: '/apps/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDesignStudioIndexRoute =
+  AuthenticatedDesignStudioIndexRouteImport.update({
+    id: '/design-studio/',
+    path: '/design-studio/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDesignStudioProjectIdRoute =
+  AuthenticatedDesignStudioProjectIdRouteImport.update({
+    id: '/design-studio/$projectId',
+    path: '/design-studio/$projectId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedErrorsErrorRoute =
   AuthenticatedErrorsErrorRouteImport.update({
     id: '/errors/$error',
@@ -324,6 +338,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthenticatedProfileRoute
   '/skills': typeof AuthenticatedSkillsRoute
   '/subscription-premium': typeof AuthenticatedSubscriptionPremiumRoute
+  '/design-studio/$projectId': typeof AuthenticatedDesignStudioProjectIdRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -337,6 +352,7 @@ export interface FileRoutesByFullPath {
   '/clerk/user-management': typeof ClerkAuthenticatedUserManagementRoute
   '/ai/': typeof AuthenticatedAiIndexRoute
   '/apps/': typeof AuthenticatedAppsIndexRoute
+  '/design-studio/': typeof AuthenticatedDesignStudioIndexRoute
   '/help-center/': typeof AuthenticatedHelpCenterIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/tasks/': typeof AuthenticatedTasksIndexRoute
@@ -368,6 +384,7 @@ export interface FileRoutesByTo {
   '/skills': typeof AuthenticatedSkillsRoute
   '/subscription-premium': typeof AuthenticatedSubscriptionPremiumRoute
   '/': typeof AuthenticatedIndexRoute
+  '/design-studio/$projectId': typeof AuthenticatedDesignStudioProjectIdRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -381,6 +398,7 @@ export interface FileRoutesByTo {
   '/clerk/user-management': typeof ClerkAuthenticatedUserManagementRoute
   '/ai': typeof AuthenticatedAiIndexRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
+  '/design-studio': typeof AuthenticatedDesignStudioIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
@@ -417,6 +435,7 @@ export interface FileRoutesById {
   '/_authenticated/skills': typeof AuthenticatedSkillsRoute
   '/_authenticated/subscription-premium': typeof AuthenticatedSubscriptionPremiumRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/design-studio/$projectId': typeof AuthenticatedDesignStudioProjectIdRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -430,6 +449,7 @@ export interface FileRoutesById {
   '/clerk/_authenticated/user-management': typeof ClerkAuthenticatedUserManagementRoute
   '/_authenticated/ai/': typeof AuthenticatedAiIndexRoute
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
+  '/_authenticated/design-studio/': typeof AuthenticatedDesignStudioIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
@@ -464,6 +484,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/skills'
     | '/subscription-premium'
+    | '/design-studio/$projectId'
     | '/errors/$error'
     | '/settings/account'
     | '/settings/appearance'
@@ -477,6 +498,7 @@ export interface FileRouteTypes {
     | '/clerk/user-management'
     | '/ai/'
     | '/apps/'
+    | '/design-studio/'
     | '/help-center/'
     | '/settings/'
     | '/tasks/'
@@ -508,6 +530,7 @@ export interface FileRouteTypes {
     | '/skills'
     | '/subscription-premium'
     | '/'
+    | '/design-studio/$projectId'
     | '/errors/$error'
     | '/settings/account'
     | '/settings/appearance'
@@ -521,6 +544,7 @@ export interface FileRouteTypes {
     | '/clerk/user-management'
     | '/ai'
     | '/apps'
+    | '/design-studio'
     | '/help-center'
     | '/settings'
     | '/tasks'
@@ -556,6 +580,7 @@ export interface FileRouteTypes {
     | '/_authenticated/skills'
     | '/_authenticated/subscription-premium'
     | '/_authenticated/'
+    | '/_authenticated/design-studio/$projectId'
     | '/_authenticated/errors/$error'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
@@ -569,6 +594,7 @@ export interface FileRouteTypes {
     | '/clerk/_authenticated/user-management'
     | '/_authenticated/ai/'
     | '/_authenticated/apps/'
+    | '/_authenticated/design-studio/'
     | '/_authenticated/help-center/'
     | '/_authenticated/settings/'
     | '/_authenticated/tasks/'
@@ -779,6 +805,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/design-studio/': {
+      id: '/_authenticated/design-studio/'
+      path: '/design-studio'
+      fullPath: '/design-studio/'
+      preLoaderRoute: typeof AuthenticatedDesignStudioIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/design-studio/$projectId': {
+      id: '/_authenticated/design-studio/$projectId'
+      path: '/design-studio/$projectId'
+      fullPath: '/design-studio/$projectId'
+      preLoaderRoute: typeof AuthenticatedDesignStudioProjectIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/errors/$error': {
       id: '/_authenticated/errors/$error'
       path: '/errors/$error'
@@ -961,10 +1001,12 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSkillsRoute: typeof AuthenticatedSkillsRoute
   AuthenticatedSubscriptionPremiumRoute: typeof AuthenticatedSubscriptionPremiumRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedDesignStudioProjectIdRoute: typeof AuthenticatedDesignStudioProjectIdRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedWorkspacesWorkspaceIdRoute: typeof AuthenticatedWorkspacesWorkspaceIdRoute
   AuthenticatedAiIndexRoute: typeof AuthenticatedAiIndexRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
+  AuthenticatedDesignStudioIndexRoute: typeof AuthenticatedDesignStudioIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
@@ -986,11 +1028,14 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSkillsRoute: AuthenticatedSkillsRoute,
   AuthenticatedSubscriptionPremiumRoute: AuthenticatedSubscriptionPremiumRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedDesignStudioProjectIdRoute:
+    AuthenticatedDesignStudioProjectIdRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedWorkspacesWorkspaceIdRoute:
     AuthenticatedWorkspacesWorkspaceIdRoute,
   AuthenticatedAiIndexRoute: AuthenticatedAiIndexRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
+  AuthenticatedDesignStudioIndexRoute: AuthenticatedDesignStudioIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
