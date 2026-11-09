@@ -4,10 +4,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, UserPlus } from "lucide-react";
 import { toast } from "sonner";
+import { useNavigate } from "@tanstack/react-router";
 
 import { useTranslation } from "react-i18next";
 import { requestRegisterOtp, resendRegisterOtp, verifyRegisterOtp } from "@/lib/api-email-otp";
 import { EmailOtpStep } from "@/features/auth/email-otp/email-otp-step";
+import { setSignInPrefill } from "@/features/auth/sign-in/prefill";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -50,6 +52,7 @@ export function SignUpForm({
   ...props
 }: React.HTMLAttributes<HTMLFormElement>) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   // After the form is accepted a code is e-mailed; the account exists only once it is entered.
   const [pendingEmail, setPendingEmail] = useState<string | null>(null);
@@ -93,11 +96,13 @@ export function SignUpForm({
     await verifyRegisterOtp(pendingEmail, code);
 
     toast.success("Account created successfully!", {
-      description: `Account created for ${pendingEmail}.`,
+      description: `Account created for ${pendingEmail}. Please sign in.`,
     });
 
+    // Hand the details to the sign-in page (in memory only) so it opens already filled in.
+    setSignInPrefill({ email: pendingEmail, password: form.getValues("password") });
     form.reset();
-    window.location.href = "/sign-in";
+    await navigate({ to: "/sign-in", replace: true });
   }
 
   if (pendingEmail) {
