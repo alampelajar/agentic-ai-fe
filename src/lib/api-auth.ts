@@ -100,10 +100,22 @@ export async function verifyCurrentUserPasswordForDeletion(password: string): Pr
   }
 }
 
-export async function deleteCurrentUserAccount(password: string): Promise<void> {
+/** Accounts that signed in with Google have no known password: they confirm with a code e-mailed to them. */
+export async function requestAccountDeletionCode(): Promise<void> {
+  const response = await apiFetch('/api/me/delete/request', { method: 'POST', body: JSON.stringify({}) })
+  const result: { ok?: boolean; message?: string } = await response.json().catch(() => ({}))
+
+  if (!response.ok || !result.ok) {
+    throw new Error(result.message || 'Gagal mengirim kode verifikasi.')
+  }
+}
+
+export type AccountDeletionProof = { password: string; otp?: undefined } | { otp: string; password?: undefined }
+
+export async function deleteCurrentUserAccount(proof: AccountDeletionProof): Promise<void> {
   const response = await apiFetch('/api/me', {
     method: 'DELETE',
-    body: JSON.stringify({ password }),
+    body: JSON.stringify(proof),
   })
   const result: { ok?: boolean; message?: string } = await response.json().catch(() => ({}))
 
