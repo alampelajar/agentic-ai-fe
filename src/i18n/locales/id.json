@@ -613,6 +613,8 @@
     "selectAgent": "Pilih Agent yang ingin digunakan."
   },
   "common": {
+    "showPassword": "Tampilkan password",
+    "hidePassword": "Sembunyikan password",
     "save": "Simpan",
     "cancel": "Batal",
     "delete": "Hapus",

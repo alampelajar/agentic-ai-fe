@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/password-input'
 import { deleteCurrentUserAccount, verifyCurrentUserPasswordForDeletion } from '@/lib/api-auth'
 import { useAuthStore } from '@/stores/auth-store'
 
@@ -147,9 +147,8 @@ export function DeleteAccountCard() {
           </AlertDialogHeader>
           <form onSubmit={(event) => { event.preventDefault(); void handleVerifyPassword() }} className='space-y-3'>
             <label htmlFor='delete-account-password' className='text-sm font-medium'>{copy.passwordLabel}</label>
-            <Input
+            <PasswordInput
               id='delete-account-password'
-              type='password'
               autoComplete='current-password'
               value={password}
               placeholder={copy.passwordPlaceholder}

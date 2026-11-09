@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
 import {
@@ -9,9 +9,14 @@ import {
   FormItem,
   FormLabel,
 } from '@/components/ui/form'
+import i18n from '@/i18n'
 import { PasswordInput } from './password-input'
 
 describe('PasswordInput', () => {
+  beforeEach(async () => {
+    await i18n.changeLanguage('en')
+  })
+
   it('renders the password input correctly', async () => {
     const { getByPlaceholder, getByRole } = await render(
       <PasswordInput placeholder='password' />

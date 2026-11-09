@@ -6,6 +6,7 @@ import { useNavigate } from '@tanstack/react-router'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/password-input'
 import { EmailOtpStep } from '@/features/auth/email-otp/email-otp-step'
 import { requestChangeEmailOtp, resendChangeEmailOtp, verifyChangeEmailOtp } from '@/lib/api-email-otp'
 import { useAuthStore } from '@/stores/auth-store'
@@ -59,7 +60,7 @@ export function ChangeEmailCard() {
           </div>
           <div className='space-y-2'>
             <label htmlFor='change-email-password' className='text-sm font-medium'>{t('changeEmail.password')}</label>
-            <Input id='change-email-password' type='password' autoComplete='current-password' required value={password} onChange={(event) => setPassword(event.target.value)} disabled={sending} />
+            <PasswordInput id='change-email-password' autoComplete='current-password' required value={password} onChange={(event) => setPassword(event.target.value)} disabled={sending} />
           </div>
           <Button type='submit' disabled={sending || !newEmail.trim() || !password}>
             {sending && <LoaderCircle className='size-4 animate-spin' />}
