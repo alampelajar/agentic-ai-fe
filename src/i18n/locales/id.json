@@ -1922,5 +1922,21 @@
       "line": "Garis",
       "text": "Teks"
     }
+  },
+  "githubIntegration": {
+    "title": "GitHub",
+    "description": "Hubungkan akun GitHub Anda agar workspace bisa mengimpor repository privat dan, nanti, mengirim perubahan kembali sebagai branch dan pull request.",
+    "consent": "GitHub akan meminta Anda menyetujui akses ke repository. Perubahan tidak pernah dikirim ke branch utama: perubahan masuk ke branch baru dengan pull request yang Anda tinjau.",
+    "connect": "Hubungkan GitHub",
+    "connectedBadge": "Terhubung",
+    "signedInAs": "Terhubung sebagai",
+    "disconnect": "Putuskan",
+    "loading": "Memeriksa koneksi...",
+    "notConfigured": "GitHub belum disiapkan di server ini. Minta administrator menambahkan pengaturan GitHub OAuth App.",
+    "statusFailed": "Status GitHub tidak dapat dibaca. Coba lagi nanti.",
+    "connected": "GitHub terhubung.",
+    "disconnected": "GitHub diputuskan.",
+    "denied": "Akses GitHub tidak disetujui.",
+    "error": "GitHub tidak dapat dihubungkan. Silakan coba lagi."
   }
 }

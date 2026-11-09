@@ -1922,5 +1922,21 @@
       "line": "Line",
       "text": "Text"
     }
+  },
+  "githubIntegration": {
+    "title": "GitHub",
+    "description": "Connect your GitHub account so workspaces can import your private repositories and, later, send changes back as a branch and pull request.",
+    "consent": "GitHub will ask you to approve access to your repositories. Changes are never pushed to your main branch: they go to a new branch with a pull request you review.",
+    "connect": "Connect GitHub",
+    "connectedBadge": "Connected",
+    "signedInAs": "Connected as",
+    "disconnect": "Disconnect",
+    "loading": "Checking the connection...",
+    "notConfigured": "GitHub is not set up on this server yet. Ask the administrator to add the GitHub OAuth App settings.",
+    "statusFailed": "Could not read the GitHub status. Try again later.",
+    "connected": "GitHub connected.",
+    "disconnected": "GitHub disconnected.",
+    "denied": "GitHub access was not approved.",
+    "error": "Could not connect GitHub. Please try again."
   }
 }
