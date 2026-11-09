@@ -1,7 +1,14 @@
 import * as React from "react";
+import { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "@tanstack/react-router";
+import { Plus } from "lucide-react";
 import {
+  SidebarGroup,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -13,7 +20,28 @@ import { Logo } from "@/assets/logo";
 
 import { NavGroup } from "./nav-group";
 import { NavUser } from "./nav-user";
+import { NavChats } from "./nav-chats";
 import { sidebarData } from "./data/sidebar-data";
+
+function NewChatButton() {
+  const { t } = useTranslation();
+  const { setOpenMobile } = useSidebar();
+
+  return (
+    <SidebarGroup className="pb-0">
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild tooltip={t("chatHistory.new")}>
+            <Link to="/ai" search={{}} onClick={() => setOpenMobile(false)}>
+              <Plus />
+              <span>{t("chatHistory.new")}</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    </SidebarGroup>
+  );
+}
 
 export function AppSidebar({
   ...props
@@ -53,13 +81,17 @@ export function AppSidebar({
       ===================================================== */}
 
       <SidebarContent>
-        {sidebarData.navGroups.map((group) => (
-          <NavGroup
-            key={group.title}
-            title={group.title}
-            items={group.items}
-          />
-        ))}
+        {/* Tombol New + menu AI Workspace di atas, lalu riwayat chat, lalu Settings.
+            Grup "CHAT" tetap ada di data untuk palet perintah, tapi tidak dirender di sini. */}
+        <NewChatButton />
+        {sidebarData.navGroups
+          .filter((group) => group.title !== "CHAT")
+          .map((group) => (
+            <Fragment key={group.title}>
+              <NavGroup title={group.title} items={group.items} />
+              {group.title === "AI Workspace" && <NavChats />}
+            </Fragment>
+          ))}
       </SidebarContent>
 
       {/* =====================================================
