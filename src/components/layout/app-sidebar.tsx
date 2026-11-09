@@ -58,7 +58,7 @@ export function AppSidebar({
         <Link
           to="/ai"
           aria-label="Buka halaman AI"
-          className="group flex h-14 items-center gap-2 rounded-md px-3 transition-colors duration-200 hover:bg-sidebar-accent active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
+          className="group flex h-14 items-center gap-2 rounded-md px-3 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
         >
           <span className="flex shrink-0 transition-transform duration-200 group-hover:scale-110 group-active:scale-95">
             <Logo className="size-7" />
