@@ -1497,7 +1497,8 @@
       "zipFile": "File ZIP",
       "zipHint": "Maksimal {{max}} MB. File rahasia seperti .env tidak ikut diimpor.",
       "githubUrl": "URL repository",
-      "githubHint": "Hanya repository publik di github.com. Jangan menempelkan token di sini.",
+      "githubHint": "Repository publik di github.com, atau repository privat setelah Anda menghubungkan GitHub di Settings > Integrasi. Jangan menempelkan token di sini.",
+      "privateRepo": "privat",
       "submit": "Buat workspace",
       "creating": "Membuat...",
       "errors": {

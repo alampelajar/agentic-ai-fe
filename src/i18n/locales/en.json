@@ -1497,7 +1497,8 @@
       "zipFile": "ZIP file",
       "zipHint": "Up to {{max}} MB. Secret files such as .env are left out.",
       "githubUrl": "Repository URL",
-      "githubHint": "Public repositories on github.com only. Never paste a token here.",
+      "githubHint": "Public repositories on github.com, or private ones once you have connected GitHub in Settings > Integrations. Never paste a token here.",
+      "privateRepo": "private",
       "submit": "Create workspace",
       "creating": "Creating...",
       "errors": {

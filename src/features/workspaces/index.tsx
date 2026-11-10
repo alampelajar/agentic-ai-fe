@@ -115,7 +115,7 @@ export function WorkspacesPage() {
                     <dt>{t('workspacePage.card.files')}</dt>
                     <dd>{t('workspacePage.card.fileCount', { count: workspace.file_count })} · {formatBytes(workspace.size_bytes)}</dd>
                     <dt>{t('workspacePage.card.source')}</dt>
-                    <dd>{t(`workspacePage.create.sources.${workspace.source_type}`)}{workspace.source_url && ` · ${workspace.source_url.replace('https://github.com/', '')}`}</dd>
+                    <dd>{t(`workspacePage.create.sources.${workspace.source_type}`)}{workspace.source_url && ` · ${workspace.source_url.replace('https://github.com/', '')}`}{workspace.base_branch && ` @ ${workspace.base_branch}`}{workspace.source_private && ` · ${t('workspacePage.create.privateRepo')}`}</dd>
                     <dt>{t('workspacePage.card.lastAccessed')}</dt>
                     <dd>{date(workspace.last_accessed_at)}</dd>
                   </dl>

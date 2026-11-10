@@ -10,6 +10,12 @@ export type Workspace = {
   description: string
   source_type: WorkspaceSource
   source_url: string
+  // Set for a workspace imported from GitHub: where it came from and the commit it was taken at.
+  github_owner?: string
+  github_repo?: string
+  base_branch?: string
+  base_sha?: string
+  source_private?: boolean
   status: WorkspaceStatus
   default_runtime: WorkspaceRuntime
   file_count: number
