@@ -1602,7 +1602,16 @@
       "description": "{{agent}} ingin mengubah atau menjalankan sesuatu di \"{{workspace}}\". Tidak ada yang terjadi sampai Anda mengizinkannya.",
       "file": "File",
       "allow": "Izinkan sekali",
-      "deny": "Tolak"
+      "deny": "Tolak",
+      "repository": "Repository",
+      "newBranch": "Branch baru",
+      "pullRequest": "Pull request",
+      "pullRequestInto": "Ya, ke {{branch}}",
+      "noPullRequest": "Tidak, hanya branch",
+      "commitMessage": "Pesan commit",
+      "filesToSend": "{{count}} file akan dikirim",
+      "moreFiles": "dan {{count}} lainnya",
+      "publishPinned": "Persis perubahan ini yang dikirim. Kalau file berubah sebelum Anda mengizinkan, tidak ada yang dikirim."
     },
     "chat": {
       "label": "Workspace cloud",

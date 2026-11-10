@@ -1602,7 +1602,16 @@
       "description": "{{agent}} wants to change or run something in \"{{workspace}}\". Nothing happens until you allow it.",
       "file": "File",
       "allow": "Allow once",
-      "deny": "Deny"
+      "deny": "Deny",
+      "repository": "Repository",
+      "newBranch": "New branch",
+      "pullRequest": "Pull request",
+      "pullRequestInto": "Yes, into {{branch}}",
+      "noPullRequest": "No, only the branch",
+      "commitMessage": "Commit message",
+      "filesToSend": "{{count}} file(s) will be sent",
+      "moreFiles": "and {{count}} more",
+      "publishPinned": "Exactly these changes are sent. If the files change before you allow it, nothing is sent."
     },
     "chat": {
       "label": "Cloud workspace",
