@@ -123,6 +123,25 @@ export async function getChanges(id: number): Promise<FileChange[]> {
   return (await parse<{ changes: FileChange[] }>(await apiFetch(`/api/workspaces/${id}/changes`))).changes || []
 }
 
+export type PublishInput = { branch: string; message: string; create_pr: boolean; pr_title: string; pr_body: string }
+export type PublishOutcome = {
+  repository: string
+  file_count: number
+  result: {
+    branch: string
+    commit_sha: string
+    commit_url: string
+    pull_request_url: string
+    pull_request_error?: string
+    base_moved: boolean
+  }
+}
+
+/** Sends the changes since the import to GitHub: a new branch with one commit, and by default a pull request. */
+export async function publishToGitHub(id: number, input: PublishInput): Promise<PublishOutcome> {
+  return parse(await apiFetch(`/api/workspaces/${id}/github/publish`, { method: 'POST', body: JSON.stringify(input) }))
+}
+
 export async function exportWorkspace(id: number): Promise<Blob> {
   const response = await apiFetch(`/api/workspaces/${id}/export`, { method: 'POST' })
   if (!response.ok) {
