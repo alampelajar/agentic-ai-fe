@@ -18,6 +18,7 @@ const CLOUD_TOOLS = new Set([
   'workspace.build',
   'workspace.install_dependencies',
   'workspace.get_execution',
+  'workspace.publish',
 ])
 
 /** The Local Agent Runner actions a model may still emit. With a cloud workspace selected they run in the cloud. */

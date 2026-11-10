@@ -7,6 +7,7 @@ import { ApprovalCountdown } from '@/features/desktop-runtime/approval-countdown
 import { isExpired } from '@/features/desktop-runtime/approval-details'
 import type { ToolApproval } from './data/api'
 import type { ApprovalDecision } from './tool-runner'
+import { PublishApprovalDetails } from './publish-approval-details'
 
 type Props = {
   approval: ToolApproval
@@ -41,6 +42,7 @@ export function WorkspaceApprovalDialog({ approval, agentName, onDecision }: Pro
         </DialogHeader>
         <div className='space-y-3 text-sm'>
           <p className='font-medium'>{approval.summary}</p>
+          {approval.tool === 'workspace.publish' && <PublishApprovalDetails args={approval.arguments} />}
           {typeof approval.arguments.path === 'string' && <p className='text-muted-foreground'>{t('workspacePage.approval.file')}: <code>{approval.arguments.path}</code></p>}
           {preview !== null && <pre className='max-h-48 overflow-auto rounded-md border bg-muted/40 p-2 text-xs whitespace-pre-wrap'>{preview}</pre>}
           <ApprovalCountdown expiresAt={approval.expires_at} lang={i18n.language === 'id' ? 'id' : 'en'} onExpire={() => decide('expired')} />
