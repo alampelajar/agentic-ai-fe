@@ -1497,7 +1497,8 @@
       "zipFile": "ZIP file",
       "zipHint": "Up to {{max}} MB. Secret files such as .env are left out.",
       "githubUrl": "Repository URL",
-      "githubHint": "Public repositories on github.com only. Never paste a token here.",
+      "githubHint": "Public repositories on github.com, or private ones once you have connected GitHub in Settings > Integrations. Never paste a token here.",
+      "privateRepo": "private",
       "submit": "Create workspace",
       "creating": "Creating...",
       "errors": {
@@ -1938,5 +1939,38 @@
     "disconnected": "GitHub disconnected.",
     "denied": "GitHub access was not approved.",
     "error": "Could not connect GitHub. Please try again."
+  },
+  "githubPublish": {
+    "button": "Send to GitHub",
+    "title": "Send changes to GitHub",
+    "description": "Your changes become one commit on a new branch of {{repository}}, with a pull request into {{branch}}. Nothing on GitHub is overwritten.",
+    "changes": "Changed files",
+    "loading": "Reading the changes...",
+    "loadFailed": "Could not read the changes.",
+    "noChanges": "There are no changes since the import.",
+    "status": {
+      "added": "added",
+      "modified": "changed",
+      "deleted": "deleted"
+    },
+    "message": "Commit message",
+    "messagePlaceholder": "Describe what changed",
+    "branch": "New branch",
+    "branchPlaceholder": "Leave empty to name it automatically",
+    "branchHint": "Always a new branch. It cannot be {{branch}} or a branch that already exists.",
+    "createPR": "Open a pull request",
+    "prTitle": "Pull request title",
+    "prTitlePlaceholder": "Defaults to the commit message",
+    "prBody": "Pull request description (optional)",
+    "send": "Send",
+    "sending": "Sending...",
+    "cancel": "Cancel",
+    "close": "Close",
+    "sent": "Changes sent to GitHub.",
+    "failed": "Could not send the changes.",
+    "doneBranch": "{{count}} file(s) sent to the new branch {{branch}}.",
+    "baseMoved": "{{branch}} has new commits on GitHub since the import. Nothing was overwritten; check the pull request for conflicts.",
+    "openPR": "Open the pull request",
+    "openCommit": "View the commit"
   }
 }

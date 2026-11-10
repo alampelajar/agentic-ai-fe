@@ -1497,7 +1497,8 @@
       "zipFile": "File ZIP",
       "zipHint": "Maksimal {{max}} MB. File rahasia seperti .env tidak ikut diimpor.",
       "githubUrl": "URL repository",
-      "githubHint": "Hanya repository publik di github.com. Jangan menempelkan token di sini.",
+      "githubHint": "Repository publik di github.com, atau repository privat setelah Anda menghubungkan GitHub di Settings > Integrasi. Jangan menempelkan token di sini.",
+      "privateRepo": "privat",
       "submit": "Buat workspace",
       "creating": "Membuat...",
       "errors": {
@@ -1938,5 +1939,38 @@
     "disconnected": "GitHub diputuskan.",
     "denied": "Akses GitHub tidak disetujui.",
     "error": "GitHub tidak dapat dihubungkan. Silakan coba lagi."
+  },
+  "githubPublish": {
+    "button": "Kirim ke GitHub",
+    "title": "Kirim perubahan ke GitHub",
+    "description": "Perubahan Anda menjadi satu commit di branch baru {{repository}}, dengan pull request ke {{branch}}. Tidak ada yang ditimpa di GitHub.",
+    "changes": "File yang berubah",
+    "loading": "Membaca perubahan...",
+    "loadFailed": "Perubahan tidak dapat dibaca.",
+    "noChanges": "Tidak ada perubahan sejak impor.",
+    "status": {
+      "added": "baru",
+      "modified": "diubah",
+      "deleted": "dihapus"
+    },
+    "message": "Pesan commit",
+    "messagePlaceholder": "Jelaskan apa yang berubah",
+    "branch": "Branch baru",
+    "branchPlaceholder": "Kosongkan agar dinamai otomatis",
+    "branchHint": "Selalu branch baru. Tidak boleh {{branch}} atau branch yang sudah ada.",
+    "createPR": "Buka pull request",
+    "prTitle": "Judul pull request",
+    "prTitlePlaceholder": "Bawaan: pesan commit",
+    "prBody": "Deskripsi pull request (opsional)",
+    "send": "Kirim",
+    "sending": "Mengirim...",
+    "cancel": "Batal",
+    "close": "Tutup",
+    "sent": "Perubahan terkirim ke GitHub.",
+    "failed": "Perubahan tidak dapat dikirim.",
+    "doneBranch": "{{count}} file terkirim ke branch baru {{branch}}.",
+    "baseMoved": "{{branch}} punya commit baru di GitHub sejak impor. Tidak ada yang ditimpa; periksa pull request untuk konflik.",
+    "openPR": "Buka pull request",
+    "openCommit": "Lihat commit"
   }
 }

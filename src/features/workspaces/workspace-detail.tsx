@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { GitHubPublishButton } from './github-publish-dialog'
 import { exportWorkspace, getChanges, getTree, getWorkspace, readFile, writeFile, type FileChange, type TreeEntry, type Workspace } from './data/api'
 import { ExecutionConsole } from './execution-console'
 import { formatBytes } from './format'
@@ -202,10 +203,13 @@ export function WorkspaceDetailPage({ workspaceId }: { workspaceId: number }) {
           <p className='text-xs text-muted-foreground'>{t('workspacePage.card.fileCount', { count: workspace.file_count })} · {formatBytes(workspace.size_bytes)}{workspace.default_runtime && ` · ${workspace.default_runtime}`}</p>
         </div>
         <Badge variant={workspace.status === 'ready' ? 'default' : 'secondary'}>{t(`workspacePage.status.${workspace.status}`)}</Badge>
-        <Button className='ml-auto' variant='outline' size='sm' disabled={exporting} onClick={() => void download()}>
+        <div className='ml-auto flex flex-wrap gap-2'>
+          {workspace.github_owner && workspace.base_sha && <GitHubPublishButton workspace={workspace} />}
+        <Button variant='outline' size='sm' disabled={exporting} onClick={() => void download()}>
           {exporting ? <Loader2 className='mr-2 size-4 animate-spin' /> : <Download className='mr-2 size-4' />}
           {t('workspacePage.explorer.download')}
         </Button>
+        </div>
       </div>
 
       <Tabs value={tab} onValueChange={(value) => { setTab(value); if (value === 'changes') void loadChanges() }}>
