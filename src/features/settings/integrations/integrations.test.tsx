@@ -6,6 +6,8 @@ import { useDesktopRuntime } from '@/stores/desktop-runtime-store'
 import { IntegrationsPage } from './index'
 
 vi.mock('sonner', () => ({ toast: { error: vi.fn(), success: vi.fn() } }))
+// The GitHub card has its own tests; here it would add a request of its own to the runner stub.
+vi.mock('./github-card', () => ({ GitHubCard: () => null }))
 
 type Reply = { status: number; body?: unknown } | 'network-error'
 
