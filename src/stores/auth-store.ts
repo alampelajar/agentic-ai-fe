@@ -36,14 +36,9 @@ export const useAuthStore = create<AuthState>()((set) => {
 
   if (cookieUser) {
     try {
+      // Kept even when exp has passed: exp only says the access token may be stale. The
+      // route guard renews it with the refresh-token cookie, and signs out only if that fails.
       initUser = JSON.parse(cookieUser) as AuthUser;
-
-      // Jika session sudah expired, jangan restore user
-      if (initUser.exp && initUser.exp <= Date.now()) {
-        initUser = null;
-        removeCookie(AUTH_USER);
-        removeCookie(ACCESS_TOKEN);
-      }
     } catch {
       initUser = null;
       removeCookie(AUTH_USER);

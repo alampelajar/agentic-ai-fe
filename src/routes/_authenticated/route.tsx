@@ -1,15 +1,12 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { AuthenticatedLayout } from "@/components/layout/authenticated-layout";
-import { useAuthStore } from "@/stores/auth-store";
+import { ensureSession } from "@/lib/session";
 
 export const Route = createFileRoute("/_authenticated")({
-  beforeLoad: ({ location }) => {
-    const { auth } = useAuthStore.getState();
-
-    const isAuthenticated =
-      !!auth.accessToken && !!auth.user && auth.user.exp > Date.now();
-
-    if (!isAuthenticated) {
+  // An old access token is renewed with the refresh token first; only a failed renewal signs
+  // the person out (before, everyone was sent to sign in again every 15 minutes).
+  beforeLoad: async ({ location }) => {
+    if (!(await ensureSession())) {
       throw redirect({
         to: "/sign-in",
         search: {
