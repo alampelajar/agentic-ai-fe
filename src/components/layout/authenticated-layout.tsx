@@ -302,7 +302,8 @@ export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
                       className="h-9 gap-2 px-3"
                     >
                       <LanguageFlag language={isIndonesian ? "id" : "en"} />
-                      <span className="hidden text-sm sm:inline">
+                      {/* Only the flag below lg: with the sidebar open, a tablet-width header has no room for the name. */}
+                      <span className="hidden text-sm lg:inline">
                         {t("languageMenu.currentName")}
                       </span>
                       <ChevronDown className="size-4 text-muted-foreground" />

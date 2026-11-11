@@ -103,6 +103,7 @@ export function NavChats() {
         return next
       })
       void refresh()
+      toast.success(t('chatHistory.deleted'))
       if (onChat && activeId === String(id)) void navigate({ to: '/ai' })
     },
     onError: (error) => toast.error(error instanceof Error ? error.message : t('chatHistory.failed')),

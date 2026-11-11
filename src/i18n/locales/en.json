@@ -699,7 +699,8 @@
     "cancel": "Cancel",
     "failed": "Something went wrong. Please try again.",
     "showMore": "View other chats",
-    "showLess": "Show fewer"
+    "showLess": "Show fewer",
+    "deleted": "Chat deleted."
   },
   "sidebar": {
     "smartAgentic": "SMART AGENTIC",
@@ -1621,7 +1622,9 @@
       "treeFailed": "The file list could not be loaded.",
       "readFailed": "The file could not be read.",
       "saveFailed": "The file could not be saved.",
-      "exportFailed": "The ZIP could not be created."
+      "exportFailed": "The ZIP could not be created.",
+      "discardTitle": "Discard changes?",
+      "discard": "Discard"
     },
     "console": {
       "command": "Command",
@@ -2097,7 +2100,8 @@
       "ellipse": "Ellipse",
       "line": "Line",
       "text": "Text"
-    }
+    },
+    "deleted": "Design deleted."
   },
   "githubIntegration": {
     "title": "GitHub",
@@ -2216,6 +2220,11 @@
       "invalid": "The skill is not valid.",
       "deleted": "Skill deleted.",
       "created": "Skill created."
+    },
+    "status": {
+      "installed": "Installed",
+      "enabled": "Enabled",
+      "disabled": "Disabled"
     }
   },
   "subscriptionPage": {

@@ -699,7 +699,8 @@
     "cancel": "Batal",
     "failed": "Terjadi kesalahan. Coba lagi.",
     "showMore": "Lihat riwayat lainnya",
-    "showLess": "Tampilkan lebih sedikit"
+    "showLess": "Tampilkan lebih sedikit",
+    "deleted": "Chat dihapus."
   },
   "sidebar": {
     "smartAgentic": "SMART AGENTIC",
@@ -1621,7 +1622,9 @@
       "treeFailed": "Daftar file gagal dimuat.",
       "readFailed": "File tidak dapat dibaca.",
       "saveFailed": "File tidak dapat disimpan.",
-      "exportFailed": "ZIP tidak dapat dibuat."
+      "exportFailed": "ZIP tidak dapat dibuat.",
+      "discardTitle": "Buang perubahan?",
+      "discard": "Buang"
     },
     "console": {
       "command": "Perintah",
@@ -2097,7 +2100,8 @@
       "ellipse": "Elips",
       "line": "Garis",
       "text": "Teks"
-    }
+    },
+    "deleted": "Desain dihapus."
   },
   "githubIntegration": {
     "title": "GitHub",
@@ -2216,6 +2220,11 @@
       "invalid": "Skill tidak valid.",
       "deleted": "Skill dihapus.",
       "created": "Skill berhasil dibuat."
+    },
+    "status": {
+      "installed": "Terpasang",
+      "enabled": "Aktif",
+      "disabled": "Nonaktif"
     }
   },
   "subscriptionPage": {

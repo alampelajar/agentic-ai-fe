@@ -154,19 +154,21 @@ describe('Workspace explorer', () => {
 
   it('asks before throwing away unsaved edits when another file is opened', async () => {
     mocks.readFile.mockImplementation(async (_id: number, path: string) => ({ path, content: path === 'README.md' ? 'readme' : 'package main', size: 6 }))
-    const confirm = vi.fn().mockReturnValueOnce(false).mockReturnValueOnce(true)
-    vi.stubGlobal('confirm', confirm)
     const screen = await openPage()
     await userEvent.click(screen.getByRole('button', { name: 'README.md' }))
     await userEvent.fill(screen.getByLabelText('File editor'), 'changed')
     await userEvent.click(screen.getByRole('button', { name: 'src' }))
     await userEvent.click(screen.getByRole('button', { name: 'main.go' }))
 
-    expect(confirm).toHaveBeenCalledWith('You have unsaved changes. Discard them?')
+    // The app's own dialog asks, not window.confirm.
+    const dialog = screen.getByRole('alertdialog')
+    await expect.element(dialog.getByText('You have unsaved changes. Discard them?')).toBeInTheDocument()
+    await userEvent.click(dialog.getByRole('button', { name: 'Cancel' }))
     await expect.element(screen.getByLabelText('File editor')).toHaveValue('changed') // declined: still the edited file
     expect(mocks.readFile).toHaveBeenCalledTimes(1)
 
     await userEvent.click(screen.getByRole('button', { name: 'main.go' }))
+    await userEvent.click(screen.getByRole('alertdialog').getByRole('button', { name: 'Discard' }))
     await expect.element(screen.getByLabelText('File editor')).toHaveValue('package main')
   })
 

@@ -52,6 +52,7 @@ export function DesignProjectsPage() {
       clearDraft(toDelete.id)
       setProjects((current) => current.filter((project) => project.id !== toDelete.id))
       setToDelete(null)
+      toast.success(t('designStudio.deleted'))
     } catch (reason) {
       toast.error(message(reason, t('designStudio.deleteError')))
     } finally {
