@@ -135,14 +135,16 @@ export function NavChats() {
           asChild
           isActive={onChat && activeId === String(chat.id)}
           tooltip={title}
-          className='group-focus-within/menu-item:pe-14 group-hover/menu-item:pe-14'
+          // Two buttons (pin, options) sit on the right: always on phones, on hover from md up.
+          // Keep room for both so a long title never runs under them, and nothing shifts on hover.
+          className='group-has-data-[sidebar=menu-action]/menu-item:pe-14'
         >
           <Link to='/ai' search={{ task: String(chat.id) }} onClick={() => setOpenMobile(false)}>
             {isPinned ? <Pin /> : <MessageSquare />}
             <span className='truncate'>{title}</span>
           </Link>
         </SidebarMenuButton>
-        {/* Tombol pin: terpisah dari tombol titik tiga, keduanya hanya muncul saat kursor di baris. */}
+        {/* Tombol pin: terpisah dari tombol titik tiga. Di layar lebar muncul saat kursor di baris, di HP selalu tampil. */}
         <SidebarMenuAction
           showOnHover
           className='inset-e-7'

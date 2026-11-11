@@ -679,7 +679,8 @@
       "CHAT": "Chat",
       "AI Workspace": "Ruang Kerja AI",
       "Settings": "Pengaturan"
-    }
+    },
+    "openProfileMenu": "Buka menu profil"
   },
   "chatHistory": {
     "title": "Riwayat chat",
