@@ -2369,7 +2369,8 @@
   "commandMenu": {
     "placeholder": "Type a command or search...",
     "theme": "Theme",
-    "toggleTheme": "Toggle theme"
+    "toggleTheme": "Toggle theme",
+    "search": "Search"
   },
   "maintenance": {
     "checking": "Checking system status...",

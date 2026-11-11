@@ -1,6 +1,7 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
+import i18n from '@/i18n'
 import { DeleteAccountCard } from './delete-account-card'
 
 const api = vi.hoisted(() => ({
@@ -10,10 +11,14 @@ const api = vi.hoisted(() => ({
 }))
 vi.mock('@/lib/api-auth', () => api)
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn() }))
-vi.mock('react-i18next', () => ({ useTranslation: () => ({ i18n: { language: 'en', resolvedLanguage: 'en' } }) }))
 vi.mock('@/stores/auth-store', () => ({
   useAuthStore: (select: (state: { auth: { reset: () => void } }) => unknown) => select({ auth: { reset: vi.fn() } }),
 }))
+
+// These tests read the English text.
+beforeAll(async () => {
+  await i18n.changeLanguage('en')
+})
 
 describe('DeleteAccountCard', () => {
   beforeEach(() => {

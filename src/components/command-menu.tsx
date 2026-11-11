@@ -37,13 +37,13 @@ export function CommandMenu() {
         <ScrollArea type='hover' className='h-72 pe-1'>
           <CommandEmpty>{t('dataTable.noResults')}</CommandEmpty>
           {sidebarData.navGroups.map((group) => (
-            <CommandGroup key={group.title} heading={group.title}>
+            <CommandGroup key={group.title} heading={t(`navigation.groups.${group.title}`)}>
               {group.items.map((navItem, i) => {
                 if (navItem.url)
                   return (
                     <CommandItem
                       key={`${navItem.url}-${i}`}
-                      value={navItem.title}
+                      value={t(navItem.title)}
                       onSelect={() => {
                         runCommand(() => navigate({ to: navItem.url }))
                       }}
@@ -51,14 +51,14 @@ export function CommandMenu() {
                       <div className='flex size-4 items-center justify-center'>
                         <ArrowRight className='size-2 text-muted-foreground/80' />
                       </div>
-                      {navItem.title}
+                      {t(navItem.title)}
                     </CommandItem>
                   )
 
                 return navItem.items?.map((subItem, i) => (
                   <CommandItem
                     key={`${navItem.title}-${subItem.url}-${i}`}
-                    value={`${navItem.title}-${subItem.url}`}
+                    value={`${t(navItem.title)} ${t(subItem.title)}`}
                     onSelect={() => {
                       runCommand(() => navigate({ to: subItem.url }))
                     }}
@@ -66,7 +66,7 @@ export function CommandMenu() {
                     <div className='flex size-4 items-center justify-center'>
                       <ArrowRight className='size-2 text-muted-foreground/80' />
                     </div>
-                    {navItem.title} <ChevronRight /> {subItem.title}
+                    {t(navItem.title)} <ChevronRight /> {t(subItem.title)}
                   </CommandItem>
                 ))
               })}

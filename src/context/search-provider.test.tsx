@@ -50,7 +50,21 @@ describe('SearchProvider and CommandMenu', () => {
     await expect.element(screen.getByText('Light')).toBeInTheDocument()
     await expect.element(screen.getByText('Dark')).toBeInTheDocument()
     await expect.element(screen.getByText('System')).toBeInTheDocument()
-    await expect.element(screen.getByText('aiOverview')).toBeInTheDocument()
+    await expect.element(screen.getByText('AI Overview')).toBeInTheDocument()
+  })
+
+  it('shows the page names and headings in the chosen language', async () => {
+    await i18n.changeLanguage('id')
+    try {
+      const screen = await renderWithSearchProvider()
+      await userEvent.keyboard('{Control>}k{/Control}')
+      await expect.element(screen.getByPlaceholder('Ketik perintah atau cari...')).toBeInTheDocument()
+      await expect.element(screen.getByText('Ringkasan AI')).toBeInTheDocument()
+      await expect.element(screen.getByText('Ruang Kerja AI')).toBeInTheDocument()
+      await expect.element(screen.getByText('aiOverview')).not.toBeInTheDocument()
+    } finally {
+      await i18n.changeLanguage('en')
+    }
   })
 
   it('does not show the dialog content when search is closed', async () => {

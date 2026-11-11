@@ -2369,7 +2369,8 @@
   "commandMenu": {
     "placeholder": "Ketik perintah atau cari...",
     "theme": "Tema",
-    "toggleTheme": "Ganti tema"
+    "toggleTheme": "Ganti tema",
+    "search": "Cari"
   },
   "maintenance": {
     "checking": "Memeriksa status sistem...",
