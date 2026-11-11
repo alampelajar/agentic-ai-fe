@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { DesktopConnectionCard, LocalFoldersCard } from '@/features/desktop-runtime/connection-card'
 import { DesktopRuntime } from '@/features/desktop-runtime'
+import { GitHubCard } from './github-card'
 
 // Placeholders only: the real token is something the user chooses and keeps private.
 const START_COMMANDS = `$env:LOCAL_RUNNER_TOKEN = "<a long random secret>"
@@ -30,6 +31,8 @@ export function IntegrationsPage() {
         <h2 className='text-xl font-semibold'>{t('desktopRuntime.pageTitle')}</h2>
         <p className='text-sm text-muted-foreground'>{t('desktopRuntime.pageSubtitle')}</p>
       </div>
+
+      <GitHubCard />
 
       <section aria-labelledby='desktop-runtime-heading' className='space-y-4'>
         <div className='flex flex-wrap items-center gap-2'>

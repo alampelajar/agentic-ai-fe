@@ -3,6 +3,9 @@ import { API_BASE_URL } from '@/lib/api-config'
 
 let refreshPromise: Promise<string> | null = null
 
+/** How long a freshly issued access token is valid (the backend issues 15-minute tokens). */
+export const ACCESS_TOKEN_LIFETIME_MS = 15 * 60 * 1000
+
 async function refreshAccessToken() {
   const response = await fetch(
     `${API_BASE_URL}/api/auth/refresh`,
@@ -27,11 +30,19 @@ async function refreshAccessToken() {
     )
   }
 
-  useAuthStore
-    .getState()
-    .auth.setAccessToken(result.access_token)
+  const { auth } = useAuthStore.getState()
+  auth.setAccessToken(result.access_token)
+  // A fresh access token lasts 15 minutes; note that, so the session is not seen as expired.
+  if (auth.user) {
+    auth.setUser({ ...auth.user, exp: Date.now() + ACCESS_TOKEN_LIFETIME_MS })
+  }
 
   return result.access_token
+}
+
+/** Renews the access token with the refresh-token cookie. Concurrent callers share one request. */
+export function refreshAccessTokenOnce() {
+  return getNewAccessToken()
 }
 
 async function getNewAccessToken() {

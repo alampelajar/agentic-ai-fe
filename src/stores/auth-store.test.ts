@@ -73,4 +73,16 @@ describe('useAuthStore', () => {
     expect(useAuthStoreAfterReload.getState().auth.user).toBeNull()
     expect(useAuthStoreAfterReload.getState().auth.accessToken).toBe('')
   })
+
+  it('keeps a user whose access token is stale, so the session can be renewed instead of lost', async () => {
+    const useAuthStore = await importAuthStore()
+    useAuthStore.getState().auth.setAccessToken('stale-token')
+    useAuthStore.getState().auth.setUser({ ...sampleUser, exp: Date.now() - 60_000 })
+
+    vi.resetModules()
+    const useAuthStoreAfterReload = await importAuthStore()
+
+    expect(useAuthStoreAfterReload.getState().auth.user?.email).toBe('user@example.com')
+    expect(useAuthStoreAfterReload.getState().auth.accessToken).toBe('stale-token')
+  })
 })

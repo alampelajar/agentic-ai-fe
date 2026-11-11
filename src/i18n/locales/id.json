@@ -636,8 +636,6 @@
     "selectAgent": "Pilih Agent yang ingin digunakan."
   },
   "common": {
-    "showPassword": "Tampilkan password",
-    "hidePassword": "Sembunyikan password",
     "save": "Simpan",
     "cancel": "Batal",
     "delete": "Hapus",
@@ -654,6 +652,8 @@
     "retry": "Coba Lagi",
     "viewAll": "Lihat Semua",
     "reset": "Atur Ulang",
+    "showPassword": "Tampilkan password",
+    "hidePassword": "Sembunyikan password",
     "continue": "Lanjutkan",
     "skipToMain": "Langsung ke konten",
     "errors": {
@@ -1548,7 +1548,8 @@
       "zipFile": "File ZIP",
       "zipHint": "Maksimal {{max}} MB. File rahasia seperti .env tidak ikut diimpor.",
       "githubUrl": "URL repository",
-      "githubHint": "Hanya repository publik di github.com. Jangan menempelkan token di sini.",
+      "githubHint": "Repository publik di github.com, atau repository privat setelah Anda menghubungkan GitHub di Settings > Integrasi. Jangan menempelkan token di sini.",
+      "privateRepo": "privat",
       "submit": "Buat workspace",
       "creating": "Membuat...",
       "errors": {
@@ -1652,7 +1653,16 @@
       "description": "{{agent}} ingin mengubah atau menjalankan sesuatu di \"{{workspace}}\". Tidak ada yang terjadi sampai Anda mengizinkannya.",
       "file": "File",
       "allow": "Izinkan sekali",
-      "deny": "Tolak"
+      "deny": "Tolak",
+      "repository": "Repository",
+      "newBranch": "Branch baru",
+      "pullRequest": "Pull request",
+      "pullRequestInto": "Ya, ke {{branch}}",
+      "noPullRequest": "Tidak, hanya branch",
+      "commitMessage": "Pesan commit",
+      "filesToSend": "{{count}} file akan dikirim",
+      "moreFiles": "dan {{count}} lainnya",
+      "publishPinned": "Persis perubahan ini yang dikirim. Kalau file berubah sebelum Anda mengizinkan, tidak ada yang dikirim."
     },
     "chat": {
       "label": "Workspace cloud",
@@ -2077,6 +2087,55 @@
       "text": "Teks"
     }
   },
+  "githubIntegration": {
+    "title": "GitHub",
+    "description": "Hubungkan akun GitHub Anda agar workspace bisa mengimpor repository privat dan, nanti, mengirim perubahan kembali sebagai branch dan pull request.",
+    "consent": "GitHub akan meminta Anda menyetujui akses ke repository. Perubahan tidak pernah dikirim ke branch utama: perubahan masuk ke branch baru dengan pull request yang Anda tinjau.",
+    "connect": "Hubungkan GitHub",
+    "connectedBadge": "Terhubung",
+    "signedInAs": "Terhubung sebagai",
+    "disconnect": "Putuskan",
+    "loading": "Memeriksa koneksi...",
+    "notConfigured": "GitHub belum disiapkan di server ini. Minta administrator menambahkan pengaturan GitHub OAuth App.",
+    "statusFailed": "Status GitHub tidak dapat dibaca. Coba lagi nanti.",
+    "connected": "GitHub terhubung.",
+    "disconnected": "GitHub diputuskan.",
+    "denied": "Akses GitHub tidak disetujui.",
+    "error": "GitHub tidak dapat dihubungkan. Silakan coba lagi."
+  },
+  "githubPublish": {
+    "button": "Kirim ke GitHub",
+    "title": "Kirim perubahan ke GitHub",
+    "description": "Perubahan Anda menjadi satu commit di branch baru {{repository}}, dengan pull request ke {{branch}}. Tidak ada yang ditimpa di GitHub.",
+    "changes": "File yang berubah",
+    "loading": "Membaca perubahan...",
+    "loadFailed": "Perubahan tidak dapat dibaca.",
+    "noChanges": "Tidak ada perubahan sejak impor.",
+    "status": {
+      "added": "baru",
+      "modified": "diubah",
+      "deleted": "dihapus"
+    },
+    "message": "Pesan commit",
+    "messagePlaceholder": "Jelaskan apa yang berubah",
+    "branch": "Branch baru",
+    "branchPlaceholder": "Kosongkan agar dinamai otomatis",
+    "branchHint": "Selalu branch baru. Tidak boleh {{branch}} atau branch yang sudah ada.",
+    "createPR": "Buka pull request",
+    "prTitle": "Judul pull request",
+    "prTitlePlaceholder": "Bawaan: pesan commit",
+    "prBody": "Deskripsi pull request (opsional)",
+    "send": "Kirim",
+    "sending": "Mengirim...",
+    "cancel": "Batal",
+    "close": "Tutup",
+    "sent": "Perubahan terkirim ke GitHub.",
+    "failed": "Perubahan tidak dapat dikirim.",
+    "doneBranch": "{{count}} file terkirim ke branch baru {{branch}}.",
+    "baseMoved": "{{branch}} punya commit baru di GitHub sejak impor. Tidak ada yang ditimpa; periksa pull request untuk konflik.",
+    "openPR": "Buka pull request",
+    "openCommit": "Lihat commit"
+  },
   "skillsPage": {
     "eyebrow": "Agentic workspace",
     "title": "Skills",
@@ -2292,7 +2351,7 @@
       "password": "Password",
       "confirmPassword": "Konfirmasi Password",
       "created": "Akun berhasil dibuat!",
-      "createdFor": "Akun dibuat untuk {{email}}.",
+      "createdFor": "Akun dibuat untuk {{email}}. Silakan masuk.",
       "creating": "Membuat akun...",
       "submit": "Buat Akun"
     },
@@ -2351,7 +2410,17 @@
     "yesDelete": "Ya, hapus akun",
     "wait": "Tunggu {{seconds}} detik...",
     "deleting": "Menghapus akun...",
-    "fallbackError": "Gagal menghapus akun. Silakan coba lagi."
+    "fallbackError": "Gagal menghapus akun. Silakan coba lagi.",
+    "noPassword": "Tidak punya kata sandi (masuk dengan Google)? Kirim kode ke email",
+    "codeTitle": "Verifikasi lewat email",
+    "codeDescription": "Kami mengirim kode 6 digit ke email akun Anda. Masukkan kode itu untuk melanjutkan. Akun belum dihapus pada tahap ini.",
+    "codeLabel": "Kode verifikasi",
+    "codePlaceholder": "123456",
+    "sendingCode": "Mengirim kode...",
+    "codeSent": "Kode dikirim ke email akun Anda.",
+    "usePassword": "Gunakan kata sandi",
+    "resendCode": "Kirim ulang kode",
+    "next": "Lanjut"
   },
   "changePassword": {
     "title": "Ubah password",

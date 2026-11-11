@@ -1,5 +1,6 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
+import { clearSignInPrefill, peekSignInPrefill } from '../prefill'
 import { GoogleLogin, type CredentialResponse } from '@react-oauth/google'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
@@ -49,8 +50,13 @@ export function UserAuthForm({
   const { t } = useTranslation()
   const auth = useAuthStore((state) => state.auth)
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  // Right after sign-up the page opens with the details the person just entered.
+  const [prefill] = useState(peekSignInPrefill)
+  const [email, setEmail] = useState(prefill?.email ?? '')
+  const [password, setPassword] = useState(prefill?.password ?? '')
+  useEffect(() => {
+    clearSignInPrefill()
+  }, [])
   const [isLoading, setIsLoading] = useState(false)
 
   async function handleLogin(event: FormEvent<HTMLFormElement>) {

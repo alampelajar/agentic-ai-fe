@@ -10,6 +10,12 @@ export type Workspace = {
   description: string
   source_type: WorkspaceSource
   source_url: string
+  // Set for a workspace imported from GitHub: where it came from and the commit it was taken at.
+  github_owner?: string
+  github_repo?: string
+  base_branch?: string
+  base_sha?: string
+  source_private?: boolean
   status: WorkspaceStatus
   default_runtime: WorkspaceRuntime
   file_count: number
@@ -115,6 +121,25 @@ export async function writeFile(id: number, path: string, content: string): Prom
 
 export async function getChanges(id: number): Promise<FileChange[]> {
   return (await parse<{ changes: FileChange[] }>(await apiFetch(`/api/workspaces/${id}/changes`))).changes || []
+}
+
+export type PublishInput = { branch: string; message: string; create_pr: boolean; pr_title: string; pr_body: string }
+export type PublishOutcome = {
+  repository: string
+  file_count: number
+  result: {
+    branch: string
+    commit_sha: string
+    commit_url: string
+    pull_request_url: string
+    pull_request_error?: string
+    base_moved: boolean
+  }
+}
+
+/** Sends the changes since the import to GitHub: a new branch with one commit, and by default a pull request. */
+export async function publishToGitHub(id: number, input: PublishInput): Promise<PublishOutcome> {
+  return parse(await apiFetch(`/api/workspaces/${id}/github/publish`, { method: 'POST', body: JSON.stringify(input) }))
 }
 
 export async function exportWorkspace(id: number): Promise<Blob> {
