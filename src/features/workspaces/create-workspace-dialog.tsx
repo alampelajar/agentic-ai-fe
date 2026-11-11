@@ -99,8 +99,11 @@ function CreateForm({ onCancel, onCreated }: { onCancel: () => void; onCreated: 
           <Label htmlFor='workspace-runtime'>{t('workspacePage.create.runtime')}</Label>
           <select id='workspace-runtime' className='h-9 rounded-md border bg-background px-3 text-sm' value={runtime} onChange={(event) => setRuntime(event.target.value as WorkspaceRuntime)}>
             <option value=''>{t('workspacePage.create.runtimeNone')}</option>
+            {/* design-system-ignore: runtime names are product names */}
             <option value='go'>Go</option>
+            {/* design-system-ignore: runtime names are product names */}
             <option value='node'>Node.js</option>
+            {/* design-system-ignore: runtime names are product names */}
             <option value='python'>Python</option>
           </select>
         </div>

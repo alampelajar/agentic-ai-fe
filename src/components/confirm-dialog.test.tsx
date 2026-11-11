@@ -1,8 +1,14 @@
 import type { SubmitEvent } from 'react'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeAll, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
+import i18n from '@/i18n'
 import { ConfirmDialog } from './confirm-dialog'
+
+// These tests read the English text.
+beforeAll(async () => {
+  await i18n.changeLanguage('en')
+})
 
 describe('ConfirmDialog', () => {
   it('renders title, description, and default buttons', async () => {

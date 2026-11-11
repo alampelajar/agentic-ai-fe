@@ -57,7 +57,7 @@ export function AppSidebar({
       <SidebarHeader>
         <Link
           to="/ai"
-          aria-label="Buka halaman AI"
+          aria-label={t('sidebar.openAiPage')}
           className="group flex h-14 items-center gap-2 rounded-md px-3 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
         >
           <span className="flex shrink-0 transition-transform duration-200 group-hover:scale-110 group-active:scale-95">
@@ -66,6 +66,7 @@ export function AppSidebar({
 
           <div className="grid flex-1 text-start leading-tight">
             <span className="truncate text-[13px] font-semibold tracking-tight">
+              {/* design-system-ignore: the product name stays the same in every language */}
               AGENTIC<span className="text-primary">AI</span>
             </span>
 

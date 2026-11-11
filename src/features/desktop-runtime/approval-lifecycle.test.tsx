@@ -1,6 +1,7 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
+import i18n from '@/i18n'
 import { DesktopInteractionPanel } from './interaction-panel'
 import { stubRunner } from './runner-stub'
 
@@ -24,6 +25,11 @@ async function request(screen: Screen) {
   return dialog
 }
 const closed = (screen: Screen) => expect.element(screen.getByRole('dialog', DIALOG)).not.toBeInTheDocument()
+
+// These tests read the English text.
+beforeAll(async () => {
+  await i18n.changeLanguage('en')
+})
 
 describe('approval lifecycle on the Desktop Runtime panel', () => {
   beforeEach(() => {

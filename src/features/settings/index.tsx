@@ -1,20 +1,22 @@
 import { Outlet } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 
 import { Separator } from "@/components/ui/separator";
 import { Main } from "@/components/layout/main";
 
 export function Settings() {
+  const { t } = useTranslation();
   return (
     <Main fixed fluid className="gap-0">
       <header className="shrink-0 space-y-2">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-          Workspace
+          {t("settingsPage.eyebrow")}
         </p>
         <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
-          Settings
+          {t("settingsPage.title")}
         </h1>
         <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
-          Kelola akun, keamanan, dan preferensi workspace Agentic AI.
+          {t("settingsPage.description")}
         </p>
       </header>
 

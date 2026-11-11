@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { type Root, type Content, type Trigger } from '@radix-ui/react-popover'
 import { CircleQuestionMark } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -19,6 +20,7 @@ export function LearnMore({
   triggerProps,
   ...props
 }: LearnMoreProps) {
+  const { t } = useTranslation()
   return (
     <Popover {...props}>
       <PopoverTrigger
@@ -27,7 +29,7 @@ export function LearnMore({
         className={cn('size-5 rounded-full', triggerProps?.className)}
       >
         <Button variant='outline' size='icon'>
-          <span className='sr-only'>Learn more</span>
+          <span className='sr-only'>{t('errorPages.learnMore')}</span>
           <CircleQuestionMark className='size-4 [&>circle]:hidden' />
         </Button>
       </PopoverTrigger>

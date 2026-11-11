@@ -1,7 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, type RenderResult } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
 import { SearchProvider } from '@/context/search-provider'
+import i18n from '@/i18n'
 
 const COMMAND_MENU_PLACEHOLDER = 'Type a command or search...'
 
@@ -31,6 +32,11 @@ async function openCommandPalette(screen: RenderResult, modifier: ShortcutModifi
     await expect.element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER)).toBeInTheDocument()
   }, { interval: 50, timeout: 5000 })
 }
+
+// These tests read the English text.
+beforeAll(async () => {
+  await i18n.changeLanguage('en')
+})
 
 describe('SearchProvider and CommandMenu', () => {
   beforeEach(() => vi.clearAllMocks())

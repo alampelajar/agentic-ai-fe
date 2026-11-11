@@ -106,6 +106,7 @@ export function Tasks() {
                   dark:text-violet-400
                 "
               >
+                {/* design-system-ignore: the product name stays the same in every language */}
                 Agentic AI
               </div>
 

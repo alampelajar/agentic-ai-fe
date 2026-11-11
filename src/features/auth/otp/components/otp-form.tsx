@@ -279,6 +279,7 @@ export function OtpForm({
                 value={newPassword}
                 onChange={(event) => setNewPassword(event.target.value)}
                 required
+                // design-system-ignore: the auth screens are always dark and keep their own surface
                 inputClassName='h-11 rounded-md border-white/10 bg-white/[0.035] px-3.5 text-sm shadow-none'
               />
             </div>
@@ -294,6 +295,7 @@ export function OtpForm({
                 value={confirmPassword}
                 onChange={(event) => setConfirmPassword(event.target.value)}
                 required
+                // design-system-ignore: the auth screens are always dark and keep their own surface
                 inputClassName='h-11 rounded-md border-white/10 bg-white/[0.035] px-3.5 text-sm shadow-none'
               />
             </div>

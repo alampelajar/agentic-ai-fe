@@ -212,6 +212,7 @@ export function UserAuthForm({
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             disabled={isLoading}
+            // design-system-ignore: the auth screens are always dark and keep their own surface
             inputClassName="h-11 rounded-md border-white/10 bg-white/[0.035] px-3.5 text-sm shadow-none placeholder:text-zinc-600 focus-visible:ring-2 focus-visible:ring-primary/20"
           />
         </div>

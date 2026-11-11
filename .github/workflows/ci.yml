@@ -16,6 +16,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          # The design check compares the pull request with its base branch.
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -24,6 +27,13 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      # Only lines the pull request adds or changes are checked; see DESIGN.md.
+      - name: Check the design system
+        if: github.event_name == 'pull_request'
+        run: |
+          npm run design:test
+          node scripts/check-design.mjs --base "$(git merge-base origin/${{ github.base_ref }} HEAD)"
 
       - name: Lint the code
         run: npm run lint

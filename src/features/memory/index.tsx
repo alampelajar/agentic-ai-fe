@@ -147,7 +147,7 @@ export function MemoryPage() {
     <Main className='space-y-6'>
       <div className='flex flex-col gap-4 border-b pb-6 sm:flex-row sm:items-end sm:justify-between'>
         <div>
-          <p className='text-sm text-muted-foreground'>Agentic workspace</p>
+          <p className='text-sm text-muted-foreground'>{t('common.agenticWorkspace')}</p>
           <h1 className='text-2xl font-semibold tracking-tight'>{t('memoryPage.title')}</h1>
           <p className='mt-1 max-w-2xl text-sm text-muted-foreground'>{t('memoryPage.subtitle')}</p>
         </div>

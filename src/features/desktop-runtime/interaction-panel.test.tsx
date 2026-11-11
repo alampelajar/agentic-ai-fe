@@ -1,6 +1,7 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
+import i18n from '@/i18n'
 import { DesktopInteractionPanel } from './interaction-panel'
 import { stubRunner, type RunnerCall } from './runner-stub'
 
@@ -21,6 +22,11 @@ async function request(screen: Awaited<ReturnType<typeof openPanel>>) {
   await expect.element(dialog).toBeInTheDocument()
   return dialog
 }
+
+// These tests read the English text.
+beforeAll(async () => {
+  await i18n.changeLanguage('en')
+})
 
 describe('DesktopInteractionPanel approval dialog', () => {
   beforeEach(() => vi.clearAllMocks())

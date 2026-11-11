@@ -135,7 +135,12 @@
       "testConnection": "Test Connection",
       "saving": "Menyimpan...",
       "saveModel": "Simpan Model",
-      "button": "Tambah Model"
+      "button": "Tambah Model",
+      "providerName": "Nama Provider",
+      "providerNamePlaceholder": "Contoh: My AI Provider",
+      "providerType": "Tipe Provider",
+      "providerTypePlaceholder": "Pilih tipe provider",
+      "baseUrlHint": "Masukkan URL API provider sendiri. URL ini digunakan untuk tes koneksi dan proses penyimpanan model."
     },
     "editModel": {
       "title": "Edit Model AI",
@@ -143,7 +148,10 @@
       "modelIdPlaceholder": "Contoh: openrouter/free",
       "modelNamePlaceholder": "Contoh: Gemini 2.5 Flash",
       "providerNote": "Provider tidak diubah dari menu edit model.",
-      "saveChanges": "Simpan Perubahan"
+      "saveChanges": "Simpan Perubahan",
+      "targetAgent": "Agent tujuan",
+      "targetAgentPlaceholder": "Pilih satu Agent",
+      "targetAgentHint": "Model akan dihubungkan hanya ke Agent yang dipilih. Relasi lama ke Agent lain akan dilepas."
     },
     "removeModel": {
       "title": "Lepas Model dari Agent?",
@@ -237,7 +245,8 @@
     "workflowDescription": "Tahapan eksekusi Agent dari tujuan hingga selesai.",
     "codeBuilder": "Code Builder",
     "aiModel": "Model AI",
-    "twoMinutesAgo": "2 menit lalu"
+    "twoMinutesAgo": "2 menit lalu",
+    "sampleTaskTitle": "Membangun Dashboard Agentic AI"
   },
   "status": {
     "running": "Berjalan",
@@ -472,7 +481,21 @@
     "retry": "Coba lagi",
     "saving": "Menyimpan...",
     "saveError": "Gagal menyimpan task.",
-    "openChat": "Buka chat"
+    "openChat": "Buka chat",
+    "multiDelete": {
+      "typeToConfirm": "Ketik \"{{word}}\" untuk konfirmasi.",
+      "deleting": "Menghapus task...",
+      "deleted_one": "{{count}} task dihapus",
+      "deleted_other": "{{count}} task dihapus",
+      "error": "Task gagal dihapus.",
+      "title_one": "Hapus {{count}} task",
+      "title_other": "Hapus {{count}} task",
+      "question": "Yakin ingin menghapus task yang dipilih?",
+      "cannotUndo": "Tindakan ini tidak bisa dibatalkan.",
+      "confirmLabel": "Konfirmasi dengan mengetik \"{{word}}\":",
+      "warningTitle": "Peringatan!",
+      "warning": "Harap berhati-hati, tindakan ini tidak bisa dikembalikan."
+    }
   },
   "overviewPage": {
     "subtitle": "Pantau Agent AI dan konfigurasi model dari satu tempat.",
@@ -630,7 +653,15 @@
     "confirm": "Konfirmasi",
     "retry": "Coba Lagi",
     "viewAll": "Lihat Semua",
-    "reset": "Atur Ulang"
+    "reset": "Atur Ulang",
+    "continue": "Lanjutkan",
+    "skipToMain": "Langsung ke konten",
+    "errors": {
+      "notModified": "Konten tidak berubah!",
+      "sessionExpired": "Sesi Anda berakhir. Silakan masuk lagi.",
+      "serverError": "Terjadi kesalahan pada server!"
+    },
+    "agenticWorkspace": "Agentic workspace"
   },
   "navigation": {
     "changeAvatar": "Ganti foto profil",
@@ -670,7 +701,8 @@
     "showLess": "Tampilkan lebih sedikit"
   },
   "sidebar": {
-    "smartAgentic": "SMART AGENTIC"
+    "smartAgentic": "SMART AGENTIC",
+    "openAiPage": "Buka halaman AI"
   },
   "auth": {
     "signIn": {
@@ -848,7 +880,9 @@
       "nothing": "Tidak ada",
       "mobileSettings": "pengaturan mobile",
       "useDifferentMobile": "Gunakan pengaturan berbeda untuk perangkat mobile"
-    }
+    },
+    "eyebrow": "Workspace",
+    "description": "Kelola akun, keamanan, dan preferensi workspace Agentic AI."
   },
   "usersPage": {
     "title": "Manajemen Pengguna",
@@ -923,7 +957,22 @@
     }
   },
   "dataTable": {
-    "reset": "Atur Ulang"
+    "reset": "Atur Ulang",
+    "rowsPerPage": "Baris per halaman",
+    "firstPage": "Ke halaman pertama",
+    "previousPage": "Ke halaman sebelumnya",
+    "nextPage": "Ke halaman berikutnya",
+    "lastPage": "Ke halaman terakhir",
+    "selectedAnnouncement_one": "{{count}} {{entity}} dipilih. Toolbar aksi massal tersedia.",
+    "selectedAnnouncement_other": "{{count}} {{entity}} dipilih. Toolbar aksi massal tersedia.",
+    "clearSelection": "Hapus pilihan",
+    "clearSelectionHint": "Hapus pilihan (Escape)",
+    "noResults": "Tidak ada hasil.",
+    "clearFilters": "Hapus filter",
+    "view": "Tampilan",
+    "toggleColumns": "Atur kolom",
+    "selectAll": "Pilih semua",
+    "selectRow": "Pilih baris"
   },
   "toggleNavigation": "Buka/tutup navigasi",
   "paidModels": "Model Berbayar",
@@ -1706,7 +1755,26 @@
       "heading": "Kontrol desktop",
       "description": "Amati desktop Windows (jendela, screenshot, elemen UI) dan ajukan interaksi. Pengamatan berjalan langsung; setiap pindah fokus, klik, pengetikan, hotkey, atau scroll membutuhkan persetujuan sendiri.",
       "connectFirst": "Hubungkan Desktop Runtime di atas untuk memakai kontrol desktop.",
-      "unavailable": "Kontrol desktop dimatikan di runner, jadi belum ada yang bisa ditampilkan."
+      "unavailable": "Kontrol desktop dimatikan di runner, jadi belum ada yang bisa ditampilkan.",
+      "requestFailed": "Permintaan ke Desktop Runtime gagal.",
+      "noScreenshotData": "Screenshot tidak tersedia.",
+      "chooseWindowFirst": "Pilih jendela terlebih dahulu.",
+      "unknown": "Tidak diketahui",
+      "noId": "tanpa id",
+      "handle": "handle {{handle}}",
+      "stopped": "Desktop Runtime dihentikan.",
+      "windowsTitle": "Jendela yang terbuka",
+      "windowsDescription": "Detail jendela dari Windows UI Automation, hanya dibaca.",
+      "loadingWindows": "Memuat jendela…",
+      "noWindows": "Belum ada jendela yang dimuat.",
+      "refreshWindows": "Muat ulang jendela",
+      "inspectWindow": "Periksa jendela terpilih",
+      "screenshotTitle": "Screenshot",
+      "screenshotDescription": "Diambil hanya saat Anda memintanya; runner tidak menyimpannya.",
+      "screenshotAlt": "Screenshot desktop",
+      "noScreenshot": "Belum ada screenshot.",
+      "takeScreenshot": "Ambil screenshot",
+      "stop": "Hentikan"
     },
     "chat": {
       "statusLabel": "Desktop Runtime (opsional)",
@@ -1715,6 +1783,90 @@
       "manage": "Kelola di Settings",
       "desktopNeedsRuntime": "Ini membutuhkan Desktop Runtime yang belum terhubung. Hubungkan di Settings → Integrasi → Desktop Runtime, lalu kirim ulang permintaan.\n\nPermintaan tool tidak dijalankan.",
       "localNeedsFolder": "Ini membutuhkan folder proyek lokal pada Desktop Runtime. Pilih di Settings → Integrasi, atau pilih Cloud Workspace.\n\nPermintaan tool tidak dijalankan."
+    },
+    "interaction": {
+      "title": "Persetujuan interaksi desktop",
+      "description": "Setiap aksi yang mengubah sesuatu butuh persetujuan sendiri. Menyetujui aksi juga menyimpan desktop untuk agent itu sampai Anda melepas kontrol atau memakai Emergency stop.",
+      "fields": {
+        "agent": "Agent",
+        "action": "Aksi",
+        "targetWindow": "Jendela tujuan",
+        "targetWindowPlaceholder": "Judul persis atau handle jendela",
+        "reason": "Alasan",
+        "controlToClick": "Kontrol yang diklik",
+        "controlToScroll": "Kontrol yang digulir (opsional)",
+        "findHow": "Pilih cara menemukannya",
+        "windowItself": "Jendelanya sendiri",
+        "byName": "Berdasarkan nama",
+        "byAutomationId": "Berdasarkan automation ID",
+        "byControlType": "Berdasarkan tipe kontrol",
+        "controlValue": "Nilai kontrol",
+        "controlValuePlaceholder": "Misalnya Save, 15 atau Edit",
+        "direction": "Arah",
+        "lines": "Baris (1 sampai 20)",
+        "text": "Teks",
+        "hotkey": "Hotkey yang diizinkan",
+        "hotkeyPlaceholder": "CTRL+A, CTRL+S, ESC",
+        "textPlaceholder": "Teks baru dikirim setelah disetujui"
+      },
+      "actions": {
+        "focusWindow": "Fokus ke jendela",
+        "click": "Klik",
+        "doubleClick": "Klik dua kali",
+        "scroll": "Gulir",
+        "type": "Ketik",
+        "hotkey": "Hotkey"
+      },
+      "directions": {
+        "down": "Bawah",
+        "up": "Atas",
+        "left": "Kiri",
+        "right": "Kanan"
+      },
+      "buttons": {
+        "request": "Minta persetujuan",
+        "emergency": "Emergency stop",
+        "release": "Lepas kontrol desktop"
+      },
+      "dialog": {
+        "label": "Persetujuan aksi desktop",
+        "required": "Butuh persetujuan",
+        "requests": "{{agent}} meminta",
+        "denyAction": "Tolak aksi",
+        "allowOnce": "Izinkan sekali",
+        "deny": "Tolak"
+      },
+      "activity": "Aktivitas",
+      "noActivity": "Belum ada aksi desktop.",
+      "log": {
+        "expired": "Persetujuan kedaluwarsa: {{action}}",
+        "requested": "Persetujuan diminta: {{action}}",
+        "approved": "Disetujui: {{action}} ({{mode}})",
+        "failed": "Persetujuan gagal: {{message}}",
+        "denied": "Ditolak: {{action}}",
+        "emergency": "Emergency stop: antrean dibatalkan dan izin dicabut.",
+        "released": "Kontrol desktop dilepas."
+      },
+      "toast": {
+        "failed": "Aksi desktop gagal.",
+        "expired": "Persetujuan kedaluwarsa. Minta yang baru untuk melanjutkan.",
+        "emergency": "Emergency stop aktif."
+      }
+    },
+    "chatApproval": {
+      "label": "Persetujuan tindakan desktop",
+      "title": "Persetujuan tindakan desktop",
+      "description": "AI meminta izin sebelum mengubah desktop.",
+      "waiting": "Menunggu",
+      "agent": "Agent",
+      "skill": "Skill",
+      "tool": "Tool / tindakan",
+      "reason": "Alasan",
+      "note": "Hanya tindakan ini yang dijalankan; tindakan desktop berikutnya tetap meminta persetujuan. Setelah disetujui, agent ini memegang kendali desktop sampai Anda menekan Emergency Stop.",
+      "deny": "Tolak",
+      "allowOnce": "Izinkan sekali",
+      "emergencyStop": "Emergency Stop",
+      "expired": "Persetujuan tindakan desktop kedaluwarsa. Minta agent mengajukan permintaan baru."
     }
   },
   "emailOtp": {
@@ -1924,5 +2076,342 @@
       "line": "Garis",
       "text": "Teks"
     }
+  },
+  "skillsPage": {
+    "eyebrow": "Agentic workspace",
+    "title": "Skills",
+    "subtitle": "Kelola instruksi dan kemampuan yang dapat dipakai agent tanpa mengubah source code aplikasi.",
+    "create": "Buat skill",
+    "importZip": "Import ZIP",
+    "stats": {
+      "installed": "Terpasang",
+      "active": "Aktif",
+      "needsAttention": "Perlu perhatian"
+    },
+    "tabs": {
+      "installed": "Terpasang",
+      "discover": "Jelajahi",
+      "create": "Buat skill"
+    },
+    "searchPlaceholder": "Cari nama, slug, atau deskripsi",
+    "loading": "Memuat skill…",
+    "loadErrorTitle": "Skill gagal dimuat",
+    "retry": "Coba lagi",
+    "emptyTitle": "Belum ada skill",
+    "emptyDescription": "Buat skill sendiri atau impor paket yang sudah divalidasi.",
+    "github": {
+      "title": "Import dari GitHub",
+      "description": "Hanya repository publik HTTPS yang berisi manifest.json dan SKILL.md. Paket tidak dieksekusi.",
+      "import": "Import"
+    },
+    "form": {
+      "title": "Buat skill",
+      "description": "Editor ini menyimpan instruksi dan manifest tervalidasi. Tool harus berasal dari registry yang dikenal.",
+      "slug": "Slug / ID",
+      "slugPlaceholder": "coding-assistant",
+      "name": "Nama",
+      "namePlaceholder": "Coding Assistant",
+      "version": "Versi",
+      "author": "Author",
+      "authorPlaceholder": "Nama atau organisasi",
+      "descriptionLabel": "Deskripsi",
+      "instructions": "SKILL.md",
+      "instructionsPlaceholder": "# Coding Assistant\n\nInstruksi operasional skill…",
+      "note": "Tool dan permission akan diperketat oleh backend pada fase berikutnya. Jangan memasukkan secret ke instruksi.",
+      "save": "Simpan skill"
+    },
+    "card": {
+      "enabled": "Aktif",
+      "noDescription": "Tidak ada deskripsi.",
+      "noTools": "Tidak meminta tool",
+      "enable": "Aktifkan",
+      "disable": "Nonaktifkan",
+      "validate": "Validasi",
+      "delete": "Hapus"
+    },
+    "delete": {
+      "title": "Hapus skill {{name}}?",
+      "description": "Skill dan file-nya akan dihapus. Tindakan ini tidak bisa dibatalkan.",
+      "confirm": "Hapus"
+    },
+    "toast": {
+      "loadFailed": "Skill gagal dimuat.",
+      "operationFailed": "Operasi skill gagal.",
+      "imported": "Skill berhasil diimpor.",
+      "githubImported": "Skill GitHub berhasil diimpor.",
+      "enabled": "Skill diaktifkan.",
+      "disabled": "Skill dinonaktifkan.",
+      "valid": "Skill valid.",
+      "invalid": "Skill tidak valid.",
+      "deleted": "Skill dihapus.",
+      "created": "Skill berhasil dibuat."
+    }
+  },
+  "subscriptionPage": {
+    "eyebrow": "Langganan",
+    "title": "Subscription & Premium",
+    "subtitle": "Lihat contoh paket dan fitur langganan. Halaman ini masih berupa tampilan demo.",
+    "demoBadge": "Demo · Belum aktif",
+    "stats": {
+      "plans": "Paket tersedia",
+      "active": "Langganan aktif",
+      "revenue": "Pendapatan"
+    },
+    "choosePlan": "Pilih paket",
+    "choosePlanDescription": "Harga dan fitur di bawah hanya contoh untuk rancangan antarmuka.",
+    "recommended": "Rekomendasi",
+    "currentPlan": "Paket saat ini",
+    "plans": {
+      "free": {
+        "name": "Free",
+        "period": "selamanya",
+        "description": "Untuk mulai mencoba Agentic AI.",
+        "features": {
+          "0": "Akses fitur dasar",
+          "1": "Model AI gratis",
+          "2": "Tanpa biaya langganan"
+        }
+      },
+      "pro": {
+        "name": "Pro",
+        "period": "/ bulan",
+        "description": "Untuk penggunaan AI yang lebih intensif.",
+        "features": {
+          "0": "Akses model pilihan",
+          "1": "Batas penggunaan lebih tinggi",
+          "2": "Dukungan prioritas"
+        }
+      },
+      "premium": {
+        "name": "Premium",
+        "period": "/ bulan",
+        "description": "Untuk pengguna yang membutuhkan kemampuan lebih lengkap.",
+        "features": {
+          "0": "Akses model premium",
+          "1": "Batas penggunaan tertinggi",
+          "2": "Fitur eksklusif"
+        }
+      }
+    },
+    "notice": {
+      "title": "Fitur belum bisa digunakan",
+      "description": "Pembelian langganan belum tersedia. Fitur ini akan diaktifkan pada pembaruan berikutnya."
+    },
+    "footnote": "Catatan: halaman ini hanya mockup. Belum ada pembayaran, transaksi, atau aktivasi langganan otomatis."
+  },
+  "configDrawer": {
+    "open": "Buka pengaturan tema",
+    "title": "Pengaturan Tema",
+    "description": "Atur tampilan dan tata letak sesuai keinginan Anda.",
+    "resetAllLabel": "Kembalikan semua pengaturan ke bawaan",
+    "reset": "Atur ulang",
+    "selectOption": "Pilih {{label}}",
+    "optionPreview": "Pratinjau opsi {{label}}",
+    "theme": {
+      "title": "Tema",
+      "reset": "Kembalikan tema ke bawaan",
+      "select": "Pilih tema",
+      "system": "Sistem",
+      "light": "Terang",
+      "dark": "Gelap",
+      "description": "Pilih antara pengaturan sistem, mode terang, atau mode gelap"
+    },
+    "sidebar": {
+      "title": "Sidebar",
+      "reset": "Kembalikan gaya sidebar ke bawaan",
+      "select": "Pilih gaya sidebar",
+      "inset": "Inset",
+      "floating": "Mengambang",
+      "sidebar": "Sidebar",
+      "description": "Pilih antara sidebar inset, mengambang, atau standar"
+    },
+    "layout": {
+      "title": "Tata letak",
+      "reset": "Kembalikan tata letak ke bawaan",
+      "select": "Pilih gaya tata letak",
+      "default": "Bawaan",
+      "compact": "Ringkas",
+      "full": "Penuh",
+      "description": "Pilih antara tata letak bawaan, ringkas hanya ikon, atau penuh"
+    },
+    "direction": {
+      "title": "Arah teks",
+      "reset": "Kembalikan arah teks ke bawaan",
+      "select": "Pilih arah teks situs",
+      "ltr": "Kiri ke Kanan",
+      "rtl": "Kanan ke Kiri",
+      "description": "Pilih antara arah kiri-ke-kanan atau kanan-ke-kiri"
+    }
+  },
+  "errorPages": {
+    "goBack": "Kembali",
+    "backHome": "Ke Beranda",
+    "learnMore": "Pelajari lebih lanjut",
+    "e401": {
+      "title": "Akses tidak diizinkan",
+      "line1": "Silakan masuk dengan akun yang sesuai",
+      "line2": "untuk membuka halaman ini."
+    },
+    "e403": {
+      "title": "Akses ditolak",
+      "line1": "Anda tidak punya izin yang diperlukan",
+      "line2": "untuk melihat halaman ini."
+    },
+    "e404": {
+      "title": "Ups! Halaman tidak ditemukan!",
+      "line1": "Sepertinya halaman yang Anda cari",
+      "line2": "tidak ada atau sudah dihapus."
+    },
+    "e500": {
+      "title": "Ups! Terjadi kesalahan :')",
+      "line1": "Mohon maaf atas ketidaknyamanannya.",
+      "line2": "Silakan coba lagi nanti."
+    },
+    "e503": {
+      "title": "Website sedang dalam pemeliharaan!",
+      "line1": "Situs sedang tidak tersedia.",
+      "line2": "Kami akan segera kembali."
+    }
+  },
+  "comingSoon": {
+    "title": "Segera Hadir!",
+    "line1": "Halaman ini belum dibuat.",
+    "line2": "Nantikan ya!"
+  },
+  "signUpPage": {
+    "title": "Buat akun Anda",
+    "description": "Buat akun dan mulai membangun workspace AI otonom Anda.",
+    "haveAccount": "Sudah punya akun?",
+    "signIn": "Masuk",
+    "secure": "Pembuatan akun yang aman",
+    "poweredBy": "Didukung oleh Agentic AI",
+    "form": {
+      "name": "Nama",
+      "namePlaceholder": "Nama Anda",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Konfirmasi Password",
+      "created": "Akun berhasil dibuat!",
+      "createdFor": "Akun dibuat untuk {{email}}.",
+      "creating": "Membuat akun...",
+      "submit": "Buat Akun"
+    },
+    "validation": {
+      "nameRequired": "Masukkan nama Anda.",
+      "nameShort": "Nama minimal 2 karakter.",
+      "emailRequired": "Masukkan email Anda.",
+      "passwordRequired": "Masukkan password Anda.",
+      "passwordShort": "Password minimal 8 karakter.",
+      "confirmRequired": "Konfirmasi password Anda.",
+      "mismatch": "Password tidak sama.",
+      "failed": "Terjadi kesalahan."
+    }
+  },
+  "commandMenu": {
+    "placeholder": "Ketik perintah atau cari...",
+    "theme": "Tema",
+    "toggleTheme": "Ganti tema"
+  },
+  "maintenance": {
+    "checking": "Memeriksa status sistem...",
+    "title": "Website Sedang Maintenance",
+    "description": "Kami sedang melakukan pemeliharaan sistem. Silakan coba kembali beberapa saat lagi.",
+    "note": "Sistem akan kembali tersedia setelah maintenance selesai."
+  },
+  "agentSkills": {
+    "title": "Skills agent",
+    "description": "Assignment hanya berlaku untuk agent ini dan user yang sedang login. Skill tidak otomatis dipasang ke agent lain.",
+    "loading": "Memuat assignment…",
+    "loadErrorTitle": "Assignment skill gagal dimuat",
+    "loadFailed": "Assignment skill gagal dimuat.",
+    "updateFailed": "Assignment skill gagal diperbarui.",
+    "retry": "Coba lagi",
+    "add": "Tambahkan skill",
+    "choose": "Pilih skill",
+    "allAssigned": "Semua skill sudah terpasang",
+    "assign": "Pasang",
+    "assigned": "Skill dipasang ke agent.",
+    "empty": "Belum ada skill yang dipasang pada agent ini.",
+    "remove": "Lepas {{name}}",
+    "removed": "Skill dilepas dari agent."
+  },
+  "deleteAccount": {
+    "sectionTitle": "Zona berbahaya",
+    "sectionDescription": "Hapus akun dan data pribadi terkait secara permanen.",
+    "openButton": "Hapus akun",
+    "passwordTitle": "Verifikasi kata sandi",
+    "passwordDescription": "Masukkan kata sandi akun untuk melanjutkan. Akun belum dihapus pada tahap ini.",
+    "passwordLabel": "Kata sandi akun",
+    "passwordPlaceholder": "Masukkan kata sandi",
+    "verify": "Verifikasi",
+    "verifying": "Memverifikasi...",
+    "cancel": "Tidak",
+    "finalTitle": "Apakah Anda yakin ingin menghapus akun Anda?",
+    "finalDescription": "Akun, tugas, riwayat percakapan, serta provider dan model AI custom milik Anda akan dihapus permanen. Data sistem bersama tetap dipertahankan. Tindakan ini tidak dapat dibatalkan.",
+    "yesDelete": "Ya, hapus akun",
+    "wait": "Tunggu {{seconds}} detik...",
+    "deleting": "Menghapus akun...",
+    "fallbackError": "Gagal menghapus akun. Silakan coba lagi."
+  },
+  "changePassword": {
+    "title": "Ubah password",
+    "description": "Gunakan password yang kuat dan jangan gunakan kembali password lama.",
+    "current": "Password sekarang",
+    "currentPlaceholder": "Masukkan password sekarang",
+    "next": "Password baru",
+    "nextPlaceholder": "Minimal 8 karakter",
+    "confirm": "Konfirmasi password baru",
+    "confirmPlaceholder": "Ketik ulang password baru",
+    "mismatch": "Konfirmasi password baru belum sama.",
+    "minLength": "Password baru minimal 8 karakter.",
+    "same": "Password baru harus berbeda dari password sekarang.",
+    "save": "Simpan password baru",
+    "saving": "Menyimpan...",
+    "success": "Password berhasil diubah. Sesi di perangkat lain telah dicabut.",
+    "failure": "Gagal mengubah password.",
+    "hidePassword": "Sembunyikan password",
+    "showPassword": "Tampilkan password"
+  },
+  "accountForm": {
+    "pleaseChooseAValidImage": "Pilih file gambar yang valid.",
+    "thePhotoCouldNotBe": "Foto tidak dapat diproses.",
+    "profilePhotoUpdatedInThis": "Foto profil berhasil diperbarui di browser ini.",
+    "browserStorageIsFullTry": "Penyimpanan browser penuh. Coba gambar yang lebih kecil.",
+    "uploadProfilePhoto": "Unggah foto profil",
+    "takeProfilePhoto": "Ambil foto profil",
+    "viewProfilePhoto": "Lihat foto profil",
+    "profilePhotoOptions": "Opsi foto profil",
+    "viewPhoto": "Lihat foto",
+    "takePhoto": "Ambil foto",
+    "uploadPhoto": "Unggah foto",
+    "removePhoto": "Hapus foto",
+    "clickThePencilIconTo": "Tekan ikon pensil untuk melihat, mengambil, mengunggah, atau menghapus foto.",
+    "profilePhoto": "Foto profil",
+    "previewYourProfilePhoto": "Pratinjau foto profil kamu.",
+    "close": "Tutup",
+    "changePhoto": "Ubah foto",
+    "deleteProfilePhoto": "Hapus foto profil?",
+    "useThisAvatar": "Gunakan avatar ini?",
+    "yourCustomPhotoWillBe": "Foto kustom akan dihapus dan avatar bawaan akan digunakan kembali.",
+    "no": "Tidak",
+    "profilePhotoDeleted": "Foto profil berhasil dihapus.",
+    "thePhotoCouldNotBe2": "Foto tidak dapat dihapus.",
+    "yes": "Ya",
+    "replaceWithAvatar": "Avatar \"{{name}}\" akan menggantikan foto profil saat ini. Lanjutkan?"
+  },
+  "profilePage": {
+    "settings": "Pengaturan",
+    "profile": "Profil",
+    "manageHowYourNameAnd": "Atur bagaimana nama dan foto kamu ditampilkan di Agentic AI.",
+    "profileInformation": "Informasi profil",
+    "thisInformationIsUsedTo": "Informasi ini digunakan untuk mengenali akun kamu."
+  },
+  "accountSecurity": {
+    "accountSecurity": "Keamanan akun",
+    "updateYourPasswordOrManage": "Perbarui password atau kelola penghapusan akun dari halaman ini."
+  },
+  "languageMenu": {
+    "current": "Bahasa aktif: Indonesia",
+    "currentName": "Indonesia"
   }
 }

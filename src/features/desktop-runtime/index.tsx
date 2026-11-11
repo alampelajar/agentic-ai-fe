@@ -27,7 +27,7 @@ export function DesktopRuntime() {
     try {
       await action()
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Desktop runtime request failed.')
+      toast.error(error instanceof Error ? error.message : t('desktopRuntime.panels.requestFailed'))
     } finally {
       setBusy(false)
     }
@@ -35,20 +35,20 @@ export function DesktopRuntime() {
   const loadWindows = () => run(async () => setWindows((await getDesktopWindows(url, token)).data?.windows || []))
   const takeScreenshot = () => void run(async () => {
     const result = await getDesktopScreenshot(url, token)
-    if (!result.data?.base64) throw new Error('Screenshot tidak tersedia.')
+    if (!result.data?.base64) throw new Error(t('desktopRuntime.panels.noScreenshotData'))
     setScreenshot(`data:${result.data.mime_type || 'image/png'};base64,${result.data.base64}`)
   })
   const inspect = () => void run(async () => {
-    if (!selectedWindow) throw new Error('Pilih jendela terlebih dahulu.')
+    if (!selectedWindow) throw new Error(t('desktopRuntime.panels.chooseWindowFirst'))
     const result = await inspectDesktopWindow(url, token, selectedWindow)
-    setInspection((result.data?.elements || []).map((item) => `${item.name} · ${item.control_type || 'Unknown'} · ${item.automation_id || 'no id'}`))
+    setInspection((result.data?.elements || []).map((item) => `${item.name} · ${item.control_type || t('desktopRuntime.panels.unknown')} · ${item.automation_id || t('desktopRuntime.panels.noId')}`))
   })
   const stop = () => void run(async () => {
     await stopDesktopRuntime(url, token)
     markDesktopStopped()
     setScreenshot('')
     setInspection([])
-    toast.success('Desktop runtime dihentikan.')
+    toast.success(t('desktopRuntime.panels.stopped'))
   })
 
   // Load the window list once when the runtime becomes usable.
@@ -71,26 +71,26 @@ export function DesktopRuntime() {
       <div className='grid gap-6 lg:grid-cols-2'>
         <Card>
           <CardHeader>
-            <CardTitle>Open windows</CardTitle>
-            <CardDescription>Read-only window metadata from Windows UI Automation.</CardDescription>
+            <CardTitle>{t('desktopRuntime.panels.windowsTitle')}</CardTitle>
+            <CardDescription>{t('desktopRuntime.panels.windowsDescription')}</CardDescription>
           </CardHeader>
           <CardContent className='space-y-3'>
             {windows.length ? (
               windows.map((window) => (
                 <button type='button' key={window.handle} onClick={() => setSelectedWindow(String(window.handle))} className={`block w-full rounded-md border p-3 text-left text-sm ${selectedWindow === String(window.handle) ? 'border-primary bg-primary/5' : 'hover:bg-muted'}`}>
                   <span className='font-medium'>{window.title}</span>
-                  <span className='block text-xs text-muted-foreground'>{window.class_name || 'Unknown'} · handle {window.handle}</span>
+                  <span className='block text-xs text-muted-foreground'>{window.class_name || t('desktopRuntime.panels.unknown')} · {t('desktopRuntime.panels.handle', { handle: window.handle })}</span>
                 </button>
               ))
             ) : (
-              <p className='text-sm text-muted-foreground'>{busy ? 'Loading windows…' : 'No windows loaded.'}</p>
+              <p className='text-sm text-muted-foreground'>{busy ? t('desktopRuntime.panels.loadingWindows') : t('desktopRuntime.panels.noWindows')}</p>
             )}
             <div className='flex flex-wrap gap-2'>
               <Button variant='outline' disabled={busy || stopped} onClick={() => void loadWindows()}>
-                {busy ? <Loader2 className='mr-2 size-4 animate-spin' /> : <RefreshCw className='mr-2 size-4' />}Refresh windows
+                {busy ? <Loader2 className='mr-2 size-4 animate-spin' /> : <RefreshCw className='mr-2 size-4' />}{t('desktopRuntime.panels.refreshWindows')}
               </Button>
               <Button variant='outline' disabled={busy || !selectedWindow} onClick={inspect}>
-                <Eye className='mr-2 size-4' />Inspect selected window
+                <Eye className='mr-2 size-4' />{t('desktopRuntime.panels.inspectWindow')}
               </Button>
             </div>
             {inspection.length > 0 && <div className='max-h-64 overflow-auto rounded-md bg-muted p-3 text-xs'>{inspection.map((item) => <div key={item}>{item}</div>)}</div>}
@@ -98,14 +98,14 @@ export function DesktopRuntime() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Screenshot</CardTitle>
-            <CardDescription>Captured only after explicit user action; not persisted by the runner.</CardDescription>
+            <CardTitle>{t('desktopRuntime.panels.screenshotTitle')}</CardTitle>
+            <CardDescription>{t('desktopRuntime.panels.screenshotDescription')}</CardDescription>
           </CardHeader>
           <CardContent className='space-y-4'>
-            {screenshot ? <img src={screenshot} alt='Desktop screenshot' className='max-h-[480px] w-full object-contain' /> : <div className='flex h-48 items-center justify-center rounded-md bg-muted text-sm text-muted-foreground'>No screenshot captured.</div>}
+            {screenshot ? <img src={screenshot} alt={t('desktopRuntime.panels.screenshotAlt')} className='max-h-120 w-full object-contain' /> : <div className='flex h-48 items-center justify-center rounded-md bg-muted text-sm text-muted-foreground'>{t('desktopRuntime.panels.noScreenshot')}</div>}
             <div className='flex flex-wrap gap-2'>
-              <Button variant='outline' disabled={busy || stopped} onClick={takeScreenshot}><Camera className='mr-2 size-4' />Take screenshot</Button>
-              <Button variant='destructive' disabled={busy || stopped} onClick={stop}><Square className='mr-2 size-4' />Stop</Button>
+              <Button variant='outline' disabled={busy || stopped} onClick={takeScreenshot}><Camera className='mr-2 size-4' />{t('desktopRuntime.panels.takeScreenshot')}</Button>
+              <Button variant='destructive' disabled={busy || stopped} onClick={stop}><Square className='mr-2 size-4' />{t('desktopRuntime.panels.stop')}</Button>
             </div>
           </CardContent>
         </Card>

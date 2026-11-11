@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import {
   ArrowUpRight,
   CheckCircle2,
@@ -9,6 +10,7 @@ import { AuthLayout } from "../auth-layout";
 import { SignUpForm } from "./components/sign-up-form";
 
 export function SignUp() {
+  const { t } = useTranslation();
   return (
     <AuthLayout>
       <div className="w-full">
@@ -21,12 +23,11 @@ export function SignUp() {
             </div>
 
             <h2 className="text-lg font-semibold tracking-tight">
-              Create your account
+              {t("signUpPage.title")}
             </h2>
 
             <p className="mx-auto mt-1 max-w-xs text-xs leading-4.5 text-muted-foreground">
-              Create your account and start building your autonomous AI
-              workspace.
+              {t("signUpPage.description")}
             </p>
           </div>
 
@@ -36,14 +37,14 @@ export function SignUp() {
           {/* Sign In */}
           <div className="mt-4 border-t border-white/10 pt-4 text-center">
             <p className="text-xs text-muted-foreground">
-              Already have an account?
+              {t("signUpPage.haveAccount")}
             </p>
 
             <Link
               to="/sign-in"
               className="mt-1 inline-flex cursor-pointer items-center justify-center text-sm font-medium text-white transition-colors hover:text-primary"
             >
-              Sign in
+              {t("signUpPage.signIn")}
             </Link>
           </div>
         </div>
@@ -51,11 +52,11 @@ export function SignUp() {
         {/* Small info */}
         <div className="mt-4 flex items-center justify-center gap-2 text-[10px] text-muted-foreground/60">
           <CheckCircle2 className="size-3 text-emerald-500" />
-          <span>Secure account creation</span>
+          <span>{t("signUpPage.secure")}</span>
         </div>
 
         <div className="mt-2 flex items-center justify-center gap-1 text-[10px] text-muted-foreground/40">
-          <span>Powered by Agentic AI</span>
+          <span>{t("signUpPage.poweredBy")}</span>
           <ArrowUpRight className="size-2.5" />
         </div>
       </div>

@@ -1,7 +1,8 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
 import type { DesktopAction } from './api'
+import i18n from '@/i18n'
 import { ChatApprovalDialog } from './chat-approval-dialog'
 
 const action = (overrides: Partial<DesktopAction> = {}): DesktopAction => ({
@@ -31,6 +32,11 @@ async function openDialog(approval = action()) {
   return { screen, onDecision, onEmergencyStop }
 }
 
+// These tests read the English text.
+beforeAll(async () => {
+  await i18n.changeLanguage('en')
+})
+
 describe('ChatApprovalDialog', () => {
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'Date'] })
@@ -45,7 +51,7 @@ describe('ChatApprovalDialog', () => {
     await expect.element(dialog).toHaveTextContent('desktop.type')
     await expect.element(dialog).toHaveTextContent('agentic-ai-be (handle 131406)')
     await expect.element(dialog).toHaveTextContent('hello')
-    await expect.element(dialog).toHaveTextContent('(60 detik lagi)')
+    await expect.element(dialog).toHaveTextContent('(60 s left)')
   })
 
   it('reports Allow Once once, and locks the buttons', async () => {
