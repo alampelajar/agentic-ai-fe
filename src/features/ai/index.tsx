@@ -1,5 +1,7 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { useLocation } from '@tanstack/react-router'
+import { useQueryClient } from '@tanstack/react-query'
+import { CHAT_HISTORY_KEY } from '@/components/layout/nav-chats'
 import { useTranslation } from 'react-i18next'
 import { API_BASE_URL } from '@/lib/api-config'
 import { useAuthStore } from '@/stores/auth-store'
@@ -87,6 +89,7 @@ const workflowSteps: WorkflowStep[] = [
 export function AIAssistant() {
   const { t } = useTranslation()
   const accessToken = useAuthStore((state) => state.auth.accessToken)
+  const queryClient = useQueryClient()
 
   // Ambil task ID langsung dari URL agar history tetap terbaca
   // walaupun route search schema tidak mengekspos field `task`.
@@ -414,6 +417,7 @@ export function AIAssistant() {
     })
 
     const id = String(created.id)
+    void queryClient.invalidateQueries({ queryKey: CHAT_HISTORY_KEY })
     activeTaskRef.current = id
     setCurrentTaskId(id)
     setTaskTitle(created.title)
@@ -1188,6 +1192,7 @@ export function AIAssistant() {
       }
 
       await updateTask(taskId, { status: 'done', model_id: selectedModel.id })
+      void queryClient.invalidateQueries({ queryKey: CHAT_HISTORY_KEY })
       window.dispatchEvent(new Event('tasks:refresh'))
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : t('agentic.errors.generic')

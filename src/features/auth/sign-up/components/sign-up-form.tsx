@@ -4,8 +4,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, UserPlus } from "lucide-react";
 import { toast } from "sonner";
+import { useNavigate } from "@tanstack/react-router";
 
-import { API_BASE_URL } from "@/lib/api-config";
+import { useTranslation } from "react-i18next";
+import { requestRegisterOtp, resendRegisterOtp, verifyRegisterOtp } from "@/lib/api-email-otp";
+import { EmailOtpStep } from "@/features/auth/email-otp/email-otp-step";
+import { setSignInPrefill } from "@/features/auth/sign-in/prefill";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -47,7 +51,11 @@ export function SignUpForm({
   className,
   ...props
 }: React.HTMLAttributes<HTMLFormElement>) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  // After the form is accepted a code is e-mailed; the account exists only once it is entered.
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,31 +72,15 @@ export function SignUpForm({
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: data.name.trim(),
-          email: data.email.trim(),
-          password: data.password,
-        }),
+      const email = data.email.trim();
+
+      await requestRegisterOtp({
+        name: data.name.trim(),
+        email,
+        password: data.password,
       });
 
-      const result = await response.json();
-
-      if (!response.ok || !result.ok) {
-        throw new Error(result.message || "Registration failed.");
-      }
-
-      toast.success("Account created successfully!", {
-        description: `Account created for ${data.email}.`,
-      });
-
-      form.reset();
-
-      window.location.href = "/sign-in";
+      setPendingEmail(email);
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Something went wrong.",
@@ -96,6 +88,35 @@ export function SignUpForm({
     } finally {
       setIsLoading(false);
     }
+  }
+
+  async function verifyCode(code: string) {
+    if (!pendingEmail) return;
+
+    await verifyRegisterOtp(pendingEmail, code);
+
+    toast.success("Account created successfully!", {
+      description: `Account created for ${pendingEmail}. Please sign in.`,
+    });
+
+    // Hand the details to the sign-in page (in memory only) so it opens already filled in.
+    setSignInPrefill({ email: pendingEmail, password: form.getValues("password") });
+    form.reset();
+    await navigate({ to: "/sign-in", replace: true });
+  }
+
+  if (pendingEmail) {
+    return (
+      <EmailOtpStep
+        email={pendingEmail}
+        verifyLabel={t("emailOtp.createAccount")}
+        onVerify={verifyCode}
+        onResend={async () => {
+          await resendRegisterOtp(pendingEmail);
+        }}
+        onBack={() => setPendingEmail(null)}
+      />
+    );
   }
 
   return (

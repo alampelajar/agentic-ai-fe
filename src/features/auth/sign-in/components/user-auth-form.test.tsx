@@ -3,6 +3,7 @@ import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
 import i18n from '@/i18n'
 import { UserAuthForm } from './user-auth-form'
+import { peekSignInPrefill, setSignInPrefill } from '../prefill'
 
 const mocks = vi.hoisted(() => ({
   navigate: vi.fn(),
@@ -39,6 +40,16 @@ describe('UserAuthForm', () => {
 
   afterEach(() => {
     vi.unstubAllGlobals()
+  })
+
+  it('opens already filled in with the details from sign-up, then forgets them', async () => {
+    setSignInPrefill({ email: 'rina@example.com', password: 'RinaPass-123' })
+    const screen = await render(<UserAuthForm />)
+
+    await expect.element(screen.getByRole('textbox', { name: 'Email address' })).toHaveValue('rina@example.com')
+    await expect.element(screen.getByLabelText('Password')).toHaveValue('RinaPass-123')
+    // Used once: nothing is kept for a later visit.
+    expect(peekSignInPrefill()).toBeNull()
   })
 
   it('renders email, password, submit, and reset-password controls', async () => {

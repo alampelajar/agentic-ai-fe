@@ -3,7 +3,6 @@ import {
   LayoutDashboard,
   Monitor,
   Puzzle,
-  ListTodo,
   Bell,
   Package,
   Palette,
@@ -19,6 +18,7 @@ import {
   FolderGit2,
   Shuffle,
   MessageSquareText,
+  PenTool,
 } from "lucide-react";
 
 import { type SidebarData } from "../types";
@@ -71,11 +71,6 @@ export const sidebarData: SidebarData = {
           icon: Bot,
         },
         {
-          title: "tasks",
-          url: "/tasks",
-          icon: ListTodo,
-        },
-        {
           title: "appsMenu",
           url: "/apps",
           icon: Package,
@@ -99,6 +94,11 @@ export const sidebarData: SidebarData = {
           title: "workspacesMenu",
           url: "/workspaces",
           icon: FolderGit2,
+        },
+        {
+          title: "designStudioMenu",
+          url: "/design-studio",
+          icon: PenTool,
         },
       ],
     },

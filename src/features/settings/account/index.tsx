@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { ContentSection } from "../components/content-section";
+import { ChangeEmailCard } from "./change-email-card";
 import { ChangePasswordCard } from "./change-password-card";
 import { DeleteAccountCard } from "./delete-account-card";
 
@@ -25,6 +26,7 @@ export function SettingsAccount() {
         </div>
 
         <div className="grid min-w-0 grid-cols-1 gap-5 2xl:grid-cols-2">
+          <ChangeEmailCard />
           <ChangePasswordCard />
           <DeleteAccountCard />
         </div>

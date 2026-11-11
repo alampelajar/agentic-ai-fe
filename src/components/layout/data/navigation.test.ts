@@ -31,10 +31,14 @@ describe('main navigation', () => {
 
   it('keeps the other menus: Workspaces, Agents, Skills, Memory and the settings pages', () => {
     const urls = entries.map((entry) => entry.url)
-    for (const url of ['/workspaces', '/skills', '/memory', '/combos', '/tasks', '/settings/account', '/settings/appearance', '/settings/notifications', '/settings/display', '/profile', '/feedback']) {
+    for (const url of ['/workspaces', '/skills', '/memory', '/combos', '/settings/account', '/settings/appearance', '/settings/notifications', '/settings/display', '/profile', '/feedback', '/design-studio']) {
       expect(urls, url).toContain(url)
     }
     expect(entries.some((entry) => entry.title === 'workspacesMenu')).toBe(true)
+  })
+
+  it('has no Task menu: conversations are listed as chat history instead', () => {
+    expect(entries.some((entry) => entry.url === '/tasks' || entry.title === 'tasks')).toBe(false)
   })
 
   it('has no duplicate links', () => {
@@ -49,7 +53,7 @@ describe('main navigation', () => {
   })
 
   it('has text in both languages for the menus of the cloud-first experience', () => {
-    for (const title of ['workspacesMenu', 'memoryMenu', 'integrationsMenu', 'skills', 'settings']) {
+    for (const title of ['workspacesMenu', 'memoryMenu', 'integrationsMenu', 'skills', 'settings', 'designStudioMenu']) {
       expect(entries.some((entry) => entry.title === title), title).toBe(true)
       expect(en[title as keyof typeof en], `${title} (en)`).toBeTruthy()
       expect(id[title as keyof typeof id], `${title} (id)`).toBeTruthy()
