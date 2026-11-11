@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -15,40 +16,24 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 
+// Labels come from settingsPage.display.items in the language files.
 const items = [
-  {
-    id: 'recents',
-    label: 'Recents',
-  },
-  {
-    id: 'home',
-    label: 'Home',
-  },
-  {
-    id: 'applications',
-    label: 'Applications',
-  },
-  {
-    id: 'desktop',
-    label: 'Desktop',
-  },
-  {
-    id: 'downloads',
-    label: 'Downloads',
-  },
-  {
-    id: 'documents',
-    label: 'Documents',
-  },
+  { id: 'recents' },
+  { id: 'home' },
+  { id: 'applications' },
+  { id: 'desktop' },
+  { id: 'downloads' },
+  { id: 'documents' },
 ] as const
 
-const displayFormSchema = z.object({
-  items: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: 'You have to select at least one item.',
-  }),
-})
+// Built with t() so the message follows the chosen language.
+function makeDisplayFormSchema(message: string) {
+  return z.object({
+    items: z.array(z.string()).refine((value) => value.some((item) => item), { message }),
+  })
+}
 
-type DisplayFormValues = z.infer<typeof displayFormSchema>
+type DisplayFormValues = z.infer<ReturnType<typeof makeDisplayFormSchema>>
 
 // This can come from your database or API.
 const defaultValues: Partial<DisplayFormValues> = {
@@ -57,6 +42,7 @@ const defaultValues: Partial<DisplayFormValues> = {
 
 export function DisplayForm() {
   const { t } = useTranslation()
+  const displayFormSchema = useMemo(() => makeDisplayFormSchema(t('settingsPage.display.selectOne')), [t])
   const form = useForm<DisplayFormValues>({
     resolver: zodResolver(displayFormSchema),
     defaultValues,
@@ -105,7 +91,7 @@ export function DisplayForm() {
                           />
                         </FormControl>
                         <FormLabel className='font-normal'>
-                          {item.label}
+                          {t(`settingsPage.display.items.${item.id}`)}
                         </FormLabel>
                       </FormItem>
                     )

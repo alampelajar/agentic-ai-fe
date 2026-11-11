@@ -122,7 +122,7 @@ export function AppearanceForm() {
                       </div>
                     </div>
                     <span className='block w-full p-2 text-center font-normal'>
-                      Light
+                      {t("settingsPage.appearance.light")}
                     </span>
                   </FormLabel>
                 </FormItem>
@@ -148,7 +148,7 @@ export function AppearanceForm() {
                       </div>
                     </div>
                     <span className='block w-full p-2 text-center font-normal'>
-                      Dark
+                      {t("settingsPage.appearance.dark")}
                     </span>
                   </FormLabel>
                 </FormItem>

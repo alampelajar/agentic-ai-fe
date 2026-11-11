@@ -17,7 +17,7 @@ import { clearDraft, readDraft } from './use-auto-save'
 const message = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
 
 export function DesignProjectsPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const [projects, setProjects] = useState<DesignProjectSummary[]>([])
   const [loading, setLoading] = useState(true)
@@ -98,7 +98,7 @@ export function DesignProjectsPage() {
                   </div>
                   <CardContent className='p-3'>
                     <p className='truncate text-sm font-medium'>{project.name}</p>
-                    <p className='mt-0.5 text-xs text-muted-foreground'>{t('designStudio.editedAt', { date: new Date(project.updated_at).toLocaleString() })}</p>
+                    <p className='mt-0.5 text-xs text-muted-foreground'>{t('designStudio.editedAt', { date: new Date(project.updated_at).toLocaleString(i18n.resolvedLanguage ?? i18n.language) })}</p>
                   </CardContent>
                 </Link>
                 <Button

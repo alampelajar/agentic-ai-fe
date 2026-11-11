@@ -847,7 +847,7 @@
       "updatePreferences": "Perbarui Preferensi"
     },
     "display": {
-      "title": "Display",
+      "title": "Tampilan Layar",
       "subtitle": "Atur layout dan display aplikasi.",
       "sidebar": "Sidebar",
       "sidebarDescription": "Pilih elemen yang ditampilkan di sidebar.",
@@ -856,7 +856,16 @@
       "saveChanges": "Simpan Perubahan",
       "saving": "Menyimpan...",
       "success": "Pengaturan display berhasil diperbarui!",
-      "updateDisplay": "Perbarui Tampilan"
+      "updateDisplay": "Perbarui Tampilan",
+      "selectOne": "Pilih minimal satu item.",
+      "items": {
+        "recents": "Terbaru",
+        "home": "Beranda",
+        "applications": "Aplikasi",
+        "desktop": "Desktop",
+        "downloads": "Unduhan",
+        "documents": "Dokumen"
+      }
     },
     "notifications": {
       "title": "Notifikasi",
@@ -879,7 +888,9 @@
       "directMessagesMentions": "Pesan langsung dan mention",
       "nothing": "Tidak ada",
       "mobileSettings": "pengaturan mobile",
-      "useDifferentMobile": "Gunakan pengaturan berbeda untuk perangkat mobile"
+      "useDifferentMobile": "Gunakan pengaturan berbeda untuk perangkat mobile",
+      "mobileHintBefore": "Anda bisa mengatur notifikasi mobile di halaman",
+      "mobileHintAfter": "."
     },
     "eyebrow": "Workspace",
     "description": "Kelola akun, keamanan, dan preferensi workspace Agentic AI."

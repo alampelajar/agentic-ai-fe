@@ -856,7 +856,16 @@
       "saveChanges": "Save Changes",
       "saving": "Saving...",
       "success": "Display settings updated successfully!",
-      "updateDisplay": "Update display"
+      "updateDisplay": "Update display",
+      "selectOne": "You have to select at least one item.",
+      "items": {
+        "recents": "Recents",
+        "home": "Home",
+        "applications": "Applications",
+        "desktop": "Desktop",
+        "downloads": "Downloads",
+        "documents": "Documents"
+      }
     },
     "notifications": {
       "title": "Notifications",
@@ -879,7 +888,9 @@
       "directMessagesMentions": "Direct messages and mentions",
       "nothing": "Nothing",
       "mobileSettings": "mobile settings",
-      "useDifferentMobile": "Use different settings for my mobile devices"
+      "useDifferentMobile": "Use different settings for my mobile devices",
+      "mobileHintBefore": "You can manage your mobile notifications in the",
+      "mobileHintAfter": " page."
     },
     "eyebrow": "Workspace",
     "description": "Manage your account, security and Agentic AI workspace preferences."
