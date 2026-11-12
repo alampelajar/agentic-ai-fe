@@ -1,7 +1,13 @@
 import { useTranslation } from 'react-i18next'
 import { Badge } from '@/components/ui/badge'
 
-type PublishFile = { path: string; status: 'changed' | 'deleted' }
+type PublishFile = { path: string; status: 'added' | 'changed' | 'deleted' }
+
+const statusKey = {
+  added: 'githubPublish.status.added',
+  changed: 'githubPublish.status.modified',
+  deleted: 'githubPublish.status.deleted',
+} as const
 
 const asString = (value: unknown) => (typeof value === 'string' ? value : '')
 
@@ -31,7 +37,7 @@ export function PublishApprovalDetails({ args }: { args: Record<string, unknown>
       <ul className='max-h-40 overflow-auto rounded-md border p-2 text-xs'>
         {files.map((file) => (
           <li key={file.path} className='flex items-center gap-2 py-0.5'>
-            <Badge variant='outline' className='text-[10px]'>{file.status === 'deleted' ? t('githubPublish.status.deleted') : t('githubPublish.status.modified')}</Badge>
+            <Badge variant='outline' className='text-xs'>{t(statusKey[file.status] ?? statusKey.changed)}</Badge>
             <span className='truncate font-mono'>{file.path}</span>
           </li>
         ))}

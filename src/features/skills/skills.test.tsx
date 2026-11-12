@@ -10,6 +10,7 @@ const mocks = vi.hoisted(() => ({
   updateSkill: vi.fn(),
   deleteSkill: vi.fn(),
   validateSkill: vi.fn(),
+  createSkill: vi.fn(),
   toastError: vi.fn(),
   toastSuccess: vi.fn(),
 }))
@@ -19,7 +20,7 @@ vi.mock('./data/api', () => ({
   updateSkill: mocks.updateSkill,
   deleteSkill: mocks.deleteSkill,
   validateSkill: mocks.validateSkill,
-  createSkill: vi.fn(),
+  createSkill: mocks.createSkill,
   importSkillGithub: vi.fn(),
   importSkillZip: vi.fn(),
 }))
@@ -150,5 +151,30 @@ describe('Skills manager', () => {
     mocks.getSkills.mockResolvedValueOnce([skill({ validation_status: 'error', validation_error: 'Tool tidak dikenal' })])
     const screen = await render(<Skills />)
     await expect.element(screen.getByText('Tool tidak dikenal')).toBeInTheDocument()
+  })
+
+  it('creates a skill with the tools that were ticked', async () => {
+    await i18n.changeLanguage('en')
+    mocks.getSkills.mockResolvedValue([])
+    mocks.createSkill.mockResolvedValue({ skill: skill() })
+    const screen = await render(<Skills />)
+    await userEvent.click(screen.getByRole('tab', { name: 'Create skill' }))
+    await userEvent.fill(screen.getByLabelText('Slug / ID'), 'reader')
+    await userEvent.fill(screen.getByLabelText('Name'), 'Reader')
+    await userEvent.fill(screen.getByLabelText('SKILL.md'), '# Reader')
+    await userEvent.click(screen.getByRole('checkbox', { name: 'workspace.read_file' }))
+    await userEvent.click(screen.getByRole('checkbox', { name: 'workspace.write_file' }))
+    await userEvent.click(screen.getByRole('checkbox', { name: 'workspace.write_file' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Save skill' }))
+
+    await vi.waitFor(() => expect(mocks.createSkill).toHaveBeenCalledTimes(1))
+    expect(mocks.createSkill.mock.calls[0][0]).toMatchObject({ id: 'reader', name: 'Reader', tools: ['workspace.read_file'] })
+  })
+
+  it('names where a skill came from in the chosen language', async () => {
+    await i18n.changeLanguage('en')
+    mocks.getSkills.mockResolvedValue([skill()])
+    const screen = await render(<Skills />)
+    await expect.element(screen.getByText('Created here')).toBeInTheDocument()
   })
 })

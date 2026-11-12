@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from '@tanstack/react-router'
-import { ArrowLeft, ChevronDown, ChevronRight, Download, File as FileIcon, FilePlus2, Folder, Loader2, Save, Undo2 } from 'lucide-react'
+import { ArrowLeft, ChevronDown, ChevronRight, Download, File as FileIcon, FilePlus2, Folder, Info, Loader2, Save, Undo2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { ConfirmDialog } from '@/components/confirm-dialog'
@@ -223,6 +223,12 @@ export function WorkspaceDetailPage({ workspaceId }: { workspaceId: number }) {
         </Button>
         </div>
       </div>
+      {workspace.source_type === 'github' && !(workspace.github_owner && workspace.base_sha) && (
+        <p className='flex items-start gap-2 rounded-md border border-dashed p-3 text-xs text-muted-foreground'>
+          <Info className='mt-0.5 size-4 shrink-0' aria-hidden='true' />
+          {t('workspacePage.explorer.publishUnavailable')}
+        </p>
+      )}
 
       <Tabs value={tab} onValueChange={(value) => { setTab(value); if (value === 'changes') void loadChanges() }}>
         <TabsList>
