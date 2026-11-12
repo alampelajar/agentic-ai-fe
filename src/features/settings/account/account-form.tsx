@@ -25,6 +25,12 @@ export function AccountForm() {
   const [customPhoto, setCustomPhoto] = useState<string | null>(null)
   const [photoPreviewOpen, setPhotoPreviewOpen] = useState(false)
   const [pendingAvatarAction, setPendingAvatarAction] = useState<{ type: 'preset'; value: string; label: string } | { type: 'remove' } | null>(null)
+  // Kept apart from the action so the dialog text stays filled while it animates closed.
+  const [avatarDialogOpen, setAvatarDialogOpen] = useState(false)
+  const askAvatarAction = (action: NonNullable<typeof pendingAvatarAction>) => {
+    setPendingAvatarAction(action)
+    setAvatarDialogOpen(true)
+  }
   const authUser = useAuthStore((state) => state.auth.user)
   const seed = authUser?.accountNo || authUser?.email || 'agentic-ai-user'
   const [name, setName] = useState('')
@@ -229,7 +235,7 @@ export function AccountForm() {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       className='text-destructive focus:text-destructive'
-                      onSelect={() => setPendingAvatarAction({ type: 'remove' })}
+                      onSelect={() => askAvatarAction({ type: 'remove' })}
                     >
                       <Trash2 className='me-2 size-4 text-destructive' />
                       {t('accountForm.removePhoto')}
@@ -285,7 +291,7 @@ export function AccountForm() {
                 type='button'
                 aria-pressed={isSelected}
                 aria-label={preset.label}
-                onClick={() => setPendingAvatarAction({
+                onClick={() => askAvatarAction({
                   type: 'preset',
                   value: avatarPresetValue(preset.id),
                   label: preset.label,
@@ -358,7 +364,7 @@ export function AccountForm() {
           </div>
         </DialogContent>
       </Dialog>
-      <Dialog open={pendingAvatarAction !== null} onOpenChange={(open) => { if (!open) setPendingAvatarAction(null) }}>
+      <Dialog open={avatarDialogOpen} onOpenChange={setAvatarDialogOpen}>
         <DialogContent className='max-w-md'>
           <DialogHeader>
             <DialogTitle>
@@ -373,7 +379,7 @@ export function AccountForm() {
             </DialogDescription>
           </DialogHeader>
           <div className='flex justify-end gap-2'>
-            <Button type='button' variant='outline' onClick={() => setPendingAvatarAction(null)}>
+            <Button type='button' variant='outline' onClick={() => setAvatarDialogOpen(false)}>
               {t('accountForm.no')}
             </Button>
             <Button
@@ -399,7 +405,7 @@ export function AccountForm() {
                   setAvatar(pendingAvatarAction.value)
                   setNotice(null)
                 }
-                setPendingAvatarAction(null)
+                setAvatarDialogOpen(false)
               }}
             >
               {t('accountForm.yes')}
