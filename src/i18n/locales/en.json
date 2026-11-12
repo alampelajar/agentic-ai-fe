@@ -1624,7 +1624,8 @@
       "saveFailed": "The file could not be saved.",
       "exportFailed": "The ZIP could not be created.",
       "discardTitle": "Discard changes?",
-      "discard": "Discard"
+      "discard": "Discard",
+      "publishUnavailable": "Send to GitHub is not available here: this workspace was imported before the app kept track of the commit it came from. Import the repository again to send changes to GitHub."
     },
     "console": {
       "command": "Command",
@@ -2181,7 +2182,7 @@
     },
     "form": {
       "title": "Create skill",
-      "description": "This editor saves the instructions and a validated manifest. Tools must come from the known registry.",
+      "description": "This editor saves the instructions and a validated manifest.",
       "slug": "Slug / ID",
       "slugPlaceholder": "coding-assistant",
       "name": "Name",
@@ -2192,8 +2193,14 @@
       "descriptionLabel": "Description",
       "instructions": "SKILL.md",
       "instructionsPlaceholder": "# Coding Assistant\n\nHow the skill should work…",
-      "note": "The backend will tighten tools and permissions in a later phase. Do not put secrets in the instructions.",
-      "save": "Save skill"
+      "note": "Do not put secrets in the instructions.",
+      "save": "Save skill",
+      "tools": "Tools",
+      "toolsHint": "Choose only what the skill needs. Tools that change files or the computer still ask for your approval each time.",
+      "toolGroups": {
+        "workspace": "Workspace",
+        "desktop": "Desktop"
+      }
     },
     "card": {
       "enabled": "Enabled",
@@ -2225,6 +2232,11 @@
       "installed": "Installed",
       "enabled": "Enabled",
       "disabled": "Disabled"
+    },
+    "source": {
+      "created": "Created here",
+      "zip": "ZIP",
+      "github": "GitHub"
     }
   },
   "subscriptionPage": {

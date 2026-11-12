@@ -52,6 +52,19 @@ describe('publish approval', () => {
     expect(onDecision).toHaveBeenCalledWith('allow')
   })
 
+  it('labels each file as added, changed or deleted', async () => {
+    const files = [
+      { path: 'index.html', status: 'added' },
+      { path: 'README.md', status: 'changed' },
+      { path: 'old.txt', status: 'deleted' },
+    ]
+    const screen = await render(<WorkspaceApprovalDialog approval={approval({ files })} agentName='Coding' onDecision={vi.fn()} />)
+    const items = screen.getByTestId('publish-approval').getByRole('listitem')
+    await expect.element(items.nth(0)).toHaveTextContent('addedindex.html')
+    await expect.element(items.nth(1)).toHaveTextContent('changedREADME.md')
+    await expect.element(items.nth(2)).toHaveTextContent('deletedold.txt')
+  })
+
   it('says when no pull request will be opened', async () => {
     const screen = await render(<WorkspaceApprovalDialog approval={approval({ pull_request: false })} agentName='Coding' onDecision={vi.fn()} />)
     await expect.element(screen.getByTestId('publish-approval')).toHaveTextContent('No, only the branch')

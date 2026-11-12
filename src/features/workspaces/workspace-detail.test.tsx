@@ -53,8 +53,8 @@ const entries: TreeEntry[] = [
   { path: '.env', name: '.env', type: 'file', size: 20, sensitive: true },
 ]
 
-async function openPage() {
-  mocks.getWorkspace.mockResolvedValue(workspace)
+async function openPage(shown: Workspace = workspace) {
+  mocks.getWorkspace.mockResolvedValue(shown)
   mocks.getTree.mockResolvedValue({ entries, truncated: false })
   mocks.getChanges.mockResolvedValue([])
   mocks.getExecutions.mockResolvedValue({ jobs: [], executionEnabled: false })
@@ -80,6 +80,17 @@ describe('Workspace explorer', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'src' }))
     await expect.element(screen.getByRole('button', { name: 'main.go' })).toBeInTheDocument()
+  })
+
+  it('explains why a GitHub workspace imported before publishing existed cannot be sent', async () => {
+    const screen = await openPage({ ...workspace, source_type: 'github', source_url: 'https://github.com/o/r' })
+    await expect.element(screen.getByText(/Import the repository again/)).toBeInTheDocument()
+    await expect.element(screen.getByRole('button', { name: 'Send to GitHub' })).not.toBeInTheDocument()
+  })
+
+  it('does not show that note for a workspace that can be sent or was never on GitHub', async () => {
+    const screen = await openPage()
+    await expect.element(screen.getByText(/Import the repository again/)).not.toBeInTheDocument()
   })
 
   it('shows a dependency folder as a closed, labelled entry that cannot be opened', async () => {

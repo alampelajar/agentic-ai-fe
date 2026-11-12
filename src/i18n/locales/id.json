@@ -1624,7 +1624,8 @@
       "saveFailed": "File tidak dapat disimpan.",
       "exportFailed": "ZIP tidak dapat dibuat.",
       "discardTitle": "Buang perubahan?",
-      "discard": "Buang"
+      "discard": "Buang",
+      "publishUnavailable": "Kirim ke GitHub tidak tersedia di sini: workspace ini diimpor sebelum aplikasi mencatat commit asalnya. Impor ulang repository untuk mengirim perubahan ke GitHub."
     },
     "console": {
       "command": "Perintah",
@@ -2181,7 +2182,7 @@
     },
     "form": {
       "title": "Buat skill",
-      "description": "Editor ini menyimpan instruksi dan manifest tervalidasi. Tool harus berasal dari registry yang dikenal.",
+      "description": "Editor ini menyimpan instruksi dan manifest yang sudah divalidasi.",
       "slug": "Slug / ID",
       "slugPlaceholder": "coding-assistant",
       "name": "Nama",
@@ -2192,8 +2193,14 @@
       "descriptionLabel": "Deskripsi",
       "instructions": "SKILL.md",
       "instructionsPlaceholder": "# Coding Assistant\n\nInstruksi operasional skill…",
-      "note": "Tool dan permission akan diperketat oleh backend pada fase berikutnya. Jangan memasukkan secret ke instruksi.",
-      "save": "Simpan skill"
+      "note": "Jangan memasukkan secret ke instruksi.",
+      "save": "Simpan skill",
+      "tools": "Tool",
+      "toolsHint": "Pilih hanya yang dibutuhkan skill. Tool yang mengubah file atau komputer tetap meminta persetujuan Anda setiap kali.",
+      "toolGroups": {
+        "workspace": "Workspace",
+        "desktop": "Desktop"
+      }
     },
     "card": {
       "enabled": "Aktif",
@@ -2225,6 +2232,11 @@
       "installed": "Terpasang",
       "enabled": "Aktif",
       "disabled": "Nonaktif"
+    },
+    "source": {
+      "created": "Dibuat di sini",
+      "zip": "ZIP",
+      "github": "GitHub"
     }
   },
   "subscriptionPage": {
