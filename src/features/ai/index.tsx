@@ -1270,7 +1270,7 @@ export function AIAssistant() {
   const progressStatus = runnerStatus || (selectedAgent ? t('agentic.status.thinking', { agent: selectedAgent.name, model: selectedModel?.name }) : '')
 
   return (
-    <Main className='agentic-workspace flex min-h-0 flex-1 flex-col overflow-hidden bg-background p-0'>
+    <Main fixed className='agentic-workspace flex min-h-0 flex-1 flex-col overflow-hidden bg-background p-0'>
       <div className='flex min-h-0 flex-1 flex-col'>
         <SessionBar status={sessionStatus} onNewChat={handleNewChat} newChatDisabled={running}>
           <AgentSelector
