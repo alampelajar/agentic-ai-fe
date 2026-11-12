@@ -1,10 +1,11 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Bot, Check, ChevronDown, Cpu } from "lucide-react";
+import { Bot, Check, ChevronDown, Cpu, Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { API_BASE_URL } from "@/lib/api-config";
 import { useAuthStore } from "@/stores/auth-store";
+import { autoModel, isAutoModel } from "../auto-model";
 
 // ============================================================
 // TYPES
@@ -359,11 +360,14 @@ export function AgentSelector({
   const handleSelectAgent = (agent: Agent) => {
     onSelect(agent);
 
-    // Model pertama menjadi model default
+    // With two or more models Auto is the default: it picks per message.
+    // Otherwise the agent's one model.
     const defaultModel =
-      Array.isArray(agent.models) && agent.models.length > 0
-        ? agent.models[0]
-        : null;
+      Array.isArray(agent.models) && agent.models.length >= 2
+        ? autoModel(t("agentSelector.auto.name"), t("agentSelector.auto.description"))
+        : Array.isArray(agent.models) && agent.models.length > 0
+          ? agent.models[0]
+          : null;
 
     setInternalSelectedModel(defaultModel);
 
@@ -552,7 +556,30 @@ export function AgentSelector({
                     </p>
                   </div>
                 ) : (
-                  selectedAgent.models.map((model) => {
+                  <>
+                  {selectedAgent.models.length >= 2 && (
+                    <button
+                      type="button"
+                      onClick={() => handleSelectModel(autoModel(t("agentSelector.auto.name"), t("agentSelector.auto.description")))}
+                      className={`flex w-full cursor-pointer items-center gap-4 rounded-xl px-3 py-3 text-left transition-colors ${
+                        isAutoModel(internalSelectedModel) ? "bg-accent" : "hover:bg-accent/60"
+                      }`}
+                    >
+                      <div
+                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border ${
+                          isAutoModel(internalSelectedModel) ? "border-primary bg-primary/10" : "border-border bg-background"
+                        }`}
+                      >
+                        <Sparkles className="h-5 w-5" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <span className="font-semibold">{t("agentSelector.auto.name")}</span>
+                        <p className="mt-0.5 text-xs text-muted-foreground">{t("agentSelector.auto.description")}</p>
+                      </div>
+                      {isAutoModel(internalSelectedModel) && <Check className="h-5 w-5 shrink-0 text-primary" />}
+                    </button>
+                  )}
+                  {selectedAgent.models.map((model) => {
                     const isSelected = internalSelectedModel?.id === model.id;
 
                     return (
@@ -607,7 +634,8 @@ export function AgentSelector({
                         )}
                       </button>
                     );
-                  })
+                  })}
+                  </>
                 )}
               </div>
             </div>

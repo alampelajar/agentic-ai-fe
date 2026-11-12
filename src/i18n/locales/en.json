@@ -444,6 +444,16 @@
       "elapsed": "Time taken",
       "trail": "Steps done",
       "stopped": "Stopped"
+    },
+    "auto": {
+      "answeredBy": "Auto → {{model}}",
+      "need": {
+        "vision": "reads images",
+        "coding": "coding in the workspace",
+        "long": "long documents",
+        "fast": "fast answer"
+      },
+      "fallback": "backup after the first choice failed"
     }
   },
   "tasksPage": {
@@ -679,7 +689,11 @@
     "system": "SYSTEM",
     "noAgentSelected": "No Agent Selected",
     "ready": "Ready",
-    "selectAgent": "Select the Agent you want to use."
+    "selectAgent": "Select the Agent you want to use.",
+    "auto": {
+      "name": "Auto",
+      "description": "Picks the model for each message: one that reads images for a photo, a coding model in a workspace, a fast one otherwise."
+    }
   },
   "common": {
     "save": "Save",
@@ -2565,5 +2579,46 @@
   "languageMenu": {
     "current": "Current language: English",
     "currentName": "English"
+  },
+  "modelHealthMenu": "Model health",
+  "modelHealth": {
+    "title": "Model health",
+    "subtitle": "How each model answered in the last {{hours}} hours, and how much each provider has left.",
+    "refresh": "Refresh",
+    "loading": "Loading model health…",
+    "loadFailed": "Model health could not be loaded",
+    "retry": "Try again",
+    "emptyTitle": "No models yet",
+    "emptyDescription": "Add a model in Settings, then come back after using it in a chat.",
+    "quotaTitle": "Quota per provider",
+    "modelsTitle": "Models",
+    "noQuota": "No quota known yet: it shows after a model of this provider has answered.",
+    "requestsLeft": "requests left",
+    "resets": "Resets in {{value}}",
+    "seenAt": "As of {{time}}",
+    "openrouter": {
+      "freeTier": "Free tier",
+      "paidTier": "Paid tier (credits bought)",
+      "usageToday": "Used today: {{value}} credits",
+      "creditLeft": "Credit left: {{value}}"
+    },
+    "columns": {
+      "model": "Model",
+      "status": "Status",
+      "calls": "Calls",
+      "success": "Success",
+      "busy": "Overloaded (5xx)",
+      "limited": "Limited (429)",
+      "speed": "Avg. time",
+      "lastFailure": "Last failure"
+    },
+    "status": {
+      "healthy": "Healthy",
+      "unstable": "Unstable",
+      "unused": "Not used",
+      "restingUntil": "Resting until {{time}}"
+    },
+    "seconds": "{{value}} s",
+    "note": "Shared models count every user's calls (counts only); your own models count only yours. Auto skips resting models and puts often-failing ones last."
   }
 }

@@ -39,6 +39,7 @@ import { extendTrail, type RunPhase } from './components/run-phase'
 import { MAX_ATTACHMENTS, checkAttachment, isImageAttachment } from './components/attachments'
 import { SessionBar, type SessionStatus } from './components/session-bar'
 import { readChatReply, visibleDraft } from './chat-stream'
+import { AUTO_MODEL_ID, describeAutoAnswer, isAutoModel } from './auto-model'
 import { ThreadEmpty } from './components/thread-empty'
 
 
@@ -421,7 +422,8 @@ export function AIAssistant() {
       label: 'feature',
       priority: 'medium',
       agent_id: selectedAgent.id,
-      model_id: selectedModel?.id ?? null,
+      // With Auto the model is chosen per message, so the task names none.
+      model_id: isAutoModel(selectedModel) ? null : selectedModel?.id ?? null,
       workspace_id: selectedWorkspaceId,
     })
 
@@ -627,6 +629,10 @@ export function AIAssistant() {
     if (modelId && modelId > 0) {
       formData.append('model_id', String(modelId))
     }
+    // Auto: the backend picks the model that fits this message.
+    if (modelId === AUTO_MODEL_ID) {
+      formData.append('auto_model', '1')
+    }
 
     if (selectedWorkspaceId) {
       formData.append('workspace_id', String(selectedWorkspaceId))
@@ -684,6 +690,7 @@ export function AIAssistant() {
       // Backend/provider tetap menggunakan model_id API.
       // Untuk combo: nama combo, model yang benar-benar menjawab, dan model yang gagal lebih dulu.
       model: String(
+        describeAutoAnswer(data.auto, String(data.model || ''), t) ||
         describeComboAnswer(data, t) ||
           selectedModel?.name ||
           data.model ||
@@ -1046,7 +1053,7 @@ export function AIAssistant() {
     // MODEL
     // --------------------------------------------------------
 
-    if (selectedModel?.id) {
+    if (selectedModel?.id && !isAutoModel(selectedModel)) {
       formData.append('model_id', String(selectedModel.id))
     }
 
@@ -1227,7 +1234,7 @@ export function AIAssistant() {
         })
       }
 
-      await updateTask(taskId, { status: 'done', model_id: selectedModel.id })
+      await updateTask(taskId, isAutoModel(selectedModel) ? { status: 'done' } : { status: 'done', model_id: selectedModel.id })
       void queryClient.invalidateQueries({ queryKey: CHAT_HISTORY_KEY })
       window.dispatchEvent(new Event('tasks:refresh'))
     } catch (error) {
