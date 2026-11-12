@@ -75,6 +75,7 @@ function ComboForm({ combo, models, agents, limits, onSave, onCancel }: Omit<Pro
     if (!name.trim()) return t('comboPage.form.errors.nameRequired')
     if (name.trim().length > COMBO_NAME_MAX) return t('comboPage.form.errors.nameTooLong', { max: COMBO_NAME_MAX })
     if (picked.length === 0) return t('comboPage.form.errors.modelsRequired')
+    if (strategy === 'pipeline' && picked.length < 2) return t('comboPage.form.errors.pipelineNeedsTwo')
     if (agentIds.length === 0) return t('comboPage.form.errors.agentsRequired')
     return null
   }
@@ -104,7 +105,7 @@ function ComboForm({ combo, models, agents, limits, onSave, onCancel }: Omit<Pro
     }
   }
 
-  const strategies: ComboStrategy[] = ['fallback', 'round_robin']
+  const strategies: ComboStrategy[] = ['fallback', 'round_robin', 'pipeline']
 
   return (
     <DialogContent className='max-h-[92vh] overflow-y-auto sm:max-w-2xl'>
@@ -139,7 +140,7 @@ function ComboForm({ combo, models, agents, limits, onSave, onCancel }: Omit<Pro
 
         <fieldset className='grid gap-2'>
           <legend className='mb-1 text-sm font-medium'>{t('comboPage.form.models', { count: picked.length, max: limits.max_members })}</legend>
-          <p className='text-sm text-muted-foreground'>{strategy === 'fallback' ? t('comboPage.form.modelsHintFallback') : t('comboPage.form.modelsHintRoundRobin')}</p>
+          <p className='text-sm text-muted-foreground'>{strategy === 'fallback' ? t('comboPage.form.modelsHintFallback') : strategy === 'pipeline' ? t('comboPage.form.modelsHintPipeline') : t('comboPage.form.modelsHintRoundRobin')}</p>
 
           {picked.length > 0 && (
             <ol className='grid gap-1' aria-label={t('comboPage.form.order')}>
@@ -149,6 +150,9 @@ function ComboForm({ combo, models, agents, limits, onSave, onCancel }: Omit<Pro
                   <li key={item.id} className='flex items-center gap-2 rounded-md bg-muted px-3 py-2 text-sm'>
                     <span className='w-5 shrink-0 tabular-nums text-muted-foreground'>{index + 1}</span>
                     <span className='min-w-0 flex-1 truncate font-medium'>{model?.name ?? `#${item.id}`}</span>
+                    {strategy === 'pipeline' && picked.length > 1 && (
+                      <span className='shrink-0 text-muted-foreground'>{index === picked.length - 1 ? t('comboPage.form.stageFinal') : t('comboPage.form.stageDraft')}</span>
+                    )}
                     {strategy === 'round_robin' && (
                       <label className='flex items-center gap-2 text-muted-foreground'>
                         {t('comboPage.form.weight')}

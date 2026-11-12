@@ -190,6 +190,7 @@ export function CombosPage() {
                         <span className={member.available && member.is_enabled ? 'min-w-0 flex-1 truncate font-medium' : 'min-w-0 flex-1 truncate text-muted-foreground line-through'}>{member.name}</span>
                         <span className='shrink-0 text-muted-foreground'>
                           {combo.strategy === 'round_robin' ? `×${member.weight} · ` : ''}
+                          {combo.strategy === 'pipeline' && combo.members.length > 1 ? `${index === combo.members.length - 1 ? t('comboPage.form.stageFinal') : t('comboPage.form.stageDraft')} · ` : ''}
                           {member.is_system ? t('comboPage.form.systemModel') : t('comboPage.form.ownModel')}
                         </span>
                       </li>
