@@ -18,6 +18,8 @@ export type ChatMessageView = {
   model?: string
   modelId?: number
   provider?: string
+  /** Photos the person attached, shown in their message (local previews, kept for this visit). */
+  images?: { name: string; url: string }[]
 }
 
 /**
@@ -31,7 +33,16 @@ export function MessageItem({ message, agentName }: { message: ChatMessageView; 
   if (message.role === 'user') {
     return (
       <article className='flex justify-end' data-role='user'>
-        <div className='max-w-[80%] whitespace-pre-wrap rounded-lg bg-muted px-4 py-2.5 text-sm leading-6'>{message.content}</div>
+        <div className='flex max-w-4/5 flex-col items-end gap-2'>
+          {message.images && message.images.length > 0 && (
+            <div className='flex flex-wrap justify-end gap-2' data-testid='message-images'>
+              {message.images.map((image) => (
+                <img key={image.url} src={image.url} alt={image.name} className='max-h-48 max-w-full rounded-md border border-border object-cover' />
+              ))}
+            </div>
+          )}
+          <div className='whitespace-pre-wrap rounded-lg bg-muted px-4 py-2.5 text-sm leading-6'>{message.content}</div>
+        </div>
       </article>
     )
   }
