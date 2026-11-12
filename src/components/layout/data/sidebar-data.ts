@@ -17,6 +17,7 @@ import {
   BrainCircuit,
   FolderGit2,
   Shuffle,
+  Activity,
   MessageSquareText,
   PenTool,
 } from "lucide-react";
@@ -89,6 +90,11 @@ export const sidebarData: SidebarData = {
           title: "combosMenu",
           url: "/combos",
           icon: Shuffle,
+        },
+        {
+          title: "modelHealthMenu",
+          url: "/model-health",
+          icon: Activity,
         },
         {
           title: "workspacesMenu",

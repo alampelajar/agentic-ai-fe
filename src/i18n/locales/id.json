@@ -444,6 +444,16 @@
       "elapsed": "Waktu berjalan",
       "trail": "Langkah selesai",
       "stopped": "Dihentikan"
+    },
+    "auto": {
+      "answeredBy": "Otomatis → {{model}}",
+      "need": {
+        "vision": "membaca gambar",
+        "coding": "coding di workspace",
+        "long": "dokumen panjang",
+        "fast": "jawaban cepat"
+      },
+      "fallback": "cadangan karena pilihan pertama gagal"
     }
   },
   "tasksPage": {
@@ -679,7 +689,11 @@
     "system": "SISTEM",
     "noAgentSelected": "Belum Ada Agent Dipilih",
     "ready": "Siap",
-    "selectAgent": "Pilih Agent yang ingin digunakan."
+    "selectAgent": "Pilih Agent yang ingin digunakan.",
+    "auto": {
+      "name": "Otomatis",
+      "description": "Memilih model untuk tiap pesan: yang bisa membaca gambar untuk foto, model coding di workspace, dan model cepat untuk lainnya."
+    }
   },
   "common": {
     "save": "Simpan",
@@ -2565,5 +2579,46 @@
   "languageMenu": {
     "current": "Bahasa aktif: Indonesia",
     "currentName": "Indonesia"
+  },
+  "modelHealthMenu": "Kesehatan model",
+  "modelHealth": {
+    "title": "Kesehatan model",
+    "subtitle": "Bagaimana tiap model menjawab dalam {{hours}} jam terakhir, dan sisa kuota tiap provider.",
+    "refresh": "Muat ulang",
+    "loading": "Memuat kesehatan model…",
+    "loadFailed": "Kesehatan model tidak bisa dimuat",
+    "retry": "Coba lagi",
+    "emptyTitle": "Belum ada model",
+    "emptyDescription": "Tambahkan model di Pengaturan, lalu kembali setelah memakainya di chat.",
+    "quotaTitle": "Kuota per provider",
+    "modelsTitle": "Model",
+    "noQuota": "Kuota belum diketahui: akan muncul setelah model dari provider ini menjawab.",
+    "requestsLeft": "request tersisa",
+    "resets": "Direset dalam {{value}}",
+    "seenAt": "Per {{time}}",
+    "openrouter": {
+      "freeTier": "Tingkat gratis",
+      "paidTier": "Tingkat berbayar (pernah beli kredit)",
+      "usageToday": "Terpakai hari ini: {{value}} kredit",
+      "creditLeft": "Sisa kredit: {{value}}"
+    },
+    "columns": {
+      "model": "Model",
+      "status": "Status",
+      "calls": "Panggilan",
+      "success": "Berhasil",
+      "busy": "Sibuk (5xx)",
+      "limited": "Dibatasi (429)",
+      "speed": "Rata-rata waktu",
+      "lastFailure": "Gagal terakhir"
+    },
+    "status": {
+      "healthy": "Sehat",
+      "unstable": "Tidak stabil",
+      "unused": "Belum dipakai",
+      "restingUntil": "Istirahat sampai {{time}}"
+    },
+    "seconds": "{{value}} dtk",
+    "note": "Model bersama menghitung panggilan semua user (hanya jumlah); model milik Anda hanya menghitung panggilan Anda. Otomatis melewati model yang beristirahat dan menaruh model yang sering gagal di urutan terakhir."
   }
 }

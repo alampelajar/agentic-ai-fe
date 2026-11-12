@@ -25,6 +25,7 @@ import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedCombosRouteImport } from './routes/_authenticated/combos'
 import { Route as AuthenticatedFeedbackRouteImport } from './routes/_authenticated/feedback'
 import { Route as AuthenticatedMemoryRouteImport } from './routes/_authenticated/memory'
+import { Route as AuthenticatedModelHealthRouteImport } from './routes/_authenticated/model-health'
 import { Route as AuthenticatedOverviewRouteImport } from './routes/_authenticated/overview'
 import { Route as AuthenticatedPaidModelsRouteImport } from './routes/_authenticated/paid-models'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
@@ -137,6 +138,12 @@ const AuthenticatedMemoryRoute = AuthenticatedMemoryRouteImport.update({
   path: '/memory',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedModelHealthRoute =
+  AuthenticatedModelHealthRouteImport.update({
+    id: '/model-health',
+    path: '/model-health',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedOverviewRoute = AuthenticatedOverviewRouteImport.update({
   id: '/overview',
   path: '/overview',
@@ -333,6 +340,7 @@ export interface FileRoutesByFullPath {
   '/combos': typeof AuthenticatedCombosRoute
   '/feedback': typeof AuthenticatedFeedbackRoute
   '/memory': typeof AuthenticatedMemoryRoute
+  '/model-health': typeof AuthenticatedModelHealthRoute
   '/overview': typeof AuthenticatedOverviewRoute
   '/paid-models': typeof AuthenticatedPaidModelsRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -378,6 +386,7 @@ export interface FileRoutesByTo {
   '/combos': typeof AuthenticatedCombosRoute
   '/feedback': typeof AuthenticatedFeedbackRoute
   '/memory': typeof AuthenticatedMemoryRoute
+  '/model-health': typeof AuthenticatedModelHealthRoute
   '/overview': typeof AuthenticatedOverviewRoute
   '/paid-models': typeof AuthenticatedPaidModelsRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -429,6 +438,7 @@ export interface FileRoutesById {
   '/_authenticated/combos': typeof AuthenticatedCombosRoute
   '/_authenticated/feedback': typeof AuthenticatedFeedbackRoute
   '/_authenticated/memory': typeof AuthenticatedMemoryRoute
+  '/_authenticated/model-health': typeof AuthenticatedModelHealthRoute
   '/_authenticated/overview': typeof AuthenticatedOverviewRoute
   '/_authenticated/paid-models': typeof AuthenticatedPaidModelsRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
@@ -479,6 +489,7 @@ export interface FileRouteTypes {
     | '/combos'
     | '/feedback'
     | '/memory'
+    | '/model-health'
     | '/overview'
     | '/paid-models'
     | '/profile'
@@ -524,6 +535,7 @@ export interface FileRouteTypes {
     | '/combos'
     | '/feedback'
     | '/memory'
+    | '/model-health'
     | '/overview'
     | '/paid-models'
     | '/profile'
@@ -574,6 +586,7 @@ export interface FileRouteTypes {
     | '/_authenticated/combos'
     | '/_authenticated/feedback'
     | '/_authenticated/memory'
+    | '/_authenticated/model-health'
     | '/_authenticated/overview'
     | '/_authenticated/paid-models'
     | '/_authenticated/profile'
@@ -733,6 +746,13 @@ declare module '@tanstack/react-router' {
       path: '/memory'
       fullPath: '/memory'
       preLoaderRoute: typeof AuthenticatedMemoryRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/model-health': {
+      id: '/_authenticated/model-health'
+      path: '/model-health'
+      fullPath: '/model-health'
+      preLoaderRoute: typeof AuthenticatedModelHealthRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/overview': {
@@ -995,6 +1015,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCombosRoute: typeof AuthenticatedCombosRoute
   AuthenticatedFeedbackRoute: typeof AuthenticatedFeedbackRoute
   AuthenticatedMemoryRoute: typeof AuthenticatedMemoryRoute
+  AuthenticatedModelHealthRoute: typeof AuthenticatedModelHealthRoute
   AuthenticatedOverviewRoute: typeof AuthenticatedOverviewRoute
   AuthenticatedPaidModelsRoute: typeof AuthenticatedPaidModelsRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
@@ -1022,6 +1043,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCombosRoute: AuthenticatedCombosRoute,
   AuthenticatedFeedbackRoute: AuthenticatedFeedbackRoute,
   AuthenticatedMemoryRoute: AuthenticatedMemoryRoute,
+  AuthenticatedModelHealthRoute: AuthenticatedModelHealthRoute,
   AuthenticatedOverviewRoute: AuthenticatedOverviewRoute,
   AuthenticatedPaidModelsRoute: AuthenticatedPaidModelsRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
