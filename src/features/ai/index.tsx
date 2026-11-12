@@ -35,18 +35,10 @@ import { Composer } from './components/composer'
 import type { SkillOption } from './components/skill-command'
 import { MessageItem, type ChatMessageView, type GeneratedFile } from './components/message-item'
 import { RunProgress } from './components/run-progress'
+import { MAX_ATTACHMENTS, checkAttachment, isImageAttachment } from './components/attachments'
 import { SessionBar, type SessionStatus } from './components/session-bar'
 import { ThreadEmpty } from './components/thread-empty'
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024
-
-const ALLOWED_IMAGE_TYPES = [
-  'image/png',
-  'image/jpeg',
-  'image/jpg',
-  'image/webp',
-  'image/gif',
-]
 
 // ============================================================
 // TYPES
@@ -525,19 +517,26 @@ export function AIAssistant() {
 
     const valid: File[] = []
 
+    // A refused file is named, so the person knows why it is not attached.
     for (const file of files) {
-      if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      const check = checkAttachment(file)
+      if (check === 'unsupported') {
+        toast.error(t('agentic.composer.unsupportedFile', { name: file.name }))
         continue
       }
-
-      if (file.size > MAX_FILE_SIZE) {
+      if (check === 'tooLarge') {
+        toast.error(t('agentic.composer.fileTooLarge', { name: file.name }))
         continue
       }
-
       valid.push(file)
     }
 
-    setSelectedFiles((current) => [...current, ...valid])
+    const room = Math.max(0, MAX_ATTACHMENTS - selectedFiles.length)
+    if (valid.length > room) {
+      toast.error(t('agentic.composer.tooManyFiles', { count: MAX_ATTACHMENTS }))
+    }
+
+    setSelectedFiles((current) => [...current, ...valid.slice(0, room)])
 
     event.target.value = ''
   }
@@ -621,7 +620,8 @@ export function AIAssistant() {
       formData.append('task_id', activeTaskRef.current)
     }
 
-    files.forEach((file) => formData.append('images', file))
+    // Images go to the model as images; documents are read as text by the backend.
+    files.forEach((file) => formData.append(isImageAttachment(file) ? 'images' : 'files', file))
 
     const headers: HeadersInit = {}
     if (accessToken) headers.Authorization = `Bearer ${accessToken}`
@@ -1022,7 +1022,7 @@ export function AIAssistant() {
     // IMAGES
     // --------------------------------------------------------
 
-    files.forEach((file) => {
+    files.filter(isImageAttachment).forEach((file) => {
       formData.append('images', file)
     })
 
@@ -1121,11 +1121,12 @@ export function AIAssistant() {
 
     const userMessageId = Date.now()
     const images = files
-      .filter((file) => file.type.startsWith('image/'))
+      .filter(isImageAttachment)
       .map((file) => ({ name: file.name, url: URL.createObjectURL(file) }))
+    const documents = files.filter((file) => !isImageAttachment(file)).map((file) => ({ name: file.name }))
     setMessages((current) => [
       ...current,
-      { id: userMessageId, role: 'user', content: text, images },
+      { id: userMessageId, role: 'user', content: text, images, files: documents },
     ])
     setMessage('')
     setSelectedFiles([])

@@ -1,4 +1,4 @@
-import { Download, FileArchive } from 'lucide-react'
+import { Download, FileArchive, FileText } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { formatFileSize } from './format-file-size'
 import { Markdown } from './markdown'
@@ -20,6 +20,8 @@ export type ChatMessageView = {
   provider?: string
   /** Photos the person attached, shown in their message (local previews, kept for this visit). */
   images?: { name: string; url: string }[]
+  /** Documents the person attached, shown by name. */
+  files?: { name: string }[]
 }
 
 /**
@@ -40,6 +42,16 @@ export function MessageItem({ message, agentName }: { message: ChatMessageView; 
                 <img key={image.url} src={image.url} alt={image.name} className='max-h-48 max-w-full rounded-md border border-border object-cover' />
               ))}
             </div>
+          )}
+          {message.files && message.files.length > 0 && (
+            <ul className='flex flex-wrap justify-end gap-2' aria-label={t('agentic.thread.attachedFiles')}>
+              {message.files.map((file, index) => (
+                <li key={`${file.name}-${index}`} className='flex max-w-full items-center gap-2 rounded-md border border-border px-2.5 py-1.5 text-xs'>
+                  <FileText aria-hidden='true' className='size-4 shrink-0 text-muted-foreground' />
+                  <span className='truncate'>{file.name}</span>
+                </li>
+              ))}
+            </ul>
           )}
           <div className='whitespace-pre-wrap rounded-lg bg-muted px-4 py-2.5 text-sm leading-6'>{message.content}</div>
         </div>

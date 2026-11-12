@@ -25,6 +25,13 @@ describe('MessageItem', () => {
     await expect.element(screen.getByText('Apa isi foto ini?')).toBeInTheDocument()
   })
 
+  it('lists attached documents by name', async () => {
+    const screen = await render(<MessageItem agentName='Coding Agent' message={{ id: 1, role: 'user', content: 'Ringkas', files: [{ name: 'laporan.pdf' }, { name: 'catatan.md' }] }} />)
+    const list = screen.getByRole('list', { name: 'Attached files' })
+    await expect.element(list).toHaveTextContent('laporan.pdf')
+    await expect.element(list).toHaveTextContent('catatan.md')
+  })
+
   it('shows no photo area when nothing was attached', async () => {
     const screen = await render(<MessageItem agentName='Coding Agent' message={{ id: 1, role: 'user', content: 'Halo' }} />)
     await expect.element(screen.getByTestId('message-images')).not.toBeInTheDocument()
