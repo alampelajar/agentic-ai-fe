@@ -403,7 +403,40 @@
       "loadError": "Percakapan tidak dapat dipulihkan",
       "attachedFiles": "File terlampir"
     },
-    "workspaceLabel": "Ruang Kerja AI"
+    "workspaceLabel": "Ruang Kerja AI",
+    "phase": {
+      "understanding": "Memahami permintaan Anda",
+      "images_one": "Melihat gambar Anda",
+      "images_other": "Melihat {{count}} gambar Anda",
+      "files_one": "Membaca file lampiran",
+      "files_other": "Membaca {{count}} file lampiran",
+      "thinking": "{{agent}} sedang berpikir",
+      "tool": {
+        "explore": "Menelusuri {{detail}}",
+        "read": "Membaca {{detail}}",
+        "changes": "Memeriksa perubahan",
+        "write": "Menulis {{detail}}",
+        "edit": "Mengedit {{detail}}",
+        "test": "Menjalankan test",
+        "build": "Membangun proyek",
+        "install": "Memasang dependensi",
+        "job": "Menunggu proses selesai",
+        "publish": "Mengirim perubahan ke GitHub",
+        "desktop": "Memakai desktop: {{tool}}",
+        "other": "Menjalankan {{tool}}",
+        "exploreRoot": "Menelusuri file proyek"
+      },
+      "approval": "Menunggu persetujuan Anda: {{detail}}",
+      "summarizing": "Merangkum temuan",
+      "site": {
+        "design": "Merancang halaman",
+        "build": "Membuat file situs",
+        "package": "Mengemas ZIP"
+      },
+      "done": "Selesai",
+      "elapsed": "Waktu berjalan",
+      "trail": "Langkah selesai"
+    }
   },
   "tasksPage": {
     "title": "Tugas AI",

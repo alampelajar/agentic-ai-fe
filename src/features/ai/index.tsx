@@ -35,6 +35,7 @@ import { Composer } from './components/composer'
 import type { SkillOption } from './components/skill-command'
 import { MessageItem, type ChatMessageView, type GeneratedFile } from './components/message-item'
 import { RunProgress } from './components/run-progress'
+import { extendTrail, type RunPhase } from './components/run-phase'
 import { MAX_ATTACHMENTS, checkAttachment, isImageAttachment } from './components/attachments'
 import { SessionBar, type SessionStatus } from './components/session-bar'
 import { ThreadEmpty } from './components/thread-empty'
@@ -59,16 +60,6 @@ type ChatResult = {
   agentId: number
 }
 
-type WorkflowStep = 'goal' | 'planning' | 'coding' | 'testing' | 'done'
-
-
-const workflowSteps: WorkflowStep[] = [
-  'goal',
-  'planning',
-  'coding',
-  'testing',
-  'done',
-]
 
 // ============================================================
 // HELPERS
@@ -129,15 +120,29 @@ export function AIAssistant() {
   const runnerToken = useDesktopRuntime((state) => state.token)
   const runnerConnected = useDesktopRuntime((state) => state.connected)
   const runnerWorkspaceID = useDesktopRuntime((state) => state.localWorkspaceId)
-  const [runnerStatus, setRunnerStatus] = useState('')
   const [pendingApproval, setPendingApproval] = useState<DesktopAction | null>(null)
   const [pendingApprovalSkill, setPendingApprovalSkill] = useState('Desktop Control')
   const [pendingWindows, setPendingWindows] = useState<WindowInfo[] | undefined>(undefined)
   const approvalResolver = useRef<((decision: ApprovalDecision) => void) | null>(null)
 
-  const [currentStep, setCurrentStep] = useState<WorkflowStep | null>(null)
-
-  const [progress, setProgress] = useState(0)
+  // What the agent is doing now, the steps already done and when the run began: the progress
+  // strip follows these real events instead of a fixed list of steps.
+  const [phase, setPhase] = useState<RunPhase | null>(null)
+  const [trail, setTrail] = useState<RunPhase[]>([])
+  const [runStartedAt, setRunStartedAt] = useState<number | null>(null)
+  const phaseRef = useRef<RunPhase | null>(null)
+  const moveTo = (next: RunPhase) => {
+    const previous = phaseRef.current
+    phaseRef.current = next
+    setTrail((current) => extendTrail(current, previous))
+    setPhase(next)
+  }
+  const resetRun = () => {
+    phaseRef.current = null
+    setPhase(null)
+    setTrail([])
+    setRunStartedAt(null)
+  }
 
   const [currentTaskId, setCurrentTaskId] = useState<string | null>(null)
   // The conversation's task id as soon as it exists, so a request sent in the same tick that
@@ -500,8 +505,7 @@ export function AIAssistant() {
     setMessage('')
     setSelectedFiles([])
 
-    setCurrentStep(null)
-    setProgress(0)
+    resetRun()
 
     setCurrentTaskId(null)
     setTaskTitle('')
@@ -763,7 +767,6 @@ export function AIAssistant() {
       `Izinkan Local Agent Runner menjalankan ${call.action}?\n\nWorkspace: ${runnerWorkspaceID}\nRuntime: ${runtime}\n\nPerintah dapat menjalankan kode dari project. Jalankan hanya kode yang dipercaya.`
     )
     if (!approved) return 'DIBATALKAN: pengguna menolak eksekusi perintah.'
-    setRunnerStatus(`Menjalankan ${call.action} (${runtime})...`)
     const response = await fetch(`${base}/api/workspaces/${workspace}/execute`, {
       method: 'POST',
       headers,
@@ -771,7 +774,6 @@ export function AIAssistant() {
     })
     const data = await response.json().catch(() => ({}))
     if (!response.ok) throw new Error(data?.error || 'Eksekusi tool gagal.')
-    setRunnerStatus(`${call.action}: ${data.status} (exit ${data.exit_code})`)
     return JSON.stringify(data)
   }
 
@@ -900,23 +902,32 @@ export function AIAssistant() {
           return { ...result, message: `${t('workspacePage.chat.needed')}\n\nPermintaan tool tidak dijalankan.` }
         }
         let toolResult: string
-        const activityId = startActivity(cloudCall.tool, describeArgs(cloudCall.args))
+        const toolDetail = describeArgs(cloudCall.args)
+        const toolName = cloudCall.tool
+        const activityId = startActivity(toolName, toolDetail)
+        moveTo({ kind: 'tool', tool: toolName, detail: toolDetail })
         try {
           toolResult = await runCloudToolCall(cloudCall, {
             workspaceId: selectedWorkspaceId,
             agentId,
             taskId: currentTaskId && /^\d+$/.test(currentTaskId) ? Number(currentTaskId) : null,
-            requestApproval: (approval) => new Promise<WorkspaceDecision>((resolve) => {
-              workspaceApprovalResolver.current = resolve
-              setPendingWorkspaceApproval(approval)
-            }),
+            requestApproval: (approval) => {
+              moveTo({ kind: 'approval', tool: toolName, detail: toolDetail })
+              return new Promise<WorkspaceDecision>((resolve) => {
+                workspaceApprovalResolver.current = (decision) => {
+                  moveTo({ kind: 'tool', tool: toolName, detail: toolDetail })
+                  resolve(decision)
+                }
+                setPendingWorkspaceApproval(approval)
+              })
+            },
           })
         } catch (error) {
           toolResult = `TOOL_ERROR: ${error instanceof Error ? error.message : 'Kesalahan tool tidak diketahui'}`
         }
         finishActivity(activityId, toolResult)
         toolCalls += 1
-        setRunnerStatus(`Tool ${cloudCall.tool} selesai (${toolCalls}/${maxToolCalls}); meminta agent melanjutkan...`)
+        moveTo({ kind: 'thinking' })
         toolHistory.push({ role: 'assistant', content: result.message })
         const cloudFollowup = `Hasil tool ${cloudCall.tool} pada workspace cloud:\n\n${toolResult}\n\nGunakan hanya hasil tool di atas sebagai bukti. Jangan menyatakan pekerjaan berhasil jika hasil tool menunjukkan kegagalan, penolakan, atau kedaluwarsa. Jika perlu tindakan workspace berikutnya, panggil satu tool lagi; jika sudah cukup, berikan jawaban akhir.`
         toolHistory.push({ role: 'user', content: cloudFollowup })
@@ -938,7 +949,6 @@ export function AIAssistant() {
         call = parseLocalAgentToolCall(toolMatch[1])
       } catch (error) {
         const detail = error instanceof Error ? error.message : 'format tidak dikenali'
-        setRunnerStatus(`Format tool tidak valid: ${detail}`)
         return {
           ...result,
           message: `Agent menghasilkan permintaan tool yang tidak valid (${detail}). Tidak ada tindakan yang dijalankan. Coba ulangi sekali dengan meminta format persis: <LOCAL_AGENT_TOOL>{"action":"list-files","path":"."}</LOCAL_AGENT_TOOL>.`,
@@ -947,6 +957,7 @@ export function AIAssistant() {
 
       let toolResult: string
       const localActivityId = startActivity(call.action, '')
+      moveTo({ kind: 'tool', tool: call.action })
       try {
         toolResult = desktopMatch ? await runDesktopTool(call, agentId) : await runLocalTool(call)
       } catch (error) {
@@ -955,7 +966,7 @@ export function AIAssistant() {
       finishActivity(localActivityId, toolResult)
       toolCalls += 1
 
-      setRunnerStatus(`Tool ${call.action} selesai (${toolCalls}/${maxToolCalls}); meminta agent melanjutkan...`)
+      moveTo({ kind: 'thinking' })
       const assistantToolCall = result.message
       toolHistory.push({ role: 'assistant', content: assistantToolCall })
       const followup = `Hasil Local Agent Runner untuk tool ${call.action}:\\n\\n${toolResult}\\n\\nGunakan hanya hasil tool di atas sebagai bukti. Jika perlu tindakan workspace, keluarkan <LOCAL_AGENT_TOOL>; jika perlu tindakan desktop dari skill aktif, keluarkan <AGENT_TOOL>. Jika sudah selesai, jawab pengguna tanpa marker.`
@@ -964,12 +975,11 @@ export function AIAssistant() {
     }
 
     if (/<LOCAL_AGENT_TOOL>|<AGENT_TOOL>/.test(result.message)) {
-      setRunnerStatus('Batas tool tercapai; meminta ringkasan dari hasil yang sudah terkumpul...')
+      moveTo({ kind: 'summarizing' })
       const finalPrompt = `Batas aman ${maxToolCalls} pemanggilan tool telah tercapai. JANGAN meminta atau mengeluarkan tool marker lagi. Buat jawaban akhir sekarang hanya berdasarkan output Local Agent Runner yang sudah ada di riwayat percakapan. Ringkas file yang benar-benar berhasil dibaca, temuan yang didukung output, dan hal yang belum dapat dipastikan. Jangan mengklaim file sudah dibaca atau perintah sudah dijalankan jika tidak ada hasilnya. Permintaan awal pengguna: ${originalText}`
       try {
         const finalResult = await sendChat(finalPrompt, files, toolHistory, agentId, modelId)
         if (!/<LOCAL_AGENT_TOOL>|<AGENT_TOOL>/.test(finalResult.message)) {
-          setRunnerStatus(`Selesai dengan ${toolCalls} pemanggilan tool`)
           return finalResult
         }
         return {
@@ -997,8 +1007,7 @@ export function AIAssistant() {
     // GOAL
     // --------------------------------------------------------
 
-    setCurrentStep('goal')
-    setProgress(20)
+    moveTo({ kind: 'site', stage: 'design' })
 
     const formData = new FormData()
 
@@ -1036,10 +1045,6 @@ export function AIAssistant() {
     // PLANNING
     // --------------------------------------------------------
 
-    setCurrentStep('planning')
-
-    setProgress(35)
-
     const response = await fetch(`${API_BASE_URL}/api/generator/landing-page`, {
       method: 'POST',
       headers,
@@ -1062,9 +1067,7 @@ export function AIAssistant() {
     // CODING
     // --------------------------------------------------------
 
-    setCurrentStep('coding')
-
-    setProgress(70)
+    moveTo({ kind: 'site', stage: 'build' })
 
     const blob = await response.blob()
 
@@ -1076,9 +1079,7 @@ export function AIAssistant() {
     // TESTING
     // --------------------------------------------------------
 
-    setCurrentStep('testing')
-
-    setProgress(90)
+    moveTo({ kind: 'site', stage: 'package' })
 
     const blobUrl = URL.createObjectURL(blob)
 
@@ -1098,8 +1099,7 @@ export function AIAssistant() {
     // DONE
     // --------------------------------------------------------
 
-    setCurrentStep('done')
-    setProgress(100)
+    moveTo({ kind: 'done' })
 
     return generatedFile
   }
@@ -1133,6 +1133,10 @@ export function AIAssistant() {
     runId.current = userMessageId
     setTaskTitle((current) => current || text)
     setRunning(true)
+    phaseRef.current = null
+    setTrail([])
+    setRunStartedAt(Date.now())
+    moveTo({ kind: 'understanding' })
 
     let taskId: string | null = null
 
@@ -1153,8 +1157,10 @@ export function AIAssistant() {
         const agentSlug = selectedAgent.slug.toLowerCase()
         const isCodingAgent = agentSlug.includes('coding') || agentSlug.includes('code')
         const isTestingAgent = agentSlug.includes('testing') || agentSlug.includes('test')
-        setCurrentStep(isCodingAgent ? 'coding' : isTestingAgent ? 'testing' : 'planning')
-        setProgress(35)
+        // Attachments are read with the first call; say so, then the model is thinking.
+        const imageCount = images.length
+        const documentCount = documents.length
+        moveTo(imageCount > 0 ? { kind: 'images', count: imageCount } : documentCount > 0 ? { kind: 'files', count: documentCount } : { kind: 'thinking' })
 
         // A selected Cloud Workspace needs no mention of the Local Agent Runner at all.
         const contextHints = buildContextHints({ cloudWorkspaceSelected: selectedWorkspaceId !== null, runtimeConnected: runnerConnected, localFolderId: runnerWorkspaceID, runtimeUrl: runnerURL })
@@ -1170,7 +1176,7 @@ export function AIAssistant() {
 
         // Tools run for a selected Cloud Workspace, or (as before) for a connected Desktop Runtime.
         if (shouldRunTools({ cloudWorkspaceSelected: selectedWorkspaceId !== null, runtimeConnected: runnerConnected, localFolderId: runnerWorkspaceID, codingOrTesting: isCodingAgent || isTestingAgent })) {
-          setProgress(55)
+          moveTo({ kind: 'thinking' })
           result = await runAgentToolLoop(
             result,
             effectivePrompt,
@@ -1181,8 +1187,7 @@ export function AIAssistant() {
           )
         }
 
-        setCurrentStep('done')
-        setProgress(100)
+        moveTo({ kind: 'done' })
         addAgentMessage(result.message, {
           model: result.model,
           modelId: result.modelId,
@@ -1214,10 +1219,11 @@ export function AIAssistant() {
       }
     } finally {
       setRunning(false)
+      // The finished strip stays a moment, unless a new message has started a new run by then.
+      const finishedRun = userMessageId
       setTimeout(() => {
-        setCurrentStep(null)
-        setProgress(0)
-      }, 1000)
+        if (runId.current === finishedRun) resetRun()
+      }, 4000)
     }
   }
 
@@ -1233,21 +1239,6 @@ export function AIAssistant() {
     const nearBottom = element.scrollHeight - element.scrollTop - element.clientHeight < 160
     if (grew && (nearBottom || total <= 2)) element.scrollTo({ top: element.scrollHeight })
   }, [messages, activityRuns])
-
-  // ============================================================
-  // WORKFLOW INDEX
-  // ============================================================
-
-  const currentStepIndex =
-    currentStep === null ? -1 : workflowSteps.indexOf(currentStep)
-
-  const workflowLabels: Record<WorkflowStep, string> = {
-    goal: t('agentic.workflow.goal'),
-    planning: t('agentic.workflow.planning'),
-    coding: t('agentic.workflow.coding'),
-    testing: t('agentic.workflow.testing'),
-    done: t('agentic.workflow.done'),
-  }
 
   // ============================================================
   // LOADING
@@ -1270,8 +1261,6 @@ export function AIAssistant() {
       : !selectedModel
         ? 'chooseModel'
         : 'ready'
-
-  const progressStatus = runnerStatus || (selectedAgent ? t('agentic.status.thinking', { agent: selectedAgent.name, model: selectedModel?.name }) : '')
 
   return (
     <Main fixed className='agentic-workspace flex min-h-0 flex-1 flex-col overflow-hidden bg-background p-0'>
@@ -1329,11 +1318,12 @@ export function AIAssistant() {
         </div>
 
         <RunProgress
-          steps={workflowSteps.map((step) => ({ key: step, label: workflowLabels[step] }))}
-          currentIndex={currentStepIndex}
-          progress={progress}
-          status={progressStatus}
+          phase={phase}
+          trail={trail}
+          startedAt={runStartedAt}
           running={running}
+          agentName={selectedAgent?.name}
+          modelName={selectedModel?.name}
         />
 
         <Composer
