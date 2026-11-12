@@ -43,6 +43,8 @@ describe('parseCloudToolCall', () => {
     expect(parseCloudToolCall('{"action":"list-files","path":"src"}', true)).toEqual({ tool: 'workspace.list_files', args: { path: 'src' } })
     expect(parseCloudToolCall('{"action":"read-file","arguments":{"path":"a.go"}}', true)).toEqual({ tool: 'workspace.read_file', args: { path: 'a.go' } })
     expect(parseCloudToolCall('{"action":"write-file","path":"a.go","content":"x","runtime":"docker"}', true)).toEqual({ tool: 'workspace.write_file', args: { path: 'a.go', content: 'x' } })
+    expect(parseCloudToolCall('{"action":"edit-file","path":"a.go","old_text":"x","new_text":"y"}', true)).toEqual({ tool: 'workspace.edit_file', args: { path: 'a.go', old_text: 'x', new_text: 'y' } })
+    expect(parseCloudToolCall('{"action":"workspace.edit_file","arguments":{"path":"a.go","old_text":"x","new_text":"y"}}', true)).toEqual({ tool: 'workspace.edit_file', args: { path: 'a.go', old_text: 'x', new_text: 'y' } })
     expect(parseCloudToolCall('{"action":"go-test","runtime":"docker"}', true)).toEqual({ tool: 'workspace.run_test', args: { target: 'go' } })
     expect(parseCloudToolCall('{"action":"npm-build"}', true)).toEqual({ tool: 'workspace.build', args: { target: 'node' } })
     expect(parseCloudToolCall('{"action":"git-status"}', true)).toEqual({ tool: 'workspace.get_changes', args: {} })

@@ -31,7 +31,11 @@ export function WorkspaceApprovalDialog({ approval, agentName, onDecision }: Pro
     setSettled(true)
     onDecision(decision)
   }
-  const preview = typeof approval.arguments.content_preview === 'string' ? approval.arguments.content_preview : null
+  const text = (key: string) => (typeof approval.arguments[key] === 'string' ? (approval.arguments[key] as string) : null)
+  const preview = text('content_preview')
+  // An edit shows the text it replaces and what replaces it, so the person sees the exact change.
+  const oldText = text('old_text_preview')
+  const newText = text('new_text_preview')
 
   return (
     <Dialog open onOpenChange={(open) => { if (!open) decide('deny') }}>
@@ -45,6 +49,22 @@ export function WorkspaceApprovalDialog({ approval, agentName, onDecision }: Pro
           {approval.tool === 'workspace.publish' && <PublishApprovalDetails args={approval.arguments} />}
           {typeof approval.arguments.path === 'string' && <p className='text-muted-foreground'>{t('workspacePage.approval.file')}: <code>{approval.arguments.path}</code></p>}
           {preview !== null && <pre className='max-h-48 overflow-auto rounded-md border bg-muted/40 p-2 text-xs whitespace-pre-wrap'>{preview}</pre>}
+          {oldText !== null && (
+            <div className='space-y-1' data-testid='edit-old'>
+              <p className='text-xs font-medium text-muted-foreground'>{t('workspacePage.approval.replaces')}</p>
+              <pre className='max-h-32 overflow-auto rounded-md border border-destructive/30 bg-destructive/5 p-2 text-xs whitespace-pre-wrap'>{oldText}</pre>
+            </div>
+          )}
+          {newText !== null && (
+            <div className='space-y-1' data-testid='edit-new'>
+              <p className='text-xs font-medium text-muted-foreground'>{t('workspacePage.approval.replacesWith')}</p>
+              {newText ? (
+                <pre className='max-h-32 overflow-auto rounded-md border border-border bg-emerald-500/10 p-2 text-xs whitespace-pre-wrap'>{newText}</pre>
+              ) : (
+                <p className='text-xs text-muted-foreground'>{t('workspacePage.approval.removed')}</p>
+              )}
+            </div>
+          )}
           <ApprovalCountdown expiresAt={approval.expires_at} lang={i18n.language === 'id' ? 'id' : 'en'} onExpire={() => decide('expired')} />
         </div>
         <DialogFooter>
