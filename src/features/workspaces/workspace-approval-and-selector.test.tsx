@@ -47,6 +47,25 @@ describe('Workspace approval dialog', () => {
     await expect.element(dialog).toHaveTextContent('(60 s left)')
   })
 
+  it('shows an edit as the text it replaces and what replaces it', async () => {
+    const edit: ToolApproval = {
+      ...approval('2026-11-03T12:01:00Z'),
+      tool: 'workspace.edit_file',
+      summary: 'Edit index.html: replace 11 characters with 20',
+      arguments: { path: 'index.html', old_text_characters: 11, old_text_preview: '<p>Halo</p>', new_text_characters: 20, new_text_preview: '<p>Halo, saya Rina</p>' },
+    }
+    const screen = await render(<WorkspaceApprovalDialog approval={edit} agentName='Coding Agent' onDecision={vi.fn()} />)
+    await expect.element(screen.getByTestId('edit-old')).toHaveTextContent('Replaces<p>Halo</p>')
+    await expect.element(screen.getByTestId('edit-new')).toHaveTextContent('With<p>Halo, saya Rina</p>')
+    await expect.element(screen.getByRole('dialog')).toHaveTextContent('index.html')
+  })
+
+  it('says when an edit removes text', async () => {
+    const removal: ToolApproval = { ...approval('2026-11-03T12:01:00Z'), tool: 'workspace.edit_file', arguments: { path: 'a.txt', old_text_preview: 'old', new_text_preview: '' } }
+    const screen = await render(<WorkspaceApprovalDialog approval={removal} agentName='Coding Agent' onDecision={vi.fn()} />)
+    await expect.element(screen.getByTestId('edit-new')).toHaveTextContent('the text is removed')
+  })
+
   it('reports Allow once exactly once and locks the buttons', async () => {
     const { screen, onDecision } = await open()
     await userEvent.click(screen.getByRole('button', { name: 'Allow once' }))

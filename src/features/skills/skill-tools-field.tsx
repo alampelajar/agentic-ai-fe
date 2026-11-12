@@ -12,6 +12,7 @@ export const SKILL_TOOL_GROUPS = {
     'workspace.list_files',
     'workspace.read_file',
     'workspace.write_file',
+    'workspace.edit_file',
     'workspace.get_changes',
     'workspace.install_dependencies',
     'workspace.build',

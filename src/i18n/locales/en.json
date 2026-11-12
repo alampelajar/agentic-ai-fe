@@ -382,7 +382,8 @@
         "workspace_run_test": "Run tests",
         "workspace_build": "Build",
         "workspace_install_dependencies": "Install dependencies",
-        "workspace_get_execution": "Read job result"
+        "workspace_get_execution": "Read job result",
+        "workspace_edit_file": "Edit file"
       }
     },
     "composer": {
@@ -1682,7 +1683,10 @@
       "commitMessage": "Commit message",
       "filesToSend": "{{count}} file(s) will be sent",
       "moreFiles": "and {{count}} more",
-      "publishPinned": "Exactly these changes are sent. If the files change before you allow it, nothing is sent."
+      "publishPinned": "Exactly these changes are sent. If the files change before you allow it, nothing is sent.",
+      "replaces": "Replaces",
+      "replacesWith": "With",
+      "removed": "Nothing: the text is removed."
     },
     "chat": {
       "label": "Cloud workspace",
