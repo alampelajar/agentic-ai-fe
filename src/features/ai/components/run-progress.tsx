@@ -43,6 +43,7 @@ export function RunProgress({ phase, trail, startedAt, running, agentName, model
   }
   const waiting = view.motion === 'waiting'
   const complete = view.motion === 'complete'
+  const stopped = view.motion === 'stopped'
   const elapsed = startedAt === null ? null : formatElapsed(Math.max(now, startedAt) - startedAt)
 
   return (
@@ -57,7 +58,7 @@ export function RunProgress({ phase, trail, startedAt, running, agentName, model
                 waiting ? 'bg-amber-500/10 text-amber-700 dark:text-amber-400' : complete ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-muted text-foreground'
               )}
             >
-              <Icon className={cn('size-4', running && !waiting && !complete && 'motion-safe:animate-pulse')} />
+              <Icon className={cn('size-4', running && !waiting && !complete && !stopped && 'motion-safe:animate-pulse')} />
             </span>
             <span className={cn('truncate', waiting ? 'text-amber-700 dark:text-amber-400' : 'text-foreground')}>{label(phase)}</span>
           </p>
@@ -73,7 +74,7 @@ export function RunProgress({ phase, trail, startedAt, running, agentName, model
           <div
             className={cn(
               'h-full',
-              complete ? 'w-full bg-primary' : waiting ? 'w-1/3 bg-muted-foreground/40' : 'w-1/3 bg-primary motion-safe:animate-progress-slide'
+              complete ? 'w-full bg-primary' : stopped ? 'w-0' : waiting ? 'w-1/3 bg-muted-foreground/40' : 'w-1/3 bg-primary motion-safe:animate-progress-slide'
             )}
           />
         </div>

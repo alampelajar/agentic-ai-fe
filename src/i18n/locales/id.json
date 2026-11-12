@@ -332,7 +332,8 @@
       "selectEmployee": "Pilih Virtual Employee"
     },
     "messages": {
-      "websiteCreated": "Website berhasil dibuat. Kamu bisa mengunduh file ZIP di bawah ini."
+      "websiteCreated": "Website berhasil dibuat. Kamu bisa mengunduh file ZIP di bawah ini.",
+      "stopped": "Dihentikan sebelum jawaban selesai."
     },
     "errors": {
       "planningFailed": "Gagal menentukan task AI.",
@@ -340,7 +341,8 @@
       "emptyResponse": "AI mengembalikan jawaban kosong.",
       "generatorFailed": "Generator gagal.",
       "emptyZip": "File ZIP kosong.",
-      "generic": "Terjadi kesalahan."
+      "generic": "Terjadi kesalahan.",
+      "streamIncomplete": "Jawaban terputus sebelum selesai."
     },
     "title": "Agentic",
     "bar": {
@@ -395,7 +397,8 @@
       "removeFile": "Hapus {{name}}",
       "unsupportedFile": "{{name}} tidak bisa dilampirkan. Gunakan gambar, PDF, Word (.docx), ZIP, atau file teks/kode.",
       "fileTooLarge": "{{name}} lebih besar dari 10 MB.",
-      "tooManyFiles": "Maksimal {{count}} file per pesan."
+      "tooManyFiles": "Maksimal {{count}} file per pesan.",
+      "stop": "Hentikan"
     },
     "thread": {
       "label": "Percakapan",
@@ -439,7 +442,8 @@
       },
       "done": "Selesai",
       "elapsed": "Waktu berjalan",
-      "trail": "Langkah selesai"
+      "trail": "Langkah selesai",
+      "stopped": "Dihentikan"
     }
   },
   "tasksPage": {

@@ -332,7 +332,8 @@
       "selectEmployee": "Select a Virtual Employee"
     },
     "messages": {
-      "websiteCreated": "Website created successfully. You can download the ZIP file below."
+      "websiteCreated": "Website created successfully. You can download the ZIP file below.",
+      "stopped": "Stopped before the answer was finished."
     },
     "errors": {
       "planningFailed": "Failed to determine the AI task.",
@@ -340,7 +341,8 @@
       "emptyResponse": "AI returned an empty response.",
       "generatorFailed": "Generator failed.",
       "emptyZip": "ZIP file is empty.",
-      "generic": "An error occurred."
+      "generic": "An error occurred.",
+      "streamIncomplete": "The answer stopped before it was complete."
     },
     "title": "Agentic",
     "bar": {
@@ -395,7 +397,8 @@
       "removeFile": "Remove {{name}}",
       "unsupportedFile": "{{name}} cannot be attached. Use an image, PDF, Word (.docx), ZIP, or a text or code file.",
       "fileTooLarge": "{{name}} is larger than 10 MB.",
-      "tooManyFiles": "At most {{count}} files per message."
+      "tooManyFiles": "At most {{count}} files per message.",
+      "stop": "Stop"
     },
     "thread": {
       "label": "Conversation",
@@ -439,7 +442,8 @@
       },
       "done": "Done",
       "elapsed": "Time taken",
-      "trail": "Steps done"
+      "trail": "Steps done",
+      "stopped": "Stopped"
     }
   },
   "tasksPage": {

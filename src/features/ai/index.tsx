@@ -38,6 +38,7 @@ import { RunProgress } from './components/run-progress'
 import { extendTrail, type RunPhase } from './components/run-phase'
 import { MAX_ATTACHMENTS, checkAttachment, isImageAttachment } from './components/attachments'
 import { SessionBar, type SessionStatus } from './components/session-bar'
+import { readChatReply, visibleDraft } from './chat-stream'
 import { ThreadEmpty } from './components/thread-empty'
 
 
@@ -178,6 +179,14 @@ export function AIAssistant() {
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<number | null>(null)
   const [pendingWorkspaceApproval, setPendingWorkspaceApproval] = useState<ToolApproval | null>(null)
   const workspaceApprovalResolver = useRef<((decision: WorkspaceDecision) => void) | null>(null)
+  // The answer as the model writes it (shown under the conversation), and the way to stop the run.
+  const [draft, setDraft] = useState('')
+  const draftRef = useRef('')
+  const abortRef = useRef<AbortController | null>(null)
+  const showDraft = (text: string) => {
+    draftRef.current = text
+    setDraft(text)
+  }
 
   const [taskTitle, setTaskTitle] = useState('')
   const [historyLoading, setHistoryLoading] = useState(false)
@@ -471,6 +480,7 @@ export function AIAssistant() {
       provider?: string
     }
   ) => {
+    showDraft('')
     setMessages((current) => [
       ...current,
       {
@@ -633,20 +643,29 @@ export function AIAssistant() {
     const headers: HeadersInit = {}
     if (accessToken) headers.Authorization = `Bearer ${accessToken}`
 
-    const response = await fetch(`${API_BASE_URL}/api/chat`, {
+    // The answer streams in while the model writes it; combos and tool calls answer at once.
+    const response = await fetch(`${API_BASE_URL}/api/chat?stream=1`, {
       method: 'POST',
       headers,
       body: formData,
+      signal: abortRef.current?.signal,
     })
 
-    const data = await response.json().catch(() => ({}))
+    let written = ''
+    showDraft('')
+    const reply = await readChatReply(response, (piece) => {
+      written += piece
+      showDraft(visibleDraft(written))
+    })
+    // Read like a parsed JSON reply, as before.
+    const data = reply.data as ReturnType<typeof JSON.parse>
 
-    if (!response.ok) {
+    if (!reply.ok) {
       const baseMessage = String(
-        data?.error || data?.message || t('agentic.errors.chatFailed')
+        data?.error || data?.message || (data?.code === 'stream_incomplete' ? t('agentic.errors.streamIncomplete') : t('agentic.errors.chatFailed'))
       )
       const detail = typeof data?.detail === 'string' ? data.detail.trim() : ''
-      const statusLabel = `HTTP ${response.status}`
+      const statusLabel = `HTTP ${reply.status}`
       throw new Error(
         [`[${statusLabel}] ${baseMessage}`, detail ? `Detail: ${detail}` : 'Backend tidak mengirim detail penyebab.']
           .filter(Boolean)
@@ -853,6 +872,7 @@ export function AIAssistant() {
     let promptedForFirstTool = false
 
     while (toolCalls < maxToolCalls) {
+      if (abortRef.current?.signal.aborted) throw new DOMException('Stopped', 'AbortError')
       const desktopMatch = result.message.match(/<AGENT_TOOL>([\s\S]*?)<\/AGENT_TOOL>/)
       const match = result.message.match(/<LOCAL_AGENT_TOOL>([\s\S]*?)<\/LOCAL_AGENT_TOOL>/)
       const toolMatch = desktopMatch || match
@@ -1136,6 +1156,9 @@ export function AIAssistant() {
     runId.current = userMessageId
     setTaskTitle((current) => current || text)
     setRunning(true)
+    const controller = new AbortController()
+    abortRef.current = controller
+    showDraft('')
     phaseRef.current = null
     setTrail([])
     setRunStartedAt(Date.now())
@@ -1208,6 +1231,23 @@ export function AIAssistant() {
       void queryClient.invalidateQueries({ queryKey: CHAT_HISTORY_KEY })
       window.dispatchEvent(new Event('tasks:refresh'))
     } catch (error) {
+      // Stopped by the person: keep what was written so far, marked as stopped.
+      if (controller.signal.aborted) {
+        const partial = draftRef.current
+        const content = [partial, `_${t('agentic.messages.stopped')}_`].filter(Boolean).join('\n\n')
+        moveTo({ kind: 'stopped' })
+        addAgentMessage(content)
+        if (taskId) {
+          try {
+            await persistMessage(taskId, 'assistant', content)
+            await updateTask(taskId, { status: 'canceled' })
+            window.dispatchEvent(new Event('tasks:refresh'))
+          } catch (persistError) {
+            console.error('[TASK ERROR]', persistError)
+          }
+        }
+        return
+      }
       const errorMessage = error instanceof Error ? error.message : t('agentic.errors.generic')
       addAgentMessage(`Maaf, terjadi kesalahan.\n\n${errorMessage}`)
 
@@ -1222,12 +1262,25 @@ export function AIAssistant() {
       }
     } finally {
       setRunning(false)
+      abortRef.current = null
+      showDraft('')
       // The finished strip stays a moment, unless a new message has started a new run by then.
       const finishedRun = userMessageId
       setTimeout(() => {
         if (runId.current === finishedRun) resetRun()
       }, 4000)
     }
+  }
+
+  const handleStop = () => {
+    abortRef.current?.abort()
+    if (workspaceApprovalResolver.current) {
+      const resolve = workspaceApprovalResolver.current
+      workspaceApprovalResolver.current = null
+      setPendingWorkspaceApproval(null)
+      resolve('deny')
+    }
+    approvalResolver.current?.('deny')
   }
 
   // Keep the newest message, tool call or status in view, unless the person has
@@ -1315,6 +1368,11 @@ export function AIAssistant() {
                     {activityRuns[item.id] && <ActivityList items={activityRuns[item.id]} />}
                   </Fragment>
                 ))}
+                {running && draft && (
+                  <div data-testid='answer-draft' aria-live='polite'>
+                    <MessageItem message={{ id: -1, role: 'agent', content: draft }} agentName={selectedAgent?.name ?? 'Agent'} />
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -1333,6 +1391,7 @@ export function AIAssistant() {
           value={message}
           onChange={setMessage}
           onSend={handleSend}
+          onStop={handleStop}
           ready={Boolean(selectedAgent && selectedModel)}
           running={running}
           modelName={selectedModel?.name}

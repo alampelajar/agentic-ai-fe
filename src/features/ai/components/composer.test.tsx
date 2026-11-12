@@ -82,6 +82,14 @@ describe('Composer', () => {
     await expect.element(screen.getByRole('button', { name: 'Attach an image' })).toBeDisabled()
   })
 
+  it('offers Stop instead of Send while a run is going, and stops it', async () => {
+    const onStop = vi.fn()
+    const screen = await render(<Composer value='' onChange={vi.fn()} onSend={vi.fn()} onStop={onStop} ready running files={[]} onFiles={vi.fn()} onRemoveFile={vi.fn()} fileInputRef={{ current: null }} onDelegate={vi.fn()} delegateDisabled runtimeConnected={false} />)
+    await expect.element(screen.getByRole('button', { name: 'Send' })).not.toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Stop' }))
+    expect(onStop).toHaveBeenCalledTimes(1)
+  })
+
   it('names every icon button, and removes an attached file by name', async () => {
     const onRemoveFile = vi.fn()
     const onDelegate = vi.fn()
