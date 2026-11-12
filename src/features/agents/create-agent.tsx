@@ -156,7 +156,9 @@ export function CreateAgent() {
             onChange={(event) => i18n.changeLanguage(event.target.value)}
             className='h-9 rounded-md border bg-background px-3 text-sm'
           >
+            {/* design-system-ignore: each language is named in its own language */}
             <option value='id'>🇮🇩 Indonesia</option>
+            {/* design-system-ignore: each language is named in its own language */}
             <option value='en'>🇬🇧 English</option>
           </select>
 

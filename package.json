@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "design:check": "node scripts/check-design.mjs",
+    "design:test": "node --test scripts/check-design-tests.mjs",
     "preview": "vite preview",
     "format:check": "prettier --check .",
     "format": "prettier --write .",

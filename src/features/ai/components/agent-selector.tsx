@@ -415,17 +415,17 @@ export function AgentSelector({
               }}
             >
               <div className="border-b border-border px-5 py-4">
-                <h3 className="text-base font-semibold">{t("agentSelector.selectAgent")}</h3>
+                <h3 className="text-base font-semibold">{t("agentSelector.agentDropdown.title")}</h3>
 
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Pilih Agent yang ingin digunakan.
+                  {t("agentSelector.agentDropdown.description")}
                 </p>
               </div>
 
               <div className="max-h-[65vh] overflow-y-auto p-2">
                 {loading && (
                   <div className="px-4 py-8 text-center text-sm text-muted-foreground">
-                    Memuat Agent...
+                    {t("agentSelector.agentDropdown.loading")}
                   </div>
                 )}
 
@@ -434,7 +434,7 @@ export function AgentSelector({
                     <p className="text-sm text-destructive">{error}</p>
 
                     <p className="mt-2 text-xs text-muted-foreground">
-                      Periksa koneksi backend.
+                      {t("agentSelector.agentDropdown.checkBackend")}
                     </p>
                   </div>
                 )}
@@ -442,7 +442,7 @@ export function AgentSelector({
                 {!loading && !error && agents.length === 0 && (
                   <div className="px-4 py-8 text-center">
                     <p className="text-sm text-muted-foreground">
-                      Tidak ada Agent tersedia.
+                      {t("agentSelector.agentDropdown.noAgents")}
                     </p>
                   </div>
                 )}
@@ -548,7 +548,7 @@ export function AgentSelector({
                 {!selectedAgent.models || selectedAgent.models.length === 0 ? (
                   <div className="px-4 py-8 text-center">
                     <p className="text-sm text-muted-foreground">
-                      Belum ada model untuk Agent ini.
+                      {t("agentSelector.modelDropdown.noModels")}
                     </p>
                   </div>
                 ) : (

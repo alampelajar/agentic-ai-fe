@@ -1,14 +1,20 @@
 import { useState } from 'react'
 import { createTableMock } from '@/test-utils/tanstack-table'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
 import { TasksMultiDeleteDialog } from './tasks-multi-delete-dialog'
+import i18n from '@/i18n'
 
 vi.mock('@/lib/utils', async (orig) => ({
   ...(await orig()),
   sleep: vi.fn(() => Promise.resolve()),
 }))
+
+// These tests read the English text.
+beforeAll(async () => {
+  await i18n.changeLanguage('en')
+})
 
 describe('TasksMultiDeleteDialog', () => {
   beforeEach(() => vi.clearAllMocks())

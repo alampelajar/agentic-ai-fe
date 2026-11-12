@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/password-input'
 import { Label } from '@/components/ui/label'
 import { API_BASE_URL } from '@/lib/api-config'
 import {
@@ -270,32 +271,32 @@ export function OtpForm({
               <Label htmlFor='new-password' className='text-sm font-medium'>
                 {t('passwordReset.newPassword.password')}
               </Label>
-              <Input
+              <PasswordInput
                 id='new-password'
                 name='new-password'
-                type='password'
                 autoComplete='new-password'
                 minLength={8}
                 value={newPassword}
                 onChange={(event) => setNewPassword(event.target.value)}
                 required
-                className='h-11 rounded-md border-white/10 bg-white/[0.035] px-3.5 text-sm shadow-none'
+                // design-system-ignore: the auth screens are always dark and keep their own surface
+                inputClassName='h-11 rounded-md border-white/10 bg-white/[0.035] px-3.5 text-sm shadow-none'
               />
             </div>
             <div className='space-y-2'>
               <Label htmlFor='confirm-password' className='text-sm font-medium'>
                 {t('passwordReset.newPassword.confirmPassword')}
               </Label>
-              <Input
+              <PasswordInput
                 id='confirm-password'
                 name='confirm-password'
-                type='password'
                 autoComplete='new-password'
                 minLength={8}
                 value={confirmPassword}
                 onChange={(event) => setConfirmPassword(event.target.value)}
                 required
-                className='h-11 rounded-md border-white/10 bg-white/[0.035] px-3.5 text-sm shadow-none'
+                // design-system-ignore: the auth screens are always dark and keep their own surface
+                inputClassName='h-11 rounded-md border-white/10 bg-white/[0.035] px-3.5 text-sm shadow-none'
               />
             </div>
             <Button type='submit' className='h-11 w-full rounded-md font-medium shadow-none' disabled={isLoading}>

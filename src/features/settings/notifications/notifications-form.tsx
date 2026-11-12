@@ -202,14 +202,14 @@ export function NotificationsForm() {
                   {t("settingsPage.notifications.useDifferentMobile")}
                 </FormLabel>
                 <FormDescription>
-                  You can manage your mobile notifications in the{' '}
+                  {t("settingsPage.notifications.mobileHintBefore")}{' '}
                   <Link
                     to='/settings'
                     className='underline decoration-dashed underline-offset-4 hover:decoration-solid'
                   >
                     {t("settingsPage.notifications.mobileSettings")}
-                  </Link>{' '}
-                  page.
+                  </Link>
+                  {t("settingsPage.notifications.mobileHintAfter")}
                 </FormDescription>
               </div>
             </FormItem>

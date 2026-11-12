@@ -6,14 +6,14 @@ import { useTranslation } from 'react-i18next'
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/password-input'
 import { deleteCurrentUserAccount, requestAccountDeletionCode, verifyCurrentUserPasswordForDeletion } from '@/lib/api-auth'
 import { useAuthStore } from '@/stores/auth-store'
 
 export function DeleteAccountCard() {
   const navigate = useNavigate()
   const resetAuth = useAuthStore((state) => state.auth.reset)
-  const { i18n } = useTranslation()
-  const isIndonesian = (i18n.resolvedLanguage ?? i18n.language).toLowerCase().startsWith('id')
+  const { t } = useTranslation()
 
   const [passwordOpen, setPasswordOpen] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
@@ -31,63 +31,34 @@ export function DeleteAccountCard() {
   const [deleteError, setDeleteError] = useState('')
   const [countdown, setCountdown] = useState(5)
 
-  const copy = isIndonesian
-    ? {
-        sectionTitle: 'Zona berbahaya',
-        sectionDescription: 'Hapus akun dan data pribadi terkait secara permanen.',
-        openButton: 'Hapus akun',
-        passwordTitle: 'Verifikasi kata sandi',
-        passwordDescription: 'Masukkan kata sandi akun untuk melanjutkan. Akun belum dihapus pada tahap ini.',
-        passwordLabel: 'Kata sandi akun',
-        passwordPlaceholder: 'Masukkan kata sandi',
-        verify: 'Verifikasi',
-        verifying: 'Memverifikasi...',
-        cancel: 'Tidak',
-        finalTitle: 'Apakah Anda yakin ingin menghapus akun Anda?',
-        finalDescription: 'Akun, tugas, riwayat percakapan, serta provider dan model AI custom milik Anda akan dihapus permanen. Data sistem bersama tetap dipertahankan. Tindakan ini tidak dapat dibatalkan.',
-        yesDelete: 'Ya, hapus akun',
-        wait: (seconds: number) => `Tunggu ${seconds} detik...`,
-        deleting: 'Menghapus akun...',
-        fallbackError: 'Gagal menghapus akun. Silakan coba lagi.',
-        noPassword: 'Tidak punya kata sandi (masuk dengan Google)? Kirim kode ke email',
-        codeTitle: 'Verifikasi lewat email',
-        codeDescription: 'Kami mengirim kode 6 digit ke email akun Anda. Masukkan kode itu untuk melanjutkan. Akun belum dihapus pada tahap ini.',
-        codeLabel: 'Kode verifikasi',
-        codePlaceholder: '123456',
-        sendingCode: 'Mengirim kode...',
-        codeSent: 'Kode dikirim ke email akun Anda.',
-        usePassword: 'Gunakan kata sandi',
-        resendCode: 'Kirim ulang kode',
-        next: 'Lanjut',
-      }
-    : {
-        sectionTitle: 'Danger zone',
-        sectionDescription: 'Permanently delete your account and associated private data.',
-        openButton: 'Delete account',
-        passwordTitle: 'Verify your password',
-        passwordDescription: 'Enter your account password to continue. Your account has not been deleted yet.',
-        passwordLabel: 'Account password',
-        passwordPlaceholder: 'Enter your password',
-        verify: 'Verify',
-        verifying: 'Verifying...',
-        cancel: 'No',
-        finalTitle: 'Are you sure you want to delete your account?',
-        finalDescription: 'Your account, tasks, conversation history, and custom AI providers and models will be permanently deleted. Shared system data will be kept. This action cannot be undone.',
-        yesDelete: 'Yes, delete account',
-        wait: (seconds: number) => `Wait ${seconds} seconds...`,
-        deleting: 'Deleting account...',
-        fallbackError: 'Could not delete your account. Please try again.',
-        noPassword: 'No password (signed in with Google)? E-mail me a code',
-        codeTitle: 'Verify by e-mail',
-        codeDescription: 'We sent a 6-digit code to your account e-mail. Enter it to continue. Your account has not been deleted yet.',
-        codeLabel: 'Verification code',
-        codePlaceholder: '123456',
-        sendingCode: 'Sending code...',
-        codeSent: 'A code was sent to your account e-mail.',
-        usePassword: 'Use my password',
-        resendCode: 'Resend code',
-        next: 'Continue',
-      }
+  const copy = {
+    sectionTitle: t('deleteAccount.sectionTitle'),
+    sectionDescription: t('deleteAccount.sectionDescription'),
+    openButton: t('deleteAccount.openButton'),
+    passwordTitle: t('deleteAccount.passwordTitle'),
+    passwordDescription: t('deleteAccount.passwordDescription'),
+    passwordLabel: t('deleteAccount.passwordLabel'),
+    passwordPlaceholder: t('deleteAccount.passwordPlaceholder'),
+    verify: t('deleteAccount.verify'),
+    verifying: t('deleteAccount.verifying'),
+    cancel: t('deleteAccount.cancel'),
+    finalTitle: t('deleteAccount.finalTitle'),
+    finalDescription: t('deleteAccount.finalDescription'),
+    yesDelete: t('deleteAccount.yesDelete'),
+    wait: (seconds: number) => t('deleteAccount.wait', { seconds }),
+    deleting: t('deleteAccount.deleting'),
+    fallbackError: t('deleteAccount.fallbackError'),
+    noPassword: t('deleteAccount.noPassword'),
+    codeTitle: t('deleteAccount.codeTitle'),
+    codeDescription: t('deleteAccount.codeDescription'),
+    codeLabel: t('deleteAccount.codeLabel'),
+    codePlaceholder: t('deleteAccount.codePlaceholder'),
+    sendingCode: t('deleteAccount.sendingCode'),
+    codeSent: t('deleteAccount.codeSent'),
+    usePassword: t('deleteAccount.usePassword'),
+    resendCode: t('deleteAccount.resendCode'),
+    next: t('deleteAccount.next'),
+  }
 
   useEffect(() => {
     if (!confirmOpen || countdown <= 0) return
@@ -228,9 +199,8 @@ export function DeleteAccountCard() {
             ) : (
               <>
                 <label htmlFor='delete-account-password' className='text-sm font-medium'>{copy.passwordLabel}</label>
-                <Input
+                <PasswordInput
                   id='delete-account-password'
-                  type='password'
                   autoComplete='current-password'
                   value={password}
                   placeholder={copy.passwordPlaceholder}

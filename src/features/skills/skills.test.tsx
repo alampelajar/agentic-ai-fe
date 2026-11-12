@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
+import i18n from '@/i18n'
 import type { Skill } from './data/api'
 import { Skills } from './index'
 
@@ -49,8 +50,9 @@ function deferred<T>() {
 }
 
 describe('Skills manager', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.resetAllMocks()
+    await i18n.changeLanguage('id')
   })
   afterEach(() => vi.unstubAllGlobals())
 
@@ -109,33 +111,36 @@ describe('Skills manager', () => {
     mocks.getSkills.mockResolvedValueOnce([skill()]).mockResolvedValueOnce([skill({ is_enabled: true, status: 'enabled' })])
     mocks.updateSkill.mockResolvedValueOnce({})
     const screen = await render(<Skills />)
-    await userEvent.click(screen.getByRole('button', { name: 'Enable' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Aktifkan' }))
 
     expect(mocks.updateSkill).toHaveBeenCalledWith(1, { is_enabled: true })
-    await expect.element(screen.getByRole('button', { name: 'Disable' })).toBeInTheDocument()
+    await expect.element(screen.getByRole('button', { name: 'Nonaktifkan' })).toBeInTheDocument()
     expect(mocks.toastSuccess).toHaveBeenCalledWith('Skill diaktifkan.')
   })
 
   it('asks before deleting, and deletes nothing when the user cancels', async () => {
     mocks.getSkills.mockResolvedValue([skill()])
-    const confirm = vi.fn().mockReturnValueOnce(false).mockReturnValueOnce(true)
-    vi.stubGlobal('confirm', confirm)
     mocks.deleteSkill.mockResolvedValue({})
     const screen = await render(<Skills />)
 
-    await userEvent.click(screen.getByRole('button', { name: /Hapus/ }))
-    expect(confirm).toHaveBeenCalledWith('Hapus skill Reader?')
+    await userEvent.click(screen.getByRole('button', { name: 'Hapus' }))
+    const dialog = screen.getByRole('alertdialog')
+    await expect.element(dialog.getByText('Hapus skill Reader?')).toBeInTheDocument()
+    await userEvent.click(dialog.getByRole('button', { name: 'Batal' }))
+    await expect.element(screen.getByRole('alertdialog')).not.toBeInTheDocument()
     expect(mocks.deleteSkill).not.toHaveBeenCalled()
 
-    await userEvent.click(screen.getByRole('button', { name: /Hapus/ }))
+    await userEvent.click(screen.getByRole('button', { name: 'Hapus' }))
+    await userEvent.click(screen.getByRole('alertdialog').getByRole('button', { name: 'Hapus' }))
     await vi.waitFor(() => expect(mocks.deleteSkill).toHaveBeenCalledExactlyOnceWith(1))
+    expect(mocks.toastSuccess).toHaveBeenCalledWith('Skill dihapus.')
   })
 
   it('reports a failed operation and keeps the list', async () => {
     mocks.getSkills.mockResolvedValue([skill()])
     mocks.updateSkill.mockRejectedValueOnce(new Error('Skill tidak ditemukan.'))
     const screen = await render(<Skills />)
-    await userEvent.click(screen.getByRole('button', { name: 'Enable' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Aktifkan' }))
 
     await vi.waitFor(() => expect(mocks.toastError).toHaveBeenCalledWith('Skill tidak ditemukan.'))
     await expect.element(screen.getByText('Reader', { exact: true })).toBeInTheDocument()

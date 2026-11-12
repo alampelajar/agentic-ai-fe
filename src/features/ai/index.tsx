@@ -807,7 +807,7 @@ export function AIAssistant() {
     approvalResolver.current = null
     const expired = async () => {
       // The approval is gone. Say so, and never retry or approve it again on the user's behalf.
-      toast.error('Persetujuan tindakan desktop kedaluwarsa. Minta agent mengajukan permintaan baru.')
+      toast.error(t('desktopRuntime.chatApproval.expired'))
       await logActivity('expired', 'cancelled')
       return 'TOOL_EXPIRED: persetujuan pengguna kedaluwarsa dan tindakan desktop tidak dijalankan. Jangan mengulang otomatis; tanyakan apakah pengguna ingin mengajukan permintaan baru.'
     }
@@ -816,6 +816,7 @@ export function AIAssistant() {
       // The runner may already have dropped the approval (for example after Emergency Stop). The action cannot run either way.
       await denyDesktopAction(base, runnerToken, requested.action.id).catch(() => undefined)
       await logActivity('denied', 'cancelled')
+      // design-system-ignore: these TOOL_* results go to the AI model, not to the screen
       return decision === 'emergency' ? 'TOOL_DENIED: pengguna menghentikan desktop dengan Emergency Stop. Tidak ada tindakan yang dijalankan.' : 'TOOL_DENIED: pengguna menolak tindakan desktop.'
     }
     try {

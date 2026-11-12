@@ -135,7 +135,12 @@
       "testConnection": "Test Connection",
       "saving": "Saving...",
       "saveModel": "Save Model",
-      "button": "Add Model"
+      "button": "Add Model",
+      "providerName": "Provider Name",
+      "providerNamePlaceholder": "Example: My AI Provider",
+      "providerType": "Provider Type",
+      "providerTypePlaceholder": "Choose a provider type",
+      "baseUrlHint": "Enter your provider's API URL. It is used to test the connection and to save the model."
     },
     "editModel": {
       "title": "Edit AI Model",
@@ -143,7 +148,10 @@
       "modelIdPlaceholder": "Example: openrouter/free",
       "modelNamePlaceholder": "Example: Gemini 2.5 Flash",
       "providerNote": "The provider cannot be changed from the model edit menu.",
-      "saveChanges": "Save Changes"
+      "saveChanges": "Save Changes",
+      "targetAgent": "Target Agent",
+      "targetAgentPlaceholder": "Choose one Agent",
+      "targetAgentHint": "The model is linked only to the selected Agent. Its links to other Agents are removed."
     },
     "removeModel": {
       "title": "Remove Model from Agent?",
@@ -237,7 +245,8 @@
     "workflowDescription": "Agent execution stages from goal to completion.",
     "codeBuilder": "Code Builder",
     "aiModel": "AI Model",
-    "twoMinutesAgo": "2 minutes ago"
+    "twoMinutesAgo": "2 minutes ago",
+    "sampleTaskTitle": "Build Agentic AI Dashboard"
   },
   "status": {
     "running": "Running",
@@ -472,7 +481,21 @@
     "retry": "Try again",
     "saving": "Saving...",
     "saveError": "Failed to save task.",
-    "openChat": "Open chat"
+    "openChat": "Open chat",
+    "multiDelete": {
+      "typeToConfirm": "Type \"{{word}}\" to confirm.",
+      "deleting": "Deleting tasks...",
+      "deleted_one": "Deleted {{count}} task",
+      "deleted_other": "Deleted {{count}} tasks",
+      "error": "The tasks could not be deleted.",
+      "title_one": "Delete {{count}} task",
+      "title_other": "Delete {{count}} tasks",
+      "question": "Are you sure you want to delete the selected tasks?",
+      "cannotUndo": "This action cannot be undone.",
+      "confirmLabel": "Confirm by typing \"{{word}}\":",
+      "warningTitle": "Warning!",
+      "warning": "Please be careful, this cannot be rolled back."
+    }
   },
   "overviewPage": {
     "subtitle": "Monitor AI Agents and model configurations from one place.",
@@ -628,7 +651,17 @@
     "confirm": "Confirm",
     "retry": "Retry",
     "viewAll": "View All",
-    "reset": "Reset"
+    "reset": "Reset",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "continue": "Continue",
+    "skipToMain": "Skip to Main",
+    "errors": {
+      "notModified": "Content not modified!",
+      "sessionExpired": "Your session has expired. Please sign in again.",
+      "serverError": "Internal server error!"
+    },
+    "agenticWorkspace": "Agentic workspace"
   },
   "navigation": {
     "changeAvatar": "Change profile photo",
@@ -646,7 +679,8 @@
       "CHAT": "Chat",
       "AI Workspace": "AI Workspace",
       "Settings": "Settings"
-    }
+    },
+    "openProfileMenu": "Open profile menu"
   },
   "chatHistory": {
     "title": "Chat history",
@@ -665,10 +699,12 @@
     "cancel": "Cancel",
     "failed": "Something went wrong. Please try again.",
     "showMore": "View other chats",
-    "showLess": "Show fewer"
+    "showLess": "Show fewer",
+    "deleted": "Chat deleted."
   },
   "sidebar": {
-    "smartAgentic": "SMART AGENTIC"
+    "smartAgentic": "SMART AGENTIC",
+    "openAiPage": "Open the AI page"
   },
   "auth": {
     "signIn": {
@@ -822,7 +858,16 @@
       "saveChanges": "Save Changes",
       "saving": "Saving...",
       "success": "Display settings updated successfully!",
-      "updateDisplay": "Update display"
+      "updateDisplay": "Update display",
+      "selectOne": "You have to select at least one item.",
+      "items": {
+        "recents": "Recents",
+        "home": "Home",
+        "applications": "Applications",
+        "desktop": "Desktop",
+        "downloads": "Downloads",
+        "documents": "Documents"
+      }
     },
     "notifications": {
       "title": "Notifications",
@@ -845,8 +890,12 @@
       "directMessagesMentions": "Direct messages and mentions",
       "nothing": "Nothing",
       "mobileSettings": "mobile settings",
-      "useDifferentMobile": "Use different settings for my mobile devices"
-    }
+      "useDifferentMobile": "Use different settings for my mobile devices",
+      "mobileHintBefore": "You can manage your mobile notifications in the",
+      "mobileHintAfter": " page."
+    },
+    "eyebrow": "Workspace",
+    "description": "Manage your account, security and Agentic AI workspace preferences."
   },
   "usersPage": {
     "title": "User Management",
@@ -921,7 +970,22 @@
     }
   },
   "dataTable": {
-    "reset": "Reset"
+    "reset": "Reset",
+    "rowsPerPage": "Rows per page",
+    "firstPage": "Go to first page",
+    "previousPage": "Go to previous page",
+    "nextPage": "Go to next page",
+    "lastPage": "Go to last page",
+    "selectedAnnouncement_one": "{{count}} {{entity}} selected. Bulk actions toolbar is available.",
+    "selectedAnnouncement_other": "{{count}} {{entity}}s selected. Bulk actions toolbar is available.",
+    "clearSelection": "Clear selection",
+    "clearSelectionHint": "Clear selection (Escape)",
+    "noResults": "No results found.",
+    "clearFilters": "Clear filters",
+    "view": "View",
+    "toggleColumns": "Toggle columns",
+    "selectAll": "Select all",
+    "selectRow": "Select row"
   },
   "toggleNavigation": "Toggle navigation",
   "paidModels": "Paid Models",
@@ -1558,7 +1622,9 @@
       "treeFailed": "The file list could not be loaded.",
       "readFailed": "The file could not be read.",
       "saveFailed": "The file could not be saved.",
-      "exportFailed": "The ZIP could not be created."
+      "exportFailed": "The ZIP could not be created.",
+      "discardTitle": "Discard changes?",
+      "discard": "Discard"
     },
     "console": {
       "command": "Command",
@@ -1714,7 +1780,26 @@
       "heading": "Desktop control",
       "description": "Observe the Windows desktop (windows, screenshot, UI elements) and request interactions. Observation runs directly; every focus change, click, typing, hotkey or scroll needs its own approval.",
       "connectFirst": "Connect the Desktop Runtime above to use desktop control.",
-      "unavailable": "Desktop control is switched off on the runner, so there is nothing to show here."
+      "unavailable": "Desktop control is switched off on the runner, so there is nothing to show here.",
+      "requestFailed": "The Desktop Runtime request failed.",
+      "noScreenshotData": "No screenshot is available.",
+      "chooseWindowFirst": "Choose a window first.",
+      "unknown": "Unknown",
+      "noId": "no id",
+      "handle": "handle {{handle}}",
+      "stopped": "Desktop Runtime stopped.",
+      "windowsTitle": "Open windows",
+      "windowsDescription": "Read-only window details from Windows UI Automation.",
+      "loadingWindows": "Loading windows…",
+      "noWindows": "No windows loaded.",
+      "refreshWindows": "Refresh windows",
+      "inspectWindow": "Inspect selected window",
+      "screenshotTitle": "Screenshot",
+      "screenshotDescription": "Taken only when you ask for it; the runner does not keep it.",
+      "screenshotAlt": "Desktop screenshot",
+      "noScreenshot": "No screenshot taken.",
+      "takeScreenshot": "Take screenshot",
+      "stop": "Stop"
     },
     "chat": {
       "statusLabel": "Desktop Runtime (optional)",
@@ -1723,6 +1808,90 @@
       "manage": "Manage in Settings",
       "desktopNeedsRuntime": "This needs the Desktop Runtime, which is not connected. Connect it in Settings → Integrations → Desktop Runtime, then send the request again.\n\nThe tool request was not run.",
       "localNeedsFolder": "This needs a local project folder on the Desktop Runtime. Choose one in Settings → Integrations, or select a Cloud Workspace instead.\n\nThe tool request was not run."
+    },
+    "interaction": {
+      "title": "Desktop interaction approval",
+      "description": "Every action that changes something needs its own approval. Approving an action also reserves the desktop for that agent until you release control or use Emergency stop.",
+      "fields": {
+        "agent": "Agent",
+        "action": "Action",
+        "targetWindow": "Target window",
+        "targetWindowPlaceholder": "Exact title or window handle",
+        "reason": "Reason",
+        "controlToClick": "Control to click",
+        "controlToScroll": "Control to scroll (optional)",
+        "findHow": "Choose how to find it",
+        "windowItself": "The window itself",
+        "byName": "By name",
+        "byAutomationId": "By automation ID",
+        "byControlType": "By control type",
+        "controlValue": "Control value",
+        "controlValuePlaceholder": "For example Save, 15 or Edit",
+        "direction": "Direction",
+        "lines": "Lines (1 to 20)",
+        "text": "Text",
+        "hotkey": "Allowlisted hotkey",
+        "hotkeyPlaceholder": "CTRL+A, CTRL+S, ESC",
+        "textPlaceholder": "Text is sent only after approval"
+      },
+      "actions": {
+        "focusWindow": "Focus window",
+        "click": "Click",
+        "doubleClick": "Double click",
+        "scroll": "Scroll",
+        "type": "Type",
+        "hotkey": "Hotkey"
+      },
+      "directions": {
+        "down": "Down",
+        "up": "Up",
+        "left": "Left",
+        "right": "Right"
+      },
+      "buttons": {
+        "request": "Request approval",
+        "emergency": "Emergency stop",
+        "release": "Release desktop control"
+      },
+      "dialog": {
+        "label": "Desktop action approval",
+        "required": "Approval required",
+        "requests": "{{agent}} requests",
+        "denyAction": "Deny action",
+        "allowOnce": "Allow once",
+        "deny": "Deny"
+      },
+      "activity": "Activity",
+      "noActivity": "No desktop actions yet.",
+      "log": {
+        "expired": "Approval expired: {{action}}",
+        "requested": "Approval requested: {{action}}",
+        "approved": "Approved {{action}} ({{mode}})",
+        "failed": "Approval failed: {{message}}",
+        "denied": "Denied {{action}}",
+        "emergency": "Emergency stop: queue cancelled and permission revoked.",
+        "released": "Desktop control released."
+      },
+      "toast": {
+        "failed": "Desktop action failed.",
+        "expired": "Approval expired. Request a new one to continue.",
+        "emergency": "Emergency stop activated."
+      }
+    },
+    "chatApproval": {
+      "label": "Desktop action approval",
+      "title": "Desktop action approval",
+      "description": "The AI asks for permission before changing your desktop.",
+      "waiting": "Waiting",
+      "agent": "Agent",
+      "skill": "Skill",
+      "tool": "Tool / action",
+      "reason": "Reason",
+      "note": "Only this action runs; later desktop actions still ask for approval. Once approved, this agent holds desktop control until you press Emergency Stop.",
+      "deny": "Deny",
+      "allowOnce": "Allow Once",
+      "emergencyStop": "Emergency Stop",
+      "expired": "The desktop action approval expired. Ask the agent to make a new request."
     }
   },
   "emailOtp": {
@@ -1931,7 +2100,8 @@
       "ellipse": "Ellipse",
       "line": "Line",
       "text": "Text"
-    }
+    },
+    "deleted": "Design deleted."
   },
   "githubIntegration": {
     "title": "GitHub",
@@ -1981,5 +2151,358 @@
     "baseMoved": "{{branch}} has new commits on GitHub since the import. Nothing was overwritten; check the pull request for conflicts.",
     "openPR": "Open the pull request",
     "openCommit": "View the commit"
+  },
+  "skillsPage": {
+    "eyebrow": "Agentic workspace",
+    "title": "Skills",
+    "subtitle": "Manage the instructions and abilities agents can use, without changing the app's source code.",
+    "create": "Create skill",
+    "importZip": "Import ZIP",
+    "stats": {
+      "installed": "Installed",
+      "active": "Active",
+      "needsAttention": "Needs attention"
+    },
+    "tabs": {
+      "installed": "Installed",
+      "discover": "Discover",
+      "create": "Create skill"
+    },
+    "searchPlaceholder": "Search name, slug or description",
+    "loading": "Loading skills…",
+    "loadErrorTitle": "Skills could not be loaded",
+    "retry": "Try again",
+    "emptyTitle": "No skills yet",
+    "emptyDescription": "Create your own skill or import a validated package.",
+    "github": {
+      "title": "Import from GitHub",
+      "description": "Only public HTTPS repositories that contain manifest.json and SKILL.md. Packages are never run.",
+      "import": "Import"
+    },
+    "form": {
+      "title": "Create skill",
+      "description": "This editor saves the instructions and a validated manifest. Tools must come from the known registry.",
+      "slug": "Slug / ID",
+      "slugPlaceholder": "coding-assistant",
+      "name": "Name",
+      "namePlaceholder": "Coding Assistant",
+      "version": "Version",
+      "author": "Author",
+      "authorPlaceholder": "Name or organization",
+      "descriptionLabel": "Description",
+      "instructions": "SKILL.md",
+      "instructionsPlaceholder": "# Coding Assistant\n\nHow the skill should work…",
+      "note": "The backend will tighten tools and permissions in a later phase. Do not put secrets in the instructions.",
+      "save": "Save skill"
+    },
+    "card": {
+      "enabled": "Enabled",
+      "noDescription": "No description.",
+      "noTools": "Requests no tools",
+      "enable": "Enable",
+      "disable": "Disable",
+      "validate": "Validate",
+      "delete": "Delete"
+    },
+    "delete": {
+      "title": "Delete the skill {{name}}?",
+      "description": "The skill and its files are removed. This cannot be undone.",
+      "confirm": "Delete"
+    },
+    "toast": {
+      "loadFailed": "Skills could not be loaded.",
+      "operationFailed": "The skill action failed.",
+      "imported": "Skill imported.",
+      "githubImported": "GitHub skill imported.",
+      "enabled": "Skill enabled.",
+      "disabled": "Skill disabled.",
+      "valid": "The skill is valid.",
+      "invalid": "The skill is not valid.",
+      "deleted": "Skill deleted.",
+      "created": "Skill created."
+    },
+    "status": {
+      "installed": "Installed",
+      "enabled": "Enabled",
+      "disabled": "Disabled"
+    }
+  },
+  "subscriptionPage": {
+    "eyebrow": "Subscription",
+    "title": "Subscription & Premium",
+    "subtitle": "See the example plans and subscription features. This page is still a demo.",
+    "demoBadge": "Demo · Not active yet",
+    "stats": {
+      "plans": "Available plans",
+      "active": "Active subscription",
+      "revenue": "Revenue"
+    },
+    "choosePlan": "Choose plan",
+    "choosePlanDescription": "The prices and features below are only examples for the interface design.",
+    "recommended": "Recommended",
+    "currentPlan": "Current plan",
+    "plans": {
+      "free": {
+        "name": "Free",
+        "period": "forever",
+        "description": "To start trying Agentic AI.",
+        "features": {
+          "0": "Basic features",
+          "1": "Free AI models",
+          "2": "No subscription fee"
+        }
+      },
+      "pro": {
+        "name": "Pro",
+        "period": "/ month",
+        "description": "For heavier AI use.",
+        "features": {
+          "0": "Selected models",
+          "1": "Higher usage limits",
+          "2": "Priority support"
+        }
+      },
+      "premium": {
+        "name": "Premium",
+        "period": "/ month",
+        "description": "For users who need the most complete abilities.",
+        "features": {
+          "0": "Premium models",
+          "1": "Highest usage limits",
+          "2": "Exclusive features"
+        }
+      }
+    },
+    "notice": {
+      "title": "This feature cannot be used yet",
+      "description": "Buying a subscription is not available yet. It will be switched on in a later update."
+    },
+    "footnote": "Note: this page is only a mockup. There are no payments, transactions or automatic subscription activation yet."
+  },
+  "configDrawer": {
+    "open": "Open theme settings",
+    "title": "Theme Settings",
+    "description": "Adjust the appearance and layout to suit your preferences.",
+    "resetAllLabel": "Reset all settings to default values",
+    "reset": "Reset",
+    "selectOption": "Select {{label}}",
+    "optionPreview": "{{label}} option preview",
+    "theme": {
+      "title": "Theme",
+      "reset": "Reset theme preference to default",
+      "select": "Select theme preference",
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark",
+      "description": "Choose between system preference, light mode, or dark mode"
+    },
+    "sidebar": {
+      "title": "Sidebar",
+      "reset": "Reset sidebar style to default",
+      "select": "Select sidebar style",
+      "inset": "Inset",
+      "floating": "Floating",
+      "sidebar": "Sidebar",
+      "description": "Choose between inset, floating, or standard sidebar layout"
+    },
+    "layout": {
+      "title": "Layout",
+      "reset": "Reset layout options to default",
+      "select": "Select layout style",
+      "default": "Default",
+      "compact": "Compact",
+      "full": "Full layout",
+      "description": "Choose between default expanded, compact icon-only, or full layout mode"
+    },
+    "direction": {
+      "title": "Direction",
+      "reset": "Reset text direction to default",
+      "select": "Select site direction",
+      "ltr": "Left to Right",
+      "rtl": "Right to Left",
+      "description": "Choose between left-to-right or right-to-left site direction"
+    }
+  },
+  "errorPages": {
+    "goBack": "Go Back",
+    "backHome": "Back to Home",
+    "learnMore": "Learn more",
+    "e401": {
+      "title": "Unauthorized Access",
+      "line1": "Please sign in with the right account",
+      "line2": "to open this page."
+    },
+    "e403": {
+      "title": "Access Forbidden",
+      "line1": "You don't have the permission needed",
+      "line2": "to view this page."
+    },
+    "e404": {
+      "title": "Oops! Page Not Found!",
+      "line1": "It seems the page you are looking for",
+      "line2": "does not exist or might have been removed."
+    },
+    "e500": {
+      "title": "Oops! Something went wrong :')",
+      "line1": "We apologize for the inconvenience.",
+      "line2": "Please try again later."
+    },
+    "e503": {
+      "title": "Website is under maintenance!",
+      "line1": "The site is not available at the moment.",
+      "line2": "We'll be back online shortly."
+    }
+  },
+  "comingSoon": {
+    "title": "Coming Soon!",
+    "line1": "This page has not been created yet.",
+    "line2": "Stay tuned!"
+  },
+  "signUpPage": {
+    "title": "Create your account",
+    "description": "Create your account and start building your autonomous AI workspace.",
+    "haveAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "secure": "Secure account creation",
+    "poweredBy": "Powered by Agentic AI",
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "created": "Account created successfully!",
+      "createdFor": "Account created for {{email}}. Please sign in.",
+      "creating": "Creating account...",
+      "submit": "Create Account"
+    },
+    "validation": {
+      "nameRequired": "Please enter your name.",
+      "nameShort": "Name must be at least 2 characters long.",
+      "emailRequired": "Please enter your email.",
+      "passwordRequired": "Please enter your password.",
+      "passwordShort": "Password must be at least 8 characters long.",
+      "confirmRequired": "Please confirm your password.",
+      "mismatch": "Passwords don't match.",
+      "failed": "Something went wrong."
+    }
+  },
+  "commandMenu": {
+    "placeholder": "Type a command or search...",
+    "theme": "Theme",
+    "toggleTheme": "Toggle theme",
+    "search": "Search"
+  },
+  "maintenance": {
+    "checking": "Checking system status...",
+    "title": "Website under maintenance",
+    "description": "We are doing system maintenance. Please try again in a moment.",
+    "note": "The system will be available again when maintenance is finished."
+  },
+  "agentSkills": {
+    "title": "Agent skills",
+    "description": "Assignments apply only to this agent and the signed-in user. Skills are not added to other agents automatically.",
+    "loading": "Loading assignments…",
+    "loadErrorTitle": "Skill assignments could not be loaded",
+    "loadFailed": "Skill assignments could not be loaded.",
+    "updateFailed": "Skill assignments could not be updated.",
+    "retry": "Try again",
+    "add": "Add skill",
+    "choose": "Choose a skill",
+    "allAssigned": "All skills are already assigned",
+    "assign": "Assign",
+    "assigned": "Skill assigned to the agent.",
+    "empty": "No skills are assigned to this agent yet.",
+    "remove": "Remove {{name}}",
+    "removed": "Skill removed from the agent."
+  },
+  "deleteAccount": {
+    "sectionTitle": "Danger zone",
+    "sectionDescription": "Permanently delete your account and associated private data.",
+    "openButton": "Delete account",
+    "passwordTitle": "Verify your password",
+    "passwordDescription": "Enter your account password to continue. Your account has not been deleted yet.",
+    "passwordLabel": "Account password",
+    "passwordPlaceholder": "Enter your password",
+    "verify": "Verify",
+    "verifying": "Verifying...",
+    "cancel": "No",
+    "finalTitle": "Are you sure you want to delete your account?",
+    "finalDescription": "Your account, tasks, conversation history, and custom AI providers and models will be permanently deleted. Shared system data will be kept. This action cannot be undone.",
+    "yesDelete": "Yes, delete account",
+    "wait": "Wait {{seconds}} seconds...",
+    "deleting": "Deleting account...",
+    "fallbackError": "Could not delete your account. Please try again.",
+    "noPassword": "No password (signed in with Google)? E-mail me a code",
+    "codeTitle": "Verify by e-mail",
+    "codeDescription": "We sent a 6-digit code to your account e-mail. Enter it to continue. Your account has not been deleted yet.",
+    "codeLabel": "Verification code",
+    "codePlaceholder": "123456",
+    "sendingCode": "Sending code...",
+    "codeSent": "A code was sent to your account e-mail.",
+    "usePassword": "Use my password",
+    "resendCode": "Resend code",
+    "next": "Continue"
+  },
+  "changePassword": {
+    "title": "Change password",
+    "description": "Use a strong password and do not reuse your old password.",
+    "current": "Current password",
+    "currentPlaceholder": "Enter current password",
+    "next": "New password",
+    "nextPlaceholder": "At least 8 characters",
+    "confirm": "Confirm new password",
+    "confirmPlaceholder": "Re-enter new password",
+    "mismatch": "The new passwords do not match.",
+    "minLength": "The new password must be at least 8 characters.",
+    "same": "The new password must differ from the current password.",
+    "save": "Save new password",
+    "saving": "Saving...",
+    "success": "Password changed. Sessions on other devices have been revoked.",
+    "failure": "Could not change password.",
+    "hidePassword": "Hide password",
+    "showPassword": "Show password"
+  },
+  "accountForm": {
+    "pleaseChooseAValidImage": "Please choose a valid image file.",
+    "thePhotoCouldNotBe": "The photo could not be processed.",
+    "profilePhotoUpdatedInThis": "Profile photo updated in this browser.",
+    "browserStorageIsFullTry": "Browser storage is full. Try a smaller image.",
+    "uploadProfilePhoto": "Upload profile photo",
+    "takeProfilePhoto": "Take profile photo",
+    "viewProfilePhoto": "View profile photo",
+    "profilePhotoOptions": "Profile photo options",
+    "viewPhoto": "View photo",
+    "takePhoto": "Take photo",
+    "uploadPhoto": "Upload photo",
+    "removePhoto": "Remove photo",
+    "clickThePencilIconTo": "Click the pencil icon to view, take, upload, or remove your photo.",
+    "profilePhoto": "Profile photo",
+    "previewYourProfilePhoto": "Preview your profile photo.",
+    "close": "Close",
+    "changePhoto": "Change photo",
+    "deleteProfilePhoto": "Delete profile photo?",
+    "useThisAvatar": "Use this avatar?",
+    "yourCustomPhotoWillBe": "Your custom photo will be deleted and the default avatar will be used.",
+    "no": "No",
+    "profilePhotoDeleted": "Profile photo deleted.",
+    "thePhotoCouldNotBe2": "The photo could not be deleted.",
+    "yes": "Yes",
+    "replaceWithAvatar": "The \"{{name}}\" avatar will replace your current profile photo. Continue?"
+  },
+  "profilePage": {
+    "settings": "Settings",
+    "profile": "Profile",
+    "manageHowYourNameAnd": "Manage how your name and photo appear across Agentic AI.",
+    "profileInformation": "Profile information",
+    "thisInformationIsUsedTo": "This information is used to identify your account."
+  },
+  "accountSecurity": {
+    "accountSecurity": "Account security",
+    "updateYourPasswordOrManage": "Update your password or manage account deletion from this page."
+  },
+  "languageMenu": {
+    "current": "Current language: English",
+    "currentName": "English"
   }
 }

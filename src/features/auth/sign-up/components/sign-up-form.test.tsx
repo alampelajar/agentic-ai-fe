@@ -1,6 +1,7 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, type RenderResult } from 'vitest-browser-react'
 import { type Locator, userEvent } from 'vitest/browser'
+import i18n from '@/i18n'
 import { SignUpForm } from './sign-up-form'
 import { peekSignInPrefill, clearSignInPrefill } from '@/features/auth/sign-in/prefill'
 
@@ -18,6 +19,11 @@ const FORM_MESSAGES = {
   confirmPasswordEmpty: 'Please confirm your password.',
   passwordMismatch: "Passwords don't match.",
 } as const
+
+// These tests read the English text.
+beforeAll(async () => {
+  await i18n.changeLanguage('en')
+})
 
 describe('SignUpForm', () => {
   let screen: RenderResult

@@ -65,6 +65,7 @@ export function ProfileDropdown() {
           <Button
             variant='ghost'
             className='relative h-8 w-8 rounded-full'
+            aria-label={t('navigation.openProfileMenu')}
           >
             <Avatar className='h-8 w-8'>
               <AvatarImage

@@ -3,6 +3,7 @@ import { Link, useParams } from '@tanstack/react-router'
 import { ArrowLeft, ChevronDown, ChevronRight, Download, File as FileIcon, FilePlus2, Folder, Loader2, Save, Undo2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { ConfirmDialog } from '@/components/confirm-dialog'
 import { Main } from '@/components/layout/main'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -96,10 +97,19 @@ export function WorkspaceDetailPage({ workspaceId }: { workspaceId: number }) {
     })
   }, [entries, expanded])
 
-  const confirmDiscard = () => !dirty || window.confirm(t('workspacePage.explorer.discardConfirm'))
+  // Unsaved changes are only dropped after the user agrees in the dialog below.
+  const [pendingDiscard, setPendingDiscard] = useState<(() => void) | null>(null)
+  const afterDiscardCheck = (action: () => void) => {
+    if (dirty) setPendingDiscard(() => action)
+    else action()
+  }
 
-  const openFile = async (path: string) => {
-    if (open?.path === path || !confirmDiscard()) return
+  const openFile = (path: string) => {
+    if (open?.path === path) return
+    afterDiscardCheck(() => void loadFile(path))
+  }
+
+  const loadFile = async (path: string) => {
     const request = ++fileRequest.current
     setFileLoading(true)
     setFileError(null)
@@ -121,13 +131,15 @@ export function WorkspaceDetailPage({ workspaceId }: { workspaceId: number }) {
 
   const startNewFile = () => {
     const path = newPath.trim().replace(/^\/+/, '')
-    if (!path || !confirmDiscard()) return
-    fileRequest.current++
-    setOpen({ path, saved: '', isNew: true })
-    setDraft('')
-    setFileError(null)
-    setShowDiff(false)
-    setNewPath('')
+    if (!path) return
+    afterDiscardCheck(() => {
+      fileRequest.current++
+      setOpen({ path, saved: '', isNew: true })
+      setDraft('')
+      setFileError(null)
+      setShowDiff(false)
+      setNewPath('')
+    })
   }
 
   const save = async () => {
@@ -327,6 +339,21 @@ export function WorkspaceDetailPage({ workspaceId }: { workspaceId: number }) {
           <ExecutionConsole workspaceId={workspaceId} />
         </TabsContent>
       </Tabs>
+
+      <ConfirmDialog
+        open={pendingDiscard !== null}
+        onOpenChange={(value) => { if (!value) setPendingDiscard(null) }}
+        title={t('workspacePage.explorer.discardTitle')}
+        desc={t('workspacePage.explorer.discardConfirm')}
+        cancelBtnText={t('common.cancel')}
+        confirmText={t('workspacePage.explorer.discard')}
+        destructive
+        handleConfirm={() => {
+          const action = pendingDiscard
+          setPendingDiscard(null)
+          action?.()
+        }}
+      />
     </Main>
   )
 }

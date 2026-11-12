@@ -1,7 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
 import type { AgentSkill, Skill } from '@/features/skills/data/api'
+import i18n from '@/i18n'
 import { AgentSkills } from './agent-skills'
 
 const mocks = vi.hoisted(() => ({
@@ -37,6 +38,11 @@ const skill = (id: number, name: string): Skill => ({
   requested_permissions: [],
 })
 const assignment = (record: Skill, enabled = true): AgentSkill => ({ id: record.id * 10, agent_id: 7, skill_id: record.id, is_enabled: enabled, skill: record })
+
+// These tests read the Indonesian text.
+beforeAll(async () => {
+  await i18n.changeLanguage('id')
+})
 
 describe('Agent skill assignment', () => {
   beforeEach(() => {
@@ -101,7 +107,7 @@ describe('Agent skill assignment', () => {
     mocks.removeSkillFromAgent.mockResolvedValue({})
     const screen = await render(<AgentSkills agentId={7} />)
 
-    await userEvent.click(screen.getByRole('button', { name: 'Disable' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Nonaktifkan' }))
     expect(mocks.updateAgentSkill).toHaveBeenCalledExactlyOnceWith(7, 1, false)
     await userEvent.click(screen.getByRole('button', { name: 'Lepas Reader' }))
     expect(mocks.removeSkillFromAgent).toHaveBeenCalledExactlyOnceWith(7, 1)

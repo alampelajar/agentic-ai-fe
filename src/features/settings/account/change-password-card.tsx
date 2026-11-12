@@ -9,8 +9,7 @@ import { changeCurrentUserPassword } from '@/lib/api-auth'
 type Notice = { kind: 'success' | 'error'; text: string } | null
 
 export function ChangePasswordCard() {
-  const { i18n } = useTranslation()
-  const isIndonesian = (i18n.resolvedLanguage ?? i18n.language).toLowerCase().startsWith('id')
+  const { t } = useTranslation()
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -20,41 +19,23 @@ export function ChangePasswordCard() {
   const [saving, setSaving] = useState(false)
   const [notice, setNotice] = useState<Notice>(null)
 
-  const copy = isIndonesian
-    ? {
-        title: 'Ubah password',
-        description: 'Gunakan password yang kuat dan jangan gunakan kembali password lama.',
-        current: 'Password sekarang',
-        currentPlaceholder: 'Masukkan password sekarang',
-        next: 'Password baru',
-        nextPlaceholder: 'Minimal 8 karakter',
-        confirm: 'Konfirmasi password baru',
-        confirmPlaceholder: 'Ketik ulang password baru',
-        mismatch: 'Konfirmasi password baru belum sama.',
-        minLength: 'Password baru minimal 8 karakter.',
-        same: 'Password baru harus berbeda dari password sekarang.',
-        save: 'Simpan password baru',
-        saving: 'Menyimpan...',
-        success: 'Password berhasil diubah. Sesi di perangkat lain telah dicabut.',
-        failure: 'Gagal mengubah password.',
-      }
-    : {
-        title: 'Change password',
-        description: 'Use a strong password and do not reuse your old password.',
-        current: 'Current password',
-        currentPlaceholder: 'Enter current password',
-        next: 'New password',
-        nextPlaceholder: 'At least 8 characters',
-        confirm: 'Confirm new password',
-        confirmPlaceholder: 'Re-enter new password',
-        mismatch: 'The new passwords do not match.',
-        minLength: 'The new password must be at least 8 characters.',
-        same: 'The new password must differ from the current password.',
-        save: 'Save new password',
-        saving: 'Saving...',
-        success: 'Password changed. Sessions on other devices have been revoked.',
-        failure: 'Could not change password.',
-      }
+  const copy = {
+    title: t('changePassword.title'),
+    description: t('changePassword.description'),
+    current: t('changePassword.current'),
+    currentPlaceholder: t('changePassword.currentPlaceholder'),
+    next: t('changePassword.next'),
+    nextPlaceholder: t('changePassword.nextPlaceholder'),
+    confirm: t('changePassword.confirm'),
+    confirmPlaceholder: t('changePassword.confirmPlaceholder'),
+    mismatch: t('changePassword.mismatch'),
+    minLength: t('changePassword.minLength'),
+    same: t('changePassword.same'),
+    save: t('changePassword.save'),
+    saving: t('changePassword.saving'),
+    success: t('changePassword.success'),
+    failure: t('changePassword.failure'),
+  }
 
   const mismatch = confirmPassword.length > 0 && newPassword !== confirmPassword
   const newPasswordInvalid = newPassword.length > 0 && newPassword.length < 8
@@ -128,7 +109,7 @@ export function ChangePasswordCard() {
           <button
             type='button'
             onClick={toggleVisible}
-            aria-label={visible ? (isIndonesian ? 'Sembunyikan password' : 'Hide password') : (isIndonesian ? 'Tampilkan password' : 'Show password')}
+            aria-label={visible ? (t('changePassword.hidePassword')) : (t('changePassword.showPassword'))}
             className='absolute inset-y-0 end-0 flex items-center px-3 text-muted-foreground hover:text-foreground'
             disabled={saving}
           >

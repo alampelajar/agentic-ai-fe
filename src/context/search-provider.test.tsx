@@ -1,7 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, type RenderResult } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
 import { SearchProvider } from '@/context/search-provider'
+import i18n from '@/i18n'
 
 const COMMAND_MENU_PLACEHOLDER = 'Type a command or search...'
 
@@ -32,6 +33,11 @@ async function openCommandPalette(screen: RenderResult, modifier: ShortcutModifi
   }, { interval: 50, timeout: 5000 })
 }
 
+// These tests read the English text.
+beforeAll(async () => {
+  await i18n.changeLanguage('en')
+})
+
 describe('SearchProvider and CommandMenu', () => {
   beforeEach(() => vi.clearAllMocks())
 
@@ -44,7 +50,21 @@ describe('SearchProvider and CommandMenu', () => {
     await expect.element(screen.getByText('Light')).toBeInTheDocument()
     await expect.element(screen.getByText('Dark')).toBeInTheDocument()
     await expect.element(screen.getByText('System')).toBeInTheDocument()
-    await expect.element(screen.getByText('aiOverview')).toBeInTheDocument()
+    await expect.element(screen.getByText('AI Overview')).toBeInTheDocument()
+  })
+
+  it('shows the page names and headings in the chosen language', async () => {
+    await i18n.changeLanguage('id')
+    try {
+      const screen = await renderWithSearchProvider()
+      await userEvent.keyboard('{Control>}k{/Control}')
+      await expect.element(screen.getByPlaceholder('Ketik perintah atau cari...')).toBeInTheDocument()
+      await expect.element(screen.getByText('Ringkasan AI')).toBeInTheDocument()
+      await expect.element(screen.getByText('Ruang Kerja AI')).toBeInTheDocument()
+      await expect.element(screen.getByText('aiOverview')).not.toBeInTheDocument()
+    } finally {
+      await i18n.changeLanguage('en')
+    }
   })
 
   it('does not show the dialog content when search is closed', async () => {

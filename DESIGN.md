@@ -74,8 +74,13 @@ Buttons that start work are disabled and show progress until it finishes.
 
 ## Text
 
-All interface text goes through `useTranslation`, with keys added to both
-`src/i18n/locales/en.json` and `src/i18n/locales/id.json`. Never hardcode a label.
+The app has two languages, English and Indonesian. All interface text goes through
+`useTranslation`, with keys added to both `src/i18n/locales/en.json` and
+`src/i18n/locales/id.json`. Never hardcode a label, placeholder, `aria-label` or toast.
+
+- Both files always have the same keys, and no value is empty.
+- Write the Indonesian text as Indonesian, not a copy of the English.
+- Product names, URLs and example values (such as `name@example.com`) may stay as they are.
 
 ## Layout and accessibility
 
@@ -93,3 +98,22 @@ the user. Anything larger must respect `prefers-reduced-motion`.
 
 Some older screens break these rules. Do not copy them, and do not restyle them as
 part of unrelated work: follow the rules in what you touch, and mention the rest.
+
+## Automatic checks
+
+`scripts/check-design.mjs` checks these rules, so they do not depend on anyone remembering them.
+
+- **While Claude Code works:** a hook in `.claude/settings.json` checks every file it edits and
+  reports problems straight back, so it fixes them before you see the change.
+- **By hand:** `npm run design:check` checks what this branch changes compared with `main`.
+  `node scripts/check-design.mjs --all` lists what older code still breaks.
+- **On pull requests:** the CI workflow runs the same check and fails when new lines break a rule.
+
+It checks hex colors, palette colors, arbitrary values like `p-[13px]`, `window.confirm` and
+`alert`, text that skips `t()`, keys missing from either language file, and that both language
+files have the same keys. Only new and changed lines are checked, so older screens pass until
+someone touches them.
+
+When a line must break a rule on purpose, put a comment containing `design-system-ignore` and
+the reason on that line or the line above it. Spacing, wording and visual polish still need a
+person to look at the result.

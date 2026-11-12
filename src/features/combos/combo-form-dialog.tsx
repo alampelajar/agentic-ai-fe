@@ -129,7 +129,7 @@ function ComboForm({ combo, models, agents, limits, onSave, onCancel }: Omit<Pro
           <legend className='mb-1 text-sm font-medium'>{t('comboPage.form.strategy')}</legend>
           {strategies.map((value) => (
             <label key={value} className={`flex cursor-pointer items-start gap-3 rounded-md px-3 py-2.5 text-sm ${strategy === value ? 'bg-muted' : 'hover:bg-muted/60'}`}>
-              <input type='radio' name='combo-strategy' className='mt-1' checked={strategy === value} onChange={() => setStrategy(value)} />
+              <input type='radio' name='combo-strategy' value={value} aria-label={t(`comboPage.strategy.${value}.name`)} className='mt-1' checked={strategy === value} onChange={() => setStrategy(value)} />
               <span>
                 <span className='block font-medium'>{t(`comboPage.strategy.${value}.name`)}</span>
                 <span className='block text-muted-foreground'>{t(`comboPage.strategy.${value}.description`)}</span>

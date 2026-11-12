@@ -15,6 +15,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
           <div className="flex items-center gap-2.5">
             <Logo className="size-7 text-white" />
             <span className="text-base font-semibold tracking-tight">
+              {/* design-system-ignore: the product name stays the same in every language */}
               agentic<span className="text-primary">AI</span>
             </span>
           </div>
@@ -50,6 +51,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
           <header className="flex h-10 items-center lg:hidden">
             <Logo className="me-2 size-6 text-white" />
             <span className="text-sm font-semibold tracking-tight">
+              {/* design-system-ignore: the product name stays the same in every language */}
               agentic<span className="text-primary">AI</span>
             </span>
           </header>

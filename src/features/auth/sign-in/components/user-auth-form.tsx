@@ -11,6 +11,7 @@ import { API_BASE_URL } from '@/lib/api-config'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { PasswordInput } from '@/components/password-input'
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
   redirectTo?: string
@@ -209,16 +210,16 @@ export function UserAuthForm({
               {t('authPage.fields.forgotPassword')}
             </Link>
           </div>
-          <Input
+          <PasswordInput
             id="password"
             name="password"
-            type="password"
             placeholder="••••••••"
             autoComplete="current-password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             disabled={isLoading}
-            className="h-11 rounded-md border-white/10 bg-white/[0.035] px-3.5 text-sm shadow-none placeholder:text-zinc-600 focus-visible:ring-2 focus-visible:ring-primary/20"
+            // design-system-ignore: the auth screens are always dark and keep their own surface
+            inputClassName="h-11 rounded-md border-white/10 bg-white/[0.035] px-3.5 text-sm shadow-none placeholder:text-zinc-600 focus-visible:ring-2 focus-visible:ring-primary/20"
           />
         </div>
 

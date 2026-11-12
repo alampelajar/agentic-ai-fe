@@ -79,7 +79,7 @@ export function AppearanceForm() {
                 <ChevronDownIcon className='absolute inset-e-3 top-2.5 h-4 w-4 opacity-50' />
               </div>
               <FormDescription className='font-manrope'>
-                Set the font you want to use in the dashboard.
+                {t("settingsPage.appearance.fontDescription")}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -92,7 +92,7 @@ export function AppearanceForm() {
             <FormItem>
               <FormLabel>{t("settingsPage.appearance.theme")}</FormLabel>
               <FormDescription>
-                Select the theme for the dashboard.
+                {t("settingsPage.appearance.themeDescription")}
               </FormDescription>
               <FormMessage />
               <RadioGroup
@@ -122,7 +122,7 @@ export function AppearanceForm() {
                       </div>
                     </div>
                     <span className='block w-full p-2 text-center font-normal'>
-                      Light
+                      {t("settingsPage.appearance.light")}
                     </span>
                   </FormLabel>
                 </FormItem>
@@ -148,7 +148,7 @@ export function AppearanceForm() {
                       </div>
                     </div>
                     <span className='block w-full p-2 text-center font-normal'>
-                      Dark
+                      {t("settingsPage.appearance.dark")}
                     </span>
                   </FormLabel>
                 </FormItem>

@@ -61,6 +61,17 @@ describe('UserAuthForm', () => {
     await expect.element(screen.getByRole('button', { name: 'Sign in' })).toBeInTheDocument()
   })
 
+  it('shows and hides the password with the eye button', async () => {
+    const screen = await render(<UserAuthForm />)
+    const input = screen.getByLabelText('Password')
+
+    await expect.element(input).toHaveAttribute('type', 'password')
+    await userEvent.click(screen.getByRole('button', { name: 'Show password' }))
+    await expect.element(input).toHaveAttribute('type', 'text')
+    await userEvent.click(screen.getByRole('button', { name: 'Hide password' }))
+    await expect.element(input).toHaveAttribute('type', 'password')
+  })
+
   it('shows validation toasts for missing credentials', async () => {
     const screen = await render(<UserAuthForm />)
 

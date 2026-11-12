@@ -19,13 +19,18 @@ import { useAuthStore } from '@/stores/auth-store'
 type Notice = { kind: 'success' | 'error'; text: string } | null
 
 export function AccountForm() {
-  const { t, i18n } = useTranslation()
-  const isIndonesian = (i18n.resolvedLanguage ?? i18n.language).toLowerCase().startsWith('id')
+  const { t } = useTranslation()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const cameraInputRef = useRef<HTMLInputElement>(null)
   const [customPhoto, setCustomPhoto] = useState<string | null>(null)
   const [photoPreviewOpen, setPhotoPreviewOpen] = useState(false)
   const [pendingAvatarAction, setPendingAvatarAction] = useState<{ type: 'preset'; value: string; label: string } | { type: 'remove' } | null>(null)
+  // Kept apart from the action so the dialog text stays filled while it animates closed.
+  const [avatarDialogOpen, setAvatarDialogOpen] = useState(false)
+  const askAvatarAction = (action: NonNullable<typeof pendingAvatarAction>) => {
+    setPendingAvatarAction(action)
+    setAvatarDialogOpen(true)
+  }
   const authUser = useAuthStore((state) => state.auth.user)
   const seed = authUser?.accountNo || authUser?.email || 'agentic-ai-user'
   const [name, setName] = useState('')
@@ -56,15 +61,15 @@ export function AccountForm() {
   function onPhotoFileChange(file?: File) {
     if (!file) return
     if (!file.type.startsWith('image/')) {
-      setNotice({ kind: 'error', text: isIndonesian ? 'Pilih file gambar yang valid.' : 'Please choose a valid image file.' })
+      setNotice({ kind: 'error', text: t('accountForm.pleaseChooseAValidImage') })
       return
     }
 
     const reader = new FileReader()
-    reader.onerror = () => setNotice({ kind: 'error', text: isIndonesian ? 'Foto tidak dapat diproses.' : 'The photo could not be processed.' })
+    reader.onerror = () => setNotice({ kind: 'error', text: t('accountForm.thePhotoCouldNotBe') })
     reader.onload = () => {
       const image = new Image()
-      image.onerror = () => setNotice({ kind: 'error', text: isIndonesian ? 'Foto tidak dapat diproses.' : 'The photo could not be processed.' })
+      image.onerror = () => setNotice({ kind: 'error', text: t('accountForm.thePhotoCouldNotBe') })
       image.onload = () => {
         const maxSize = 512
         const scale = Math.min(1, maxSize / Math.max(image.width, image.height))
@@ -79,9 +84,9 @@ export function AccountForm() {
           window.localStorage.setItem(localPhotoKey, dataUrl)
           setCustomPhoto(dataUrl)
           window.dispatchEvent(new CustomEvent('agentic-ai-avatar-updated', { detail: dataUrl }))
-          setNotice({ kind: 'success', text: isIndonesian ? 'Foto profil berhasil diperbarui di browser ini.' : 'Profile photo updated in this browser.' })
+          setNotice({ kind: 'success', text: t('accountForm.profilePhotoUpdatedInThis') })
         } catch {
-          setNotice({ kind: 'error', text: isIndonesian ? 'Penyimpanan browser penuh. Coba gambar yang lebih kecil.' : 'Browser storage is full. Try a smaller image.' })
+          setNotice({ kind: 'error', text: t('accountForm.browserStorageIsFullTry') })
         }
       }
       image.src = String(reader.result)
@@ -169,7 +174,7 @@ export function AccountForm() {
             type='file'
             accept='image/*'
             className='hidden'
-            aria-label={isIndonesian ? 'Unggah foto profil' : 'Upload profile photo'}
+            aria-label={t('accountForm.uploadProfilePhoto')}
             onChange={(event) => {
               onPhotoFileChange(event.currentTarget.files?.[0])
               event.currentTarget.value = ''
@@ -181,7 +186,7 @@ export function AccountForm() {
             accept='image/*'
             capture='user'
             className='hidden'
-            aria-label={isIndonesian ? 'Ambil foto profil' : 'Take profile photo'}
+            aria-label={t('accountForm.takeProfilePhoto')}
             onChange={(event) => {
               onPhotoFileChange(event.currentTarget.files?.[0])
               event.currentTarget.value = ''
@@ -191,7 +196,7 @@ export function AccountForm() {
             <button
               type='button'
               onClick={() => setPhotoPreviewOpen(true)}
-              aria-label={isIndonesian ? 'Lihat foto profil' : 'View profile photo'}
+              aria-label={t('accountForm.viewProfilePhoto')}
               className='block rounded-full transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2'
             >
               <Avatar className='size-28 cursor-zoom-in border shadow-sm'>
@@ -205,8 +210,8 @@ export function AccountForm() {
                   type='button'
                   size='icon'
                   variant='secondary'
-                  aria-label={isIndonesian ? 'Opsi foto profil' : 'Profile photo options'}
-                  title={isIndonesian ? 'Opsi foto profil' : 'Profile photo options'}
+                  aria-label={t('accountForm.profilePhotoOptions')}
+                  title={t('accountForm.profilePhotoOptions')}
                   className='absolute right-0 bottom-0 size-9 rounded-full border-2 border-background shadow-md'
                 >
                   <Pencil className='size-4' />
@@ -215,25 +220,25 @@ export function AccountForm() {
               <DropdownMenuContent align='start' side='right' className='w-56'>
                 <DropdownMenuItem onSelect={() => setPhotoPreviewOpen(true)}>
                   <Eye className='me-2 size-4' />
-                  {isIndonesian ? 'Lihat foto' : 'View photo'}
+                  {t('accountForm.viewPhoto')}
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={() => cameraInputRef.current?.click()}>
                   <Camera className='me-2 size-4' />
-                  {isIndonesian ? 'Ambil foto' : 'Take photo'}
+                  {t('accountForm.takePhoto')}
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={() => fileInputRef.current?.click()}>
                   <Folder className='me-2 size-4' />
-                  {isIndonesian ? 'Unggah foto' : 'Upload photo'}
+                  {t('accountForm.uploadPhoto')}
                 </DropdownMenuItem>
                 {customPhoto && (
                   <>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       className='text-destructive focus:text-destructive'
-                      onSelect={() => setPendingAvatarAction({ type: 'remove' })}
+                      onSelect={() => askAvatarAction({ type: 'remove' })}
                     >
                       <Trash2 className='me-2 size-4 text-destructive' />
-                      {isIndonesian ? 'Hapus foto' : 'Remove photo'}
+                      {t('accountForm.removePhoto')}
                     </DropdownMenuItem>
                   </>
                 )}
@@ -243,7 +248,7 @@ export function AccountForm() {
           <p className='mt-4 max-w-full truncate font-semibold'>{name || t('settingsPage.account.namePlaceholder')}</p>
           <p className='mt-1 max-w-full truncate text-sm text-muted-foreground'>{email || t('settingsPage.account.email')}</p>
           <p className='mt-4 text-xs leading-5 text-muted-foreground'>
-            {isIndonesian ? 'Tekan ikon pensil untuk melihat, mengambil, mengunggah, atau menghapus foto.' : 'Click the pencil icon to view, take, upload, or remove your photo.'}
+            {t('accountForm.clickThePencilIconTo')}
           </p>
 
         </section>
@@ -286,7 +291,7 @@ export function AccountForm() {
                 type='button'
                 aria-pressed={isSelected}
                 aria-label={preset.label}
-                onClick={() => setPendingAvatarAction({
+                onClick={() => askAvatarAction({
                   type: 'preset',
                   value: avatarPresetValue(preset.id),
                   label: preset.label,
@@ -338,8 +343,8 @@ export function AccountForm() {
       <Dialog open={photoPreviewOpen} onOpenChange={setPhotoPreviewOpen}>
         <DialogContent className='max-w-xl'>
           <DialogHeader>
-            <DialogTitle>{isIndonesian ? 'Foto profil' : 'Profile photo'}</DialogTitle>
-            <DialogDescription>{isIndonesian ? 'Pratinjau foto profil kamu.' : 'Preview your profile photo.'}</DialogDescription>
+            <DialogTitle>{t('accountForm.profilePhoto')}</DialogTitle>
+            <DialogDescription>{t('accountForm.previewYourProfilePhoto')}</DialogDescription>
           </DialogHeader>
           <div className='flex justify-center rounded-xl bg-muted/40 p-6 sm:p-10'>
             <img
@@ -350,32 +355,32 @@ export function AccountForm() {
           </div>
           <div className='flex justify-end gap-2'>
             <Button type='button' variant='outline' onClick={() => setPhotoPreviewOpen(false)}>
-              {isIndonesian ? 'Tutup' : 'Close'}
+              {t('accountForm.close')}
             </Button>
             <Button type='button' onClick={() => { setPhotoPreviewOpen(false); fileInputRef.current?.click() }}>
               <Pencil className='me-2 size-4' />
-              {isIndonesian ? 'Ubah foto' : 'Change photo'}
+              {t('accountForm.changePhoto')}
             </Button>
           </div>
         </DialogContent>
       </Dialog>
-      <Dialog open={pendingAvatarAction !== null} onOpenChange={(open) => { if (!open) setPendingAvatarAction(null) }}>
+      <Dialog open={avatarDialogOpen} onOpenChange={setAvatarDialogOpen}>
         <DialogContent className='max-w-md'>
           <DialogHeader>
             <DialogTitle>
               {pendingAvatarAction?.type === 'remove'
-                ? (isIndonesian ? 'Hapus foto profil?' : 'Delete profile photo?')
-                : (isIndonesian ? 'Gunakan avatar ini?' : 'Use this avatar?')}
+                ? (t('accountForm.deleteProfilePhoto'))
+                : (t('accountForm.useThisAvatar'))}
             </DialogTitle>
             <DialogDescription>
               {pendingAvatarAction?.type === 'remove'
-                ? (isIndonesian ? 'Foto kustom akan dihapus dan avatar bawaan akan digunakan kembali.' : 'Your custom photo will be deleted and the default avatar will be used.')
-                : (isIndonesian ? `Avatar "${pendingAvatarAction?.type === 'preset' ? pendingAvatarAction.label : ''}" akan menggantikan foto profil saat ini. Lanjutkan?` : `The "${pendingAvatarAction?.type === 'preset' ? pendingAvatarAction.label : ''}" avatar will replace your current profile photo. Continue?`)}
+                ? (t('accountForm.yourCustomPhotoWillBe'))
+                : t('accountForm.replaceWithAvatar', { name: pendingAvatarAction?.type === 'preset' ? pendingAvatarAction.label : '' })}
             </DialogDescription>
           </DialogHeader>
           <div className='flex justify-end gap-2'>
-            <Button type='button' variant='outline' onClick={() => setPendingAvatarAction(null)}>
-              {isIndonesian ? 'Tidak' : 'No'}
+            <Button type='button' variant='outline' onClick={() => setAvatarDialogOpen(false)}>
+              {t('accountForm.no')}
             </Button>
             <Button
               type='button'
@@ -387,9 +392,9 @@ export function AccountForm() {
                     window.localStorage.removeItem(localPhotoKey)
                     setCustomPhoto(null)
                     window.dispatchEvent(new CustomEvent('agentic-ai-avatar-updated', { detail: null }))
-                    setNotice({ kind: 'success', text: isIndonesian ? 'Foto profil berhasil dihapus.' : 'Profile photo deleted.' })
+                    setNotice({ kind: 'success', text: t('accountForm.profilePhotoDeleted') })
                   } catch {
-                    setNotice({ kind: 'error', text: isIndonesian ? 'Foto tidak dapat dihapus.' : 'The photo could not be deleted.' })
+                    setNotice({ kind: 'error', text: t('accountForm.thePhotoCouldNotBe2') })
                   }
                 } else {
                   if (customPhoto) {
@@ -400,10 +405,10 @@ export function AccountForm() {
                   setAvatar(pendingAvatarAction.value)
                   setNotice(null)
                 }
-                setPendingAvatarAction(null)
+                setAvatarDialogOpen(false)
               }}
             >
-              {isIndonesian ? 'Ya' : 'Yes'}
+              {t('accountForm.yes')}
             </Button>
           </div>
         </DialogContent>

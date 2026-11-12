@@ -69,7 +69,7 @@ function LanguageFlag({ language }: { language: "id" | "en" }) {
 export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
   const defaultOpen = getCookie("sidebar_state") !== "false";
 
-  const { i18n: currentI18n } = useTranslation();
+  const { t, i18n: currentI18n } = useTranslation();
 
   const currentLanguage = currentI18n.language;
 
@@ -190,7 +190,7 @@ export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
           <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-muted border-t-primary" />
 
           <p className="text-sm text-muted-foreground">
-            Checking system status...
+            {t("maintenance.checking")}
           </p>
         </div>
       </div>
@@ -234,18 +234,16 @@ export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
           </div>
 
           <h1 className="text-3xl font-bold tracking-tight text-foreground">
-            Website Sedang Maintenance
+            {t("maintenance.title")}
           </h1>
 
           <p className="mt-4 text-sm leading-6 text-muted-foreground">
-            Kami sedang melakukan pemeliharaan sistem.
-            Silakan coba kembali beberapa saat lagi.
+            {t("maintenance.description")}
           </p>
 
           <div className="mt-8 rounded-lg border bg-muted/30 px-4 py-3">
             <p className="text-xs text-muted-foreground">
-              Sistem akan kembali tersedia setelah
-              maintenance selesai.
+              {t("maintenance.note")}
             </p>
           </div>
 
@@ -299,21 +297,21 @@ export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
                       variant="outline"
                       size="sm"
                       aria-label={
-                        isIndonesian
-                          ? "Bahasa aktif: Indonesia"
-                          : "Current language: English"
+                        t("languageMenu.current")
                       }
                       className="h-9 gap-2 px-3"
                     >
                       <LanguageFlag language={isIndonesian ? "id" : "en"} />
-                      <span className="hidden text-sm sm:inline">
-                        {isIndonesian ? "Indonesia" : "English"}
+                      {/* Only the flag below lg: with the sidebar open, a tablet-width header has no room for the name. */}
+                      <span className="hidden text-sm lg:inline">
+                        {t("languageMenu.currentName")}
                       </span>
                       <ChevronDown className="size-4 text-muted-foreground" />
                     </Button>
                   </DropdownMenuTrigger>
 
                   <DropdownMenuContent align="end" className="min-w-44">
+                    {/* design-system-ignore: the language menu names itself in both languages */}
                     <DropdownMenuLabel>Language / Bahasa</DropdownMenuLabel>
                     <DropdownMenuSeparator />
 
@@ -326,6 +324,7 @@ export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
                       aria-current={isIndonesian ? "true" : undefined}
                     >
                       <LanguageFlag language="id" />
+                      {/* design-system-ignore: each language is named in its own language */}
                       <span>Bahasa Indonesia</span>
                       {isIndonesian && (
                         <Check className="ms-auto size-4 text-primary" />
@@ -341,6 +340,7 @@ export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
                       aria-current={isEnglish ? "true" : undefined}
                     >
                       <LanguageFlag language="en" />
+                      {/* design-system-ignore: each language is named in its own language */}
                       <span>English</span>
                       {isEnglish && (
                         <Check className="ms-auto size-4 text-primary" />

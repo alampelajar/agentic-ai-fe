@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import type { TFunction } from "i18next";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,29 +24,34 @@ import {
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/password-input";
 
-const formSchema = z
+// Built with t() so the messages follow the chosen language.
+function makeFormSchema(t: TFunction) {
+  return z
   .object({
     name: z
       .string()
-      .min(1, "Please enter your name.")
-      .min(2, "Name must be at least 2 characters long."),
+      .min(1, t("signUpPage.validation.nameRequired"))
+      .min(2, t("signUpPage.validation.nameShort")),
 
     email: z.email({
       error: (iss) =>
-        iss.input === "" ? "Please enter your email." : undefined,
+        iss.input === "" ? t("signUpPage.validation.emailRequired") : undefined,
     }),
 
     password: z
       .string()
-      .min(1, "Please enter your password.")
-      .min(8, "Password must be at least 8 characters long."),
+      .min(1, t("signUpPage.validation.passwordRequired"))
+      .min(8, t("signUpPage.validation.passwordShort")),
 
-    confirmPassword: z.string().min(1, "Please confirm your password."),
+    confirmPassword: z.string().min(1, t("signUpPage.validation.confirmRequired")),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match.",
+    message: t("signUpPage.validation.mismatch"),
     path: ["confirmPassword"],
   });
+}
+
+type SignUpValues = z.infer<ReturnType<typeof makeFormSchema>>;
 
 export function SignUpForm({
   className,
@@ -57,7 +63,8 @@ export function SignUpForm({
   // After the form is accepted a code is e-mailed; the account exists only once it is entered.
   const [pendingEmail, setPendingEmail] = useState<string | null>(null);
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const formSchema = useMemo(() => makeFormSchema(t), [t]);
+  const form = useForm<SignUpValues>({
     resolver: zodResolver(formSchema),
 
     defaultValues: {
@@ -68,7 +75,7 @@ export function SignUpForm({
     },
   });
 
-  async function onSubmit(data: z.infer<typeof formSchema>) {
+  async function onSubmit(data: SignUpValues) {
     setIsLoading(true);
 
     try {
@@ -83,7 +90,7 @@ export function SignUpForm({
       setPendingEmail(email);
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Something went wrong.",
+        error instanceof Error ? error.message : t("signUpPage.validation.failed"),
       );
     } finally {
       setIsLoading(false);
@@ -95,8 +102,8 @@ export function SignUpForm({
 
     await verifyRegisterOtp(pendingEmail, code);
 
-    toast.success("Account created successfully!", {
-      description: `Account created for ${pendingEmail}. Please sign in.`,
+    toast.success(t("signUpPage.form.created"), {
+      description: t("signUpPage.form.createdFor", { email: pendingEmail }),
     });
 
     // Hand the details to the sign-in page (in memory only) so it opens already filled in.
@@ -132,11 +139,11 @@ export function SignUpForm({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>{t("signUpPage.form.name")}</FormLabel>
 
               <FormControl>
                 <Input
-                  placeholder="Your name"
+                  placeholder={t("signUpPage.form.namePlaceholder")}
                   autoComplete="name"
                   disabled={isLoading}
                   className="h-10 rounded-xl border-border/70 bg-background/50 px-3.5 transition-all focus-visible:ring-1"
@@ -155,7 +162,7 @@ export function SignUpForm({
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t("signUpPage.form.email")}</FormLabel>
 
               <FormControl>
                 <Input
@@ -179,7 +186,7 @@ export function SignUpForm({
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>{t("signUpPage.form.password")}</FormLabel>
 
               <FormControl>
                 <PasswordInput
@@ -202,7 +209,7 @@ export function SignUpForm({
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
+              <FormLabel>{t("signUpPage.form.confirmPassword")}</FormLabel>
 
               <FormControl>
                 <PasswordInput
@@ -231,7 +238,7 @@ export function SignUpForm({
             <UserPlus className="size-4" />
           )}
 
-          {isLoading ? "Creating account..." : "Create Account"}
+          {isLoading ? t("signUpPage.form.creating") : t("signUpPage.form.submit")}
         </Button>
       </form>
     </Form>

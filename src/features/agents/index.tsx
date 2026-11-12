@@ -911,14 +911,14 @@ export function Agents() {
             <CardContent className='flex items-center justify-between gap-4 p-4'>
               <div>
                 <p className='font-medium text-destructive'>
-                  Gagal memuat Agent
+                  {t('agentPage.loadErrorTitle')}
                 </p>
 
                 <p className='mt-1 text-sm text-muted-foreground'>{error}</p>
               </div>
 
               <Button variant='outline' onClick={loadAgents}>
-                Coba Lagi
+                {t('agentPage.retry')}
               </Button>
             </CardContent>
           </Card>
@@ -1075,27 +1075,27 @@ export function Agents() {
                 {/* CUSTOM PROVIDER */}
                 <div className='grid gap-5 md:grid-cols-2'>
                   <div className='space-y-2'>
-                    <label className='text-sm font-medium'>Nama Provider</label>
+                    <label className='text-sm font-medium'>{t('agentPage.addModel.providerName')}</label>
                     <Input
                       value={form.providerName}
                       onChange={(event) =>
                         updateForm('providerName', event.target.value)
                       }
-                      placeholder='Contoh: My AI Provider'
+                      placeholder={t('agentPage.addModel.providerNamePlaceholder')}
                       autoComplete='off'
                       disabled={testingConnection || savingModel}
                     />
                   </div>
 
                 <div className='space-y-2'>
-                    <label className='text-sm font-medium'>Tipe Provider</label>
+                    <label className='text-sm font-medium'>{t('agentPage.addModel.providerType')}</label>
                     <Select
                       value={form.providerType}
                       onValueChange={(value) => updateForm('providerType', value)}
                       disabled={testingConnection || savingModel}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder='Pilih tipe provider' />
+                        <SelectValue placeholder={t('agentPage.addModel.providerTypePlaceholder')} />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value='openai'>openai</SelectItem>
@@ -1111,7 +1111,7 @@ export function Agents() {
 
                 {/* CUSTOM BASE URL */}
                 <div className='space-y-2'>
-                  <label className='text-sm font-medium'>Base URL</label>
+                  <label className='text-sm font-medium'>{t('agentPage.addModel.baseUrl')}</label>
                   <Input
                     type='url'
                     value={form.baseURL}
@@ -1123,8 +1123,7 @@ export function Agents() {
                     disabled={testingConnection || savingModel}
                   />
                   <p className='text-xs text-muted-foreground'>
-                    Masukkan URL API provider sendiri. URL ini digunakan untuk
-                    Test Connection dan proses penyimpanan model.
+                    {t('agentPage.addModel.baseUrlHint')}
                   </p>
                 </div>
 
@@ -1139,14 +1138,14 @@ export function Agents() {
                     onChange={(event) =>
                       updateForm('apiKey', event.target.value)
                     }
-                    placeholder='Masukkan API key'
+                    placeholder={t('agentPage.addModel.apiKeyPlaceholder')}
                     autoComplete='new-password'
                     disabled={testingConnection || savingModel}
                   />
 
                   <p className='text-[11px] text-muted-foreground'>
-                    API key hanya digunakan untuk test dan proses penyimpanan.
-                    Tidak disimpan di localStorage.
+                    {t('agentPage.addModel.apiKeyNote')}{' '}
+                    {t('agentPage.addModel.apiKeyStorageNote')}
                   </p>
                 </div>
 
@@ -1161,7 +1160,7 @@ export function Agents() {
                       onChange={(event) =>
                         updateForm('modelID', event.target.value)
                       }
-                      placeholder='Contoh: gpt-4o-mini'
+                      placeholder={t('agentPage.addModel.modelIdPlaceholder')}
                       disabled={testingConnection || savingModel}
                     />
                   </div>
@@ -1176,7 +1175,7 @@ export function Agents() {
                       onChange={(event) =>
                         updateForm('modelName', event.target.value)
                       }
-                      placeholder='Contoh: GPT-4o Mini'
+                      placeholder={t('agentPage.addModel.modelNamePlaceholder')}
                       disabled={testingConnection || savingModel}
                     />
                   </div>
@@ -1193,7 +1192,7 @@ export function Agents() {
                       updateForm('description', event.target.value)
                     }
                     rows={3}
-                    placeholder='Deskripsi model...'
+                    placeholder={t('agentPage.addModel.descriptionPlaceholder')}
                     disabled={testingConnection || savingModel}
                     className='flex w-full resize-none rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition outline-none placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
                   />
@@ -1209,7 +1208,7 @@ export function Agents() {
 
                     <div className='min-w-0'>
                       <p className='text-xs text-muted-foreground'>
-                        Model akan ditambahkan ke
+                        {t('agentPage.addModel.willBeAddedTo')}
                       </p>
 
                       <p className='truncate text-sm font-semibold'>
@@ -1229,7 +1228,7 @@ export function Agents() {
 
                     <div>
                       <p className='text-sm font-medium text-emerald-700 dark:text-emerald-400'>
-                        Connection berhasil
+                        {t('agentPage.addModel.connectionSuccess')}
                       </p>
 
                       <p className='mt-1 text-xs text-muted-foreground'>
@@ -1285,7 +1284,7 @@ export function Agents() {
                 ) : (
                   <>
                     <CheckCircle2 className='me-2 size-4' />
-                    Test Connection
+                    {t('agentPage.addModel.testConnection')}
                   </>
                 )}
               </Button>
@@ -1302,7 +1301,7 @@ export function Agents() {
                 ) : (
                   <>
                     <Plus className='me-2 size-4' />
-                    Simpan Model
+                    {t('agentPage.addModel.saveModel')}
                   </>
                 )}
               </Button>
@@ -1329,7 +1328,7 @@ export function Agents() {
               <div>
                 <h2 className='text-lg font-semibold'>{t('agentPage.editModel.title')}</h2>
                 <p className='mt-1 text-xs text-muted-foreground'>
-                  Perbarui konfigurasi model yang dipilih.
+                  {t('agentPage.editModel.description')}
                 </p>
               </div>
 
@@ -1355,13 +1354,13 @@ export function Agents() {
                       modelID: event.target.value,
                     }))
                   }
-                  placeholder='Contoh: openrouter/free'
+                  placeholder={t('agentPage.editModel.modelIdPlaceholder')}
                   disabled={savingEditModel}
                 />
               </div>
 
               <div className='space-y-2'>
-                <label className='text-sm font-medium'>Agent tujuan</label>
+                <label className='text-sm font-medium'>{t('agentPage.editModel.targetAgent')}</label>
                 <Select
                   value={editForm.agentID}
                   onValueChange={(value) =>
@@ -1373,7 +1372,7 @@ export function Agents() {
                   disabled={savingEditModel}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder='Pilih satu Agent' />
+                    <SelectValue placeholder={t('agentPage.editModel.targetAgentPlaceholder')} />
                   </SelectTrigger>
                   <SelectContent>
                     {agents.map((agent) => (
@@ -1384,7 +1383,7 @@ export function Agents() {
                   </SelectContent>
                 </Select>
                 <p className='text-xs text-muted-foreground'>
-                  Model akan dihubungkan hanya ke Agent yang dipilih. Relasi lama ke Agent lain akan dilepas.
+                  {t('agentPage.editModel.targetAgentHint')}
                 </p>
               </div>
 
@@ -1399,7 +1398,7 @@ export function Agents() {
                       modelName: event.target.value,
                     }))
                   }
-                  placeholder='Contoh: Gemini 2.5 Flash'
+                  placeholder={t('agentPage.editModel.modelNamePlaceholder')}
                   disabled={savingEditModel}
                 />
               </div>
@@ -1416,7 +1415,7 @@ export function Agents() {
                     }))
                   }
                   rows={4}
-                  placeholder='Deskripsi model...'
+                  placeholder={t('agentPage.addModel.descriptionPlaceholder')}
                   disabled={savingEditModel}
                   className='flex w-full resize-none rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition outline-none placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
                 />
@@ -1438,7 +1437,7 @@ export function Agents() {
                 </div>
 
                 <p className='mt-3 text-[11px] text-muted-foreground'>
-                  Provider tidak diubah dari menu edit model.
+                  {t('agentPage.editModel.providerNote')}
                 </p>
               </div>
 
@@ -1470,7 +1469,7 @@ export function Agents() {
                 ) : (
                   <>
                     <Check className='me-2 size-4' />
-                    Simpan Perubahan
+                    {t('agentPage.editModel.saveChanges')}
                   </>
                 )}
               </Button>
@@ -1496,7 +1495,7 @@ export function Agents() {
             <div className='border-b px-6 py-5'>
               <h2 className='text-lg font-semibold'>{t('agentPage.removeModel.title')}</h2>
               <p className='mt-1 text-sm text-muted-foreground'>
-                Model hanya akan dilepas dari Agent ini.
+                {t('agentPage.removeModel.description')}
               </p>
             </div>
 
@@ -1514,7 +1513,7 @@ export function Agents() {
               </div>
 
               <p className='text-sm text-muted-foreground'>
-                Agent lain yang menggunakan model ini tidak akan terpengaruh.
+                {t('agentPage.removeModel.otherAgentsNote')}
               </p>
 
               {removeModelError && (
@@ -1572,7 +1571,7 @@ export function Agents() {
             <div className='border-b px-6 py-5'>
               <h2 className='text-lg font-semibold'>{t('agentPage.deleteModel.title')}</h2>
               <p className='mt-1 text-sm text-muted-foreground'>
-                Model akan dihapus secara permanen.
+                {t('agentPage.deleteModel.description')}
               </p>
             </div>
 
@@ -1589,8 +1588,8 @@ export function Agents() {
               </div>
 
               <p className='text-sm text-muted-foreground'>
-                Tindakan ini akan menghapus model dan seluruh relasinya dengan
-                Agent lain. Tindakan ini tidak dapat dibatalkan.
+                {t('agentPage.deleteModel.warningPrefix')}{' '}
+                {t('agentPage.deleteModel.warningSuffix')}
               </p>
 
               {deleteModelError && (
@@ -1740,7 +1739,7 @@ function AgentCard({
                           <button
                             type='button'
                             className='fixed inset-0 z-40 cursor-default'
-                            aria-label='Tutup menu'
+                            aria-label={t('agentPage.closeMenu')}
                             onClick={() => setOpenModelMenu(null)}
                           />
 
@@ -1753,7 +1752,7 @@ function AgentCard({
                                 onEditModel(agent, model)
                               }}
                             >
-                              Edit Model
+                              {t('agentPage.modelMenu.edit')}
                             </button>
 
                             <button
@@ -1764,7 +1763,7 @@ function AgentCard({
                                 onRemoveModel(agent, model)
                               }}
                             >
-                              Lepas dari Agent
+                              {t('agentPage.removeModel.remove')}
                             </button>
 
                             <div className='my-1 h-px bg-border' />
@@ -1777,7 +1776,7 @@ function AgentCard({
                                 onDeleteModel(model)
                               }}
                             >
-                              Hapus Model
+                              {t('agentPage.deleteModel.delete')}
                             </button>
                           </div>
                         </>
@@ -1801,7 +1800,7 @@ function AgentCard({
             onClick={() => onAddModel(agent)}
           >
             <Plus className='me-2 size-3.5' />
-            Tambah Model
+            {t('agentPage.addModel.button')}
           </Button>
         </div>
 
