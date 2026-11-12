@@ -392,7 +392,7 @@
       "hint": "Enter to send, Shift+Enter for a new line",
       "needAgent": "Choose an agent and a model to start.",
       "removeFile": "Remove {{name}}",
-      "unsupportedFile": "{{name}} cannot be attached. Use an image, PDF, Word (.docx), or a text or code file.",
+      "unsupportedFile": "{{name}} cannot be attached. Use an image, PDF, Word (.docx), ZIP, or a text or code file.",
       "fileTooLarge": "{{name}} is larger than 10 MB.",
       "tooManyFiles": "At most {{count}} files per message."
     },

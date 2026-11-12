@@ -4,8 +4,8 @@ import { ATTACHMENT_ACCEPT, MAX_ATTACHMENT_BYTES, checkAttachment, isImageAttach
 const file = (name: string, type = '', size = 10) => new File([new Uint8Array(size)], name, { type })
 
 describe('chat attachments', () => {
-  it('accepts images, PDF, Word and text or code files', () => {
-    for (const accepted of [file('foto.png', 'image/png'), file('laporan.pdf', 'application/pdf'), file('surat.docx'), file('catatan.MD'), file('main.go'), file('data.csv', 'text/csv')]) {
+  it('accepts images, PDF, Word, ZIP and text or code files', () => {
+    for (const accepted of [file('foto.png', 'image/png'), file('laporan.pdf', 'application/pdf'), file('surat.docx'), file('proyek.ZIP', 'application/zip'), file('catatan.MD'), file('main.go'), file('data.csv', 'text/csv')]) {
       expect(checkAttachment(accepted), accepted.name).toBe('ok')
     }
   })
@@ -23,5 +23,6 @@ describe('chat attachments', () => {
     expect(ATTACHMENT_ACCEPT).toContain('image/png')
     expect(ATTACHMENT_ACCEPT).toContain('.pdf')
     expect(ATTACHMENT_ACCEPT).toContain('.docx')
+    expect(ATTACHMENT_ACCEPT).toContain('.zip')
   })
 })

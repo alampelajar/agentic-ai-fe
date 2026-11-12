@@ -8,7 +8,8 @@ export const MAX_ATTACHMENT_BYTES = 10 * 1024 * 1024
 const IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/gif']
 
 const DOCUMENT_EXTENSIONS = [
-  '.pdf', '.docx',
+  // A ZIP is not unpacked here: the backend lists it and reads the text and code files inside.
+  '.pdf', '.docx', '.zip',
   '.txt', '.md', '.markdown', '.csv', '.tsv', '.json', '.xml', '.yaml', '.yml', '.toml', '.ini', '.log',
   '.html', '.htm', '.css', '.scss', '.js', '.jsx', '.ts', '.tsx', '.mjs', '.go', '.py', '.java', '.kt',
   '.c', '.h', '.cpp', '.hpp', '.cs', '.rs', '.rb', '.php', '.swift', '.dart', '.sql', '.sh', '.bat',

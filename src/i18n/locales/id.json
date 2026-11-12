@@ -392,7 +392,7 @@
       "hint": "Enter untuk kirim, Shift+Enter untuk baris baru",
       "needAgent": "Pilih agen dan model untuk memulai.",
       "removeFile": "Hapus {{name}}",
-      "unsupportedFile": "{{name}} tidak bisa dilampirkan. Gunakan gambar, PDF, Word (.docx), atau file teks/kode.",
+      "unsupportedFile": "{{name}} tidak bisa dilampirkan. Gunakan gambar, PDF, Word (.docx), ZIP, atau file teks/kode.",
       "fileTooLarge": "{{name}} lebih besar dari 10 MB.",
       "tooManyFiles": "Maksimal {{count}} file per pesan."
     },
