@@ -1,6 +1,7 @@
 import {
   Brain,
   CheckCircle2,
+  CircleStop,
   FileArchive,
   FilePen,
   FilePlus2,
@@ -38,9 +39,10 @@ export type RunPhase =
   | { kind: 'summarizing' }
   | { kind: 'site'; stage: 'design' | 'build' | 'package' }
   | { kind: 'done' }
+  | { kind: 'stopped' }
 
-/** How the bar moves: sliding while work goes on, still while the person decides, full when done. */
-export type PhaseMotion = 'working' | 'waiting' | 'complete'
+/** How the bar moves: sliding while work goes on, still while the person decides, full when done, empty when stopped. */
+export type PhaseMotion = 'working' | 'waiting' | 'complete' | 'stopped'
 
 export type PhaseView = {
   icon: LucideIcon
@@ -124,6 +126,8 @@ export function describePhase(phase: RunPhase): PhaseView {
       return { icon: SITE_ICONS[phase.stage], labelKey: `site.${phase.stage}`, values: {}, motion: 'working' }
     case 'done':
       return { icon: CheckCircle2, labelKey: 'done', values: {}, motion: 'complete' }
+    case 'stopped':
+      return { icon: CircleStop, labelKey: 'stopped', values: {}, motion: 'stopped' }
   }
 }
 
@@ -137,7 +141,7 @@ export function samePhase(a: RunPhase, b: RunPhase): boolean {
 }
 
 /** Steps worth keeping in the trail: real work, not the model thinking between tools. */
-export const isTrailStep = (phase: RunPhase) => phase.kind !== 'thinking' && phase.kind !== 'approval' && phase.kind !== 'done'
+export const isTrailStep = (phase: RunPhase) => phase.kind !== 'thinking' && phase.kind !== 'approval' && phase.kind !== 'done' && phase.kind !== 'stopped'
 
 /** The trail after leaving `previous`: at most `limit` recent steps, without repeating the last one. */
 export function extendTrail(trail: RunPhase[], previous: RunPhase | null, limit = 4): RunPhase[] {

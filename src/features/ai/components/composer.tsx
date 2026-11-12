@@ -1,6 +1,6 @@
 import { useLayoutEffect, useMemo, useRef, useState, type ChangeEvent, type RefObject } from 'react'
 import { Link } from '@tanstack/react-router'
-import { Paperclip, Send, Users, X } from 'lucide-react'
+import { Paperclip, Send, Square, Users, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { filterSkills, insertSkillCommand, matchSkillCommand, type SkillOption } from './skill-command'
@@ -10,6 +10,8 @@ type Props = {
   value: string
   onChange: (value: string) => void
   onSend: () => void
+  /** Stops the run that is going; while one runs, Stop takes the place of Send. */
+  onStop?: () => void
   /** An agent and a model are chosen. */
   ready: boolean
   running: boolean
@@ -37,6 +39,7 @@ export function Composer({
   value,
   onChange,
   onSend,
+  onStop,
   ready,
   running,
   modelName,
@@ -203,10 +206,17 @@ export function Composer({
               </Button>
             </div>
 
-            <Button type='button' size='sm' onClick={onSend} disabled={!canSend} className='bg-foreground text-background hover:bg-foreground/90'>
-              <Send aria-hidden='true' className='size-3.5' />
-              {t('agentic.composer.send')}
-            </Button>
+            {running && onStop ? (
+              <Button type='button' size='sm' variant='outline' onClick={onStop}>
+                <Square aria-hidden='true' className='size-3.5 fill-current' />
+                {t('agentic.composer.stop')}
+              </Button>
+            ) : (
+              <Button type='button' size='sm' onClick={onSend} disabled={!canSend} className='bg-foreground text-background hover:bg-foreground/90'>
+                <Send aria-hidden='true' className='size-3.5' />
+                {t('agentic.composer.send')}
+              </Button>
+            )}
           </div>
         </div>
 
