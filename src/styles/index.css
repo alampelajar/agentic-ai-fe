@@ -91,6 +91,15 @@
    Agentic workspace: flat surfaces, no glow. The layout lives in the components
    under src/features/ai; only the motion rule below is global.
    -------------------------------------------------------------------------- */
+@keyframes progress-slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(300%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .agentic-workspace *,
   .agentic-workspace *::before,

@@ -403,7 +403,40 @@
       "loadError": "The conversation could not be restored",
       "attachedFiles": "Attached files"
     },
-    "workspaceLabel": "AI Workspace"
+    "workspaceLabel": "AI Workspace",
+    "phase": {
+      "understanding": "Understanding your request",
+      "images_one": "Looking at your image",
+      "images_other": "Looking at your {{count}} images",
+      "files_one": "Reading the attached file",
+      "files_other": "Reading {{count}} attached files",
+      "thinking": "{{agent}} is thinking",
+      "tool": {
+        "explore": "Looking through {{detail}}",
+        "read": "Reading {{detail}}",
+        "changes": "Checking what changed",
+        "write": "Writing {{detail}}",
+        "edit": "Editing {{detail}}",
+        "test": "Running the tests",
+        "build": "Building the project",
+        "install": "Installing dependencies",
+        "job": "Waiting for the run to finish",
+        "publish": "Sending the changes to GitHub",
+        "desktop": "Using the desktop: {{tool}}",
+        "other": "Running {{tool}}",
+        "exploreRoot": "Looking through the project files"
+      },
+      "approval": "Waiting for your approval: {{detail}}",
+      "summarizing": "Summing up what was found",
+      "site": {
+        "design": "Designing the page",
+        "build": "Building the site files",
+        "package": "Packing the ZIP"
+      },
+      "done": "Done",
+      "elapsed": "Time taken",
+      "trail": "Steps done"
+    }
   },
   "tasksPage": {
     "title": "AI Tasks",
