@@ -401,7 +401,11 @@
       "label": "Percakapan",
       "loading": "Memulihkan percakapan...",
       "loadError": "Percakapan tidak dapat dipulihkan",
-      "attachedFiles": "File terlampir"
+      "attachedFiles": "File terlampir",
+      "imageLoading": "Memuat {{name}}",
+      "imageUnavailable": "{{name}} tidak tersedia lagi",
+      "downloadFile": "Unduh {{name}}",
+      "downloadFailed": "{{name}} tidak bisa diunduh."
     },
     "workspaceLabel": "Ruang Kerja AI",
     "phase": {

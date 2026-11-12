@@ -108,6 +108,15 @@ export async function deleteTask(id: string | number) {
   return readJSON(response)
 }
 
+/** A file attached to a stored chat message; the file itself comes from getTaskAttachment. */
+export type BackendTaskAttachment = {
+  id: number
+  name: string
+  mime_type: string
+  size: number
+  is_image: boolean
+}
+
 export type BackendTaskMessage = {
   id: number
   task_id: number
@@ -117,6 +126,7 @@ export type BackendTaskMessage = {
   model_id?: number | null
   provider?: string
   created_at: string
+  attachments?: BackendTaskAttachment[]
 }
 
 export async function getTaskMessages(id: string | number) {
@@ -127,13 +137,31 @@ export async function getTaskMessages(id: string | number) {
 
 export async function addTaskMessage(
   id: string | number,
-  payload: Omit<BackendTaskMessage, 'id' | 'task_id' | 'created_at'>
+  payload: Omit<BackendTaskMessage, 'id' | 'task_id' | 'created_at' | 'attachments'>,
+  /** Files attached to a user message, kept with it so the chat shows them after a reload. */
+  attachments: File[] = []
 ) {
+  let body: string | FormData = JSON.stringify(payload)
+  if (attachments.length > 0) {
+    const form = new FormData()
+    for (const [key, value] of Object.entries(payload)) {
+      if (value !== null && value !== undefined) form.append(key, String(value))
+    }
+    attachments.forEach((file) => form.append('attachments', file))
+    body = form
+  }
   const response = await apiFetch(`/api/tasks/${id}/messages`, {
     method: 'POST',
-    body: JSON.stringify(payload),
+    body,
   })
 
   const data = await readJSON(response)
   return data.message as BackendTaskMessage
+}
+
+/** One stored attachment of the person's own task, as a Blob (the request carries their login). */
+export async function getTaskAttachment(taskId: string | number, attachmentId: number) {
+  const response = await apiFetch(`/api/tasks/${taskId}/attachments/${attachmentId}`)
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
+  return response.blob()
 }

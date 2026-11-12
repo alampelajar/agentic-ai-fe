@@ -401,7 +401,11 @@
       "label": "Conversation",
       "loading": "Restoring the conversation...",
       "loadError": "The conversation could not be restored",
-      "attachedFiles": "Attached files"
+      "attachedFiles": "Attached files",
+      "imageLoading": "Loading {{name}}",
+      "imageUnavailable": "{{name}} is no longer available",
+      "downloadFile": "Download {{name}}",
+      "downloadFailed": "{{name}} could not be downloaded."
     },
     "workspaceLabel": "AI Workspace",
     "phase": {
