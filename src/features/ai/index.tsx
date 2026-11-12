@@ -277,6 +277,9 @@ export function AIAssistant() {
             model: item.model || undefined,
             modelId: item.model_id ?? undefined,
             provider: item.provider || undefined,
+            // Attachments kept with the message come back from the server when shown.
+            images: (item.attachments ?? []).filter((file) => file.is_image).map((file) => ({ name: file.name, source: { taskId: task.id, id: file.id } })),
+            files: (item.attachments ?? []).filter((file) => !file.is_image).map((file) => ({ name: file.name, source: { taskId: task.id, id: file.id } })),
           }))
         )
 
@@ -421,14 +424,14 @@ export function AIAssistant() {
     return id
   }
 
-  const persistMessage = async (taskId: string, role: 'user' | 'assistant', content: string, options?: { model?: string; modelId?: number; provider?: string }) => {
+  const persistMessage = async (taskId: string, role: 'user' | 'assistant', content: string, options?: { model?: string; modelId?: number; provider?: string; attachments?: File[] }) => {
     await addTaskMessage(taskId, {
       role,
       content,
       model: options?.model ?? '',
       model_id: options?.modelId ?? null,
       provider: options?.provider ?? '',
-    })
+    }, options?.attachments ?? [])
   }
 
   // ============================================================
@@ -1143,7 +1146,7 @@ export function AIAssistant() {
     try {
       taskId = await ensureConversationTask(text)
 
-      await persistMessage(taskId, 'user', text)
+      await persistMessage(taskId, 'user', text, { attachments: files })
 
       const plan = await planAgent(text, history, files.length > 0)
 

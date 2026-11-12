@@ -2,6 +2,7 @@ import { Download, FileArchive, FileText } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { formatFileSize } from './format-file-size'
 import { Markdown } from './markdown'
+import { StoredFileButton, StoredImage, type AttachmentSource } from './stored-attachment'
 
 export type GeneratedFile = {
   id: number
@@ -18,10 +19,10 @@ export type ChatMessageView = {
   model?: string
   modelId?: number
   provider?: string
-  /** Photos the person attached, shown in their message (local previews, kept for this visit). */
-  images?: { name: string; url: string }[]
-  /** Documents the person attached, shown by name. */
-  files?: { name: string }[]
+  /** Photos the person attached: a local preview just after sending, or the stored copy (source) later. */
+  images?: { name: string; url?: string; source?: AttachmentSource }[]
+  /** Documents the person attached, by name; a stored one (source) can be downloaded. */
+  files?: { name: string; source?: AttachmentSource }[]
 }
 
 /**
@@ -38,19 +39,31 @@ export function MessageItem({ message, agentName }: { message: ChatMessageView; 
         <div className='flex max-w-4/5 flex-col items-end gap-2'>
           {message.images && message.images.length > 0 && (
             <div className='flex flex-wrap justify-end gap-2' data-testid='message-images'>
-              {message.images.map((image) => (
-                <img key={image.url} src={image.url} alt={image.name} className='max-h-48 max-w-full rounded-md border border-border object-cover' />
-              ))}
+              {message.images.map((image, index) =>
+                image.url ? (
+                  <img key={image.url} src={image.url} alt={image.name} className='max-h-48 max-w-full rounded-md border border-border object-cover' />
+                ) : image.source ? (
+                  <StoredImage key={`${image.source.id}`} name={image.name} source={image.source} />
+                ) : (
+                  <span key={`${image.name}-${index}`} className='rounded-md border border-border px-2.5 py-1.5 text-xs'>{image.name}</span>
+                )
+              )}
             </div>
           )}
           {message.files && message.files.length > 0 && (
             <ul className='flex flex-wrap justify-end gap-2' aria-label={t('agentic.thread.attachedFiles')}>
-              {message.files.map((file, index) => (
-                <li key={`${file.name}-${index}`} className='flex max-w-full items-center gap-2 rounded-md border border-border px-2.5 py-1.5 text-xs'>
-                  <FileText aria-hidden='true' className='size-4 shrink-0 text-muted-foreground' />
-                  <span className='truncate'>{file.name}</span>
-                </li>
-              ))}
+              {message.files.map((file, index) =>
+                file.source ? (
+                  <li key={`${file.source.id}`} className='max-w-full'>
+                    <StoredFileButton name={file.name} source={file.source} />
+                  </li>
+                ) : (
+                  <li key={`${file.name}-${index}`} className='flex max-w-full items-center gap-2 rounded-md border border-border px-2.5 py-1.5 text-xs'>
+                    <FileText aria-hidden='true' className='size-4 shrink-0 text-muted-foreground' />
+                    <span className='truncate'>{file.name}</span>
+                  </li>
+                )
+              )}
             </ul>
           )}
           <div className='whitespace-pre-wrap rounded-lg bg-muted px-4 py-2.5 text-sm leading-6'>{message.content}</div>
