@@ -1,6 +1,6 @@
 import { apiFetch } from '@/lib/api'
 
-export type ComboStrategy = 'fallback' | 'round_robin'
+export type ComboStrategy = 'fallback' | 'round_robin' | 'pipeline'
 
 export type ComboMember = {
   ai_model_id: number
