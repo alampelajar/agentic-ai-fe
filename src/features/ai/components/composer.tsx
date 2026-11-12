@@ -4,6 +4,7 @@ import { Paperclip, Send, Users, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { filterSkills, insertSkillCommand, matchSkillCommand, type SkillOption } from './skill-command'
+import { ATTACHMENT_ACCEPT } from './attachments'
 
 type Props = {
   value: string
@@ -193,7 +194,7 @@ export function Composer({
 
           <div className='flex items-center justify-between px-2 pb-2'>
             <div className='flex items-center gap-1'>
-              <input ref={fileInputRef} type='file' accept='image/png,image/jpeg,image/jpg,image/webp,image/gif' multiple onChange={onFiles} className='hidden' />
+              <input ref={fileInputRef} type='file' accept={ATTACHMENT_ACCEPT} multiple onChange={onFiles} className='hidden' />
               <Button type='button' variant='ghost' size='icon' className='size-8' onClick={() => fileInputRef.current?.click()} disabled={locked} aria-label={t('agentic.composer.attach')} title={t('agentic.composer.attach')}>
                 <Paperclip aria-hidden='true' className='size-4' />
               </Button>

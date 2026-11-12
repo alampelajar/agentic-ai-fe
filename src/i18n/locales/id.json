@@ -387,16 +387,20 @@
     },
     "composer": {
       "skills": "Skill",
-      "attach": "Lampirkan gambar",
+      "attach": "Lampirkan gambar atau file",
       "send": "Kirim",
       "hint": "Enter untuk kirim, Shift+Enter untuk baris baru",
       "needAgent": "Pilih agen dan model untuk memulai.",
-      "removeFile": "Hapus {{name}}"
+      "removeFile": "Hapus {{name}}",
+      "unsupportedFile": "{{name}} tidak bisa dilampirkan. Gunakan gambar, PDF, Word (.docx), atau file teks/kode.",
+      "fileTooLarge": "{{name}} lebih besar dari 10 MB.",
+      "tooManyFiles": "Maksimal {{count}} file per pesan."
     },
     "thread": {
       "label": "Percakapan",
       "loading": "Memulihkan percakapan...",
-      "loadError": "Percakapan tidak dapat dipulihkan"
+      "loadError": "Percakapan tidak dapat dipulihkan",
+      "attachedFiles": "File terlampir"
     },
     "workspaceLabel": "Ruang Kerja AI"
   },
