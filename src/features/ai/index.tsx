@@ -1120,9 +1120,12 @@ export function AIAssistant() {
     }))
 
     const userMessageId = Date.now()
+    const images = files
+      .filter((file) => file.type.startsWith('image/'))
+      .map((file) => ({ name: file.name, url: URL.createObjectURL(file) }))
     setMessages((current) => [
       ...current,
-      { id: userMessageId, role: 'user', content: text },
+      { id: userMessageId, role: 'user', content: text, images },
     ])
     setMessage('')
     setSelectedFiles([])

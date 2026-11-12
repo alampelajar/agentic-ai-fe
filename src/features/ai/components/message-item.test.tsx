@@ -18,6 +18,18 @@ describe('MessageItem', () => {
     await expect.element(screen.getByText('Coding Agent')).not.toBeInTheDocument()
   })
 
+  it('shows the photos the person attached above their text', async () => {
+    const url = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+    const screen = await render(<MessageItem agentName='Coding Agent' message={{ id: 1, role: 'user', content: 'Apa isi foto ini?', images: [{ name: 'kucing.png', url }] }} />)
+    await expect.element(screen.getByRole('img', { name: 'kucing.png' })).toHaveAttribute('src', url)
+    await expect.element(screen.getByText('Apa isi foto ini?')).toBeInTheDocument()
+  })
+
+  it('shows no photo area when nothing was attached', async () => {
+    const screen = await render(<MessageItem agentName='Coding Agent' message={{ id: 1, role: 'user', content: 'Halo' }} />)
+    await expect.element(screen.getByTestId('message-images')).not.toBeInTheDocument()
+  })
+
   it('shows the agent by name with its answer as plain text and the model as one small line', async () => {
     const screen = await render(
       <MessageItem
