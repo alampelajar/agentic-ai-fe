@@ -1,5 +1,4 @@
 import { apiFetch } from '@/lib/api'
-import { API_BASE_URL } from '@/lib/api-config'
 
 export const FEEDBACK_CATEGORIES = ['feature', 'bug', 'service', 'aiExperience', 'help'] as const
 export type FeedbackCategory = (typeof FEEDBACK_CATEGORIES)[number]
@@ -50,9 +49,15 @@ export type RatingDraft = { rating: number; rating_reasons: string[]; rating_com
 /** Only finished tickets can be deleted; the server enforces the same rule. */
 export const isFinished = (status: FeedbackStatus) => status === 'completed' || status === 'rejected'
 
-/** Uploaded images are served by the backend, not by this app. */
-export const attachmentUrl = (path: string) =>
-  path.startsWith('/uploads/feedback/') ? `${API_BASE_URL}${path}` : ''
+/** Whether the report has an uploaded image (older reports may hold only a file name). */
+export const hasStoredAttachment = (path: string) => path.startsWith('/uploads/feedback/')
+
+/** The report's image. It is only sent to the signed-in owner, so it is fetched with the login. */
+export async function getFeedbackAttachment(id: number): Promise<Blob> {
+  const response = await apiFetch(`/api/feedback/${id}/attachment`)
+  if (!response.ok) throw new Error(`Attachment request failed with status ${response.status}`)
+  return response.blob()
+}
 
 async function parse<T>(response: Response): Promise<T> {
   const data = await response.json().catch(() => ({}))

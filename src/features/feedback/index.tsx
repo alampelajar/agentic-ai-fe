@@ -12,7 +12,8 @@ import {
   FEEDBACK_CATEGORIES,
   MAX_ATTACHMENT_BYTES,
   RATING_REASONS,
-  attachmentUrl,
+  getFeedbackAttachment,
+  hasStoredAttachment,
   createFeedback,
   deleteFeedback,
   getMyFeedback,
@@ -391,10 +392,56 @@ function StatusBadge({ status }: { status: Feedback['status'] }) {
   )
 }
 
+/** The report's screenshot, fetched with the login and shown from memory. */
+function ReportImage({ id }: { id: number }) {
+  const { t } = useTranslation()
+  const [url, setUrl] = useState('')
+  const [failed, setFailed] = useState(false)
+
+  useEffect(() => {
+    let objectUrl = ''
+    let cancelled = false
+    getFeedbackAttachment(id)
+      .then((blob) => {
+        if (cancelled) return
+        objectUrl = URL.createObjectURL(blob)
+        setUrl(objectUrl)
+      })
+      .catch(() => {
+        if (!cancelled) setFailed(true)
+      })
+    return () => {
+      cancelled = true
+      if (objectUrl) URL.revokeObjectURL(objectUrl)
+    }
+  }, [id])
+
+  if (failed) {
+    return (
+      <p role='alert' className='mt-4 flex items-center gap-2 text-xs text-destructive'>
+        <AlertCircle className='size-4' />
+        {t('feedbackPage.attachmentLoadFailed')}
+      </p>
+    )
+  }
+  if (!url) {
+    return (
+      <p className='mt-4 flex items-center gap-2 text-xs text-muted-foreground'>
+        <Loader2 className='size-4 animate-spin' />
+        {t('feedbackPage.attachmentLoading')}
+      </p>
+    )
+  }
+  return (
+    <a href={url} target='_blank' rel='noreferrer' className='mt-4 inline-block' title={t('feedbackPage.openAttachment')}>
+      <img src={url} alt={t('feedbackPage.attachment')} className='max-h-48 max-w-full rounded-lg border object-contain' />
+    </a>
+  )
+}
+
 function ReportCard({ report, onRated, onDelete }: { report: Feedback; onRated: (report: Feedback) => void; onDelete: () => void }) {
   const { t } = useTranslation()
   const replies = report.replies ?? []
-  const image = attachmentUrl(report.attachment)
   return (
     <article className='rounded-xl border p-4 sm:p-5'>
       <div className='flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between'>
@@ -416,11 +463,7 @@ function ReportCard({ report, onRated, onDelete }: { report: Feedback; onRated: 
         </div>
       </div>
 
-      {image && (
-        <a href={image} target='_blank' rel='noreferrer' className='mt-4 inline-block' title={t('feedbackPage.openAttachment')}>
-          <img src={image} alt={t('feedbackPage.attachment')} className='max-h-48 max-w-full rounded-lg border object-contain' />
-        </a>
-      )}
+      {hasStoredAttachment(report.attachment) && <ReportImage id={report.id} />}
 
       <div className='mt-4 flex flex-wrap gap-3 border-t pt-3 text-xs text-muted-foreground'>
         <span>{new Date(report.created_at).toLocaleString()}</span>

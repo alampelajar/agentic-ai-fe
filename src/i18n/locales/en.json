@@ -1319,6 +1319,8 @@
     "fileTooLarge": "The screenshot can be at most 5 MB.",
     "removeAttachment": "Remove screenshot",
     "openAttachment": "Open the screenshot in a new tab",
+    "attachmentLoading": "Loading the screenshot…",
+    "attachmentLoadFailed": "The screenshot could not be loaded.",
     "delete": "Delete report",
     "deleteTitle": "Delete this report?",
     "deleteDescription": "Report #{{id}} and its replies will be deleted permanently, for you and for the admin team.",
