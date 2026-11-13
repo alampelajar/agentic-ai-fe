@@ -26,16 +26,25 @@ describe('useAuthStore', () => {
     expect(useAuthStore.getState().auth.user).toBeNull()
   })
 
-  it('persists access token so a new store instance reads it back', async () => {
+  it('keeps the access token in memory only, never in a cookie or storage', async () => {
     const useAuthStore = await importAuthStore()
     useAuthStore.getState().auth.setAccessToken('session-token')
 
-    vi.resetModules()
-    const useAuthStoreAfterReload = await importAuthStore()
+    expect(useAuthStore.getState().auth.accessToken).toBe('session-token')
+    // Nothing a script could read survives a reload; the route guard renews the
+    // token with the HTTP-only refresh cookie instead.
+    expect(document.cookie).not.toContain('session-token')
+    expect(JSON.stringify({ ...localStorage })).not.toContain('session-token')
+    expect(JSON.stringify({ ...sessionStorage })).not.toContain('session-token')
+  })
 
-    expect(useAuthStoreAfterReload.getState().auth.accessToken).toBe(
-      'session-token'
-    )
+  it('clears an access token left in a cookie by an older version', async () => {
+    document.cookie = `thisisjustarandomstring=${JSON.stringify('old-token')}; path=/`
+    const { clearLegacyAccessToken } = await import('./auth-store')
+
+    clearLegacyAccessToken()
+
+    expect(document.cookie).not.toContain('old-token')
   })
 
   it('clears persisted access token when resetAccessToken is used', async () => {
@@ -83,6 +92,5 @@ describe('useAuthStore', () => {
     const useAuthStoreAfterReload = await importAuthStore()
 
     expect(useAuthStoreAfterReload.getState().auth.user?.email).toBe('user@example.com')
-    expect(useAuthStoreAfterReload.getState().auth.accessToken).toBe('stale-token')
   })
 })

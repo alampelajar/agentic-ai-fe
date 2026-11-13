@@ -30,7 +30,10 @@ export function setCookie(
 ): void {
   if (typeof document === 'undefined') return
 
-  document.cookie = `${name}=${value}; path=/; max-age=${maxAge}`
+  // SameSite keeps other sites from sending it; Secure keeps it off plain HTTP once
+  // the app is served over HTTPS (it cannot be set on http://localhost).
+  const secure = window.location.protocol === 'https:' ? '; Secure' : ''
+  document.cookie = `${name}=${value}; path=/; max-age=${maxAge}; SameSite=Lax${secure}`
 }
 
 /**

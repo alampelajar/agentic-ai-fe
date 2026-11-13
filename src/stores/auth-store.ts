@@ -1,7 +1,9 @@
 import { create } from "zustand";
 import { getCookie, setCookie, removeCookie } from "@/lib/cookies";
 
-const ACCESS_TOKEN = "thisisjustarandomstring";
+// Where older versions kept the access token, in a cookie any script could read.
+// It is only cleared now.
+const LEGACY_ACCESS_TOKEN = "thisisjustarandomstring";
 const AUTH_USER = "agentic_ai_user";
 
 interface AuthUser {
@@ -24,10 +26,16 @@ interface AuthState {
   };
 }
 
+/** Removes the access token that older versions left in a script-readable cookie. */
+export function clearLegacyAccessToken() {
+  removeCookie(LEGACY_ACCESS_TOKEN);
+}
+
 export const useAuthStore = create<AuthState>()((set) => {
-  // Restore access token
-  const cookieToken = getCookie(ACCESS_TOKEN);
-  const initToken = cookieToken ? JSON.parse(cookieToken) : "";
+  // The access token lives in memory only, so a script injected into the page
+  // cannot find it in a cookie or storage. After a reload the route guard gets a
+  // new one with the HTTP-only refresh-token cookie (see ensureSession).
+  clearLegacyAccessToken();
 
   // Restore user
   const cookieUser = getCookie(AUTH_USER);
@@ -66,12 +74,10 @@ export const useAuthStore = create<AuthState>()((set) => {
           };
         }),
 
-      accessToken: initToken,
+      accessToken: "",
 
       setAccessToken: (accessToken) =>
         set((state) => {
-          setCookie(ACCESS_TOKEN, JSON.stringify(accessToken));
-
           return {
             ...state,
             auth: {
@@ -83,8 +89,6 @@ export const useAuthStore = create<AuthState>()((set) => {
 
       resetAccessToken: () =>
         set((state) => {
-          removeCookie(ACCESS_TOKEN);
-
           return {
             ...state,
             auth: {
@@ -96,7 +100,6 @@ export const useAuthStore = create<AuthState>()((set) => {
 
       reset: () =>
         set((state) => {
-          removeCookie(ACCESS_TOKEN);
           removeCookie(AUTH_USER);
 
           return {
