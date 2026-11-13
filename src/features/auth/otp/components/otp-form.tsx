@@ -58,6 +58,8 @@ export function OtpForm({
     if (code === 'invalid_reset_token') return t('passwordReset.errors.invalidResetToken')
     if (code === 'password_too_short') return t('passwordReset.errors.passwordTooShort')
     if (code === 'password_too_long') return t('passwordReset.errors.passwordTooLong')
+    if (code === 'password_common') return t('passwordReset.errors.passwordCommon')
+    if (code === 'password_personal') return t('passwordReset.errors.passwordPersonal')
     if (code === 'password_mismatch') return t('passwordReset.errors.passwordMismatch')
     return fallback
   }

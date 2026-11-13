@@ -1253,6 +1253,8 @@
       "invalidResetToken": "This reset session is invalid or has expired. Request a new code.",
       "passwordTooShort": "Use at least 8 characters.",
       "passwordTooLong": "Use a shorter password.",
+      "passwordCommon": "This password is too common and easy to guess. Try a few words together instead.",
+      "passwordPersonal": "Leave your name, email address and the app name out of your password.",
       "passwordMismatch": "The passwords do not match.",
       "resetFailed": "Could not reset your password. Request a new code and try again."
     }

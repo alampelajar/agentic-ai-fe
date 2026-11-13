@@ -1253,6 +1253,8 @@
       "invalidResetToken": "Sesi reset tidak valid atau kedaluwarsa. Minta kode baru.",
       "passwordTooShort": "Gunakan minimal 8 karakter.",
       "passwordTooLong": "Gunakan kata sandi yang lebih pendek.",
+      "passwordCommon": "Kata sandi ini terlalu umum dan mudah ditebak. Coba gabungan beberapa kata.",
+      "passwordPersonal": "Jangan memakai nama, alamat email, atau nama aplikasi di kata sandi.",
       "passwordMismatch": "Konfirmasi kata sandi tidak cocok.",
       "resetFailed": "Kata sandi gagal direset. Minta kode baru lalu coba lagi."
     }
