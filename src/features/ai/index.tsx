@@ -22,6 +22,8 @@ import { useDesktopRuntime } from '@/stores/desktop-runtime-store'
 import { buildContextHints, firstToolMarker, shouldRunTools } from './tool-context'
 import { buildDelegationContext } from '@/features/delegation/data/api'
 import { ChatApprovalDialog, type ApprovalDecision } from '@/features/desktop-runtime/chat-approval-dialog'
+import type { LocalRunnerApproval } from '@/features/desktop-runtime/local-runner-approval'
+import { LocalRunnerApprovalDialog } from '@/features/desktop-runtime/local-runner-approval-dialog'
 import { toast } from 'sonner'
 import { DESKTOP_TOOLS, parseLocalAgentToolCall, READ_ONLY_DESKTOP_TOOLS, type LocalRunnerToolCall } from './tool-call'
 import {
@@ -180,6 +182,14 @@ export function AIAssistant() {
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<number | null>(null)
   const [pendingWorkspaceApproval, setPendingWorkspaceApproval] = useState<ToolApproval | null>(null)
   const workspaceApprovalResolver = useRef<((decision: WorkspaceDecision) => void) | null>(null)
+  // A Local Agent Runner write or command waiting for the person's decision.
+  const [pendingRunnerApproval, setPendingRunnerApproval] = useState<LocalRunnerApproval | null>(null)
+  const runnerApprovalResolver = useRef<((allowed: boolean) => void) | null>(null)
+  const askRunnerApproval = (request: LocalRunnerApproval) =>
+    new Promise<boolean>((resolve) => {
+      runnerApprovalResolver.current = resolve
+      setPendingRunnerApproval(request)
+    })
   // The answer as the model writes it (shown under the conversation), and the way to stop the run.
   const [draft, setDraft] = useState('')
   const draftRef = useRef('')
@@ -773,9 +783,15 @@ export function AIAssistant() {
       if (!call.path || typeof call.content !== 'string') {
         throw new Error('Tool write-file wajib menyertakan path dan content.')
       }
-      const approved = window.confirm(
-        `Izinkan Coding Agent menulis file berikut?\n\nWorkspace: ${runnerWorkspaceID}\nFile: ${call.path}\n\nPerubahan file akan langsung diterapkan ke disk.`
-      )
+      // Read the file as it is now, so the person approves the exact change, not just a path.
+      let before: string | null | undefined
+      const current = await fetch(`${base}/api/workspaces/${workspace}/file?path=${encodeURIComponent(call.path)}`, { headers }).catch(() => null)
+      if (current?.status === 404) before = null
+      else if (current?.ok) {
+        const data = await current.json().catch(() => ({}))
+        before = typeof data?.content === 'string' ? data.content : undefined
+      }
+      const approved = await askRunnerApproval({ kind: 'write', workspace: runnerWorkspaceID, path: call.path, before, after: call.content })
       if (!approved) return 'DIBATALKAN: pengguna menolak perubahan file.'
       const response = await fetch(`${base}/api/workspaces/${workspace}/file`, {
         method: 'PUT',
@@ -792,9 +808,7 @@ export function AIAssistant() {
     }
 
     const runtime = call.runtime === 'docker' ? 'docker' : 'native'
-    const approved = window.confirm(
-      `Izinkan Local Agent Runner menjalankan ${call.action}?\n\nWorkspace: ${runnerWorkspaceID}\nRuntime: ${runtime}\n\nPerintah dapat menjalankan kode dari project. Jalankan hanya kode yang dipercaya.`
-    )
+    const approved = await askRunnerApproval({ kind: 'execute', workspace: runnerWorkspaceID, action: call.action, runtime })
     if (!approved) return 'DIBATALKAN: pengguna menolak eksekusi perintah.'
     const response = await fetch(`${base}/api/workspaces/${workspace}/execute`, {
       method: 'POST',
@@ -1287,6 +1301,12 @@ export function AIAssistant() {
       setPendingWorkspaceApproval(null)
       resolve('deny')
     }
+    if (runnerApprovalResolver.current) {
+      const resolve = runnerApprovalResolver.current
+      runnerApprovalResolver.current = null
+      setPendingRunnerApproval(null)
+      resolve(false)
+    }
     approvalResolver.current?.('deny')
   }
 
@@ -1427,6 +1447,18 @@ export function AIAssistant() {
           setDelegateOpen(false)
         }}
       />
+      {pendingRunnerApproval && (
+        <LocalRunnerApprovalDialog
+          request={pendingRunnerApproval}
+          agentName={selectedAgent?.name ?? 'Agent'}
+          onDecision={(allowed) => {
+            setPendingRunnerApproval(null)
+            const resolve = runnerApprovalResolver.current
+            runnerApprovalResolver.current = null
+            resolve?.(allowed)
+          }}
+        />
+      )}
       {pendingWorkspaceApproval && (
         <WorkspaceApprovalDialog
           key={pendingWorkspaceApproval.id}
