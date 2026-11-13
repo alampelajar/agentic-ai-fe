@@ -10,6 +10,7 @@ const mocks = vi.hoisted(() => ({
   createFeedback: vi.fn(),
   rateFeedback: vi.fn(),
   deleteFeedback: vi.fn(),
+  getFeedbackAttachment: vi.fn(),
   toastError: vi.fn(),
   toastSuccess: vi.fn(),
 }))
@@ -20,6 +21,7 @@ vi.mock('./data/api', async (importActual) => ({
   createFeedback: mocks.createFeedback,
   rateFeedback: mocks.rateFeedback,
   deleteFeedback: mocks.deleteFeedback,
+  getFeedbackAttachment: mocks.getFeedbackAttachment,
 }))
 
 const report = (overrides: Partial<Feedback> = {}): Feedback => ({
@@ -73,6 +75,27 @@ describe('Feedback page', () => {
     const file = new File(['hello'], 'notes.txt', { type: 'text/plain' })
     await userEvent.upload(screen.getByLabelText('Screenshot (optional)', { exact: true }).first(), file)
     await expect.element(screen.getByText('The screenshot must be a PNG, JPG, or WebP image.')).toBeVisible()
+  })
+
+  it('shows a screenshot fetched with the login, not from a public address', async () => {
+    mocks.getMyFeedback.mockResolvedValue([report({ id: 7, attachment: '/uploads/feedback/abc.png' })])
+    mocks.getFeedbackAttachment.mockResolvedValue(new Blob([new Uint8Array([137, 80, 78, 71])], { type: 'image/png' }))
+    const screen = await render(<FeedbackPage />)
+    await screen.getByRole('button', { name: /My reports/ }).click()
+
+    const image = screen.getByRole('img', { name: 'Screenshot (optional)' })
+    await expect.element(image).toBeInTheDocument()
+    expect(mocks.getFeedbackAttachment).toHaveBeenCalledWith(7)
+    expect(image.element().getAttribute('src')).toMatch(/^blob:/)
+  })
+
+  it('says so when the screenshot cannot be loaded', async () => {
+    mocks.getMyFeedback.mockResolvedValue([report({ id: 8, attachment: '/uploads/feedback/gone.png' })])
+    mocks.getFeedbackAttachment.mockRejectedValue(new Error('404'))
+    const screen = await render(<FeedbackPage />)
+    await screen.getByRole('button', { name: /My reports/ }).click()
+
+    await expect.element(screen.getByRole('alert').filter({ hasText: 'The screenshot could not be loaded.' })).toBeVisible()
   })
 
   it('offers delete only for finished reports, and deletes after confirming', async () => {
