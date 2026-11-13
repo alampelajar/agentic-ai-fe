@@ -2269,6 +2269,7 @@
       "import": "Import"
     },
     "form": {
+      "back": "Kembali ke daftar skill",
       "title": "Buat skill",
       "description": "Editor ini menyimpan instruksi dan manifest yang sudah divalidasi.",
       "slug": "Slug / ID",
