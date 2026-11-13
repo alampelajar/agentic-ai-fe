@@ -39,7 +39,7 @@ jobs:
         run: npm run lint
 
       # - name: Analyze unused files and dependencies
-      #   run: pnpm knip
+      #   run: npm run knip
 
       - name: Run Prettier check
         # The existing repository has many pre-existing formatting differences.
