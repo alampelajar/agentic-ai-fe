@@ -2271,6 +2271,7 @@
       "import": "Import"
     },
     "form": {
+      "back": "Back to skills",
       "title": "Create skill",
       "description": "This editor saves the instructions and a validated manifest.",
       "slug": "Slug / ID",

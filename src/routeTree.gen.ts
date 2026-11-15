@@ -44,6 +44,7 @@ import { Route as AuthenticatedSettingsDesktopRouteImport } from './routes/_auth
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
 import { Route as AuthenticatedSettingsIntegrationsRouteImport } from './routes/_authenticated/settings/integrations'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
+import { Route as AuthenticatedSkillsNewRouteImport } from './routes/_authenticated/skills_.new'
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedWorkspacesIndexRouteImport } from './routes/_authenticated/workspaces/index'
@@ -241,6 +242,11 @@ const AuthenticatedSettingsNotificationsRoute =
     path: '/notifications',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
+const AuthenticatedSkillsNewRoute = AuthenticatedSkillsNewRouteImport.update({
+  id: '/skills_/new',
+  path: '/skills/new',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedTasksIndexRoute = AuthenticatedTasksIndexRouteImport.update({
   id: '/tasks/',
   path: '/tasks/',
@@ -318,6 +324,7 @@ export interface FileRoutesByFullPath {
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/integrations': typeof AuthenticatedSettingsIntegrationsRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/skills/new': typeof AuthenticatedSkillsNewRoute
   '/workspaces/$workspaceId': typeof AuthenticatedWorkspacesWorkspaceIdRoute
   '/ai/': typeof AuthenticatedAiIndexRoute
   '/apps/': typeof AuthenticatedAppsIndexRoute
@@ -361,6 +368,7 @@ export interface FileRoutesByTo {
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/integrations': typeof AuthenticatedSettingsIntegrationsRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/skills/new': typeof AuthenticatedSkillsNewRoute
   '/workspaces/$workspaceId': typeof AuthenticatedWorkspacesWorkspaceIdRoute
   '/ai': typeof AuthenticatedAiIndexRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
@@ -407,6 +415,7 @@ export interface FileRoutesById {
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/_authenticated/settings/integrations': typeof AuthenticatedSettingsIntegrationsRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/_authenticated/skills_/new': typeof AuthenticatedSkillsNewRoute
   '/_authenticated/workspaces/$workspaceId': typeof AuthenticatedWorkspacesWorkspaceIdRoute
   '/_authenticated/ai/': typeof AuthenticatedAiIndexRoute
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
@@ -453,6 +462,7 @@ export interface FileRouteTypes {
     | '/settings/display'
     | '/settings/integrations'
     | '/settings/notifications'
+    | '/skills/new'
     | '/workspaces/$workspaceId'
     | '/ai/'
     | '/apps/'
@@ -496,6 +506,7 @@ export interface FileRouteTypes {
     | '/settings/display'
     | '/settings/integrations'
     | '/settings/notifications'
+    | '/skills/new'
     | '/workspaces/$workspaceId'
     | '/ai'
     | '/apps'
@@ -541,6 +552,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/integrations'
     | '/_authenticated/settings/notifications'
+    | '/_authenticated/skills_/new'
     | '/_authenticated/workspaces/$workspaceId'
     | '/_authenticated/ai/'
     | '/_authenticated/apps/'
@@ -817,6 +829,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsNotificationsRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/skills_/new': {
+      id: '/_authenticated/skills_/new'
+      path: '/skills/new'
+      fullPath: '/skills/new'
+      preLoaderRoute: typeof AuthenticatedSkillsNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/tasks/': {
       id: '/_authenticated/tasks/'
       path: '/tasks'
@@ -918,6 +937,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedDesignStudioProjectIdRoute: typeof AuthenticatedDesignStudioProjectIdRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
+  AuthenticatedSkillsNewRoute: typeof AuthenticatedSkillsNewRoute
   AuthenticatedWorkspacesWorkspaceIdRoute: typeof AuthenticatedWorkspacesWorkspaceIdRoute
   AuthenticatedAiIndexRoute: typeof AuthenticatedAiIndexRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
@@ -947,6 +967,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDesignStudioProjectIdRoute:
     AuthenticatedDesignStudioProjectIdRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
+  AuthenticatedSkillsNewRoute: AuthenticatedSkillsNewRoute,
   AuthenticatedWorkspacesWorkspaceIdRoute:
     AuthenticatedWorkspacesWorkspaceIdRoute,
   AuthenticatedAiIndexRoute: AuthenticatedAiIndexRoute,

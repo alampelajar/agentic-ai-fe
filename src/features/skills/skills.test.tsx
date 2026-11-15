@@ -3,6 +3,7 @@ import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
 import i18n from '@/i18n'
 import type { Skill } from './data/api'
+import { CreateSkill } from './create-skill'
 import { Skills } from './index'
 
 const mocks = vi.hoisted(() => ({
@@ -13,6 +14,12 @@ const mocks = vi.hoisted(() => ({
   createSkill: vi.fn(),
   toastError: vi.fn(),
   toastSuccess: vi.fn(),
+  navigate: vi.fn(),
+}))
+vi.mock('@tanstack/react-router', async (importOriginal) => ({
+  ...await importOriginal<typeof import('@tanstack/react-router')>(),
+  useNavigate: () => mocks.navigate,
+  Link: ({ to, children, ...props }: { to: string; children: React.ReactNode }) => <a href={to} {...props}>{children}</a>,
 }))
 vi.mock('sonner', () => ({ toast: { error: mocks.toastError, success: mocks.toastSuccess } }))
 vi.mock('./data/api', () => ({
@@ -153,12 +160,26 @@ describe('Skills manager', () => {
     await expect.element(screen.getByText('Tool tidak dikenal')).toBeInTheDocument()
   })
 
-  it('creates a skill with the tools that were ticked', async () => {
+  it('names where a skill came from in the chosen language', async () => {
+    await i18n.changeLanguage('en')
+    mocks.getSkills.mockResolvedValue([skill()])
+    const screen = await render(<Skills />)
+    await expect.element(screen.getByText('Created here')).toBeInTheDocument()
+  })
+
+  it('opens the create page from the Create skill tab', async () => {
     await i18n.changeLanguage('en')
     mocks.getSkills.mockResolvedValue([])
-    mocks.createSkill.mockResolvedValue({ skill: skill() })
     const screen = await render(<Skills />)
     await userEvent.click(screen.getByRole('tab', { name: 'Create skill' }))
+    expect(mocks.navigate).toHaveBeenCalledWith({ to: '/skills/new' })
+    await expect.element(screen.getByRole('link', { name: 'Create skill' })).toHaveAttribute('href', '/skills/new')
+  })
+
+  it('creates a skill with the tools that were ticked', async () => {
+    await i18n.changeLanguage('en')
+    mocks.createSkill.mockResolvedValue({ skill: skill() })
+    const screen = await render(<CreateSkill />)
     await userEvent.fill(screen.getByLabelText('Slug / ID'), 'reader')
     await userEvent.fill(screen.getByLabelText('Name'), 'Reader')
     await userEvent.fill(screen.getByLabelText('SKILL.md'), '# Reader')
@@ -169,12 +190,6 @@ describe('Skills manager', () => {
 
     await vi.waitFor(() => expect(mocks.createSkill).toHaveBeenCalledTimes(1))
     expect(mocks.createSkill.mock.calls[0][0]).toMatchObject({ id: 'reader', name: 'Reader', tools: ['workspace.read_file'] })
-  })
-
-  it('names where a skill came from in the chosen language', async () => {
-    await i18n.changeLanguage('en')
-    mocks.getSkills.mockResolvedValue([skill()])
-    const screen = await render(<Skills />)
-    await expect.element(screen.getByText('Created here')).toBeInTheDocument()
+    expect(mocks.navigate).toHaveBeenCalledWith({ to: '/skills' })
   })
 })
