@@ -158,7 +158,7 @@ export function SignUpForm({
                   placeholder={t('signUpPage.form.namePlaceholder')}
                   autoComplete='name'
                   disabled={isLoading}
-                  className='h-10 rounded-xl border-border/70 bg-background/50 px-3.5 transition-all focus-visible:ring-1'
+                  className='h-10 px-3.5'
                   {...field}
                 />
               </FormControl>
@@ -182,7 +182,7 @@ export function SignUpForm({
                   type='email'
                   autoComplete='email'
                   disabled={isLoading}
-                  className='h-10 rounded-xl border-border/70 bg-background/50 px-3.5 transition-all focus-visible:ring-1'
+                  className='h-10 px-3.5'
                   {...field}
                 />
               </FormControl>
@@ -205,7 +205,7 @@ export function SignUpForm({
                   placeholder='••••••••'
                   autoComplete='new-password'
                   disabled={isLoading}
-                  className='h-10 rounded-xl border-border/70 bg-background/50'
+                  className='h-10'
                   {...field}
                 />
               </FormControl>
@@ -228,7 +228,7 @@ export function SignUpForm({
                   placeholder='••••••••'
                   autoComplete='new-password'
                   disabled={isLoading}
-                  className='h-10 rounded-xl border-border/70 bg-background/50'
+                  className='h-10'
                   {...field}
                 />
               </FormControl>
@@ -242,7 +242,7 @@ export function SignUpForm({
         <Button
           type='submit'
           disabled={isLoading}
-          className='mt-1 h-10 w-full rounded-xl font-medium shadow-lg shadow-primary/10 transition-all hover:shadow-primary/20'
+          className='mt-1 h-10 w-full font-medium'
         >
           {isLoading ? (
             <Loader2 className='size-4 animate-spin' />

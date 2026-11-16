@@ -3,10 +3,6 @@ export type DesktopWindow = {
   title: string
   class_name?: string
 }
-export type DesktopStatus = {
-  status: string
-  data?: { device_name?: string; windows_version?: string; sidecar?: string }
-}
 export type DesktopAction = {
   id: string
   action: string
@@ -55,8 +51,6 @@ async function runnerFetch<T>(
   return body as T
 }
 
-export const getDesktopStatus = (base: string, token: string) =>
-  runnerFetch<DesktopStatus>(base, token, '/api/desktop/status')
 export const getDesktopWindows = (base: string, token: string) =>
   runnerFetch<{ data?: { windows?: DesktopWindow[] } }>(
     base,

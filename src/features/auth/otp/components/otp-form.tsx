@@ -214,10 +214,10 @@ export function OtpForm({
             <div className='mb-5 flex size-10 items-center justify-center rounded-lg border border-primary/20 bg-primary/[0.08] text-primary'>
               <MailCheck className='size-5' />
             </div>
-            <p className='mb-3 text-[11px] font-medium tracking-[0.18em] text-muted-foreground uppercase'>
+            <p className='mb-3 text-xs font-medium tracking-widest text-muted-foreground uppercase'>
               {t('passwordReset.eyebrow')}
             </p>
-            <h1 className='text-2xl font-semibold tracking-tight sm:text-[1.75rem]'>
+            <h1 className='text-2xl font-semibold tracking-tight sm:text-3xl'>
               {t('passwordReset.otp.title')}
             </h1>
             <p className='mt-2 text-sm leading-6 text-muted-foreground'>
@@ -238,7 +238,7 @@ export function OtpForm({
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 required
-                className='h-11 rounded-md border-white/10 bg-white/[0.035] px-3.5 text-sm shadow-none'
+                className='h-11 px-3.5'
               />
             </div>
 
@@ -287,7 +287,7 @@ export function OtpForm({
             </Button>
           </form>
 
-          <div className='mt-6 flex flex-col items-start gap-2 border-t border-white/[0.08] pt-5 text-sm'>
+          <div className='mt-6 flex flex-col items-start gap-2 border-t pt-5 text-sm'>
             <p className='text-muted-foreground'>
               {t('passwordReset.otp.didNotReceive')}
             </p>
@@ -326,10 +326,10 @@ export function OtpForm({
             <div className='mb-5 flex size-10 items-center justify-center rounded-lg border border-primary/20 bg-primary/[0.08] text-primary'>
               <ShieldCheck className='size-5' />
             </div>
-            <p className='mb-3 text-[11px] font-medium tracking-[0.18em] text-muted-foreground uppercase'>
+            <p className='mb-3 text-xs font-medium tracking-widest text-muted-foreground uppercase'>
               {t('passwordReset.eyebrow')}
             </p>
-            <h1 className='text-2xl font-semibold tracking-tight sm:text-[1.75rem]'>
+            <h1 className='text-2xl font-semibold tracking-tight sm:text-3xl'>
               {t('passwordReset.newPassword.title')}
             </h1>
             <p className='mt-2 text-sm leading-6 text-muted-foreground'>
@@ -350,8 +350,7 @@ export function OtpForm({
                 value={newPassword}
                 onChange={(event) => setNewPassword(event.target.value)}
                 required
-                // design-system-ignore: the auth screens are always dark and keep their own surface
-                inputClassName='h-11 rounded-md border-white/10 bg-white/[0.035] px-3.5 text-sm shadow-none'
+                inputClassName='h-11 px-3.5'
               />
             </div>
             <div className='space-y-2'>
@@ -366,8 +365,7 @@ export function OtpForm({
                 value={confirmPassword}
                 onChange={(event) => setConfirmPassword(event.target.value)}
                 required
-                // design-system-ignore: the auth screens are always dark and keep their own surface
-                inputClassName='h-11 rounded-md border-white/10 bg-white/[0.035] px-3.5 text-sm shadow-none'
+                inputClassName='h-11 px-3.5'
               />
             </div>
             <Button

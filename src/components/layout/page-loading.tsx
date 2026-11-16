@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 export function PageLoading() {
   return (
-    <div className='flex min-h-[calc(100vh-4rem)] w-full flex-1 flex-col gap-6 p-4 sm:p-6'>
+    <div className='flex w-full flex-1 flex-col gap-6 p-4 sm:p-6'>
       {/* Page Header */}
       <div className='space-y-3'>
         <Skeleton className='h-8 w-48' />

@@ -30,7 +30,6 @@ const AVATAR_PREFIX = 'preset:'
 const AVATAR_PRESET_IDS = new Set<string>(
   AVATAR_PRESETS.map((preset) => preset.id)
 )
-export const DEFAULT_AVATAR_PRESET: AvatarPresetId = 'lorelei'
 
 export function getAvatarPresetId(
   avatar?: string | null

@@ -4,7 +4,7 @@ import { API_BASE_URL } from '@/lib/api-config'
 let refreshPromise: Promise<string> | null = null
 
 /** How long a freshly issued access token is valid (the backend issues 15-minute tokens). */
-export const ACCESS_TOKEN_LIFETIME_MS = 15 * 60 * 1000
+const ACCESS_TOKEN_LIFETIME_MS = 15 * 60 * 1000
 
 async function refreshAccessToken() {
   const response = await fetch(`${API_BASE_URL}/api/auth/refresh`, {

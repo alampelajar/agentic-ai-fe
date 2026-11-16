@@ -34,12 +34,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </span>
 
           <div className='grid flex-1 text-start leading-tight'>
-            <span className='truncate text-[13px] font-semibold tracking-tight'>
+            <span className='truncate text-sm font-semibold tracking-tight'>
               {/* design-system-ignore: the product name stays the same in every language */}
               AGENTIC<span className='text-primary'>AI</span>
             </span>
 
-            <span className='truncate text-[11px] text-muted-foreground'>
+            <span className='truncate text-xs text-muted-foreground'>
               {t('sidebar.smartAgentic')}
             </span>
           </div>

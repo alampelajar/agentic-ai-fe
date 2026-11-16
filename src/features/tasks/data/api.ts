@@ -47,23 +47,6 @@ export async function getTasks() {
   return (Array.isArray(tasks) ? tasks : []) as BackendTask[]
 }
 
-export async function getTask(id: string | number) {
-  const cleanId = String(id)
-    .trim()
-    .replace(/^["']+|["']+$/g, '')
-
-  if (!/^\d+$/.test(cleanId)) {
-    throw new Error('ID task tidak valid.')
-  }
-
-  const response = await apiFetch(`/api/tasks/${encodeURIComponent(cleanId)}`, {
-    cache: 'no-store',
-  })
-
-  const data = await readJSON(response)
-  return data.task as BackendTask
-}
-
 export async function createTask(payload: TaskMutationInput) {
   const response = await apiFetch('/api/tasks', {
     method: 'POST',
@@ -123,12 +106,6 @@ export type BackendTaskMessage = {
   provider?: string
   created_at: string
   attachments?: BackendTaskAttachment[]
-}
-
-export async function getTaskMessages(id: string | number) {
-  const response = await apiFetch(`/api/tasks/${id}/messages`)
-  const data = await readJSON(response)
-  return (data.messages ?? []) as BackendTaskMessage[]
 }
 
 export async function addTaskMessage(

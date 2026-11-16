@@ -59,7 +59,7 @@ export function Tasks() {
             <div>
               {/* AI Badge */}
 
-              <div className='mb-2 inline-flex items-center rounded-full border border-violet-200 bg-violet-50 px-3 py-1 text-xs font-medium text-violet-600 dark:border-violet-800 dark:bg-violet-950/40 dark:text-violet-400'>
+              <div className='mb-2 inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary'>
                 {/* design-system-ignore: the product name stays the same in every language */}
                 Agentic AI
               </div>
@@ -102,5 +102,3 @@ export function Tasks() {
     </TasksProvider>
   )
 }
-
-export default Tasks

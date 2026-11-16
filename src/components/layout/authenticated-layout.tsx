@@ -22,39 +22,11 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { AppSidebar } from '@/components/layout/app-sidebar'
 import { Header } from '@/components/layout/header'
+import { LanguageFlag } from '@/components/layout/language-flag'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { SkipToMain } from '@/components/skip-to-main'
 import { ThemeSwitch } from '@/components/theme-switch'
-
-function LanguageFlag({ language }: { language: 'id' | 'en' }) {
-  if (language === 'id') {
-    return (
-      <svg
-        aria-hidden='true'
-        viewBox='0 0 60 40'
-        className='h-4 w-6 shrink-0 overflow-hidden rounded-[3px] border border-border/70'
-      >
-        <rect width='60' height='20' fill='#dc2626' />
-        <rect y='20' width='60' height='20' fill='#ffffff' />
-      </svg>
-    )
-  }
-
-  return (
-    <svg
-      aria-hidden='true'
-      viewBox='0 0 60 40'
-      className='h-4 w-6 shrink-0 overflow-hidden rounded-[3px] border border-border/70'
-    >
-      <rect width='60' height='40' fill='#012169' />
-      <path d='M0 0 60 40M60 0 0 40' stroke='#ffffff' strokeWidth='10' />
-      <path d='M0 0 60 40M60 0 0 40' stroke='#c8102e' strokeWidth='4' />
-      <path d='M30 0V40M0 20H60' stroke='#ffffff' strokeWidth='15' />
-      <path d='M30 0V40M0 20H60' stroke='#c8102e' strokeWidth='8' />
-    </svg>
-  )
-}
 
 export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
   const defaultOpen = getCookie('sidebar_state') !== 'false'
@@ -189,7 +161,7 @@ export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
               fill='none'
               stroke='currentColor'
               strokeWidth='1.8'
-              className='h-10 w-10 text-amber-500'
+              className='h-10 w-10 text-amber-700 dark:text-amber-400'
             >
               <path
                 strokeLinecap='round'
@@ -247,6 +219,7 @@ export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
             className={cn(
               '@container/content',
               'has-data-[layout=fixed]:h-svh',
+              // design-system-ignore: the inset sidebar leaves a margin on both sides; no scale value fits
               'peer-data-[variant=inset]:has-data-[layout=fixed]:h-[calc(100svh-(var(--spacing)*4))]'
             )}
           >

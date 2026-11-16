@@ -72,6 +72,9 @@ function git(args) {
     cwd: ROOT,
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'ignore'],
+    // A large diff (a formatting pass) is bigger than the default 1 MB; running out
+    // of buffer would read as "no changes" and pass silently.
+    maxBuffer: 256 * 1024 * 1024,
   })
 }
 

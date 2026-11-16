@@ -187,7 +187,7 @@ export function UserAuthForm({
     <div className={`w-full ${className ?? ''}`} {...props}>
       <form onSubmit={handleLogin} className='space-y-5'>
         <div className='space-y-2'>
-          <Label htmlFor='email' className='text-sm font-medium text-zinc-200'>
+          <Label htmlFor='email' className='text-sm font-medium'>
             {t('authPage.fields.email')}
           </Label>
           <Input
@@ -199,21 +199,18 @@ export function UserAuthForm({
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             disabled={isLoading}
-            className='h-11 rounded-md border-white/10 bg-white/[0.035] px-3.5 text-sm shadow-none placeholder:text-zinc-600 focus-visible:ring-2 focus-visible:ring-primary/20'
+            className='h-11 px-3.5'
           />
         </div>
 
         <div className='space-y-2'>
           <div className='flex items-center justify-between gap-3'>
-            <Label
-              htmlFor='password'
-              className='text-sm font-medium text-zinc-200'
-            >
+            <Label htmlFor='password' className='text-sm font-medium'>
               {t('authPage.fields.password')}
             </Label>
             <Link
               to='/forgot-password'
-              className='text-xs text-zinc-400 underline decoration-zinc-700 underline-offset-4 transition-colors hover:text-white'
+              className='text-xs text-muted-foreground underline decoration-muted-foreground/40 underline-offset-4 transition-colors hover:text-foreground'
             >
               {t('authPage.fields.forgotPassword')}
             </Link>
@@ -226,8 +223,7 @@ export function UserAuthForm({
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             disabled={isLoading}
-            // design-system-ignore: the auth screens are always dark and keep their own surface
-            inputClassName='h-11 rounded-md border-white/10 bg-white/[0.035] px-3.5 text-sm shadow-none placeholder:text-zinc-600 focus-visible:ring-2 focus-visible:ring-primary/20'
+            inputClassName='h-11 px-3.5'
           />
         </div>
 
@@ -245,10 +241,10 @@ export function UserAuthForm({
 
       <div className='relative my-6'>
         <div className='absolute inset-0 flex items-center'>
-          <span className='w-full border-t border-white/[0.09]' />
+          <span className='w-full border-t' />
         </div>
         <div className='relative flex justify-center'>
-          <span className='bg-[#090a0c] px-3 text-[11px] font-medium tracking-[0.12em] text-zinc-500 uppercase'>
+          <span className='bg-background px-3 text-xs font-medium tracking-wider text-muted-foreground uppercase'>
             {t('authPage.fields.orContinueWith')}
           </span>
         </div>

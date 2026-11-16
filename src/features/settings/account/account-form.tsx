@@ -405,7 +405,7 @@ export function AccountForm() {
                   ].join(' ')}
                 >
                   <span className='relative'>
-                    <Avatar className='size-16 rounded-xl sm:size-[4.5rem]'>
+                    <Avatar className='size-16 rounded-xl sm:size-18'>
                       <AvatarImage src={source} alt={preset.label} />
                       <AvatarFallback className='rounded-xl'>
                         {preset.label.slice(0, 1)}
@@ -430,7 +430,7 @@ export function AccountForm() {
             className={
               notice.kind === 'error'
                 ? 'rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive'
-                : 'rounded-lg border border-emerald-500/30 bg-emerald-500/5 px-4 py-3 text-sm text-emerald-700 dark:text-emerald-400'
+                : 'rounded-lg border bg-emerald-500/10 px-4 py-3 text-sm text-emerald-600 dark:text-emerald-400'
             }
           >
             {notice.text}
@@ -471,7 +471,7 @@ export function AccountForm() {
             <img
               src={previewAvatar || undefined}
               alt={name || 'Profile avatar'}
-              className='max-h-[65vh] max-w-full rounded-lg object-contain'
+              className='max-h-96 max-w-full rounded-lg object-contain sm:max-h-128'
             />
           </div>
           <div className='flex justify-end gap-2'>

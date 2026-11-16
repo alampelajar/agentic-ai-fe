@@ -8,7 +8,7 @@ export function Settings() {
   return (
     <Main fixed fluid className='gap-0'>
       <header className='shrink-0 space-y-2'>
-        <p className='text-xs font-semibold tracking-[0.18em] text-primary uppercase'>
+        <p className='text-xs font-semibold tracking-widest text-primary uppercase'>
           {t('settingsPage.eyebrow')}
         </p>
         <h1 className='text-2xl font-bold tracking-tight md:text-3xl'>

@@ -9,7 +9,7 @@ export function UnauthorisedError() {
   return (
     <div className='h-svh'>
       <div className='m-auto flex h-full w-full flex-col items-center justify-center gap-2'>
-        <h1 className='text-[7rem] leading-tight font-bold'>401</h1>
+        <h1 className='text-8xl leading-tight font-bold'>401</h1>
         <span className='font-medium'>{t('errorPages.e401.title')}</span>
         <p className='text-center text-muted-foreground'>
           {t('errorPages.e401.line1')} <br />

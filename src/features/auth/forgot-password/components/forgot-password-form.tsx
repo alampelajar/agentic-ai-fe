@@ -111,7 +111,7 @@ export function ForgotPasswordForm({
                   type='email'
                   autoComplete='email'
                   placeholder={t('passwordReset.request.emailPlaceholder')}
-                  className='h-11 rounded-md border-white/10 bg-white/[0.035] px-3.5 text-sm shadow-none placeholder:text-zinc-600 focus-visible:ring-2 focus-visible:ring-primary/20'
+                  className='h-11 px-3.5'
                   {...field}
                 />
               </FormControl>

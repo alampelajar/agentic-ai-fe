@@ -55,8 +55,8 @@ export function ChatApprovalDialog({
   }
 
   return (
-    // design-system-ignore: the dimmed backdrop matches the dialog overlay in components/ui
     <div
+      // design-system-ignore: the dimmed backdrop matches the dialog overlay in components/ui
       className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
       role='dialog'
       aria-modal='true'

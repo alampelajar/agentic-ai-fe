@@ -185,12 +185,6 @@ export async function getSite(id: number): Promise<SiteDetail> {
     .site
 }
 
-export async function renameSite(id: number, name: string): Promise<void> {
-  await parse(
-    await apiFetch(`/api/sites/${id}`, { method: 'PATCH', ...json({ name }) })
-  )
-}
-
 export async function deleteSite(id: number): Promise<void> {
   await parse(await apiFetch(`/api/sites/${id}`, { method: 'DELETE' }))
 }
@@ -284,7 +278,7 @@ export async function startRun(
   ).run
 }
 
-export async function getRun(
+async function getRun(
   id: number,
   runId: number
 ): Promise<{ run: AgentRun; steps: RunStep[] }> {

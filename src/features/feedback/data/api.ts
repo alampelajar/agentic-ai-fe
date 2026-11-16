@@ -19,7 +19,6 @@ export const RATING_REASONS = [
   'responsif',
   'masalah_terselesaikan',
 ] as const
-export type RatingReason = (typeof RATING_REASONS)[number]
 
 export const MAX_ATTACHMENT_BYTES = 5 * 1024 * 1024
 export const ATTACHMENT_TYPES = ['image/png', 'image/jpeg', 'image/webp']

@@ -140,7 +140,7 @@ function RadioGroupItem({
     >
       <div
         className={cn(
-          'relative rounded-[6px] ring-[1px] ring-border',
+          'relative rounded-md ring-1 ring-border',
           'group-data-[state=checked]:shadow-2xl group-data-[state=checked]:ring-primary',
           'group-focus-visible:ring-2'
         )}
@@ -150,7 +150,7 @@ function RadioGroupItem({
       >
         <CircleCheck
           className={cn(
-            'size-6 fill-primary stroke-white',
+            'size-6 fill-primary stroke-primary-foreground',
             'group-data-[state=unchecked]:hidden',
             'absolute top-0 right-0 translate-x-1/2 -translate-y-1/2'
           )}

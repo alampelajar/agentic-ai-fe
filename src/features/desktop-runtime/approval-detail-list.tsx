@@ -45,7 +45,7 @@ export function ApprovalDetailList({
             <dd
               className={`max-h-32 overflow-y-auto rounded bg-background/60 px-2 py-1 text-xs break-all whitespace-pre-wrap ${
                 detail.warning
-                  ? 'border border-amber-500/60 text-amber-700 dark:text-amber-400'
+                  ? 'border border-border bg-amber-500/10 text-amber-700 dark:text-amber-400'
                   : 'font-mono'
               }`}
             >

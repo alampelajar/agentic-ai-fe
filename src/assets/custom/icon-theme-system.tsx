@@ -11,7 +11,7 @@ export function IconThemeSystem({
       xmlns='http://www.w3.org/2000/svg'
       viewBox='0 0 79.86 51.14'
       className={cn(
-        'overflow-hidden rounded-[6px]',
+        'overflow-hidden rounded-md',
         'fill-primary stroke-primary group-data-[state=unchecked]:fill-muted-foreground group-data-[state=unchecked]:stroke-muted-foreground',
         className
       )}
