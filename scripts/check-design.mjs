@@ -22,7 +22,7 @@ const CONFIG = {
   include: /^src\/.*\.(tsx|ts)$/,
   skip: [/\.test\.tsx?$/, /^src\/routeTree\.gen\.ts$/, /^src\/components\/ui\//],
   // A design editor stores the user's own colors, so hex values are data there.
-  hexAllowed: [/^src\/features\/design-studio\//, /^src\/assets\//],
+  hexAllowed: [/^src\/assets\//],
   // Status colors from DESIGN.md, the only palette colors allowed.
   allowedPalette: new Set([
     'text-emerald-600',

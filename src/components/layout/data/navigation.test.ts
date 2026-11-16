@@ -29,12 +29,18 @@ describe('main navigation', () => {
     expect(id.integrationsMenu).toBe('Integrasi')
   })
 
-  it('keeps the other menus: Workspaces, Agents, Skills, Memory and the settings pages', () => {
+  it('keeps the website builder, the overview and the settings pages', () => {
     const urls = entries.map((entry) => entry.url)
-    for (const url of ['/workspaces', '/skills', '/memory', '/combos', '/model-health', '/settings/account', '/settings/appearance', '/settings/notifications', '/settings/display', '/profile', '/feedback', '/design-studio']) {
+    for (const url of ['/overview', '/sites', '/settings/account', '/settings/appearance', '/settings/notifications', '/settings/display', '/profile', '/feedback']) {
       expect(urls, url).toContain(url)
     }
-    expect(entries.some((entry) => entry.title === 'workspacesMenu')).toBe(true)
+  })
+
+  it('has none of the features moved to the admin app or the background (WEBSITE-BUILDER.md, section 20)', () => {
+    const urls = entries.map((entry) => entry.url)
+    for (const url of ['/ai', '/users', '/apps', '/skills', '/memory', '/combos', '/model-health', '/workspaces', '/design-studio']) {
+      expect(urls, url).not.toContain(url)
+    }
   })
 
   it('has no Task menu: conversations are listed as chat history instead', () => {
@@ -53,7 +59,7 @@ describe('main navigation', () => {
   })
 
   it('has text in both languages for the menus of the cloud-first experience', () => {
-    for (const title of ['workspacesMenu', 'memoryMenu', 'integrationsMenu', 'skills', 'settings', 'designStudioMenu']) {
+    for (const title of ['sitesMenu', 'aiOverview', 'integrationsMenu', 'settings']) {
       expect(entries.some((entry) => entry.title === title), title).toBe(true)
       expect(en[title as keyof typeof en], `${title} (en)`).toBeTruthy()
       expect(id[title as keyof typeof id], `${title} (id)`).toBeTruthy()

@@ -21,20 +21,12 @@ import { Route as errors404RouteImport } from './routes/(errors)/404'
 import { Route as errors500RouteImport } from './routes/(errors)/500'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
-import { Route as AuthenticatedCombosRouteImport } from './routes/_authenticated/combos'
 import { Route as AuthenticatedFeedbackRouteImport } from './routes/_authenticated/feedback'
-import { Route as AuthenticatedMemoryRouteImport } from './routes/_authenticated/memory'
-import { Route as AuthenticatedModelHealthRouteImport } from './routes/_authenticated/model-health'
 import { Route as AuthenticatedOverviewRouteImport } from './routes/_authenticated/overview'
 import { Route as AuthenticatedPaidModelsRouteImport } from './routes/_authenticated/paid-models'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
-import { Route as AuthenticatedSkillsRouteImport } from './routes/_authenticated/skills'
 import { Route as AuthenticatedSubscriptionPremiumRouteImport } from './routes/_authenticated/subscription-premium'
-import { Route as AuthenticatedAiIndexRouteImport } from './routes/_authenticated/ai/index'
-import { Route as AuthenticatedAppsIndexRouteImport } from './routes/_authenticated/apps/index'
-import { Route as AuthenticatedDesignStudioIndexRouteImport } from './routes/_authenticated/design-studio/index'
-import { Route as AuthenticatedDesignStudioProjectIdRouteImport } from './routes/_authenticated/design-studio/$projectId'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
@@ -44,15 +36,9 @@ import { Route as AuthenticatedSettingsDesktopRouteImport } from './routes/_auth
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
 import { Route as AuthenticatedSettingsIntegrationsRouteImport } from './routes/_authenticated/settings/integrations'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
-import { Route as AuthenticatedSkillsNewRouteImport } from './routes/_authenticated/skills_.new'
+import { Route as AuthenticatedSitesIndexRouteImport } from './routes/_authenticated/sites/index'
+import { Route as AuthenticatedSitesSiteIdRouteImport } from './routes/_authenticated/sites/$siteId'
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
-import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
-import { Route as AuthenticatedWorkspacesIndexRouteImport } from './routes/_authenticated/workspaces/index'
-import { Route as AuthenticatedWorkspacesWorkspaceIdRouteImport } from './routes/_authenticated/workspaces/$workspaceId'
-import { Route as AuthenticatedAiAgentsAgentsRouteImport } from './routes/_authenticated/ai/agents/agents'
-import { Route as AuthenticatedAiAgentsCreateRouteImport } from './routes/_authenticated/ai/agents/create'
-import { Route as AuthenticatedAiAgentsDetailRouteImport } from './routes/_authenticated/ai/agents/detail'
-import { Route as AuthenticatedAiAgentsIdSkillsRouteImport } from './routes/_authenticated/ai/agents/$id/skills'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -113,27 +99,11 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedCombosRoute = AuthenticatedCombosRouteImport.update({
-  id: '/combos',
-  path: '/combos',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedFeedbackRoute = AuthenticatedFeedbackRouteImport.update({
   id: '/feedback',
   path: '/feedback',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedMemoryRoute = AuthenticatedMemoryRouteImport.update({
-  id: '/memory',
-  path: '/memory',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedModelHealthRoute =
-  AuthenticatedModelHealthRouteImport.update({
-    id: '/model-health',
-    path: '/model-health',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 const AuthenticatedOverviewRoute = AuthenticatedOverviewRouteImport.update({
   id: '/overview',
   path: '/overview',
@@ -155,37 +125,10 @@ const AuthenticatedSettingsRouteRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedSkillsRoute = AuthenticatedSkillsRouteImport.update({
-  id: '/skills',
-  path: '/skills',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedSubscriptionPremiumRoute =
   AuthenticatedSubscriptionPremiumRouteImport.update({
     id: '/subscription-premium',
     path: '/subscription-premium',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedAiIndexRoute = AuthenticatedAiIndexRouteImport.update({
-  id: '/ai/',
-  path: '/ai/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedAppsIndexRoute = AuthenticatedAppsIndexRouteImport.update({
-  id: '/apps/',
-  path: '/apps/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedDesignStudioIndexRoute =
-  AuthenticatedDesignStudioIndexRouteImport.update({
-    id: '/design-studio/',
-    path: '/design-studio/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedDesignStudioProjectIdRoute =
-  AuthenticatedDesignStudioProjectIdRouteImport.update({
-    id: '/design-studio/$projectId',
-    path: '/design-studio/$projectId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedErrorsErrorRoute =
@@ -242,57 +185,22 @@ const AuthenticatedSettingsNotificationsRoute =
     path: '/notifications',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
-const AuthenticatedSkillsNewRoute = AuthenticatedSkillsNewRouteImport.update({
-  id: '/skills_/new',
-  path: '/skills/new',
+const AuthenticatedSitesIndexRoute = AuthenticatedSitesIndexRouteImport.update({
+  id: '/sites/',
+  path: '/sites/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSitesSiteIdRoute =
+  AuthenticatedSitesSiteIdRouteImport.update({
+    id: '/sites/$siteId',
+    path: '/sites/$siteId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedTasksIndexRoute = AuthenticatedTasksIndexRouteImport.update({
   id: '/tasks/',
   path: '/tasks/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedUsersIndexRoute = AuthenticatedUsersIndexRouteImport.update({
-  id: '/users/',
-  path: '/users/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedWorkspacesIndexRoute =
-  AuthenticatedWorkspacesIndexRouteImport.update({
-    id: '/workspaces/',
-    path: '/workspaces/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedWorkspacesWorkspaceIdRoute =
-  AuthenticatedWorkspacesWorkspaceIdRouteImport.update({
-    id: '/workspaces/$workspaceId',
-    path: '/workspaces/$workspaceId',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedAiAgentsAgentsRoute =
-  AuthenticatedAiAgentsAgentsRouteImport.update({
-    id: '/ai/agents/agents',
-    path: '/ai/agents/agents',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedAiAgentsCreateRoute =
-  AuthenticatedAiAgentsCreateRouteImport.update({
-    id: '/ai/agents/create',
-    path: '/ai/agents/create',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedAiAgentsDetailRoute =
-  AuthenticatedAiAgentsDetailRouteImport.update({
-    id: '/ai/agents/detail',
-    path: '/ai/agents/detail',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedAiAgentsIdSkillsRoute =
-  AuthenticatedAiAgentsIdSkillsRouteImport.update({
-    id: '/ai/agents/$id/skills',
-    path: '/ai/agents/$id/skills',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -307,16 +215,11 @@ export interface FileRoutesByFullPath {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
-  '/combos': typeof AuthenticatedCombosRoute
   '/feedback': typeof AuthenticatedFeedbackRoute
-  '/memory': typeof AuthenticatedMemoryRoute
-  '/model-health': typeof AuthenticatedModelHealthRoute
   '/overview': typeof AuthenticatedOverviewRoute
   '/paid-models': typeof AuthenticatedPaidModelsRoute
   '/profile': typeof AuthenticatedProfileRoute
-  '/skills': typeof AuthenticatedSkillsRoute
   '/subscription-premium': typeof AuthenticatedSubscriptionPremiumRoute
-  '/design-studio/$projectId': typeof AuthenticatedDesignStudioProjectIdRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -324,20 +227,11 @@ export interface FileRoutesByFullPath {
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/integrations': typeof AuthenticatedSettingsIntegrationsRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
-  '/skills/new': typeof AuthenticatedSkillsNewRoute
-  '/workspaces/$workspaceId': typeof AuthenticatedWorkspacesWorkspaceIdRoute
-  '/ai/': typeof AuthenticatedAiIndexRoute
-  '/apps/': typeof AuthenticatedAppsIndexRoute
-  '/design-studio/': typeof AuthenticatedDesignStudioIndexRoute
+  '/sites/$siteId': typeof AuthenticatedSitesSiteIdRoute
   '/help-center/': typeof AuthenticatedHelpCenterIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/sites/': typeof AuthenticatedSitesIndexRoute
   '/tasks/': typeof AuthenticatedTasksIndexRoute
-  '/users/': typeof AuthenticatedUsersIndexRoute
-  '/workspaces/': typeof AuthenticatedWorkspacesIndexRoute
-  '/ai/agents/agents': typeof AuthenticatedAiAgentsAgentsRoute
-  '/ai/agents/create': typeof AuthenticatedAiAgentsCreateRoute
-  '/ai/agents/detail': typeof AuthenticatedAiAgentsDetailRoute
-  '/ai/agents/$id/skills': typeof AuthenticatedAiAgentsIdSkillsRoute
 }
 export interface FileRoutesByTo {
   '/forgot-password': typeof authForgotPasswordRoute
@@ -350,17 +244,12 @@ export interface FileRoutesByTo {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
-  '/combos': typeof AuthenticatedCombosRoute
   '/feedback': typeof AuthenticatedFeedbackRoute
-  '/memory': typeof AuthenticatedMemoryRoute
-  '/model-health': typeof AuthenticatedModelHealthRoute
   '/overview': typeof AuthenticatedOverviewRoute
   '/paid-models': typeof AuthenticatedPaidModelsRoute
   '/profile': typeof AuthenticatedProfileRoute
-  '/skills': typeof AuthenticatedSkillsRoute
   '/subscription-premium': typeof AuthenticatedSubscriptionPremiumRoute
   '/': typeof AuthenticatedIndexRoute
-  '/design-studio/$projectId': typeof AuthenticatedDesignStudioProjectIdRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -368,20 +257,11 @@ export interface FileRoutesByTo {
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/integrations': typeof AuthenticatedSettingsIntegrationsRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
-  '/skills/new': typeof AuthenticatedSkillsNewRoute
-  '/workspaces/$workspaceId': typeof AuthenticatedWorkspacesWorkspaceIdRoute
-  '/ai': typeof AuthenticatedAiIndexRoute
-  '/apps': typeof AuthenticatedAppsIndexRoute
-  '/design-studio': typeof AuthenticatedDesignStudioIndexRoute
+  '/sites/$siteId': typeof AuthenticatedSitesSiteIdRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/sites': typeof AuthenticatedSitesIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
-  '/users': typeof AuthenticatedUsersIndexRoute
-  '/workspaces': typeof AuthenticatedWorkspacesIndexRoute
-  '/ai/agents/agents': typeof AuthenticatedAiAgentsAgentsRoute
-  '/ai/agents/create': typeof AuthenticatedAiAgentsCreateRoute
-  '/ai/agents/detail': typeof AuthenticatedAiAgentsDetailRoute
-  '/ai/agents/$id/skills': typeof AuthenticatedAiAgentsIdSkillsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -397,17 +277,12 @@ export interface FileRoutesById {
   '/(errors)/404': typeof errors404Route
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
-  '/_authenticated/combos': typeof AuthenticatedCombosRoute
   '/_authenticated/feedback': typeof AuthenticatedFeedbackRoute
-  '/_authenticated/memory': typeof AuthenticatedMemoryRoute
-  '/_authenticated/model-health': typeof AuthenticatedModelHealthRoute
   '/_authenticated/overview': typeof AuthenticatedOverviewRoute
   '/_authenticated/paid-models': typeof AuthenticatedPaidModelsRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
-  '/_authenticated/skills': typeof AuthenticatedSkillsRoute
   '/_authenticated/subscription-premium': typeof AuthenticatedSubscriptionPremiumRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
-  '/_authenticated/design-studio/$projectId': typeof AuthenticatedDesignStudioProjectIdRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -415,20 +290,11 @@ export interface FileRoutesById {
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/_authenticated/settings/integrations': typeof AuthenticatedSettingsIntegrationsRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
-  '/_authenticated/skills_/new': typeof AuthenticatedSkillsNewRoute
-  '/_authenticated/workspaces/$workspaceId': typeof AuthenticatedWorkspacesWorkspaceIdRoute
-  '/_authenticated/ai/': typeof AuthenticatedAiIndexRoute
-  '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
-  '/_authenticated/design-studio/': typeof AuthenticatedDesignStudioIndexRoute
+  '/_authenticated/sites/$siteId': typeof AuthenticatedSitesSiteIdRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/_authenticated/sites/': typeof AuthenticatedSitesIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
-  '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
-  '/_authenticated/workspaces/': typeof AuthenticatedWorkspacesIndexRoute
-  '/_authenticated/ai/agents/agents': typeof AuthenticatedAiAgentsAgentsRoute
-  '/_authenticated/ai/agents/create': typeof AuthenticatedAiAgentsCreateRoute
-  '/_authenticated/ai/agents/detail': typeof AuthenticatedAiAgentsDetailRoute
-  '/_authenticated/ai/agents/$id/skills': typeof AuthenticatedAiAgentsIdSkillsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -445,16 +311,11 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/503'
-    | '/combos'
     | '/feedback'
-    | '/memory'
-    | '/model-health'
     | '/overview'
     | '/paid-models'
     | '/profile'
-    | '/skills'
     | '/subscription-premium'
-    | '/design-studio/$projectId'
     | '/errors/$error'
     | '/settings/account'
     | '/settings/appearance'
@@ -462,20 +323,11 @@ export interface FileRouteTypes {
     | '/settings/display'
     | '/settings/integrations'
     | '/settings/notifications'
-    | '/skills/new'
-    | '/workspaces/$workspaceId'
-    | '/ai/'
-    | '/apps/'
-    | '/design-studio/'
+    | '/sites/$siteId'
     | '/help-center/'
     | '/settings/'
+    | '/sites/'
     | '/tasks/'
-    | '/users/'
-    | '/workspaces/'
-    | '/ai/agents/agents'
-    | '/ai/agents/create'
-    | '/ai/agents/detail'
-    | '/ai/agents/$id/skills'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/forgot-password'
@@ -488,17 +340,12 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/503'
-    | '/combos'
     | '/feedback'
-    | '/memory'
-    | '/model-health'
     | '/overview'
     | '/paid-models'
     | '/profile'
-    | '/skills'
     | '/subscription-premium'
     | '/'
-    | '/design-studio/$projectId'
     | '/errors/$error'
     | '/settings/account'
     | '/settings/appearance'
@@ -506,20 +353,11 @@ export interface FileRouteTypes {
     | '/settings/display'
     | '/settings/integrations'
     | '/settings/notifications'
-    | '/skills/new'
-    | '/workspaces/$workspaceId'
-    | '/ai'
-    | '/apps'
-    | '/design-studio'
+    | '/sites/$siteId'
     | '/help-center'
     | '/settings'
+    | '/sites'
     | '/tasks'
-    | '/users'
-    | '/workspaces'
-    | '/ai/agents/agents'
-    | '/ai/agents/create'
-    | '/ai/agents/detail'
-    | '/ai/agents/$id/skills'
   id:
     | '__root__'
     | '/_authenticated'
@@ -534,17 +372,12 @@ export interface FileRouteTypes {
     | '/(errors)/404'
     | '/(errors)/500'
     | '/(errors)/503'
-    | '/_authenticated/combos'
     | '/_authenticated/feedback'
-    | '/_authenticated/memory'
-    | '/_authenticated/model-health'
     | '/_authenticated/overview'
     | '/_authenticated/paid-models'
     | '/_authenticated/profile'
-    | '/_authenticated/skills'
     | '/_authenticated/subscription-premium'
     | '/_authenticated/'
-    | '/_authenticated/design-studio/$projectId'
     | '/_authenticated/errors/$error'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
@@ -552,20 +385,11 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/integrations'
     | '/_authenticated/settings/notifications'
-    | '/_authenticated/skills_/new'
-    | '/_authenticated/workspaces/$workspaceId'
-    | '/_authenticated/ai/'
-    | '/_authenticated/apps/'
-    | '/_authenticated/design-studio/'
+    | '/_authenticated/sites/$siteId'
     | '/_authenticated/help-center/'
     | '/_authenticated/settings/'
+    | '/_authenticated/sites/'
     | '/_authenticated/tasks/'
-    | '/_authenticated/users/'
-    | '/_authenticated/workspaces/'
-    | '/_authenticated/ai/agents/agents'
-    | '/_authenticated/ai/agents/create'
-    | '/_authenticated/ai/agents/detail'
-    | '/_authenticated/ai/agents/$id/skills'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -668,32 +492,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/combos': {
-      id: '/_authenticated/combos'
-      path: '/combos'
-      fullPath: '/combos'
-      preLoaderRoute: typeof AuthenticatedCombosRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/feedback': {
       id: '/_authenticated/feedback'
       path: '/feedback'
       fullPath: '/feedback'
       preLoaderRoute: typeof AuthenticatedFeedbackRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/memory': {
-      id: '/_authenticated/memory'
-      path: '/memory'
-      fullPath: '/memory'
-      preLoaderRoute: typeof AuthenticatedMemoryRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/model-health': {
-      id: '/_authenticated/model-health'
-      path: '/model-health'
-      fullPath: '/model-health'
-      preLoaderRoute: typeof AuthenticatedModelHealthRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/overview': {
@@ -724,46 +527,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/skills': {
-      id: '/_authenticated/skills'
-      path: '/skills'
-      fullPath: '/skills'
-      preLoaderRoute: typeof AuthenticatedSkillsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/subscription-premium': {
       id: '/_authenticated/subscription-premium'
       path: '/subscription-premium'
       fullPath: '/subscription-premium'
       preLoaderRoute: typeof AuthenticatedSubscriptionPremiumRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/ai/': {
-      id: '/_authenticated/ai/'
-      path: '/ai'
-      fullPath: '/ai/'
-      preLoaderRoute: typeof AuthenticatedAiIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/apps/': {
-      id: '/_authenticated/apps/'
-      path: '/apps'
-      fullPath: '/apps/'
-      preLoaderRoute: typeof AuthenticatedAppsIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/design-studio/': {
-      id: '/_authenticated/design-studio/'
-      path: '/design-studio'
-      fullPath: '/design-studio/'
-      preLoaderRoute: typeof AuthenticatedDesignStudioIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/design-studio/$projectId': {
-      id: '/_authenticated/design-studio/$projectId'
-      path: '/design-studio/$projectId'
-      fullPath: '/design-studio/$projectId'
-      preLoaderRoute: typeof AuthenticatedDesignStudioProjectIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/errors/$error': {
@@ -829,11 +597,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsNotificationsRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
-    '/_authenticated/skills_/new': {
-      id: '/_authenticated/skills_/new'
-      path: '/skills/new'
-      fullPath: '/skills/new'
-      preLoaderRoute: typeof AuthenticatedSkillsNewRouteImport
+    '/_authenticated/sites/': {
+      id: '/_authenticated/sites/'
+      path: '/sites'
+      fullPath: '/sites/'
+      preLoaderRoute: typeof AuthenticatedSitesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sites/$siteId': {
+      id: '/_authenticated/sites/$siteId'
+      path: '/sites/$siteId'
+      fullPath: '/sites/$siteId'
+      preLoaderRoute: typeof AuthenticatedSitesSiteIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/tasks/': {
@@ -841,55 +616,6 @@ declare module '@tanstack/react-router' {
       path: '/tasks'
       fullPath: '/tasks/'
       preLoaderRoute: typeof AuthenticatedTasksIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/users/': {
-      id: '/_authenticated/users/'
-      path: '/users'
-      fullPath: '/users/'
-      preLoaderRoute: typeof AuthenticatedUsersIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/workspaces/': {
-      id: '/_authenticated/workspaces/'
-      path: '/workspaces'
-      fullPath: '/workspaces/'
-      preLoaderRoute: typeof AuthenticatedWorkspacesIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/workspaces/$workspaceId': {
-      id: '/_authenticated/workspaces/$workspaceId'
-      path: '/workspaces/$workspaceId'
-      fullPath: '/workspaces/$workspaceId'
-      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/ai/agents/agents': {
-      id: '/_authenticated/ai/agents/agents'
-      path: '/ai/agents/agents'
-      fullPath: '/ai/agents/agents'
-      preLoaderRoute: typeof AuthenticatedAiAgentsAgentsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/ai/agents/create': {
-      id: '/_authenticated/ai/agents/create'
-      path: '/ai/agents/create'
-      fullPath: '/ai/agents/create'
-      preLoaderRoute: typeof AuthenticatedAiAgentsCreateRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/ai/agents/detail': {
-      id: '/_authenticated/ai/agents/detail'
-      path: '/ai/agents/detail'
-      fullPath: '/ai/agents/detail'
-      preLoaderRoute: typeof AuthenticatedAiAgentsDetailRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/ai/agents/$id/skills': {
-      id: '/_authenticated/ai/agents/$id/skills'
-      path: '/ai/agents/$id/skills'
-      fullPath: '/ai/agents/$id/skills'
-      preLoaderRoute: typeof AuthenticatedAiAgentsIdSkillsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
   }
@@ -925,62 +651,32 @@ const AuthenticatedSettingsRouteRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
-  AuthenticatedCombosRoute: typeof AuthenticatedCombosRoute
   AuthenticatedFeedbackRoute: typeof AuthenticatedFeedbackRoute
-  AuthenticatedMemoryRoute: typeof AuthenticatedMemoryRoute
-  AuthenticatedModelHealthRoute: typeof AuthenticatedModelHealthRoute
   AuthenticatedOverviewRoute: typeof AuthenticatedOverviewRoute
   AuthenticatedPaidModelsRoute: typeof AuthenticatedPaidModelsRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
-  AuthenticatedSkillsRoute: typeof AuthenticatedSkillsRoute
   AuthenticatedSubscriptionPremiumRoute: typeof AuthenticatedSubscriptionPremiumRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
-  AuthenticatedDesignStudioProjectIdRoute: typeof AuthenticatedDesignStudioProjectIdRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
-  AuthenticatedSkillsNewRoute: typeof AuthenticatedSkillsNewRoute
-  AuthenticatedWorkspacesWorkspaceIdRoute: typeof AuthenticatedWorkspacesWorkspaceIdRoute
-  AuthenticatedAiIndexRoute: typeof AuthenticatedAiIndexRoute
-  AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
-  AuthenticatedDesignStudioIndexRoute: typeof AuthenticatedDesignStudioIndexRoute
+  AuthenticatedSitesSiteIdRoute: typeof AuthenticatedSitesSiteIdRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
+  AuthenticatedSitesIndexRoute: typeof AuthenticatedSitesIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
-  AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
-  AuthenticatedWorkspacesIndexRoute: typeof AuthenticatedWorkspacesIndexRoute
-  AuthenticatedAiAgentsAgentsRoute: typeof AuthenticatedAiAgentsAgentsRoute
-  AuthenticatedAiAgentsCreateRoute: typeof AuthenticatedAiAgentsCreateRoute
-  AuthenticatedAiAgentsDetailRoute: typeof AuthenticatedAiAgentsDetailRoute
-  AuthenticatedAiAgentsIdSkillsRoute: typeof AuthenticatedAiAgentsIdSkillsRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
-  AuthenticatedCombosRoute: AuthenticatedCombosRoute,
   AuthenticatedFeedbackRoute: AuthenticatedFeedbackRoute,
-  AuthenticatedMemoryRoute: AuthenticatedMemoryRoute,
-  AuthenticatedModelHealthRoute: AuthenticatedModelHealthRoute,
   AuthenticatedOverviewRoute: AuthenticatedOverviewRoute,
   AuthenticatedPaidModelsRoute: AuthenticatedPaidModelsRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
-  AuthenticatedSkillsRoute: AuthenticatedSkillsRoute,
   AuthenticatedSubscriptionPremiumRoute: AuthenticatedSubscriptionPremiumRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-  AuthenticatedDesignStudioProjectIdRoute:
-    AuthenticatedDesignStudioProjectIdRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
-  AuthenticatedSkillsNewRoute: AuthenticatedSkillsNewRoute,
-  AuthenticatedWorkspacesWorkspaceIdRoute:
-    AuthenticatedWorkspacesWorkspaceIdRoute,
-  AuthenticatedAiIndexRoute: AuthenticatedAiIndexRoute,
-  AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
-  AuthenticatedDesignStudioIndexRoute: AuthenticatedDesignStudioIndexRoute,
+  AuthenticatedSitesSiteIdRoute: AuthenticatedSitesSiteIdRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
+  AuthenticatedSitesIndexRoute: AuthenticatedSitesIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
-  AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
-  AuthenticatedWorkspacesIndexRoute: AuthenticatedWorkspacesIndexRoute,
-  AuthenticatedAiAgentsAgentsRoute: AuthenticatedAiAgentsAgentsRoute,
-  AuthenticatedAiAgentsCreateRoute: AuthenticatedAiAgentsCreateRoute,
-  AuthenticatedAiAgentsDetailRoute: AuthenticatedAiAgentsDetailRoute,
-  AuthenticatedAiAgentsIdSkillsRoute: AuthenticatedAiAgentsIdSkillsRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

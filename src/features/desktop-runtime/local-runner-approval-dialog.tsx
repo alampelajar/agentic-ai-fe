@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { diffLines } from '@/features/workspaces/line-diff'
+import { diffLines } from '@/features/desktop-runtime/line-diff'
 import { compactDiff, runnerActionCommands, type LocalRunnerApproval } from './local-runner-approval'
 
 const marker = { add: '+', del: '−', same: ' ' } as const

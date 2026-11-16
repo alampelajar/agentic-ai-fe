@@ -1,4 +1,4 @@
-import type { DiffLine } from '@/features/workspaces/line-diff'
+import type { DiffLine } from '@/features/desktop-runtime/line-diff'
 
 /**
  * What the Local Agent Runner is about to do on the person's computer.
