@@ -1,6 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import useDialogState from '@/hooks/use-dialog-state'
-import { createTask, deleteTask, getTasks, updateTask, type BackendTask } from '../data/api'
+import {
+  createTask,
+  deleteTask,
+  getTasks,
+  updateTask,
+  type BackendTask,
+} from '../data/api'
 import { type Task } from '../data/schema'
 
 type TasksDialogType = 'create' | 'update' | 'delete' | 'import'
@@ -60,8 +66,12 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     void refresh()
 
-    const handleRefresh = () => { void refresh() }
-    const handleFocus = () => { void refresh() }
+    const handleRefresh = () => {
+      void refresh()
+    }
+    const handleFocus = () => {
+      void refresh()
+    }
     const handleVisibility = () => {
       if (document.visibilityState === 'visible') void refresh()
     }
@@ -85,7 +95,9 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
 
   const update = async (id: string, payload: Partial<Task>) => {
     const updated = mapTask(await updateTask(id, payload))
-    setTasks((current) => current.map((item) => item.id === id ? updated : item))
+    setTasks((current) =>
+      current.map((item) => (item.id === id ? updated : item))
+    )
     return updated
   }
 
@@ -95,10 +107,21 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <TasksContext.Provider value={{
-      open, setOpen, currentRow, setCurrentRow,
-      tasks, loading, error, refresh, create, update, remove,
-    }}>
+    <TasksContext.Provider
+      value={{
+        open,
+        setOpen,
+        currentRow,
+        setCurrentRow,
+        tasks,
+        loading,
+        error,
+        refresh,
+        create,
+        update,
+        remove,
+      }}
+    >
       {children}
     </TasksContext.Provider>
   )
@@ -106,6 +129,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
 
 export const useTasks = () => {
   const tasksContext = React.useContext(TasksContext)
-  if (!tasksContext) throw new Error('useTasks has to be used within <TasksContext>')
+  if (!tasksContext)
+    throw new Error('useTasks has to be used within <TasksContext>')
   return tasksContext
 }

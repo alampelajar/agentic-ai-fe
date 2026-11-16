@@ -1,7 +1,12 @@
 import { clearCookies } from '@/test-utils/cookies'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-const user = { accountNo: 'USER_1', email: 'rina@example.com', role: ['user'], exp: 0 }
+const user = {
+  accountNo: 'USER_1',
+  email: 'rina@example.com',
+  role: ['user'],
+  exp: 0,
+}
 
 async function setup() {
   const { useAuthStore } = await import('@/stores/auth-store')
@@ -30,7 +35,10 @@ describe('ensureSession', () => {
   })
 
   it('renews a stale session with the refresh token instead of signing out', async () => {
-    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ok: true, access_token: 'renewed' }) })
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ ok: true, access_token: 'renewed' }),
+    })
     vi.stubGlobal('fetch', fetchMock)
     const { useAuthStore, ensureSession } = await setup()
     useAuthStore.getState().auth.setAccessToken('stale')
@@ -46,7 +54,10 @@ describe('ensureSession', () => {
   })
 
   it('gets a new access token after a reload, when only the signed-in user was kept', async () => {
-    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ok: true, access_token: 'after-reload' }) })
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ ok: true, access_token: 'after-reload' }),
+    })
     vi.stubGlobal('fetch', fetchMock)
     const { useAuthStore, ensureSession } = await setup()
     // The access token is kept in memory only, so a reload leaves the user but no token.
@@ -59,7 +70,13 @@ describe('ensureSession', () => {
   })
 
   it('signs out only when renewing fails', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, json: async () => ({ ok: false, message: 'expired' }) }))
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: false,
+        json: async () => ({ ok: false, message: 'expired' }),
+      })
+    )
     const { useAuthStore, ensureSession } = await setup()
     useAuthStore.getState().auth.setAccessToken('stale')
     useAuthStore.getState().auth.setUser({ ...user, exp: Date.now() - 1_000 })

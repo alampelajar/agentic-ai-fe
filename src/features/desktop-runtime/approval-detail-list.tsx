@@ -2,8 +2,18 @@ import { useState } from 'react'
 import type { ApprovalDetail, ApprovalLang } from './approval-details'
 
 const TEXT = {
-  id: { show: 'Tampilkan teks lengkap', hide: 'Sembunyikan', maskedHint: 'Bagian yang tampak seperti kredensial disamarkan di layar ini. Teks lengkap tetap yang akan diketik.' },
-  en: { show: 'Show full text', hide: 'Hide', maskedHint: 'Parts that look like credentials are masked on this screen. The full text is still what will be typed.' },
+  id: {
+    show: 'Tampilkan teks lengkap',
+    hide: 'Sembunyikan',
+    maskedHint:
+      'Bagian yang tampak seperti kredensial disamarkan di layar ini. Teks lengkap tetap yang akan diketik.',
+  },
+  en: {
+    show: 'Show full text',
+    hide: 'Hide',
+    maskedHint:
+      'Parts that look like credentials are masked on this screen. The full text is still what will be typed.',
+  },
 } as const
 
 /**
@@ -12,7 +22,13 @@ const TEXT = {
  * the user can always read exactly what will be done before approving.
  * Give it a `key` that changes per action so a reveal never carries over.
  */
-export function ApprovalDetailList({ details, lang = 'id' }: { details: ApprovalDetail[]; lang?: ApprovalLang }) {
+export function ApprovalDetailList({
+  details,
+  lang = 'id',
+}: {
+  details: ApprovalDetail[]
+  lang?: ApprovalLang
+}) {
   const [revealed, setRevealed] = useState<Record<string, boolean>>({})
   const t = TEXT[lang]
   return (
@@ -20,11 +36,17 @@ export function ApprovalDetailList({ details, lang = 'id' }: { details: Approval
       {details.map((detail) => {
         const showFull = Boolean(detail.fullValue && revealed[detail.key])
         return (
-          <div key={detail.key} data-testid='approval-detail' data-warning={detail.warning ? 'true' : undefined}>
+          <div
+            key={detail.key}
+            data-testid='approval-detail'
+            data-warning={detail.warning ? 'true' : undefined}
+          >
             <dt className='text-muted-foreground'>{detail.label}</dt>
             <dd
-              className={`max-h-32 overflow-y-auto whitespace-pre-wrap break-all rounded bg-background/60 px-2 py-1 text-xs ${
-                detail.warning ? 'border border-amber-500/60 text-amber-700 dark:text-amber-400' : 'font-mono'
+              className={`max-h-32 overflow-y-auto rounded bg-background/60 px-2 py-1 text-xs break-all whitespace-pre-wrap ${
+                detail.warning
+                  ? 'border border-amber-500/60 text-amber-700 dark:text-amber-400'
+                  : 'font-mono'
               }`}
             >
               {showFull ? detail.fullValue : detail.value}
@@ -34,11 +56,20 @@ export function ApprovalDetailList({ details, lang = 'id' }: { details: Approval
                 <button
                   type='button'
                   className='text-xs underline underline-offset-2'
-                  onClick={() => setRevealed((current) => ({ ...current, [detail.key]: !current[detail.key] }))}
+                  onClick={() =>
+                    setRevealed((current) => ({
+                      ...current,
+                      [detail.key]: !current[detail.key],
+                    }))
+                  }
                 >
                   {showFull ? t.hide : t.show}
                 </button>
-                {!showFull && <span className='text-xs text-muted-foreground'>{t.maskedHint}</span>}
+                {!showFull && (
+                  <span className='text-xs text-muted-foreground'>
+                    {t.maskedHint}
+                  </span>
+                )}
               </div>
             )}
           </div>

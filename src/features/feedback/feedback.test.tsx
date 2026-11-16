@@ -1,7 +1,7 @@
+import i18n from '@/i18n'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
-import i18n from '@/i18n'
 import type { Feedback } from './data/api'
 import { FeedbackPage } from './index'
 
@@ -14,7 +14,9 @@ const mocks = vi.hoisted(() => ({
   toastError: vi.fn(),
   toastSuccess: vi.fn(),
 }))
-vi.mock('sonner', () => ({ toast: { error: mocks.toastError, success: mocks.toastSuccess } }))
+vi.mock('sonner', () => ({
+  toast: { error: mocks.toastError, success: mocks.toastSuccess },
+}))
 vi.mock('./data/api', async (importActual) => ({
   ...(await importActual<typeof import('./data/api')>()),
   getMyFeedback: mocks.getMyFeedback,
@@ -49,37 +51,65 @@ describe('Feedback page', () => {
 
   it('sends the report and its screenshot to the server', async () => {
     mocks.getMyFeedback.mockResolvedValue([])
-    mocks.createFeedback.mockImplementation(async (draft) => report({ subject: draft.subject }))
+    mocks.createFeedback.mockImplementation(async (draft) =>
+      report({ subject: draft.subject })
+    )
     const screen = await render(<FeedbackPage />)
 
     await screen.getByLabelText('Category').selectOptions('bug')
     await screen.getByLabelText('Related page or feature').fill('AI Chat')
     await screen.getByLabelText('Subject').fill('Chat freezes')
-    await screen.getByLabelText('Description').fill('The chat stops answering after a while.')
-    const file = new File([new Uint8Array([137, 80, 78, 71])], 'shot.png', { type: 'image/png' })
-    await userEvent.upload(screen.getByLabelText('Screenshot (optional)', { exact: true }).first(), file)
+    await screen
+      .getByLabelText('Description')
+      .fill('The chat stops answering after a while.')
+    const file = new File([new Uint8Array([137, 80, 78, 71])], 'shot.png', {
+      type: 'image/png',
+    })
+    await userEvent.upload(
+      screen.getByLabelText('Screenshot (optional)', { exact: true }).first(),
+      file
+    )
     await expect.element(screen.getByText('shot.png')).toBeVisible()
     await screen.getByRole('button', { name: 'Submit report' }).click()
 
-    await vi.waitFor(() => expect(mocks.createFeedback).toHaveBeenCalledTimes(1))
+    await vi.waitFor(() =>
+      expect(mocks.createFeedback).toHaveBeenCalledTimes(1)
+    )
     const draft = mocks.createFeedback.mock.calls[0][0]
-    expect(draft).toMatchObject({ category: 'bug', related_page: 'AI Chat', subject: 'Chat freezes' })
+    expect(draft).toMatchObject({
+      category: 'bug',
+      related_page: 'AI Chat',
+      subject: 'Chat freezes',
+    })
     expect(draft.attachment).toBeInstanceOf(File)
     expect(draft.attachment.name).toBe('shot.png')
-    await expect.element(screen.getByRole('heading', { name: 'Chat freezes' })).toBeVisible()
+    await expect
+      .element(screen.getByRole('heading', { name: 'Chat freezes' }))
+      .toBeVisible()
   })
 
   it('rejects a screenshot that is not an image', async () => {
     mocks.getMyFeedback.mockResolvedValue([])
     const screen = await render(<FeedbackPage />)
     const file = new File(['hello'], 'notes.txt', { type: 'text/plain' })
-    await userEvent.upload(screen.getByLabelText('Screenshot (optional)', { exact: true }).first(), file)
-    await expect.element(screen.getByText('The screenshot must be a PNG, JPG, or WebP image.')).toBeVisible()
+    await userEvent.upload(
+      screen.getByLabelText('Screenshot (optional)', { exact: true }).first(),
+      file
+    )
+    await expect
+      .element(
+        screen.getByText('The screenshot must be a PNG, JPG, or WebP image.')
+      )
+      .toBeVisible()
   })
 
   it('shows a screenshot fetched with the login, not from a public address', async () => {
-    mocks.getMyFeedback.mockResolvedValue([report({ id: 7, attachment: '/uploads/feedback/abc.png' })])
-    mocks.getFeedbackAttachment.mockResolvedValue(new Blob([new Uint8Array([137, 80, 78, 71])], { type: 'image/png' }))
+    mocks.getMyFeedback.mockResolvedValue([
+      report({ id: 7, attachment: '/uploads/feedback/abc.png' }),
+    ])
+    mocks.getFeedbackAttachment.mockResolvedValue(
+      new Blob([new Uint8Array([137, 80, 78, 71])], { type: 'image/png' })
+    )
     const screen = await render(<FeedbackPage />)
     await screen.getByRole('button', { name: /My reports/ }).click()
 
@@ -90,12 +120,20 @@ describe('Feedback page', () => {
   })
 
   it('says so when the screenshot cannot be loaded', async () => {
-    mocks.getMyFeedback.mockResolvedValue([report({ id: 8, attachment: '/uploads/feedback/gone.png' })])
+    mocks.getMyFeedback.mockResolvedValue([
+      report({ id: 8, attachment: '/uploads/feedback/gone.png' }),
+    ])
     mocks.getFeedbackAttachment.mockRejectedValue(new Error('404'))
     const screen = await render(<FeedbackPage />)
     await screen.getByRole('button', { name: /My reports/ }).click()
 
-    await expect.element(screen.getByRole('alert').filter({ hasText: 'The screenshot could not be loaded.' })).toBeVisible()
+    await expect
+      .element(
+        screen
+          .getByRole('alert')
+          .filter({ hasText: 'The screenshot could not be loaded.' })
+      )
+      .toBeVisible()
   })
 
   it('offers delete only for finished reports, and deletes after confirming', async () => {
@@ -106,7 +144,9 @@ describe('Feedback page', () => {
     mocks.deleteFeedback.mockResolvedValue(undefined)
     const screen = await render(<FeedbackPage />)
     await screen.getByRole('button', { name: /My reports/ }).click()
-    await expect.element(screen.getByRole('heading', { name: 'Done one' })).toBeVisible()
+    await expect
+      .element(screen.getByRole('heading', { name: 'Done one' }))
+      .toBeVisible()
 
     const deleteButtons = screen.getByRole('button', { name: 'Delete report' })
     expect(deleteButtons.elements()).toHaveLength(1)
@@ -114,7 +154,11 @@ describe('Feedback page', () => {
     await screen.getByRole('button', { name: 'Delete', exact: true }).click()
 
     await vi.waitFor(() => expect(mocks.deleteFeedback).toHaveBeenCalledWith(2))
-    await expect.element(screen.getByRole('heading', { name: 'Done one' })).not.toBeInTheDocument()
-    await expect.element(screen.getByRole('heading', { name: 'Open one' })).toBeVisible()
+    await expect
+      .element(screen.getByRole('heading', { name: 'Done one' }))
+      .not.toBeInTheDocument()
+    await expect
+      .element(screen.getByRole('heading', { name: 'Open one' }))
+      .toBeVisible()
   })
 })

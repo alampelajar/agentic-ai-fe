@@ -45,7 +45,11 @@ export function PasswordInput({
         className='absolute inset-e-1 top-1/2 h-7 w-7 -translate-y-1/2 rounded-md text-muted-foreground'
         onClick={() => setShowPassword((prev) => !prev)}
       >
-        {showPassword ? <EyeOff className='size-4' /> : <Eye className='size-4' />}
+        {showPassword ? (
+          <EyeOff className='size-4' />
+        ) : (
+          <Eye className='size-4' />
+        )}
         <span className='sr-only'>
           {showPassword ? t('common.hidePassword') : t('common.showPassword')}
         </span>

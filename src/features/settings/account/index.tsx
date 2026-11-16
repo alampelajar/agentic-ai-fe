@@ -1,33 +1,33 @@
-import { useTranslation } from "react-i18next";
-import { ContentSection } from "../components/content-section";
-import { ChangeEmailCard } from "./change-email-card";
-import { ChangePasswordCard } from "./change-password-card";
-import { DeleteAccountCard } from "./delete-account-card";
+import { useTranslation } from 'react-i18next'
+import { ContentSection } from '../components/content-section'
+import { ChangeEmailCard } from './change-email-card'
+import { ChangePasswordCard } from './change-password-card'
+import { DeleteAccountCard } from './delete-account-card'
 
 export function SettingsAccount() {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (
     <ContentSection
-      title={t("settingsPage.account.title")}
-      desc={t("settingsPage.account.subtitle")}
+      title={t('settingsPage.account.title')}
+      desc={t('settingsPage.account.subtitle')}
     >
-      <div className="w-full min-w-0 space-y-6">
-        <div className="rounded-xl border bg-muted/20 px-5 py-4">
-          <h3 className="font-semibold">
+      <div className='w-full min-w-0 space-y-6'>
+        <div className='rounded-xl border bg-muted/20 px-5 py-4'>
+          <h3 className='font-semibold'>
             {t('accountSecurity.accountSecurity')}
           </h3>
-          <p className="mt-1 text-sm leading-6 text-muted-foreground">
+          <p className='mt-1 text-sm leading-6 text-muted-foreground'>
             {t('accountSecurity.updateYourPasswordOrManage')}
           </p>
         </div>
 
-        <div className="grid min-w-0 grid-cols-1 gap-5 2xl:grid-cols-2">
+        <div className='grid min-w-0 grid-cols-1 gap-5 2xl:grid-cols-2'>
           <ChangeEmailCard />
           <ChangePasswordCard />
           <DeleteAccountCard />
         </div>
       </div>
     </ContentSection>
-  );
+  )
 }

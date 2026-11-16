@@ -1,8 +1,8 @@
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 import { showSubmittedData } from '@/lib/show-submitted-data'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -60,7 +60,9 @@ export function NotificationsForm() {
           name='type'
           render={({ field }) => (
             <FormItem className='relative space-y-3'>
-              <FormLabel>{t("settingsPage.notifications.notifyAbout")}</FormLabel>
+              <FormLabel>
+                {t('settingsPage.notifications.notifyAbout')}
+              </FormLabel>
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
@@ -72,7 +74,7 @@ export function NotificationsForm() {
                       <RadioGroupItem value='all' />
                     </FormControl>
                     <FormLabel className='font-normal'>
-                      {t("settingsPage.notifications.allNewMessages")}
+                      {t('settingsPage.notifications.allNewMessages')}
                     </FormLabel>
                   </FormItem>
                   <FormItem className='flex items-center'>
@@ -80,14 +82,16 @@ export function NotificationsForm() {
                       <RadioGroupItem value='mentions' />
                     </FormControl>
                     <FormLabel className='font-normal'>
-                      {t("settingsPage.notifications.directMessagesMentions")}
+                      {t('settingsPage.notifications.directMessagesMentions')}
                     </FormLabel>
                   </FormItem>
                   <FormItem className='flex items-center'>
                     <FormControl>
                       <RadioGroupItem value='none' />
                     </FormControl>
-                    <FormLabel className='font-normal'>{t("settingsPage.notifications.nothing")}</FormLabel>
+                    <FormLabel className='font-normal'>
+                      {t('settingsPage.notifications.nothing')}
+                    </FormLabel>
                   </FormItem>
                 </RadioGroup>
               </FormControl>
@@ -96,7 +100,9 @@ export function NotificationsForm() {
           )}
         />
         <div className='relative'>
-          <h3 className='mb-4 text-lg font-medium'>{t("settingsPage.notifications.emailNotifications")}</h3>
+          <h3 className='mb-4 text-lg font-medium'>
+            {t('settingsPage.notifications.emailNotifications')}
+          </h3>
           <div className='space-y-4'>
             <FormField
               control={form.control}
@@ -105,10 +111,12 @@ export function NotificationsForm() {
                 <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
                   <div className='space-y-0.5'>
                     <FormLabel className='text-base'>
-                      {t("settingsPage.notifications.communicationEmails")}
+                      {t('settingsPage.notifications.communicationEmails')}
                     </FormLabel>
                     <FormDescription>
-                      {t("settingsPage.notifications.communicationEmailsDescription")}
+                      {t(
+                        'settingsPage.notifications.communicationEmailsDescription'
+                      )}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -127,10 +135,12 @@ export function NotificationsForm() {
                 <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
                   <div className='space-y-0.5'>
                     <FormLabel className='text-base'>
-                      {t("settingsPage.notifications.marketingEmails")}
+                      {t('settingsPage.notifications.marketingEmails')}
                     </FormLabel>
                     <FormDescription>
-                      {t("settingsPage.notifications.marketingEmailsDescription")}
+                      {t(
+                        'settingsPage.notifications.marketingEmailsDescription'
+                      )}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -148,9 +158,11 @@ export function NotificationsForm() {
               render={({ field }) => (
                 <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
                   <div className='space-y-0.5'>
-                    <FormLabel className='text-base'>{t("settingsPage.notifications.socialEmails")}</FormLabel>
+                    <FormLabel className='text-base'>
+                      {t('settingsPage.notifications.socialEmails')}
+                    </FormLabel>
                     <FormDescription>
-                      {t("settingsPage.notifications.socialEmailsDescription")}
+                      {t('settingsPage.notifications.socialEmailsDescription')}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -168,9 +180,13 @@ export function NotificationsForm() {
               render={({ field }) => (
                 <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
                   <div className='space-y-0.5'>
-                    <FormLabel className='text-base'>{t("settingsPage.notifications.securityEmails")}</FormLabel>
+                    <FormLabel className='text-base'>
+                      {t('settingsPage.notifications.securityEmails')}
+                    </FormLabel>
                     <FormDescription>
-                      {t("settingsPage.notifications.securityEmailsDescription")}
+                      {t(
+                        'settingsPage.notifications.securityEmailsDescription'
+                      )}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -199,23 +215,25 @@ export function NotificationsForm() {
               </FormControl>
               <div className='space-y-1 leading-none'>
                 <FormLabel>
-                  {t("settingsPage.notifications.useDifferentMobile")}
+                  {t('settingsPage.notifications.useDifferentMobile')}
                 </FormLabel>
                 <FormDescription>
-                  {t("settingsPage.notifications.mobileHintBefore")}{' '}
+                  {t('settingsPage.notifications.mobileHintBefore')}{' '}
                   <Link
                     to='/settings'
                     className='underline decoration-dashed underline-offset-4 hover:decoration-solid'
                   >
-                    {t("settingsPage.notifications.mobileSettings")}
+                    {t('settingsPage.notifications.mobileSettings')}
                   </Link>
-                  {t("settingsPage.notifications.mobileHintAfter")}
+                  {t('settingsPage.notifications.mobileHintAfter')}
                 </FormDescription>
               </div>
             </FormItem>
           )}
         />
-        <Button type='submit'>{t("settingsPage.notifications.updateNotifications")}</Button>
+        <Button type='submit'>
+          {t('settingsPage.notifications.updateNotifications')}
+        </Button>
       </form>
     </Form>
   )

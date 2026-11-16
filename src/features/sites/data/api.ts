@@ -4,7 +4,8 @@ import { apiFetch } from '@/lib/api'
 // interface translates under siteBuilder.errors.<code>.
 
 export type SiteStatus = 'draft' | 'building' | 'ready' | 'failed'
-export type RunStatus = 'queued' | 'running' | 'completed' | 'failed' | 'cancelled'
+export type RunStatus =
+  'queued' | 'running' | 'completed' | 'failed' | 'cancelled'
 
 export type Site = {
   id: number
@@ -29,7 +30,13 @@ export type Site = {
   updated_at: string
 }
 
-export type Question = { id: string; text: string; multiple: boolean; options: string[]; /** Answered in the person's own words, without choices. */ free?: boolean }
+export type Question = {
+  id: string
+  text: string
+  multiple: boolean
+  options: string[]
+  /** Answered in the person's own words, without choices. */ free?: boolean
+}
 
 export type Direction = {
   key: string
@@ -38,22 +45,50 @@ export type Direction = {
   variant_name: string
   name: string
   description: string
-  palette: Record<'background' | 'surface' | 'foreground' | 'muted' | 'primary' | 'primary_foreground' | 'accent' | 'border', string>
+  palette: Record<
+    | 'background'
+    | 'surface'
+    | 'foreground'
+    | 'muted'
+    | 'primary'
+    | 'primary_foreground'
+    | 'accent'
+    | 'border',
+    string
+  >
   serif: boolean
   radius: string
   /** Address of the look's example website, '' until it has been made. */
   sample_url: string
 }
 
-export type Contact = { phone: string; whatsapp: string; email: string; address: string; hours: string }
+export type Contact = {
+  phone: string
+  whatsapp: string
+  email: string
+  address: string
+  hours: string
+}
 
-export type BriefSummary = { name: string; tagline: string; summary: string; pages: string[]; contact: Contact; language?: 'id' | 'en' }
+export type BriefSummary = {
+  name: string
+  tagline: string
+  summary: string
+  pages: string[]
+  contact: Contact
+  language?: 'id' | 'en'
+}
 
 export type Fact = { label: string; value: string }
 
 export type SiteImage = { src: string; alt: string; logo?: boolean }
 
-export type SiteVersion = { id: number; number: number; summary: string; created_at: string }
+export type SiteVersion = {
+  id: number
+  number: number
+  summary: string
+  created_at: string
+}
 
 export type AgentRun = {
   id: number
@@ -95,7 +130,11 @@ export type SiteDetail = Site & {
   suggested_slug: string
 }
 
-export const FINISHED_RUN: readonly RunStatus[] = ['completed', 'failed', 'cancelled']
+export const FINISHED_RUN: readonly RunStatus[] = [
+  'completed',
+  'failed',
+  'cancelled',
+]
 
 export class SiteRequestError extends Error {
   readonly status: number
@@ -110,26 +149,46 @@ export class SiteRequestError extends Error {
 
 async function parse<T>(response: Response): Promise<T> {
   const data = await response.json().catch(() => ({}))
-  if (!response.ok) throw new SiteRequestError(data?.error || 'Request failed', response.status, data?.code || 'unknown')
+  if (!response.ok)
+    throw new SiteRequestError(
+      data?.error || 'Request failed',
+      response.status,
+      data?.code || 'unknown'
+    )
   return data as T
 }
 
 const json = (body: unknown): RequestInit => ({ body: JSON.stringify(body) })
 
 export async function getSites(): Promise<Site[]> {
-  return (await parse<{ sites: Site[] }>(await apiFetch('/api/sites'))).sites ?? []
+  return (
+    (await parse<{ sites: Site[] }>(await apiFetch('/api/sites'))).sites ?? []
+  )
 }
 
-export async function createSite(description: string, language: string): Promise<Site> {
-  return (await parse<{ site: Site }>(await apiFetch('/api/sites', { method: 'POST', ...json({ description, language }) }))).site
+export async function createSite(
+  description: string,
+  language: string
+): Promise<Site> {
+  return (
+    await parse<{ site: Site }>(
+      await apiFetch('/api/sites', {
+        method: 'POST',
+        ...json({ description, language }),
+      })
+    )
+  ).site
 }
 
 export async function getSite(id: number): Promise<SiteDetail> {
-  return (await parse<{ site: SiteDetail }>(await apiFetch(`/api/sites/${id}`))).site
+  return (await parse<{ site: SiteDetail }>(await apiFetch(`/api/sites/${id}`)))
+    .site
 }
 
 export async function renameSite(id: number, name: string): Promise<void> {
-  await parse(await apiFetch(`/api/sites/${id}`, { method: 'PATCH', ...json({ name }) }))
+  await parse(
+    await apiFetch(`/api/sites/${id}`, { method: 'PATCH', ...json({ name }) })
+  )
 }
 
 export async function deleteSite(id: number): Promise<void> {
@@ -154,49 +213,128 @@ export async function getQuestions(id: number): Promise<QuestionsResult> {
   return parse(await apiFetch(`/api/sites/${id}/questions`, { method: 'POST' }))
 }
 
-export type BriefInput = { name: string; answers: Record<string, string[]>; extra: string; contact: Contact; direction: string; variant: string; language: 'id' | 'en' }
-
-export async function makeBrief(id: number, input: BriefInput): Promise<BriefSummary> {
-  return (await parse<{ brief: BriefSummary }>(await apiFetch(`/api/sites/${id}/brief`, { method: 'POST', ...json(input) }))).brief
+export type BriefInput = {
+  name: string
+  answers: Record<string, string[]>
+  extra: string
+  contact: Contact
+  direction: string
+  variant: string
+  language: 'id' | 'en'
 }
 
-export async function uploadImage(id: number, file: File, logo: boolean): Promise<SiteImage[]> {
+export async function makeBrief(
+  id: number,
+  input: BriefInput
+): Promise<BriefSummary> {
+  return (
+    await parse<{ brief: BriefSummary }>(
+      await apiFetch(`/api/sites/${id}/brief`, {
+        method: 'POST',
+        ...json(input),
+      })
+    )
+  ).brief
+}
+
+export async function uploadImage(
+  id: number,
+  file: File,
+  logo: boolean
+): Promise<SiteImage[]> {
   const form = new FormData()
   form.append('file', file)
   form.append('logo', String(logo))
-  return (await parse<{ images: SiteImage[] }>(await apiFetch(`/api/sites/${id}/images`, { method: 'POST', body: form }))).images
+  return (
+    await parse<{ images: SiteImage[] }>(
+      await apiFetch(`/api/sites/${id}/images`, { method: 'POST', body: form })
+    )
+  ).images
 }
 
-export async function removeImage(id: number, src: string): Promise<SiteImage[]> {
-  return (await parse<{ images: SiteImage[] }>(await apiFetch(`/api/sites/${id}/images?src=${encodeURIComponent(src)}`, { method: 'DELETE' }))).images
+export async function removeImage(
+  id: number,
+  src: string
+): Promise<SiteImage[]> {
+  return (
+    await parse<{ images: SiteImage[] }>(
+      await apiFetch(`/api/sites/${id}/images?src=${encodeURIComponent(src)}`, {
+        method: 'DELETE',
+      })
+    )
+  ).images
 }
 
-export async function startRun(id: number, input: { kind: 'create' | 'revise'; request?: string; direction?: string; variant?: string }): Promise<AgentRun> {
-  return (await parse<{ run: AgentRun }>(await apiFetch(`/api/sites/${id}/runs`, { method: 'POST', ...json(input) }))).run
+export async function startRun(
+  id: number,
+  input: {
+    kind: 'create' | 'revise'
+    request?: string
+    direction?: string
+    variant?: string
+  }
+): Promise<AgentRun> {
+  return (
+    await parse<{ run: AgentRun }>(
+      await apiFetch(`/api/sites/${id}/runs`, {
+        method: 'POST',
+        ...json(input),
+      })
+    )
+  ).run
 }
 
-export async function getRun(id: number, runId: number): Promise<{ run: AgentRun; steps: RunStep[] }> {
+export async function getRun(
+  id: number,
+  runId: number
+): Promise<{ run: AgentRun; steps: RunStep[] }> {
   return parse(await apiFetch(`/api/sites/${id}/runs/${runId}`))
 }
 
 export async function cancelRun(id: number, runId: number): Promise<void> {
-  await parse(await apiFetch(`/api/sites/${id}/runs/${runId}/cancel`, { method: 'POST' }))
+  await parse(
+    await apiFetch(`/api/sites/${id}/runs/${runId}/cancel`, { method: 'POST' })
+  )
 }
 
-export async function restoreVersion(id: number, number: number): Promise<void> {
-  await parse(await apiFetch(`/api/sites/${id}/versions/${number}/restore`, { method: 'POST' }))
+export async function restoreVersion(
+  id: number,
+  number: number
+): Promise<void> {
+  await parse(
+    await apiFetch(`/api/sites/${id}/versions/${number}/restore`, {
+      method: 'POST',
+    })
+  )
 }
 
-export async function getPreview(id: number): Promise<{ url: string; expires_at: string }> {
+export async function getPreview(
+  id: number
+): Promise<{ url: string; expires_at: string }> {
   return parse(await apiFetch(`/api/sites/${id}/preview`))
 }
 
-export async function checkSlug(siteId: number, slug: string): Promise<{ available: boolean; code: string; url: string }> {
-  return parse(await apiFetch(`/api/sites/slug-available?site_id=${siteId}&slug=${encodeURIComponent(slug)}`))
+export async function checkSlug(
+  siteId: number,
+  slug: string
+): Promise<{ available: boolean; code: string; url: string }> {
+  return parse(
+    await apiFetch(
+      `/api/sites/slug-available?site_id=${siteId}&slug=${encodeURIComponent(slug)}`
+    )
+  )
 }
 
-export async function publishSite(id: number, slug: string): Promise<{ url: string }> {
-  return parse(await apiFetch(`/api/sites/${id}/publish`, { method: 'POST', ...json({ slug }) }))
+export async function publishSite(
+  id: number,
+  slug: string
+): Promise<{ url: string }> {
+  return parse(
+    await apiFetch(`/api/sites/${id}/publish`, {
+      method: 'POST',
+      ...json({ slug }),
+    })
+  )
 }
 
 export async function unpublishSite(id: number): Promise<void> {
@@ -208,9 +346,17 @@ export async function unpublishSite(id: number): Promise<void> {
  * goes in the header). Calls onState with every change until the run ends or the signal
  * aborts; falls back to polling when the stream breaks.
  */
-export async function followRun(id: number, runId: number, onState: (state: { run: AgentRun; steps: RunStep[] }) => void, signal: AbortSignal): Promise<void> {
+export async function followRun(
+  id: number,
+  runId: number,
+  onState: (state: { run: AgentRun; steps: RunStep[] }) => void,
+  signal: AbortSignal
+): Promise<void> {
   try {
-    const response = await apiFetch(`/api/sites/${id}/runs/${runId}/events`, { headers: { Accept: 'text/event-stream' }, signal })
+    const response = await apiFetch(`/api/sites/${id}/runs/${runId}/events`, {
+      headers: { Accept: 'text/event-stream' },
+      signal,
+    })
     if (!response.ok || !response.body) throw new Error('stream unavailable')
     const reader = response.body.getReader()
     const decoder = new TextDecoder()

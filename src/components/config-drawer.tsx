@@ -57,9 +57,7 @@ export function ConfigDrawer() {
       <SheetContent className='flex flex-col'>
         <SheetHeader className='pb-0 text-start'>
           <SheetTitle>{t('configDrawer.title')}</SheetTitle>
-          <SheetDescription>
-            {t('configDrawer.description')}
-          </SheetDescription>
+          <SheetDescription>{t('configDrawer.description')}</SheetDescription>
         </SheetHeader>
         <div className='space-y-6 overflow-y-auto px-4'>
           <ThemeConfig />
@@ -135,7 +133,9 @@ function RadioGroupItem({
     <Item
       value={item.value}
       className={cn('group outline-none', 'transition duration-200 ease-in')}
-      aria-label={t('configDrawer.selectOption', { label: item.label.toLowerCase() })}
+      aria-label={t('configDrawer.selectOption', {
+        label: item.label.toLowerCase(),
+      })}
       aria-describedby={`${item.value}-description`}
     >
       <div

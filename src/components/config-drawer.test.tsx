@@ -1,3 +1,4 @@
+import i18n from '@/i18n'
 import { clearCookies } from '@/test-utils/cookies'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, type RenderResult } from 'vitest-browser-react'
@@ -7,7 +8,6 @@ import { DirectionProvider } from '@/context/direction-provider'
 import { LayoutProvider } from '@/context/layout-provider'
 import { ThemeProvider } from '@/context/theme-provider'
 import { SidebarProvider } from '@/components/ui/sidebar'
-import i18n from '@/i18n'
 import { ConfigDrawer } from './config-drawer'
 
 async function renderConfigDrawer({

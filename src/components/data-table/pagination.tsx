@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next'
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -6,6 +5,7 @@ import {
   DoubleArrowRightIcon,
 } from '@radix-ui/react-icons'
 import { type Table } from '@tanstack/react-table'
+import { useTranslation } from 'react-i18next'
 import { cn, getPageNumbers } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -61,7 +61,9 @@ export function DataTablePagination<TData>({
               ))}
             </SelectContent>
           </Select>
-          <p className='hidden text-sm font-medium sm:block'>{t('dataTable.rowsPerPage')}</p>
+          <p className='hidden text-sm font-medium sm:block'>
+            {t('dataTable.rowsPerPage')}
+          </p>
         </div>
       </div>
 

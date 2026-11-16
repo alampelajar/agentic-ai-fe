@@ -7,27 +7,18 @@ let refreshPromise: Promise<string> | null = null
 export const ACCESS_TOKEN_LIFETIME_MS = 15 * 60 * 1000
 
 async function refreshAccessToken() {
-  const response = await fetch(
-    `${API_BASE_URL}/api/auth/refresh`,
-    {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-      },
-      credentials: 'include',
-    }
-  )
+  const response = await fetch(`${API_BASE_URL}/api/auth/refresh`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+    },
+    credentials: 'include',
+  })
 
   const result = await response.json()
 
-  if (
-    !response.ok ||
-    !result.ok ||
-    !result.access_token
-  ) {
-    throw new Error(
-      result.message || 'Refresh token tidak valid.'
-    )
+  if (!response.ok || !result.ok || !result.access_token) {
+    throw new Error(result.message || 'Refresh token tidak valid.')
   }
 
   const { auth } = useAuthStore.getState()
@@ -59,58 +50,46 @@ export async function apiFetch(
   path: string,
   options: RequestInit = {}
 ): Promise<Response> {
-  const accessToken =
-    useAuthStore.getState().auth.accessToken
+  const accessToken = useAuthStore.getState().auth.accessToken
 
   const headers = new Headers(options.headers)
 
   headers.set('Accept', 'application/json')
 
-  if (options.body && !(options.body instanceof FormData) && !headers.has('Content-Type')) {
+  if (
+    options.body &&
+    !(options.body instanceof FormData) &&
+    !headers.has('Content-Type')
+  ) {
     headers.set('Content-Type', 'application/json')
   }
 
   if (accessToken) {
-    headers.set(
-      'Authorization',
-      `Bearer ${accessToken}`
-    )
+    headers.set('Authorization', `Bearer ${accessToken}`)
   }
 
-  let response = await fetch(
-    `${API_BASE_URL}${path}`,
-    {
-      ...options,
-      headers,
-      credentials: 'include',
-    }
-  )
+  let response = await fetch(`${API_BASE_URL}${path}`, {
+    ...options,
+    headers,
+    credentials: 'include',
+  })
 
   // Access token expired
   if (response.status === 401) {
     try {
-      const newAccessToken =
-        await getNewAccessToken()
+      const newAccessToken = await getNewAccessToken()
 
-      headers.set(
-        'Authorization',
-        `Bearer ${newAccessToken}`
-      )
+      headers.set('Authorization', `Bearer ${newAccessToken}`)
 
       // Ulangi request setelah mendapatkan token baru
-      response = await fetch(
-        `${API_BASE_URL}${path}`,
-        {
-          ...options,
-          headers,
-          credentials: 'include',
-        }
-      )
+      response = await fetch(`${API_BASE_URL}${path}`, {
+        ...options,
+        headers,
+        credentials: 'include',
+      })
     } catch (error) {
       // Refresh token juga sudah tidak valid
-      useAuthStore
-        .getState()
-        .auth.reset()
+      useAuthStore.getState().auth.reset()
 
       throw error
     }

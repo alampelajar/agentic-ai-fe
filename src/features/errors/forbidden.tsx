@@ -19,7 +19,9 @@ export function ForbiddenError() {
           <Button variant='outline' onClick={() => history.go(-1)}>
             {t('errorPages.goBack')}
           </Button>
-          <Button onClick={() => navigate({ to: '/' })}>{t('errorPages.backHome')}</Button>
+          <Button onClick={() => navigate({ to: '/' })}>
+            {t('errorPages.backHome')}
+          </Button>
         </div>
       </div>
     </div>

@@ -2,8 +2,8 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { ChevronDownIcon } from '@radix-ui/react-icons'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useTranslation } from 'react-i18next'
 import { fonts } from '@/config/fonts'
+import { useTranslation } from 'react-i18next'
 import { showSubmittedData } from '@/lib/show-submitted-data'
 import { cn } from '@/lib/utils'
 import { useFont } from '@/context/font-provider'
@@ -58,7 +58,7 @@ export function AppearanceForm() {
           name='font'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("settingsPage.appearance.font")}</FormLabel>
+              <FormLabel>{t('settingsPage.appearance.font')}</FormLabel>
               <div className='relative w-max'>
                 <FormControl>
                   <select
@@ -79,7 +79,7 @@ export function AppearanceForm() {
                 <ChevronDownIcon className='absolute inset-e-3 top-2.5 h-4 w-4 opacity-50' />
               </div>
               <FormDescription className='font-manrope'>
-                {t("settingsPage.appearance.fontDescription")}
+                {t('settingsPage.appearance.fontDescription')}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -90,9 +90,9 @@ export function AppearanceForm() {
           name='theme'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("settingsPage.appearance.theme")}</FormLabel>
+              <FormLabel>{t('settingsPage.appearance.theme')}</FormLabel>
               <FormDescription>
-                {t("settingsPage.appearance.themeDescription")}
+                {t('settingsPage.appearance.themeDescription')}
               </FormDescription>
               <FormMessage />
               <RadioGroup
@@ -122,7 +122,7 @@ export function AppearanceForm() {
                       </div>
                     </div>
                     <span className='block w-full p-2 text-center font-normal'>
-                      {t("settingsPage.appearance.light")}
+                      {t('settingsPage.appearance.light')}
                     </span>
                   </FormLabel>
                 </FormItem>
@@ -148,7 +148,7 @@ export function AppearanceForm() {
                       </div>
                     </div>
                     <span className='block w-full p-2 text-center font-normal'>
-                      {t("settingsPage.appearance.dark")}
+                      {t('settingsPage.appearance.dark')}
                     </span>
                   </FormLabel>
                 </FormItem>
@@ -157,7 +157,9 @@ export function AppearanceForm() {
           )}
         />
 
-        <Button type='submit'>{t("settingsPage.appearance.updatePreferences")}</Button>
+        <Button type='submit'>
+          {t('settingsPage.appearance.updatePreferences')}
+        </Button>
       </form>
     </Form>
   )

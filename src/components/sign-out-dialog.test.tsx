@@ -13,18 +13,21 @@ vi.mock('@/stores/auth-store', () => ({
   useAuthStore: () => ({ auth: { reset: mocks.reset } }),
 }))
 vi.mock('@tanstack/react-router', async (importOriginal) => ({
-  ...await importOriginal<typeof import('@tanstack/react-router')>(),
+  ...(await importOriginal<typeof import('@tanstack/react-router')>()),
   useNavigate: () => mocks.navigate,
   useLocation: () => ({ href: mocks.href }),
 }))
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) =>
-      ({
-        'auth.signOutDialog.title': 'Sign out',
-        'auth.signOutDialog.description': 'Are you sure you want to sign out?',
-        'auth.signOutDialog.confirmButton': 'Sign out',
-      } as Record<string, string>)[key] ?? key,
+      (
+        ({
+          'auth.signOutDialog.title': 'Sign out',
+          'auth.signOutDialog.description':
+            'Are you sure you want to sign out?',
+          'auth.signOutDialog.confirmButton': 'Sign out',
+        }) as Record<string, string>
+      )[key] ?? key,
   }),
 }))
 

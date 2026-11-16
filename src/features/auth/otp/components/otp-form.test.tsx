@@ -1,7 +1,7 @@
+import i18n from '@/i18n'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, type RenderResult } from 'vitest-browser-react'
 import { type Locator, userEvent } from 'vitest/browser'
-import i18n from '@/i18n'
 import { API_BASE_URL } from '@/lib/api-config'
 import { OtpForm } from './otp-form'
 
@@ -29,7 +29,10 @@ describe('OtpForm', () => {
           json: async () => ({ ok: true, reset_token: 'a'.repeat(64) }),
         }
       }
-      return { ok: true, json: async () => ({ ok: true, message: 'Password reset.' }) }
+      return {
+        ok: true,
+        json: async () => ({ ok: true, message: 'Password reset.' }),
+      }
     })
     screen = await render(<OtpForm initialEmail='a@b.com' />)
     otpInput = screen.getByLabelText(/^6-digit verification code$/i)
@@ -58,10 +61,12 @@ describe('OtpForm', () => {
         expect.objectContaining({
           method: 'POST',
           body: JSON.stringify({ email: 'a@b.com', otp: '123456' }),
-        }),
+        })
       )
     })
-    await expect.element(screen.getByRole('heading', { name: 'Choose a new password' })).toBeInTheDocument()
+    await expect
+      .element(screen.getByRole('heading', { name: 'Choose a new password' }))
+      .toBeInTheDocument()
   })
 
   it('resets the password and navigates back to sign in', async () => {
@@ -72,7 +77,9 @@ describe('OtpForm', () => {
     const confirmInput = screen.getByLabelText('Confirm new password')
     await userEvent.fill(passwordInput, 'new-secure-pass')
     await userEvent.fill(confirmInput, 'new-secure-pass')
-    await userEvent.click(screen.getByRole('button', { name: 'Save new password' }))
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Save new password' })
+    )
 
     await vi.waitFor(() => {
       expect(fetchMock).toHaveBeenCalledWith(
@@ -85,7 +92,7 @@ describe('OtpForm', () => {
             new_password: 'new-secure-pass',
             confirm_password: 'new-secure-pass',
           }),
-        }),
+        })
       )
       expect(navigate).toHaveBeenCalledWith({ to: '/sign-in', replace: true })
     })

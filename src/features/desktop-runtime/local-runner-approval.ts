@@ -6,8 +6,19 @@ import type { DiffLine } from '@/features/desktop-runtime/line-diff'
  * undefined when it could not be read (the full new content is then shown).
  */
 export type LocalRunnerApproval =
-  | { kind: 'write'; workspace: string; path: string; before: string | null | undefined; after: string }
-  | { kind: 'execute'; workspace: string; action: string; runtime: 'native' | 'docker' }
+  | {
+      kind: 'write'
+      workspace: string
+      path: string
+      before: string | null | undefined
+      after: string
+    }
+  | {
+      kind: 'execute'
+      workspace: string
+      action: string
+      runtime: 'native' | 'docker'
+    }
 
 /** The command each runner action starts. It mirrors the runner's fixed list. */
 export const runnerActionCommands: Record<string, string> = {
@@ -30,7 +41,12 @@ export function compactDiff(lines: DiffLine[]): Row[] {
   const keep = lines.map(() => false)
   lines.forEach((line, index) => {
     if (line.type === 'same') return
-    for (let k = Math.max(0, index - CONTEXT_LINES); k <= Math.min(lines.length - 1, index + CONTEXT_LINES); k++) keep[k] = true
+    for (
+      let k = Math.max(0, index - CONTEXT_LINES);
+      k <= Math.min(lines.length - 1, index + CONTEXT_LINES);
+      k++
+    )
+      keep[k] = true
   })
   const rows: Row[] = []
   let skipped = 0

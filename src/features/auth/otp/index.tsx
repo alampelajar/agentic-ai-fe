@@ -1,5 +1,4 @@
 import { useSearch } from '@tanstack/react-router'
-
 import { AuthLayout } from '../auth-layout'
 import { OtpForm } from './components/otp-form'
 

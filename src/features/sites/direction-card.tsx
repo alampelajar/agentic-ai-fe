@@ -17,7 +17,12 @@ type DirectionCardProps = {
  * One look to choose from: a picture of its example website (or, until that exists, a
  * small drawing in its colours), a plain name, and a button to open the example.
  */
-export function DirectionCard({ direction, selected, onSelect, onPreview }: DirectionCardProps) {
+export function DirectionCard({
+  direction,
+  selected,
+  onSelect,
+  onPreview,
+}: DirectionCardProps) {
   const { t } = useTranslation()
   const [pictureMissing, setPictureMissing] = useState(false)
   const p = direction.palette
@@ -25,7 +30,14 @@ export function DirectionCard({ direction, selected, onSelect, onPreview }: Dire
   const hasExample = Boolean(direction.sample_url)
 
   return (
-    <div className={cn('flex flex-col overflow-hidden rounded-xl border bg-card transition-colors', selected ? 'border-primary ring-2 ring-primary' : 'border-border hover:border-primary')}>
+    <div
+      className={cn(
+        'flex flex-col overflow-hidden rounded-xl border bg-card transition-colors',
+        selected
+          ? 'border-primary ring-2 ring-primary'
+          : 'border-border hover:border-primary'
+      )}
+    >
       <button
         type='button'
         role='radio'
@@ -34,29 +46,64 @@ export function DirectionCard({ direction, selected, onSelect, onPreview }: Dire
         onClick={onSelect}
         className='flex flex-1 flex-col text-left focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none'
       >
-        <div aria-hidden='true' className='relative h-36 overflow-hidden border-b'>
+        <div
+          aria-hidden='true'
+          className='relative h-36 overflow-hidden border-b'
+        >
           {!pictureMissing ? (
-            <img src={`/looks/${direction.key}.jpg`} alt='' loading='lazy' onError={() => setPictureMissing(true)} className='h-full w-full object-cover object-top' />
+            <img
+              src={`/looks/${direction.key}.jpg`}
+              alt=''
+              loading='lazy'
+              onError={() => setPictureMissing(true)}
+              className='h-full w-full object-cover object-top'
+            />
           ) : (
-            <div className='flex h-full flex-col gap-2 p-4' style={{ background: p.background, color: p.foreground }}>
+            <div
+              className='flex h-full flex-col gap-2 p-4'
+              style={{ background: p.background, color: p.foreground }}
+            >
               <div className='flex items-center justify-between'>
-                <span className='h-2 w-12 rounded-full' style={{ background: p.foreground }} />
+                <span
+                  className='h-2 w-12 rounded-full'
+                  style={{ background: p.foreground }}
+                />
                 <span className='flex gap-1'>
-                  <span className='h-1.5 w-5 rounded-full' style={{ background: p.muted }} />
-                  <span className='h-1.5 w-5 rounded-full' style={{ background: p.muted }} />
+                  <span
+                    className='h-1.5 w-5 rounded-full'
+                    style={{ background: p.muted }}
+                  />
+                  <span
+                    className='h-1.5 w-5 rounded-full'
+                    style={{ background: p.muted }}
+                  />
                 </span>
               </div>
-              <p className='mt-1 text-xl leading-tight font-semibold' style={{ fontFamily: font }}>
+              <p
+                className='mt-1 text-xl leading-tight font-semibold'
+                style={{ fontFamily: font }}
+              >
                 {t('siteBuilder.look.sample')}
               </p>
-              <span className='mt-auto w-fit px-3 py-1 text-xs' style={{ background: p.primary, color: p.primary_foreground, borderRadius: direction.radius }}>
+              <span
+                className='mt-auto w-fit px-3 py-1 text-xs'
+                style={{
+                  background: p.primary,
+                  color: p.primary_foreground,
+                  borderRadius: direction.radius,
+                }}
+              >
                 {t('siteBuilder.look.sampleButton')}
               </span>
             </div>
           )}
           <span className='absolute right-2 bottom-2 flex gap-1 rounded-md bg-background p-1'>
             {[p.primary, p.accent, p.surface].map((colour) => (
-              <span key={colour} className='size-4 rounded-sm border' style={{ background: colour }} />
+              <span
+                key={colour}
+                className='size-4 rounded-sm border'
+                style={{ background: colour }}
+              />
             ))}
           </span>
         </div>
@@ -70,14 +117,29 @@ export function DirectionCard({ direction, selected, onSelect, onPreview }: Dire
               </span>
             ) : null}
           </span>
-          <span className='text-xs text-muted-foreground'>{direction.description}</span>
-          {direction.variant_name ? <span className='text-xs font-medium'>{t('siteBuilder.look.colour', { name: direction.variant_name })}</span> : null}
+          <span className='text-xs text-muted-foreground'>
+            {direction.description}
+          </span>
+          {direction.variant_name ? (
+            <span className='text-xs font-medium'>
+              {t('siteBuilder.look.colour', { name: direction.variant_name })}
+            </span>
+          ) : null}
         </span>
       </button>
       <div className='border-t p-2'>
-        <Button type='button' variant='ghost' size='sm' className='w-full' disabled={!hasExample} onClick={onPreview}>
+        <Button
+          type='button'
+          variant='ghost'
+          size='sm'
+          className='w-full'
+          disabled={!hasExample}
+          onClick={onPreview}
+        >
           <Eye className='size-4' />
-          {hasExample ? t('siteBuilder.look.seeExample') : t('siteBuilder.look.noExample')}
+          {hasExample
+            ? t('siteBuilder.look.seeExample')
+            : t('siteBuilder.look.noExample')}
         </Button>
       </div>
     </div>

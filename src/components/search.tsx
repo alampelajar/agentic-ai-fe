@@ -1,5 +1,5 @@
-import { useTranslation } from 'react-i18next'
 import { SearchIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { useSearch } from '@/context/search-provider'
 import { Button } from './ui/button'

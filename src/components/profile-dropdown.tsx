@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
+import { useAuthStore } from '@/stores/auth-store'
+import { getAvatarSrc } from '@/lib/avatar-presets'
 import useDialogState from '@/hooks/use-dialog-state'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -15,8 +17,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { SignOutDialog } from '@/components/sign-out-dialog'
-import { useAuthStore } from '@/stores/auth-store'
-import { getAvatarSrc } from '@/lib/avatar-presets'
 
 export function ProfileDropdown() {
   const [open, setOpen] = useDialogState()
@@ -39,7 +39,11 @@ export function ProfileDropdown() {
       setCustomAvatar(typeof detail === 'string' ? detail : null)
     }
     window.addEventListener('agentic-ai-avatar-updated', handleAvatarUpdate)
-    return () => window.removeEventListener('agentic-ai-avatar-updated', handleAvatarUpdate)
+    return () =>
+      window.removeEventListener(
+        'agentic-ai-avatar-updated',
+        handleAvatarUpdate
+      )
   }, [])
 
   useEffect(() => {
@@ -68,27 +72,16 @@ export function ProfileDropdown() {
             aria-label={t('navigation.openProfileMenu')}
           >
             <Avatar className='h-8 w-8'>
-              <AvatarImage
-                src={avatar}
-                alt={name}
-              />
-              <AvatarFallback>
-                {initials || 'U'}
-              </AvatarFallback>
+              <AvatarImage src={avatar} alt={name} />
+              <AvatarFallback>{initials || 'U'}</AvatarFallback>
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent
-          className='w-56'
-          align='end'
-          forceMount
-        >
+        <DropdownMenuContent className='w-56' align='end' forceMount>
           <DropdownMenuLabel className='font-normal'>
             <div className='flex flex-col gap-1.5'>
-              <p className='text-sm leading-none font-medium'>
-                {name}
-              </p>
+              <p className='text-sm leading-none font-medium'>{name}</p>
               <p className='text-xs leading-none text-muted-foreground'>
                 {email}
               </p>
@@ -101,38 +94,28 @@ export function ProfileDropdown() {
             <DropdownMenuItem asChild>
               <Link to='/profile'>
                 {t('navigation.profile')}
-                <DropdownMenuShortcut>
-                  ⇧⌘P
-                </DropdownMenuShortcut>
+                <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
               </Link>
             </DropdownMenuItem>
 
             <DropdownMenuItem asChild>
               <Link to='/settings'>
                 {t('navigation.billing')}
-                <DropdownMenuShortcut>
-                  ⌘B
-                </DropdownMenuShortcut>
+                <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
               </Link>
             </DropdownMenuItem>
 
             <DropdownMenuItem asChild>
               <Link to='/settings'>
                 {t('navigation.settings')}
-                <DropdownMenuShortcut>
-                  ⌘S
-                </DropdownMenuShortcut>
+                <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
               </Link>
             </DropdownMenuItem>
-
           </DropdownMenuGroup>
 
           <DropdownMenuSeparator />
 
-          <DropdownMenuItem
-            variant='destructive'
-            onClick={() => setOpen(true)}
-          >
+          <DropdownMenuItem variant='destructive' onClick={() => setOpen(true)}>
             {t('navigation.signOut')}
             <DropdownMenuShortcut className='text-current'>
               ⇧⌘Q
@@ -141,10 +124,7 @@ export function ProfileDropdown() {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <SignOutDialog
-        open={!!open}
-        onOpenChange={setOpen}
-      />
+      <SignOutDialog open={!!open} onOpenChange={setOpen} />
     </>
   )
 }

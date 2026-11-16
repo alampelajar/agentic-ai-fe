@@ -1,15 +1,18 @@
 import { useState, type FormEvent } from 'react'
+import { useNavigate } from '@tanstack/react-router'
 import { LoaderCircle, Mail } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { useNavigate } from '@tanstack/react-router'
-
+import { useAuthStore } from '@/stores/auth-store'
+import {
+  requestChangeEmailOtp,
+  resendChangeEmailOtp,
+  verifyChangeEmailOtp,
+} from '@/lib/api-email-otp'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
 import { EmailOtpStep } from '@/features/auth/email-otp/email-otp-step'
-import { requestChangeEmailOtp, resendChangeEmailOtp, verifyChangeEmailOtp } from '@/lib/api-email-otp'
-import { useAuthStore } from '@/stores/auth-store'
 
 export function ChangeEmailCard() {
   const { t } = useTranslation()
@@ -28,7 +31,9 @@ export function ChangeEmailCard() {
       await requestChangeEmailOtp({ new_email: newEmail.trim(), password })
       setStage('otp')
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('changeEmail.failure'))
+      toast.error(
+        error instanceof Error ? error.message : t('changeEmail.failure')
+      )
     } finally {
       setSending(false)
     }
@@ -55,14 +60,39 @@ export function ChangeEmailCard() {
       {stage === 'form' ? (
         <form onSubmit={start} className='grid gap-4'>
           <div className='space-y-2'>
-            <label htmlFor='new-email' className='text-sm font-medium'>{t('changeEmail.newEmail')}</label>
-            <Input id='new-email' type='email' autoComplete='email' required value={newEmail} onChange={(event) => setNewEmail(event.target.value)} disabled={sending} />
+            <label htmlFor='new-email' className='text-sm font-medium'>
+              {t('changeEmail.newEmail')}
+            </label>
+            <Input
+              id='new-email'
+              type='email'
+              autoComplete='email'
+              required
+              value={newEmail}
+              onChange={(event) => setNewEmail(event.target.value)}
+              disabled={sending}
+            />
           </div>
           <div className='space-y-2'>
-            <label htmlFor='change-email-password' className='text-sm font-medium'>{t('changeEmail.password')}</label>
-            <PasswordInput id='change-email-password' autoComplete='current-password' required value={password} onChange={(event) => setPassword(event.target.value)} disabled={sending} />
+            <label
+              htmlFor='change-email-password'
+              className='text-sm font-medium'
+            >
+              {t('changeEmail.password')}
+            </label>
+            <PasswordInput
+              id='change-email-password'
+              autoComplete='current-password'
+              required
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              disabled={sending}
+            />
           </div>
-          <Button type='submit' disabled={sending || !newEmail.trim() || !password}>
+          <Button
+            type='submit'
+            disabled={sending || !newEmail.trim() || !password}
+          >
             {sending && <LoaderCircle className='size-4 animate-spin' />}
             {t('changeEmail.sendCode')}
           </Button>

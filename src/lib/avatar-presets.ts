@@ -27,10 +27,14 @@ export const AVATAR_PRESETS = [
 
 export type AvatarPresetId = (typeof AVATAR_PRESETS)[number]['id']
 const AVATAR_PREFIX = 'preset:'
-const AVATAR_PRESET_IDS = new Set<string>(AVATAR_PRESETS.map((preset) => preset.id))
+const AVATAR_PRESET_IDS = new Set<string>(
+  AVATAR_PRESETS.map((preset) => preset.id)
+)
 export const DEFAULT_AVATAR_PRESET: AvatarPresetId = 'lorelei'
 
-export function getAvatarPresetId(avatar?: string | null): AvatarPresetId | null {
+export function getAvatarPresetId(
+  avatar?: string | null
+): AvatarPresetId | null {
   if (!avatar?.startsWith(AVATAR_PREFIX)) return null
   const id = avatar.slice(AVATAR_PREFIX.length)
   return AVATAR_PRESET_IDS.has(id) ? (id as AvatarPresetId) : null
@@ -44,7 +48,12 @@ export function getAvatarSrc(avatar?: string | null, seed = 'agentic-ai-user') {
   if (!avatar) return ''
   const presetId = getAvatarPresetId(avatar)
   if (presetId) {
-    return 'https://api.dicebear.com/10.x/' + presetId + '/svg?seed=' + encodeURIComponent(seed || 'agentic-ai-user')
+    return (
+      'https://api.dicebear.com/10.x/' +
+      presetId +
+      '/svg?seed=' +
+      encodeURIComponent(seed || 'agentic-ai-user')
+    )
   }
   if (avatar.startsWith(AVATAR_PREFIX)) return ''
   return avatar

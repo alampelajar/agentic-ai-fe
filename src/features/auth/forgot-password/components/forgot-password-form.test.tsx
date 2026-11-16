@@ -1,7 +1,7 @@
+import i18n from '@/i18n'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, type RenderResult } from 'vitest-browser-react'
 import { userEvent, type Locator } from 'vitest/browser'
-import i18n from '@/i18n'
 import { API_BASE_URL } from '@/lib/api-config'
 import { ForgotPasswordForm } from './forgot-password-form'
 
@@ -24,11 +24,16 @@ describe('ForgotPasswordForm', () => {
     vi.stubGlobal('fetch', fetchMock)
     fetchMock.mockResolvedValue({
       ok: true,
-      json: async () => ({ ok: true, message: 'If the email exists, a code will be sent.' }),
+      json: async () => ({
+        ok: true,
+        message: 'If the email exists, a code will be sent.',
+      }),
     })
     screen = await render(<ForgotPasswordForm />)
     emailInput = screen.getByRole('textbox', { name: /^Email address$/i })
-    continueButton = screen.getByRole('button', { name: /^Send verification code$/i })
+    continueButton = screen.getByRole('button', {
+      name: /^Send verification code$/i,
+    })
   })
 
   afterEach(() => {
@@ -57,7 +62,7 @@ describe('ForgotPasswordForm', () => {
         expect.objectContaining({
           method: 'POST',
           body: JSON.stringify({ email: 'a@b.com' }),
-        }),
+        })
       )
       expect(navigateMock).toHaveBeenCalledWith({
         to: '/otp',

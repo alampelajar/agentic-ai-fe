@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { CircleAlert, Globe, Loader2, Plus } from 'lucide-react'
-import { Main } from '@/components/layout/main'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Main } from '@/components/layout/main'
+import { SiteStatus } from '@/features/sites'
 import { getSites, type Site } from '@/features/sites/data/api'
 import { siteErrorText } from '@/features/sites/errors'
-import { SiteStatus } from '@/features/sites'
 
 export const Route = createFileRoute('/_authenticated/overview')({
   component: Overview,
@@ -35,16 +35,23 @@ function Overview() {
     void load()
   }, [load])
 
-  const recent = [...(sites ?? [])].sort((a, b) => b.updated_at.localeCompare(a.updated_at)).slice(0, RECENT)
+  const recent = [...(sites ?? [])]
+    .sort((a, b) => b.updated_at.localeCompare(a.updated_at))
+    .slice(0, RECENT)
   const online = sites?.filter((site) => site.published).length ?? 0
-  const building = sites?.filter((site) => site.status === 'building').length ?? 0
+  const building =
+    sites?.filter((site) => site.status === 'building').length ?? 0
 
   return (
     <Main className='space-y-6'>
       <div className='flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between'>
         <div>
-          <h1 className='text-2xl font-semibold tracking-tight'>{t('overviewPage.title')}</h1>
-          <p className='text-sm text-muted-foreground'>{t('overviewPage.subtitle')}</p>
+          <h1 className='text-2xl font-semibold tracking-tight'>
+            {t('overviewPage.title')}
+          </h1>
+          <p className='text-sm text-muted-foreground'>
+            {t('overviewPage.subtitle')}
+          </p>
         </div>
         <Button asChild>
           <Link to='/sites'>
@@ -55,7 +62,10 @@ function Overview() {
       </div>
 
       {problem ? (
-        <div role='alert' className='flex flex-col gap-3 rounded-lg border border-destructive/40 bg-destructive/10 p-4 text-sm text-destructive sm:flex-row sm:items-center sm:justify-between'>
+        <div
+          role='alert'
+          className='flex flex-col gap-3 rounded-lg border border-destructive/40 bg-destructive/10 p-4 text-sm text-destructive sm:flex-row sm:items-center sm:justify-between'
+        >
           <p className='flex items-start gap-2'>
             <CircleAlert className='mt-0.5 size-4 shrink-0' />
             {t('overviewPage.loadError')} {problem}
@@ -68,15 +78,34 @@ function Overview() {
 
       <div className='grid gap-4 sm:grid-cols-3'>
         <Stat label={t('overviewPage.total')} value={sites?.length} />
-        <Stat label={t('overviewPage.online')} value={sites ? online : undefined} icon={<Globe className='size-4 text-emerald-600 dark:text-emerald-400' />} />
-        <Stat label={t('overviewPage.building')} value={sites ? building : undefined} icon={building > 0 ? <Loader2 className='size-4 animate-spin text-muted-foreground' /> : null} />
+        <Stat
+          label={t('overviewPage.online')}
+          value={sites ? online : undefined}
+          icon={
+            <Globe className='size-4 text-emerald-600 dark:text-emerald-400' />
+          }
+        />
+        <Stat
+          label={t('overviewPage.building')}
+          value={sites ? building : undefined}
+          icon={
+            building > 0 ? (
+              <Loader2 className='size-4 animate-spin text-muted-foreground' />
+            ) : null
+          }
+        />
       </div>
 
       <section className='space-y-3'>
         <div className='flex items-center justify-between gap-2'>
-          <h2 className='text-base font-semibold'>{t('overviewPage.recent')}</h2>
+          <h2 className='text-base font-semibold'>
+            {t('overviewPage.recent')}
+          </h2>
           {sites && sites.length > RECENT ? (
-            <Link to='/sites' className='text-sm text-primary underline-offset-4 hover:underline'>
+            <Link
+              to='/sites'
+              className='text-sm text-primary underline-offset-4 hover:underline'
+            >
               {t('overviewPage.seeAll')}
             </Link>
           ) : null}
@@ -91,8 +120,12 @@ function Overview() {
           <div className='flex flex-col items-center gap-3 rounded-lg border border-dashed p-8 text-center'>
             <Globe className='size-6 text-muted-foreground' />
             <div>
-              <p className='text-base font-semibold'>{t('overviewPage.emptyTitle')}</p>
-              <p className='text-sm text-muted-foreground'>{t('overviewPage.emptyText')}</p>
+              <p className='text-base font-semibold'>
+                {t('overviewPage.emptyTitle')}
+              </p>
+              <p className='text-sm text-muted-foreground'>
+                {t('overviewPage.emptyText')}
+              </p>
             </div>
             <Button asChild>
               <Link to='/sites'>{t('overviewPage.make')}</Link>
@@ -102,10 +135,20 @@ function Overview() {
           <ul className='space-y-2'>
             {recent.map((site) => (
               <li key={site.id}>
-                <Link to='/sites/$siteId' params={{ siteId: String(site.id) }} className='flex flex-col gap-1 rounded-lg border bg-card p-4 transition-colors hover:bg-accent sm:flex-row sm:items-center sm:justify-between'>
+                <Link
+                  to='/sites/$siteId'
+                  params={{ siteId: String(site.id) }}
+                  className='flex flex-col gap-1 rounded-lg border bg-card p-4 transition-colors hover:bg-accent sm:flex-row sm:items-center sm:justify-between'
+                >
                   <div className='min-w-0'>
                     <p className='truncate text-sm font-medium'>{site.name}</p>
-                    <p className='text-xs text-muted-foreground'>{t('overviewPage.updated', { date: new Date(site.updated_at).toLocaleString(i18n.language) })}</p>
+                    <p className='text-xs text-muted-foreground'>
+                      {t('overviewPage.updated', {
+                        date: new Date(site.updated_at).toLocaleString(
+                          i18n.language
+                        ),
+                      })}
+                    </p>
                   </div>
                   <SiteStatus site={site} />
                 </Link>
@@ -118,7 +161,15 @@ function Overview() {
   )
 }
 
-function Stat({ label, value, icon }: { label: string; value: number | undefined; icon?: React.ReactNode }) {
+function Stat({
+  label,
+  value,
+  icon,
+}: {
+  label: string
+  value: number | undefined
+  icon?: React.ReactNode
+}) {
   return (
     <Card>
       <CardContent className='space-y-1'>
@@ -126,7 +177,11 @@ function Stat({ label, value, icon }: { label: string; value: number | undefined
           {icon}
           {label}
         </p>
-        {value === undefined ? <Skeleton className='h-8 w-12' /> : <p className='text-2xl font-semibold tracking-tight'>{value}</p>}
+        {value === undefined ? (
+          <Skeleton className='h-8 w-12' />
+        ) : (
+          <p className='text-2xl font-semibold tracking-tight'>{value}</p>
+        )}
       </CardContent>
     </Card>
   )

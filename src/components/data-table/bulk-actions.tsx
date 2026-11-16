@@ -1,7 +1,7 @@
-import { useTranslation } from 'react-i18next'
 import { useState, useEffect, useRef } from 'react'
 import { type Table } from '@tanstack/react-table'
 import { X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -42,7 +42,10 @@ export function DataTableBulkActions<TData>({
   // Announce selection changes to screen readers
   useEffect(() => {
     if (selectedCount > 0) {
-      const message = t('dataTable.selectedAnnouncement', { count: selectedCount, entity: entityName })
+      const message = t('dataTable.selectedAnnouncement', {
+        count: selectedCount,
+        entity: entityName,
+      })
 
       // Use queueMicrotask to defer state update and avoid cascading renders
       queueMicrotask(() => {

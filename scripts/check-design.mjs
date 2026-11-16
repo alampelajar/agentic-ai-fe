@@ -9,7 +9,6 @@
 // Only new lines are checked, so older screens do not fail until someone touches them.
 // To allow one line on purpose, add a comment containing "design-system-ignore"
 // on that line or the line above it, and say why.
-
 import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
@@ -20,7 +19,11 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const CONFIG = {
   // Files the rules apply to.
   include: /^src\/.*\.(tsx|ts)$/,
-  skip: [/\.test\.tsx?$/, /^src\/routeTree\.gen\.ts$/, /^src\/components\/ui\//],
+  skip: [
+    /\.test\.tsx?$/,
+    /^src\/routeTree\.gen\.ts$/,
+    /^src\/components\/ui\//,
+  ],
   // A design editor stores the user's own colors, so hex values are data there.
   hexAllowed: [/^src\/assets\//],
   // Status colors from DESIGN.md, the only palette colors allowed.
@@ -47,17 +50,29 @@ const PALETTE_CLASS = new RegExp(
 )
 const SPACING_UTILS =
   'p|px|py|pt|pr|pb|pl|ps|pe|m|mx|my|mt|mr|mb|ml|ms|me|gap|gap-x|gap-y|space-x|space-y|w|h|size|min-w|max-w|min-h|max-h|inset|inset-x|inset-y|top|right|bottom|left|start|end|text|leading|tracking|rounded'
-const ARBITRARY = new RegExp(`(?<![\\w-])-?(?:[a-z0-9-]+:)*(${SPACING_UTILS})-\\[(?!var\\()[^\\]\\s]+\\]`, 'g')
-const HEX = /(?<![\w&/#-])#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})(?![\w-])/g
+const ARBITRARY = new RegExp(
+  `(?<![\\w-])-?(?:[a-z0-9-]+:)*(${SPACING_UTILS})-\\[(?!var\\()[^\\]\\s]+\\]`,
+  'g'
+)
+const HEX =
+  /(?<![\w&/#-])#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})(?![\w-])/g
 const DIALOGS = /(?:\bwindow\.|(?<![\w.]))(confirm|alert|prompt)\(/g
-const TEXT_ATTRS = /\b(placeholder|title|aria-label|alt|label|description)=(["'])([^"']*)\2/g
-const INLINE_TEXT = /(?<![=-])>([^<>{}=;()&|`]*[A-Za-z]{2}[^<>{}=;()&|`]*)<(?=\/|[A-Za-z{])/g
-const TERNARY_TEXT = /\?\s*(['"])([A-Z][^'"]*[a-z][^'"]*)\1\s*:\s*(['"])([A-Z][^'"]*[a-z][^'"]*)\3/g
-const TOAST_TEXT =/\btoast(?:\.\w+)?\(\s*(['"`])\s*[A-Za-z]/g
-const T_KEY = /(?:\bt|i18n\.t)\(\s*(['"])([\w.-]+)\1|\bi18nKey=(["'])([\w.-]+)\3/g
+const TEXT_ATTRS =
+  /\b(placeholder|title|aria-label|alt|label|description)=(["'])([^"']*)\2/g
+const INLINE_TEXT =
+  /(?<![=-])>([^<>{}=;()&|`]*[A-Za-z]{2}[^<>{}=;()&|`]*)<(?=\/|[A-Za-z{])/g
+const TERNARY_TEXT =
+  /\?\s*(['"])([A-Z][^'"]*[a-z][^'"]*)\1\s*:\s*(['"])([A-Z][^'"]*[a-z][^'"]*)\3/g
+const TOAST_TEXT = /\btoast(?:\.\w+)?\(\s*(['"`])\s*[A-Za-z]/g
+const T_KEY =
+  /(?:\bt|i18n\.t)\(\s*(['"])([\w.-]+)\1|\bi18nKey=(["'])([\w.-]+)\3/g
 
 function git(args) {
-  return execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] })
+  return execFileSync('git', args, {
+    cwd: ROOT,
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'ignore'],
+  })
 }
 
 function tryGit(args) {
@@ -75,7 +90,16 @@ function applies(file) {
 // Line numbers added or changed in each file since `base` (working tree included).
 function changedLines(base, onlyFiles) {
   const result = new Map()
-  const diff = tryGit(['diff', '-U0', '--no-color', '--diff-filter=ACMR', base, '--', ...(onlyFiles ?? [])]) ?? ''
+  const diff =
+    tryGit([
+      'diff',
+      '-U0',
+      '--no-color',
+      '--diff-filter=ACMR',
+      base,
+      '--',
+      ...(onlyFiles ?? []),
+    ]) ?? ''
   let file = null
   for (const raw of diff.split('\n')) {
     const line = raw.replace(/\r$/, '')
@@ -91,7 +115,15 @@ function changedLines(base, onlyFiles) {
       for (let n = start; n < start + count; n++) result.get(file).add(n)
     }
   }
-  const untracked = (tryGit(['ls-files', '--others', '--exclude-standard', '--', ...(onlyFiles ?? [])]) ?? '')
+  const untracked = (
+    tryGit([
+      'ls-files',
+      '--others',
+      '--exclude-standard',
+      '--',
+      ...(onlyFiles ?? []),
+    ]) ?? ''
+  )
     .split('\n')
     .map((f) => f.trim())
     .filter(Boolean)
@@ -141,14 +173,22 @@ function checkLocales(locales, problems) {
         }
       }
       if (typeof value === 'string' && value.trim() === '') {
-        problems.push({ file: CONFIG.locales[lang], line: 0, rule: 'i18n-empty', message: `"${key}" is empty` })
+        problems.push({
+          file: CONFIG.locales[lang],
+          line: 0,
+          rule: 'i18n-empty',
+          message: `"${key}" is empty`,
+        })
       }
     }
   }
 }
 
 function ignored(lines, index) {
-  return /design-system-ignore/.test(lines[index]) || (index > 0 && /design-system-ignore/.test(lines[index - 1]))
+  return (
+    /design-system-ignore/.test(lines[index]) ||
+    (index > 0 && /design-system-ignore/.test(lines[index - 1]))
+  )
 }
 
 function checkFile(file, wanted, locales, problems) {
@@ -161,7 +201,8 @@ function checkFile(file, wanted, locales, problems) {
 export function checkSource(file, source, wanted, locales, problems) {
   const lines = source.split(/\r?\n/)
   const checkText = Boolean(CONFIG.textFiles?.test(file))
-  const report = (line, rule, message) => problems.push({ file, line, rule, message })
+  const report = (line, rule, message) =>
+    problems.push({ file, line, rule, message })
 
   lines.forEach((text, index) => {
     const lineNo = index + 1
@@ -172,19 +213,38 @@ export function checkSource(file, source, wanted, locales, problems) {
 
     if (!CONFIG.hexAllowed.some((re) => re.test(file))) {
       for (const m of code.matchAll(HEX)) {
-        report(lineNo, 'no-hex', `${m[0]}: use a theme color such as bg-primary or text-muted-foreground`)
+        report(
+          lineNo,
+          'no-hex',
+          `${m[0]}: use a theme color such as bg-primary or text-muted-foreground`
+        )
       }
     }
     for (const m of code.matchAll(PALETTE_CLASS)) {
-      if (!CONFIG.allowedPalette.has(m[1]) && !CONFIG.allowedPattern?.test(m[1])) {
-        report(lineNo, 'no-palette', `${m[1]}: use a theme color (bg-muted, text-foreground, bg-primary...)`)
+      if (
+        !CONFIG.allowedPalette.has(m[1]) &&
+        !CONFIG.allowedPattern?.test(m[1])
+      ) {
+        report(
+          lineNo,
+          'no-palette',
+          `${m[1]}: use a theme color (bg-muted, text-foreground, bg-primary...)`
+        )
       }
     }
     for (const m of code.matchAll(ARBITRARY)) {
-      report(lineNo, 'no-arbitrary', `${m[0]}: use the Tailwind scale (for example p-3, text-xs)`)
+      report(
+        lineNo,
+        'no-arbitrary',
+        `${m[0]}: use the Tailwind scale (for example p-3, text-xs)`
+      )
     }
     for (const m of code.matchAll(DIALOGS)) {
-      report(lineNo, 'no-browser-dialog', `${m[1]}(): use ConfirmDialog or a toast instead`)
+      report(
+        lineNo,
+        'no-browser-dialog',
+        `${m[1]}(): use ConfirmDialog or a toast instead`
+      )
     }
 
     if (checkText) {
@@ -192,8 +252,17 @@ export function checkSource(file, source, wanted, locales, problems) {
         // Keys, URLs and e-mail addresses are not interface text.
         // A file path such as src/main.go is an example value too.
         const examplePath = /^[^\s]*\/[^\s]*$/.test(m[3])
-        if (/[A-Za-z]{2}/.test(m[3]) && !/^[\w-]+\.[\w.-]+$/.test(m[3]) && !/:\/\/|@/.test(m[3]) && !examplePath) {
-          report(lineNo, 'i18n-hardcoded', `${m[1]}="${m[3]}": put the text in en.json and id.json and use t()`)
+        if (
+          /[A-Za-z]{2}/.test(m[3]) &&
+          !/^[\w-]+\.[\w.-]+$/.test(m[3]) &&
+          !/:\/\/|@/.test(m[3]) &&
+          !examplePath
+        ) {
+          report(
+            lineNo,
+            'i18n-hardcoded',
+            `${m[1]}="${m[3]}": put the text in en.json and id.json and use t()`
+          )
         }
       }
       for (const m of code.matchAll(INLINE_TEXT)) {
@@ -201,11 +270,20 @@ export function checkSource(file, source, wanted, locales, problems) {
         if (/^[a-z0-9_-]+$/.test(m[1].trim())) continue
         // `</p> : loading ? <Card` is a ternary between two elements, not text.
         if (/(^|\s)[?:](\s|$)/.test(m[1])) continue
-        report(lineNo, 'i18n-hardcoded', `"${m[1].trim()}": put the text in en.json and id.json and use t()`)
+        report(
+          lineNo,
+          'i18n-hardcoded',
+          `"${m[1].trim()}": put the text in en.json and id.json and use t()`
+        )
       }
       // A line of plain text between JSX tags.
       const trimmed = code.trim()
-      const previous = lines.slice(0, index).reverse().find((l) => l.trim())?.trim() ?? ''
+      const previous =
+        lines
+          .slice(0, index)
+          .reverse()
+          .find((l) => l.trim())
+          ?.trim() ?? ''
       if (
         /^[A-Za-z][^<>{}=;()`"]*$/.test(trimmed) &&
         /\s/.test(trimmed) &&
@@ -213,20 +291,37 @@ export function checkSource(file, source, wanted, locales, problems) {
         previous.endsWith('>') &&
         !previous.endsWith('=>')
       ) {
-        report(lineNo, 'i18n-hardcoded', `"${trimmed}": put the text in en.json and id.json and use t()`)
+        report(
+          lineNo,
+          'i18n-hardcoded',
+          `"${trimmed}": put the text in en.json and id.json and use t()`
+        )
       }
       // Choosing the language in code skips the language files. Codes such as "id" or "true" are values, not text.
-      const languageSwitch = /\b(isIndonesian|isEnglish)\s*\?\s*(['"`])(?=[^'"`]*[A-Z\s])/.test(code)
+      const languageSwitch =
+        /\b(isIndonesian|isEnglish)\s*\?\s*(['"`])(?=[^'"`]*[A-Z\s])/.test(code)
       if (languageSwitch) {
-        report(lineNo, 'i18n-hardcoded', 'text picked with isIndonesian ? ... : ...: put both texts in en.json and id.json and use t()')
+        report(
+          lineNo,
+          'i18n-hardcoded',
+          'text picked with isIndonesian ? ... : ...: put both texts in en.json and id.json and use t()'
+        )
       }
       // `busy ? 'Saving...' : 'Save'`: words in a ternary are interface text too.
       // Class names and codes are lowercase, so only capitalised words count.
       for (const m of languageSwitch ? [] : code.matchAll(TERNARY_TEXT)) {
-        report(lineNo, 'i18n-hardcoded', `"${m[2]}" / "${m[4]}": put the texts in en.json and id.json and use t()`)
+        report(
+          lineNo,
+          'i18n-hardcoded',
+          `"${m[2]}" / "${m[4]}": put the texts in en.json and id.json and use t()`
+        )
       }
       if (TOAST_TEXT.test(code)) {
-        report(lineNo, 'i18n-hardcoded', 'toast with fixed text: use toast(t("..."))')
+        report(
+          lineNo,
+          'i18n-hardcoded',
+          'toast with fixed text: use toast(t("..."))'
+        )
       }
       TOAST_TEXT.lastIndex = 0
     }
@@ -238,7 +333,11 @@ export function checkSource(file, source, wanted, locales, problems) {
         if (key.endsWith('.')) continue
         for (const [lang, map] of Object.entries(locales)) {
           if (!hasKey(map, key)) {
-            report(lineNo, 'i18n-missing', `t("${key}") has no text in ${lang}.json`)
+            report(
+              lineNo,
+              'i18n-missing',
+              `t("${key}") has no text in ${lang}.json`
+            )
           }
         }
       }
@@ -259,7 +358,9 @@ function main() {
   const hook = args.includes('--hook')
   const all = args.includes('--all')
   const baseIndex = args.indexOf('--base')
-  let files = args.filter((a, i) => !a.startsWith('--') && !(baseIndex !== -1 && i === baseIndex + 1))
+  let files = args.filter(
+    (a, i) => !a.startsWith('--') && !(baseIndex !== -1 && i === baseIndex + 1)
+  )
 
   let base
   if (hook) {
@@ -271,16 +372,22 @@ function main() {
       return 0
     }
     if (!target) return 0
-    const relative = path.relative(ROOT, path.resolve(target)).split(path.sep).join('/')
+    const relative = path
+      .relative(ROOT, path.resolve(target))
+      .split(path.sep)
+      .join('/')
     // Edits in other repositories are not ours to check.
     if (relative.startsWith('..') || path.isAbsolute(relative)) return 0
-    if (!applies(relative) && !Object.values(CONFIG.locales).includes(relative)) return 0
+    if (!applies(relative) && !Object.values(CONFIG.locales).includes(relative))
+      return 0
     files = [relative]
     base = 'HEAD'
   } else if (baseIndex !== -1) {
     base = args[baseIndex + 1]
   } else if (!all) {
-    const mainRef = tryGit(['rev-parse', '--verify', '--quiet', 'origin/main']) ? 'origin/main' : 'main'
+    const mainRef = tryGit(['rev-parse', '--verify', '--quiet', 'origin/main'])
+      ? 'origin/main'
+      : 'main'
     base = (tryGit(['merge-base', mainRef, 'HEAD']) ?? 'HEAD').trim()
   }
 
@@ -290,7 +397,9 @@ function main() {
 
   let targets
   if (all) {
-    const list = files.length ? files : git(['ls-files', 'src']).split('\n').filter(Boolean)
+    const list = files.length
+      ? files
+      : git(['ls-files', 'src']).split('\n').filter(Boolean)
     targets = new Map(list.filter(applies).map((f) => [f, 'all']))
   } else {
     targets = changedLines(base, files.length ? files : undefined)
@@ -300,11 +409,14 @@ function main() {
   }
 
   if (problems.length === 0) {
-    if (!hook) console.log(`Design check passed (${targets.size} file(s) checked).`)
+    if (!hook)
+      console.log(`Design check passed (${targets.size} file(s) checked).`)
     return 0
   }
 
-  const lines = problems.map((p) => `${p.file}${p.line ? `:${p.line}` : ''}  [${p.rule}]  ${p.message}`)
+  const lines = problems.map(
+    (p) => `${p.file}${p.line ? `:${p.line}` : ''}  [${p.rule}]  ${p.message}`
+  )
   const summary = `${problems.length} design-system problem(s). See DESIGN.md. To allow a line on purpose, add a "design-system-ignore" comment with the reason.`
   if (hook) {
     process.stderr.write(`${lines.join('\n')}\n${summary}\n`)
@@ -315,6 +427,9 @@ function main() {
   return 1
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (
+  process.argv[1] &&
+  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+) {
   process.exitCode = main()
 }

@@ -1,0 +1,14 @@
+# Generated or not ours to format
+node_modules
+dist
+coverage
+public
+package-lock.json
+src/routeTree.gen.ts
+
+# Documents are written by hand
+*.md
+
+# Editor and tool settings
+.claude
+.vscode
