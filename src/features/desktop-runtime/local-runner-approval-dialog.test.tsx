@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import i18n from '@/i18n'
-import { diffLines } from '@/features/workspaces/line-diff'
+import { diffLines } from '@/features/desktop-runtime/line-diff'
 import { compactDiff } from './local-runner-approval'
 import { LocalRunnerApprovalDialog } from './local-runner-approval-dialog'
 

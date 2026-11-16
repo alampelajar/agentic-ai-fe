@@ -1,10 +1,10 @@
 
 import {
+  Globe,
   LayoutDashboard,
   Monitor,
   Puzzle,
   Bell,
-  Package,
   Palette,
   Settings,
   Wrench,
@@ -12,14 +12,7 @@ import {
   Command,
   GalleryVerticalEnd,
   AudioWaveform,
-  Bot,
-  Sparkles,
-  BrainCircuit,
-  FolderGit2,
-  Shuffle,
-  Activity,
   MessageSquareText,
-  PenTool,
 } from "lucide-react";
 
 import { type SidebarData } from "../types";
@@ -49,17 +42,7 @@ export const sidebarData: SidebarData = {
   ],
   navGroups: [
     {
-      title: "CHAT",
-      items: [
-        {
-          title: "Agentic",
-          url: "/ai",
-          icon: Bot,
-        },
-      ],
-    },
-    {
-      title: "AI Workspace",
+      title: "Website",
       items: [
         {
           title: "aiOverview",
@@ -67,44 +50,9 @@ export const sidebarData: SidebarData = {
           icon: LayoutDashboard,
         },
         {
-          title: "agents",
-          url: "/users",
-          icon: Bot,
-        },
-        {
-          title: "appsMenu",
-          url: "/apps",
-          icon: Package,
-        },
-        {
-          title: "skills",
-          url: "/skills",
-          icon: Sparkles,
-        },
-        {
-          title: "memoryMenu",
-          url: "/memory",
-          icon: BrainCircuit,
-        },
-        {
-          title: "combosMenu",
-          url: "/combos",
-          icon: Shuffle,
-        },
-        {
-          title: "modelHealthMenu",
-          url: "/model-health",
-          icon: Activity,
-        },
-        {
-          title: "workspacesMenu",
-          url: "/workspaces",
-          icon: FolderGit2,
-        },
-        {
-          title: "designStudioMenu",
-          url: "/design-studio",
-          icon: PenTool,
+          title: "sitesMenu",
+          url: "/sites",
+          icon: Globe,
         },
       ],
     },

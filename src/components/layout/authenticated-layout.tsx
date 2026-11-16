@@ -30,7 +30,6 @@ import { ConfigDrawer } from "@/components/config-drawer";
 import { ProfileDropdown } from "@/components/profile-dropdown";
 import { SkipToMain } from "@/components/skip-to-main";
 
-import { AgentTasksProvider } from "@/features/ai/components/agent-tasks-provider";
 
 import { getCurrentUser } from "@/lib/api-auth";
 
@@ -259,7 +258,6 @@ export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
   return (
     <SearchProvider>
       <LayoutProvider>
-        <AgentTasksProvider>
           <SidebarProvider defaultOpen={defaultOpen}>
             <SkipToMain />
 
@@ -371,7 +369,6 @@ export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
 
             </SidebarInset>
           </SidebarProvider>
-        </AgentTasksProvider>
       </LayoutProvider>
     </SearchProvider>
   );
