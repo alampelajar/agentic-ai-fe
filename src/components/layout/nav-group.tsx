@@ -1,14 +1,12 @@
-import { type ReactNode } from "react";
-import { Link, useLocation } from "@tanstack/react-router";
-import { ChevronRight } from "lucide-react";
-import { useTranslation } from "react-i18next";
-
+import { type ReactNode } from 'react'
+import { Link, useLocation } from '@tanstack/react-router'
+import { ChevronRight } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-
+} from '@/components/ui/collapsible'
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -19,10 +17,8 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   useSidebar,
-} from "@/components/ui/sidebar";
-
-import { Badge } from "../ui/badge";
-
+} from '@/components/ui/sidebar'
+import { Badge } from '../ui/badge'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,27 +26,26 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-
+} from '../ui/dropdown-menu'
 import {
   type NavCollapsible,
   type NavItem,
   type NavLink,
   type NavGroup as NavGroupProps,
-} from "./types";
+} from './types'
 
 /* =========================================================
    NAV GROUP
 ========================================================= */
 
 export function NavGroup({ title, items }: NavGroupProps) {
-  const { state, isMobile } = useSidebar();
+  const { state, isMobile } = useSidebar()
 
   const href = useLocation({
     select: (location) => location.href,
-  });
+  })
 
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (
     <SidebarGroup>
@@ -58,21 +53,21 @@ export function NavGroup({ title, items }: NavGroupProps) {
 
       <SidebarMenu>
         {items.map((item) => {
-          const key = `${item.title}-${item.url}`;
+          const key = `${item.title}-${item.url}`
 
           /* =================================================
              NORMAL MENU
           ================================================= */
 
           if (!item.items) {
-            return <SidebarMenuLink key={key} item={item} href={href} t={t} />;
+            return <SidebarMenuLink key={key} item={item} href={href} t={t} />
           }
 
           /* =================================================
              COLLAPSED SIDEBAR
           ================================================= */
 
-          if (state === "collapsed" && !isMobile) {
+          if (state === 'collapsed' && !isMobile) {
             return (
               <SidebarMenuCollapsedDropdown
                 key={key}
@@ -80,7 +75,7 @@ export function NavGroup({ title, items }: NavGroupProps) {
                 href={href}
                 t={t}
               />
-            );
+            )
           }
 
           /* =================================================
@@ -89,11 +84,11 @@ export function NavGroup({ title, items }: NavGroupProps) {
 
           return (
             <SidebarMenuCollapsible key={key} item={item} href={href} t={t} />
-          );
+          )
         })}
       </SidebarMenu>
     </SidebarGroup>
-  );
+  )
 }
 
 /* =========================================================
@@ -101,7 +96,7 @@ export function NavGroup({ title, items }: NavGroupProps) {
 ========================================================= */
 
 function NavBadge({ children }: { children: ReactNode }) {
-  return <Badge className="rounded-full px-1 py-0 text-xs">{children}</Badge>;
+  return <Badge className='rounded-full px-1 py-0 text-xs'>{children}</Badge>
 }
 
 /* =========================================================
@@ -113,13 +108,13 @@ function SidebarMenuLink({
   href,
   t,
 }: {
-  item: NavLink;
-  href: string;
-  t: (key: string) => string;
+  item: NavLink
+  href: string
+  t: (key: string) => string
 }) {
-  const { setOpenMobile } = useSidebar();
+  const { setOpenMobile } = useSidebar()
 
-  const isActive = checkIsActive(href, item);
+  const isActive = checkIsActive(href, item)
 
   return (
     <SidebarMenuItem>
@@ -136,7 +131,7 @@ function SidebarMenuLink({
         </Link>
       </SidebarMenuButton>
     </SidebarMenuItem>
-  );
+  )
 }
 
 /* =========================================================
@@ -148,16 +143,16 @@ function SidebarMenuCollapsible({
   href,
   t,
 }: {
-  item: NavCollapsible;
-  href: string;
-  t: (key: string) => string;
+  item: NavCollapsible
+  href: string
+  t: (key: string) => string
 }) {
-  const { setOpenMobile } = useSidebar();
+  const { setOpenMobile } = useSidebar()
 
-  const isActive = checkIsActive(href, item, true);
+  const isActive = checkIsActive(href, item, true)
 
   return (
-    <Collapsible asChild defaultOpen={isActive} className="group/collapsible">
+    <Collapsible asChild defaultOpen={isActive} className='group/collapsible'>
       <SidebarMenuItem>
         {/* =================================================
             COLLAPSIBLE HEADER
@@ -175,15 +170,7 @@ function SidebarMenuCollapsible({
             {item.badge && <NavBadge>{item.badge}</NavBadge>}
 
             {/* Arrow */}
-            <ChevronRight
-              className="
-                ms-auto
-                transition-transform
-                duration-200
-                group-data-[state=open]/collapsible:rotate-90
-                rtl:rotate-180
-              "
-            />
+            <ChevronRight className='ms-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 rtl:rotate-180' />
           </SidebarMenuButton>
         </CollapsibleTrigger>
 
@@ -191,7 +178,7 @@ function SidebarMenuCollapsible({
             SUB MENU
         ================================================= */}
 
-        <CollapsibleContent className="CollapsibleContent">
+        <CollapsibleContent className='CollapsibleContent'>
           <SidebarMenuSub>
             {item.items.map((subItem) => (
               <SidebarMenuSubItem key={`${subItem.title}-${subItem.url}`}>
@@ -216,7 +203,7 @@ function SidebarMenuCollapsible({
         </CollapsibleContent>
       </SidebarMenuItem>
     </Collapsible>
-  );
+  )
 }
 
 /* =========================================================
@@ -228,9 +215,9 @@ function SidebarMenuCollapsedDropdown({
   href,
   t,
 }: {
-  item: NavCollapsible;
-  href: string;
-  t: (key: string) => string;
+  item: NavCollapsible
+  href: string
+  t: (key: string) => string
 }) {
   return (
     <SidebarMenuItem>
@@ -254,14 +241,7 @@ function SidebarMenuCollapsedDropdown({
             {item.badge && <NavBadge>{item.badge}</NavBadge>}
 
             {/* Arrow */}
-            <ChevronRight
-              className="
-                ms-auto
-                transition-transform
-                duration-200
-                group-data-[state=open]/collapsible:rotate-90
-              "
-            />
+            <ChevronRight className='ms-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
           </SidebarMenuButton>
         </DropdownMenuTrigger>
 
@@ -269,12 +249,12 @@ function SidebarMenuCollapsedDropdown({
             DROPDOWN CONTENT
         ================================================= */}
 
-        <DropdownMenuContent side="right" align="start" sideOffset={4}>
+        <DropdownMenuContent side='right' align='start' sideOffset={4}>
           {/* Dropdown title */}
           <DropdownMenuLabel>
             {t(item.title)}
 
-            {item.badge ? ` (${item.badge})` : ""}
+            {item.badge ? ` (${item.badge})` : ''}
           </DropdownMenuLabel>
 
           <DropdownMenuSeparator />
@@ -284,17 +264,17 @@ function SidebarMenuCollapsedDropdown({
             <DropdownMenuItem key={`${sub.title}-${sub.url}`} asChild>
               <Link
                 to={sub.url}
-                className={checkIsActive(href, sub) ? "bg-secondary" : ""}
+                className={checkIsActive(href, sub) ? 'bg-secondary' : ''}
               >
                 {/* Icon */}
                 {sub.icon && <sub.icon />}
 
                 {/* Label */}
-                <span className="max-w-52 text-wrap">{t(sub.title)}</span>
+                <span className='max-w-52 text-wrap'>{t(sub.title)}</span>
 
                 {/* Badge */}
                 {sub.badge && (
-                  <span className="ms-auto text-xs">{sub.badge}</span>
+                  <span className='ms-auto text-xs'>{sub.badge}</span>
                 )}
               </Link>
             </DropdownMenuItem>
@@ -302,7 +282,7 @@ function SidebarMenuCollapsedDropdown({
         </DropdownMenuContent>
       </DropdownMenu>
     </SidebarMenuItem>
-  );
+  )
 }
 
 /* =========================================================
@@ -314,12 +294,12 @@ function checkIsActive(href: string, item: NavItem, mainNav = false) {
     /* Exact URL */
     href === item.url ||
     /* URL without query */
-    href.split("?")[0] === item.url ||
+    href.split('?')[0] === item.url ||
     /* Sub menu active */
     !!item?.items?.filter((i) => i.url === href).length ||
     /* Main navigation */
     (mainNav &&
-      href.split("/")[1] !== "" &&
-      href.split("/")[1] === item?.url?.split("/")[1])
-  );
+      href.split('/')[1] !== '' &&
+      href.split('/')[1] === item?.url?.split('/')[1])
+  )
 }

@@ -18,16 +18,18 @@ vi.mock('react-i18next', () => ({
         'tasksPage.import.validationRequired': 'Please upload a file.',
         'tasksPage.import.validationFormat': 'Please upload a CSV file.',
         'tasksPage.import.success': 'You have imported the following file:',
-      })[key as keyof {
-        'tasksPage.import.title': string
-        'tasksPage.import.description': string
-        'tasksPage.import.file': string
-        'tasksPage.import.close': string
-        'tasksPage.import.import': string
-        'tasksPage.import.validationRequired': string
-        'tasksPage.import.validationFormat': string
-        'tasksPage.import.success': string
-      }] ?? key,
+      })[
+        key as keyof {
+          'tasksPage.import.title': string
+          'tasksPage.import.description': string
+          'tasksPage.import.file': string
+          'tasksPage.import.close': string
+          'tasksPage.import.import': string
+          'tasksPage.import.validationRequired': string
+          'tasksPage.import.validationFormat': string
+          'tasksPage.import.success': string
+        }
+      ] ?? key,
   }),
 }))
 
@@ -39,10 +41,16 @@ describe('TasksImportDialog', () => {
       <TasksImportDialog open onOpenChange={vi.fn()} />
     )
 
-    await expect.element(screen.getByRole('heading', { name: 'Import Tasks' })).toBeInTheDocument()
-    await expect.element(screen.getByText('Import tasks quickly from a CSV file.')).toBeInTheDocument()
+    await expect
+      .element(screen.getByRole('heading', { name: 'Import Tasks' }))
+      .toBeInTheDocument()
+    await expect
+      .element(screen.getByText('Import tasks quickly from a CSV file.'))
+      .toBeInTheDocument()
     await expect.element(screen.getByLabelText('File')).toBeInTheDocument()
-    await expect.element(screen.getByRole('button', { name: 'Import' })).toBeInTheDocument()
+    await expect
+      .element(screen.getByRole('button', { name: 'Import' }))
+      .toBeInTheDocument()
   })
 
   it('shows validation when submitting without a file', async () => {
@@ -53,7 +61,9 @@ describe('TasksImportDialog', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Import' }))
 
-    await expect.element(screen.getByText('Please upload a file.')).toBeInTheDocument()
+    await expect
+      .element(screen.getByText('Please upload a file.'))
+      .toBeInTheDocument()
     expect(onOpenChange).not.toHaveBeenCalled()
     expect(showSubmittedData).not.toHaveBeenCalled()
   })
@@ -80,15 +90,21 @@ describe('TasksImportDialog', () => {
       const [open, setOpen] = useState(true)
       return (
         <>
-          <button type='button' onClick={() => setOpen(true)}>Reopen</button>
+          <button type='button' onClick={() => setOpen(true)}>
+            Reopen
+          </button>
           <TasksImportDialog open={open} onOpenChange={setOpen} />
         </>
       )
     }
     const screen = await render(<Harness />)
 
-    await userEvent.click(screen.getByRole('dialog').getByRole('button', { name: 'Close' }).nth(0))
-    await expect.element(screen.getByRole('button', { name: 'Reopen' })).toBeInTheDocument()
+    await userEvent.click(
+      screen.getByRole('dialog').getByRole('button', { name: 'Close' }).nth(0)
+    )
+    await expect
+      .element(screen.getByRole('button', { name: 'Reopen' }))
+      .toBeInTheDocument()
     expect(showSubmittedData).not.toHaveBeenCalled()
   })
 })

@@ -1,7 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { ArrowLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-
 import { AuthLayout } from '../auth-layout'
 import { ForgotPasswordForm } from './components/forgot-password-form'
 
@@ -20,10 +19,10 @@ export function ForgotPassword() {
         </Link>
 
         <div className='mb-7'>
-          <p className='mb-3 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground'>
+          <p className='mb-3 text-xs font-medium tracking-widest text-muted-foreground uppercase'>
             {t('passwordReset.eyebrow')}
           </p>
-          <h1 className='text-2xl font-semibold tracking-tight sm:text-[1.75rem]'>
+          <h1 className='text-2xl font-semibold tracking-tight sm:text-3xl'>
             {t('passwordReset.request.title')}
           </h1>
           <p className='mt-2 text-sm leading-6 text-muted-foreground'>
@@ -33,7 +32,7 @@ export function ForgotPassword() {
 
         <ForgotPasswordForm />
 
-        <p className='mt-7 border-t border-white/[0.08] pt-5 text-xs leading-5 text-muted-foreground'>
+        <p className='mt-7 border-t pt-5 text-xs leading-5 text-muted-foreground'>
           {t('passwordReset.securityNote')}
         </p>
       </div>

@@ -1,15 +1,21 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
-import { AccountForm } from './account-form'
 import { getCurrentUser, updateCurrentUserProfile } from '@/lib/api-auth'
+import { AccountForm } from './account-form'
 
 vi.mock('@/lib/api-auth', () => ({
   getCurrentUser: vi.fn(),
   updateCurrentUserProfile: vi.fn(),
 }))
 vi.mock('@/stores/auth-store', () => ({
-  useAuthStore: (selector: (state: { auth: { user: { accountNo: string; email: string; role: string[]; exp: number } } }) => unknown) =>
+  useAuthStore: (
+    selector: (state: {
+      auth: {
+        user: { accountNo: string; email: string; role: string[]; exp: number }
+      }
+    }) => unknown
+  ) =>
     selector({
       auth: {
         user: {
@@ -30,11 +36,14 @@ vi.mock('react-i18next', () => {
     'settingsPage.account.email': 'Email',
     'settingsPage.account.profilePhoto': 'Profile photo',
     'settingsPage.account.chooseAvatar': 'Choose an avatar below.',
-    'settingsPage.account.avatarDescription': 'Your avatar appears in navigation.',
-    'settingsPage.account.profileNameHint': 'Use a name between 2 and 30 characters.',
+    'settingsPage.account.avatarDescription':
+      'Your avatar appears in navigation.',
+    'settingsPage.account.profileNameHint':
+      'Use a name between 2 and 30 characters.',
     'settingsPage.account.emailReadOnly': 'Email cannot be edited.',
     'settingsPage.account.profileLoadError': 'Could not load profile.',
-    'settingsPage.account.profileNameError': 'Name must contain between 2 and 30 characters.',
+    'settingsPage.account.profileNameError':
+      'Name must contain between 2 and 30 characters.',
     'settingsPage.account.profileSaveError': 'Could not save profile.',
     'settingsPage.account.profileSaveSuccess': 'Profile updated successfully.',
     'settingsPage.account.saving': 'Saving...',
@@ -72,7 +81,9 @@ describe('AccountForm', () => {
 
     await expect.element(nameInput).toHaveValue('Alam')
     await userEvent.fill(nameInput, 'Alam RPL')
-    await userEvent.click(screen.getByRole('button', { name: 'Adventurer' }).nth(0))
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Adventurer' }).nth(0)
+    )
     // The component deliberately asks for confirmation before selecting a preset.
     await userEvent.click(screen.getByRole('button', { name: 'Yes' }))
     await userEvent.click(screen.getByRole('button', { name: 'Save Changes' }))
@@ -83,6 +94,8 @@ describe('AccountForm', () => {
         avatar: 'preset:adventurer',
       })
     })
-    await expect.element(screen.getByRole('status')).toHaveTextContent('Profile updated successfully.')
+    await expect
+      .element(screen.getByRole('status'))
+      .toHaveTextContent('Profile updated successfully.')
   })
 })

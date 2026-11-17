@@ -71,15 +71,21 @@ async function readJson(response: Response) {
 export const useDesktopRuntime = create<DesktopRuntimeState>()((set, get) => ({
   ...initial,
 
-  setUrl: (url) => set({ url, connected: false, desktopControl: 'unknown', problem: null }),
-  setToken: (token) => set({ token, connected: false, desktopControl: 'unknown', problem: null }),
+  setUrl: (url) =>
+    set({ url, connected: false, desktopControl: 'unknown', problem: null }),
+  setToken: (token) =>
+    set({ token, connected: false, desktopControl: 'unknown', problem: null }),
   selectLocalWorkspace: (id) => set({ localWorkspaceId: id }),
 
   connect: async () => {
     const base = normalize(get().url)
     const token = get().token.trim()
     if (!base || !token) {
-      set({ problem: 'missing-credentials', problemDetail: '', connected: false })
+      set({
+        problem: 'missing-credentials',
+        problemDetail: '',
+        connected: false,
+      })
       return
     }
     set({ connecting: true, problem: null, problemDetail: '' })
@@ -88,32 +94,57 @@ export const useDesktopRuntime = create<DesktopRuntimeState>()((set, get) => ({
     try {
       await fetch(`${base}/health`)
     } catch {
-      set({ connecting: false, connected: false, desktopControl: 'unknown', problem: 'unreachable', problemDetail: '' })
+      set({
+        connecting: false,
+        connected: false,
+        desktopControl: 'unknown',
+        problem: 'unreachable',
+        problemDetail: '',
+      })
       return
     }
 
     try {
-      const response = await fetch(`${base}/api/workspaces`, { headers: { Authorization: `Bearer ${token}` } })
+      const response = await fetch(`${base}/api/workspaces`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       const data = await readJson(response)
       if (response.status === 401 || response.status === 403) {
-        set({ connecting: false, connected: false, problem: 'unauthorized', problemDetail: '' })
+        set({
+          connecting: false,
+          connected: false,
+          problem: 'unauthorized',
+          problemDetail: '',
+        })
         return
       }
       if (!response.ok) {
-        set({ connecting: false, connected: false, problem: 'http-error', problemDetail: String(data.error ?? `HTTP ${response.status}`) })
+        set({
+          connecting: false,
+          connected: false,
+          problem: 'http-error',
+          problemDetail: String(data.error ?? `HTTP ${response.status}`),
+        })
         return
       }
-      const workspaces = Array.isArray(data.workspaces) ? (data.workspaces as LocalRunnerWorkspace[]) : []
+      const workspaces = Array.isArray(data.workspaces)
+        ? (data.workspaces as LocalRunnerWorkspace[])
+        : []
 
       // Desktop control is a separate switch on the runner; ask it, but a refusal does not undo the connection.
       let desktopControl: DesktopControl = 'unknown'
       let deviceName = ''
       try {
-        const status = await fetch(`${base}/api/desktop/status`, { headers: { Authorization: `Bearer ${token}` } })
+        const status = await fetch(`${base}/api/desktop/status`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
         if (status.ok) {
           desktopControl = 'available'
           const body = await readJson(status)
-          deviceName = String((body.data as { device_name?: string } | undefined)?.device_name ?? '')
+          deviceName = String(
+            (body.data as { device_name?: string } | undefined)?.device_name ??
+              ''
+          )
         } else {
           desktopControl = 'disabled'
         }
@@ -130,10 +161,19 @@ export const useDesktopRuntime = create<DesktopRuntimeState>()((set, get) => ({
         deviceName,
         stopped: false,
         localWorkspaces: workspaces,
-        localWorkspaceId: workspaces.some((workspace) => workspace.id === state.localWorkspaceId) ? state.localWorkspaceId : workspaces[0]?.id ?? '',
+        localWorkspaceId: workspaces.some(
+          (workspace) => workspace.id === state.localWorkspaceId
+        )
+          ? state.localWorkspaceId
+          : (workspaces[0]?.id ?? ''),
       }))
     } catch (error) {
-      set({ connecting: false, connected: false, problem: 'unknown', problemDetail: error instanceof Error ? error.message : '' })
+      set({
+        connecting: false,
+        connected: false,
+        problem: 'unknown',
+        problemDetail: error instanceof Error ? error.message : '',
+      })
     }
   },
 
@@ -152,20 +192,36 @@ export const useDesktopRuntime = create<DesktopRuntimeState>()((set, get) => ({
     try {
       const response = await fetch(`${base}/api/workspaces/clone`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ url: target }),
       })
       const data = await readJson(response)
       if (!response.ok) throw new Error(String(data.error ?? 'clone-failed'))
-      const listResponse = await fetch(`${base}/api/workspaces`, { headers: { Authorization: `Bearer ${token}` } })
+      const listResponse = await fetch(`${base}/api/workspaces`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       const list = await readJson(listResponse)
       if (!listResponse.ok) throw new Error(String(list.error ?? 'list-failed'))
-      const workspaces = Array.isArray(list.workspaces) ? (list.workspaces as LocalRunnerWorkspace[]) : []
-      const created = (data.workspace as { id?: string; name?: string } | undefined) ?? {}
-      set({ cloning: false, localWorkspaces: workspaces, localWorkspaceId: String(created.id || workspaces[0]?.id || ''), cloneMessage: `ok:${created.name || target}` })
+      const workspaces = Array.isArray(list.workspaces)
+        ? (list.workspaces as LocalRunnerWorkspace[])
+        : []
+      const created =
+        (data.workspace as { id?: string; name?: string } | undefined) ?? {}
+      set({
+        cloning: false,
+        localWorkspaces: workspaces,
+        localWorkspaceId: String(created.id || workspaces[0]?.id || ''),
+        cloneMessage: `ok:${created.name || target}`,
+      })
       return true
     } catch (error) {
-      set({ cloning: false, cloneMessage: `error:${error instanceof Error ? error.message : 'clone-failed'}` })
+      set({
+        cloning: false,
+        cloneMessage: `error:${error instanceof Error ? error.message : 'clone-failed'}`,
+      })
       return false
     }
   },

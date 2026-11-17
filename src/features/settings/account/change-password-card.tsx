@@ -1,10 +1,9 @@
 import { useState, type FormEvent } from 'react'
 import { Eye, EyeOff, KeyRound, LoaderCircle, ShieldCheck } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-
+import { changeCurrentUserPassword } from '@/lib/api-auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { changeCurrentUserPassword } from '@/lib/api-auth'
 
 type Notice = { kind: 'success' | 'error'; text: string } | null
 
@@ -39,7 +38,10 @@ export function ChangePasswordCard() {
 
   const mismatch = confirmPassword.length > 0 && newPassword !== confirmPassword
   const newPasswordInvalid = newPassword.length > 0 && newPassword.length < 8
-  const samePassword = currentPassword.length > 0 && newPassword.length > 0 && currentPassword === newPassword
+  const samePassword =
+    currentPassword.length > 0 &&
+    newPassword.length > 0 &&
+    currentPassword === newPassword
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -92,7 +94,9 @@ export function ChangePasswordCard() {
   ) {
     return (
       <div className='space-y-2'>
-        <label htmlFor={id} className='text-sm font-medium'>{label}</label>
+        <label htmlFor={id} className='text-sm font-medium'>
+          {label}
+        </label>
         <div className='relative'>
           <Input
             id={id}
@@ -109,11 +113,19 @@ export function ChangePasswordCard() {
           <button
             type='button'
             onClick={toggleVisible}
-            aria-label={visible ? (t('changePassword.hidePassword')) : (t('changePassword.showPassword'))}
+            aria-label={
+              visible
+                ? t('changePassword.hidePassword')
+                : t('changePassword.showPassword')
+            }
             className='absolute inset-y-0 end-0 flex items-center px-3 text-muted-foreground hover:text-foreground'
             disabled={saving}
           >
-            {visible ? <EyeOff className='size-4' /> : <Eye className='size-4' />}
+            {visible ? (
+              <EyeOff className='size-4' />
+            ) : (
+              <Eye className='size-4' />
+            )}
           </button>
         </div>
       </div>
@@ -133,22 +145,91 @@ export function ChangePasswordCard() {
       </div>
 
       <form onSubmit={onSubmit} className='space-y-4'>
-        {passwordField('current-password', copy.current, currentPassword, copy.currentPlaceholder, showCurrent, () => setShowCurrent((value) => !value), setCurrentPassword, 'current-password')}
-        {passwordField('new-password', copy.next, newPassword, copy.nextPlaceholder, showNew, () => setShowNew((value) => !value), setNewPassword, 'new-password', 8)}
-        {passwordField('confirm-new-password', copy.confirm, confirmPassword, copy.confirmPlaceholder, showConfirm, () => setShowConfirm((value) => !value), setConfirmPassword, 'new-password', 8)}
+        {passwordField(
+          'current-password',
+          copy.current,
+          currentPassword,
+          copy.currentPlaceholder,
+          showCurrent,
+          () => setShowCurrent((value) => !value),
+          setCurrentPassword,
+          'current-password'
+        )}
+        {passwordField(
+          'new-password',
+          copy.next,
+          newPassword,
+          copy.nextPlaceholder,
+          showNew,
+          () => setShowNew((value) => !value),
+          setNewPassword,
+          'new-password',
+          8
+        )}
+        {passwordField(
+          'confirm-new-password',
+          copy.confirm,
+          confirmPassword,
+          copy.confirmPlaceholder,
+          showConfirm,
+          () => setShowConfirm((value) => !value),
+          setConfirmPassword,
+          'new-password',
+          8
+        )}
 
-        {mismatch && <p role='alert' className='text-sm text-destructive'>{copy.mismatch}</p>}
-        {newPasswordInvalid && <p role='alert' className='text-sm text-destructive'>{copy.minLength}</p>}
-        {samePassword && <p role='alert' className='text-sm text-destructive'>{copy.same}</p>}
+        {mismatch && (
+          <p role='alert' className='text-sm text-destructive'>
+            {copy.mismatch}
+          </p>
+        )}
+        {newPasswordInvalid && (
+          <p role='alert' className='text-sm text-destructive'>
+            {copy.minLength}
+          </p>
+        )}
+        {samePassword && (
+          <p role='alert' className='text-sm text-destructive'>
+            {copy.same}
+          </p>
+        )}
         {notice && (
-          <p role={notice.kind === 'error' ? 'alert' : 'status'} className={notice.kind === 'success' ? 'text-sm text-emerald-600' : 'text-sm text-destructive'}>
+          <p
+            role={notice.kind === 'error' ? 'alert' : 'status'}
+            className={
+              notice.kind === 'success'
+                ? 'text-sm text-emerald-600'
+                : 'text-sm text-destructive'
+            }
+          >
             {notice.text}
           </p>
         )}
 
         <div className='flex justify-end'>
-          <Button type='submit' disabled={saving || !currentPassword || !newPassword || !confirmPassword || mismatch || newPasswordInvalid || samePassword}>
-            {saving ? <><LoaderCircle className='me-2 size-4 animate-spin' />{copy.saving}</> : <><ShieldCheck className='me-2 size-4' />{copy.save}</>}
+          <Button
+            type='submit'
+            disabled={
+              saving ||
+              !currentPassword ||
+              !newPassword ||
+              !confirmPassword ||
+              mismatch ||
+              newPasswordInvalid ||
+              samePassword
+            }
+          >
+            {saving ? (
+              <>
+                <LoaderCircle className='me-2 size-4 animate-spin' />
+                {copy.saving}
+              </>
+            ) : (
+              <>
+                <ShieldCheck className='me-2 size-4' />
+                {copy.save}
+              </>
+            )}
           </Button>
         </div>
       </form>

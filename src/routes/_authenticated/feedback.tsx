@@ -1,4 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { FeedbackPage } from '@/features/feedback'
 
-export const Route = createFileRoute('/_authenticated/feedback')({ component: FeedbackPage })
+export const Route = createFileRoute('/_authenticated/feedback')({
+  component: FeedbackPage,
+})

@@ -9,11 +9,9 @@ import {
   Sparkles,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-
-import useDialogState from '@/hooks/use-dialog-state'
 import { useAuthStore } from '@/stores/auth-store'
 import { getAvatarSrc } from '@/lib/avatar-presets'
-
+import useDialogState from '@/hooks/use-dialog-state'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   DropdownMenu,
@@ -24,14 +22,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
-
 import { SignOutDialog } from '@/components/sign-out-dialog'
 
 export function NavUser() {
@@ -54,12 +50,18 @@ export function NavUser() {
       setCustomAvatar(typeof detail === 'string' ? detail : null)
     }
     window.addEventListener('agentic-ai-avatar-updated', handleAvatarUpdate)
-    return () => window.removeEventListener('agentic-ai-avatar-updated', handleAvatarUpdate)
+    return () =>
+      window.removeEventListener(
+        'agentic-ai-avatar-updated',
+        handleAvatarUpdate
+      )
   }, [avatarStorageKey])
 
   const name = user?.name || 'User'
   const email = user?.email || 'No email'
-  const avatar = customAvatar || getAvatarSrc(user?.avatar, user?.accountNo || user?.email || name)
+  const avatar =
+    customAvatar ||
+    getAvatarSrc(user?.avatar, user?.accountNo || user?.email || name)
 
   const initials = name
     .trim()
@@ -81,10 +83,7 @@ export function NavUser() {
               >
                 {/* Avatar */}
                 <Avatar className='h-8 w-8 rounded-lg'>
-                  <AvatarImage
-                    src={avatar}
-                    alt={name}
-                  />
+                  <AvatarImage src={avatar} alt={name} />
 
                   <AvatarFallback className='rounded-lg'>
                     {initials || 'U'}
@@ -93,13 +92,9 @@ export function NavUser() {
 
                 {/* User information */}
                 <div className='grid flex-1 text-start text-sm leading-tight'>
-                  <span className='truncate font-semibold'>
-                    {name}
-                  </span>
+                  <span className='truncate font-semibold'>{name}</span>
 
-                  <span className='truncate text-xs'>
-                    {email}
-                  </span>
+                  <span className='truncate text-xs'>{email}</span>
                 </div>
 
                 <ChevronsUpDown className='ms-auto size-4' />
@@ -116,10 +111,7 @@ export function NavUser() {
               <DropdownMenuLabel className='p-0 font-normal'>
                 <div className='flex items-center gap-2 px-1 py-1.5 text-start text-sm'>
                   <Avatar className='h-8 w-8 rounded-lg'>
-                    <AvatarImage
-                      src={avatar}
-                      alt={name}
-                    />
+                    <AvatarImage src={avatar} alt={name} />
 
                     <AvatarFallback className='rounded-lg'>
                       {initials || 'U'}
@@ -127,13 +119,9 @@ export function NavUser() {
                   </Avatar>
 
                   <div className='grid flex-1 text-start text-sm leading-tight'>
-                    <span className='truncate font-semibold'>
-                      {name}
-                    </span>
+                    <span className='truncate font-semibold'>{name}</span>
 
-                    <span className='truncate text-xs'>
-                      {email}
-                    </span>
+                    <span className='truncate text-xs'>{email}</span>
                   </div>
                 </div>
               </DropdownMenuLabel>
@@ -191,10 +179,7 @@ export function NavUser() {
         </SidebarMenuItem>
       </SidebarMenu>
 
-      <SignOutDialog
-        open={!!open}
-        onOpenChange={setOpen}
-      />
+      <SignOutDialog open={!!open} onOpenChange={setOpen} />
     </>
   )
 }

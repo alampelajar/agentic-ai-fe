@@ -9,7 +9,7 @@ export function NotFoundError() {
   return (
     <div className='h-svh'>
       <div className='m-auto flex h-full w-full flex-col items-center justify-center gap-2'>
-        <h1 className='text-[7rem] leading-tight font-bold'>404</h1>
+        <h1 className='text-8xl leading-tight font-bold'>404</h1>
         <span className='font-medium'>{t('errorPages.e404.title')}</span>
         <p className='text-center text-muted-foreground'>
           {t('errorPages.e404.line1')} <br />
@@ -19,7 +19,9 @@ export function NotFoundError() {
           <Button variant='outline' onClick={() => history.go(-1)}>
             {t('errorPages.goBack')}
           </Button>
-          <Button onClick={() => navigate({ to: '/' })}>{t('errorPages.backHome')}</Button>
+          <Button onClick={() => navigate({ to: '/' })}>
+            {t('errorPages.backHome')}
+          </Button>
         </div>
       </div>
     </div>

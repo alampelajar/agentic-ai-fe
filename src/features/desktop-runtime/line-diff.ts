@@ -22,18 +22,24 @@ export function diffLines(before: string, after: string): DiffLine[] | null {
   }
   const middleA = a.slice(start, endA)
   const middleB = b.slice(start, endB)
-  if (middleA.length > MAX_DIFF_LINES || middleB.length > MAX_DIFF_LINES) return null
+  if (middleA.length > MAX_DIFF_LINES || middleB.length > MAX_DIFF_LINES)
+    return null
 
   const rows = middleA.length + 1
   const cols = middleB.length + 1
   const table = new Uint32Array(rows * cols)
   for (let i = middleA.length - 1; i >= 0; i--) {
     for (let j = middleB.length - 1; j >= 0; j--) {
-      table[i * cols + j] = middleA[i] === middleB[j] ? table[(i + 1) * cols + j + 1] + 1 : Math.max(table[(i + 1) * cols + j], table[i * cols + j + 1])
+      table[i * cols + j] =
+        middleA[i] === middleB[j]
+          ? table[(i + 1) * cols + j + 1] + 1
+          : Math.max(table[(i + 1) * cols + j], table[i * cols + j + 1])
     }
   }
 
-  const result: DiffLine[] = a.slice(0, start).map((text) => ({ type: 'same', text }))
+  const result: DiffLine[] = a
+    .slice(0, start)
+    .map((text) => ({ type: 'same', text }))
   let i = 0
   let j = 0
   while (i < middleA.length && j < middleB.length) {

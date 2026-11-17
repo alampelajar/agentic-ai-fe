@@ -1,8 +1,8 @@
+import i18n from '@/i18n'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, type RenderResult } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
 import { SearchProvider } from '@/context/search-provider'
-import i18n from '@/i18n'
 
 const COMMAND_MENU_PLACEHOLDER = 'Type a command or search...'
 
@@ -25,12 +25,24 @@ async function renderWithSearchProvider() {
   return await render(<SearchProvider>{null}</SearchProvider>)
 }
 
-async function openCommandPalette(screen: RenderResult, modifier: ShortcutModifier = 'Control') {
-  await vi.waitFor(async () => {
-    const isOpen = document.querySelector('[placeholder="' + COMMAND_MENU_PLACEHOLDER + '"]') !== null
-    if (!isOpen) await userEvent.keyboard('{' + modifier + '>}k{/' + modifier + '}')
-    await expect.element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER)).toBeInTheDocument()
-  }, { interval: 50, timeout: 5000 })
+async function openCommandPalette(
+  screen: RenderResult,
+  modifier: ShortcutModifier = 'Control'
+) {
+  await vi.waitFor(
+    async () => {
+      const isOpen =
+        document.querySelector(
+          '[placeholder="' + COMMAND_MENU_PLACEHOLDER + '"]'
+        ) !== null
+      if (!isOpen)
+        await userEvent.keyboard('{' + modifier + '>}k{/' + modifier + '}')
+      await expect
+        .element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER))
+        .toBeInTheDocument()
+    },
+    { interval: 50, timeout: 5000 }
+  )
 }
 
 // These tests read the English text.
@@ -45,7 +57,9 @@ describe('SearchProvider and CommandMenu', () => {
     const screen = await renderWithSearchProvider()
     await openCommandPalette(screen)
 
-    await expect.element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER)).toBeInTheDocument()
+    await expect
+      .element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER))
+      .toBeInTheDocument()
     await expect.element(screen.getByText('Theme')).toBeInTheDocument()
     await expect.element(screen.getByText('Light')).toBeInTheDocument()
     await expect.element(screen.getByText('Dark')).toBeInTheDocument()
@@ -58,10 +72,16 @@ describe('SearchProvider and CommandMenu', () => {
     try {
       const screen = await renderWithSearchProvider()
       await userEvent.keyboard('{Control>}k{/Control}')
-      await expect.element(screen.getByPlaceholder('Ketik perintah atau cari...')).toBeInTheDocument()
+      await expect
+        .element(screen.getByPlaceholder('Ketik perintah atau cari...'))
+        .toBeInTheDocument()
       await expect.element(screen.getByText('Ringkasan')).toBeInTheDocument()
-      await expect.element(screen.getByText('Website', { exact: true })).toBeInTheDocument()
-      await expect.element(screen.getByText('aiOverview')).not.toBeInTheDocument()
+      await expect
+        .element(screen.getByText('Website', { exact: true }))
+        .toBeInTheDocument()
+      await expect
+        .element(screen.getByText('aiOverview'))
+        .not.toBeInTheDocument()
     } finally {
       await i18n.changeLanguage('en')
     }
@@ -69,16 +89,25 @@ describe('SearchProvider and CommandMenu', () => {
 
   it('does not show the dialog content when search is closed', async () => {
     const screen = await renderWithSearchProvider()
-    await expect.element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER)).not.toBeInTheDocument()
+    await expect
+      .element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER))
+      .not.toBeInTheDocument()
   })
 
-  it.each([['Ctrl', 'Control'], ['Cmd', 'Meta']] as const)(
+  it.each([
+    ['Ctrl', 'Control'],
+    ['Cmd', 'Meta'],
+  ] as const)(
     'opens the command menu when %s + K is pressed',
     async (_label, modifier) => {
       const screen = await renderWithSearchProvider()
-      await expect.element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER)).not.toBeInTheDocument()
+      await expect
+        .element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER))
+        .not.toBeInTheDocument()
       await openCommandPalette(screen, modifier)
-      await expect.element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER)).toBeInTheDocument()
+      await expect
+        .element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER))
+        .toBeInTheDocument()
     }
   )
 
@@ -87,15 +116,21 @@ describe('SearchProvider and CommandMenu', () => {
     await openCommandPalette(screen)
     await userEvent.click(screen.getByText('Make a website'))
     expect(mocks.navigate).toHaveBeenCalledWith({ to: '/sites' })
-    await expect.element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER)).not.toBeInTheDocument()
+    await expect
+      .element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER))
+      .not.toBeInTheDocument()
   })
 
   it('navigates for nested sidebar items (group with sub-items)', async () => {
     const screen = await renderWithSearchProvider()
     await openCommandPalette(screen)
-    await userEvent.click(screen.getByRole('option', { name: /settings.*account/i }))
+    await userEvent.click(
+      screen.getByRole('option', { name: /settings.*account/i })
+    )
     expect(mocks.navigate).toHaveBeenCalledWith({ to: '/settings/account' })
-    await expect.element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER)).not.toBeInTheDocument()
+    await expect
+      .element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER))
+      .not.toBeInTheDocument()
   })
 
   it('applies theme and closes the palette when a theme command is chosen', async () => {
@@ -103,13 +138,20 @@ describe('SearchProvider and CommandMenu', () => {
     await openCommandPalette(screen)
     await userEvent.click(screen.getByText('Dark'))
     expect(mocks.setTheme).toHaveBeenCalledWith('dark')
-    await expect.element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER)).not.toBeInTheDocument()
+    await expect
+      .element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER))
+      .not.toBeInTheDocument()
   })
 
   it('shows empty state when the filter matches nothing', async () => {
     const screen = await renderWithSearchProvider()
     await openCommandPalette(screen)
-    await userEvent.fill(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER), 'zzzz-no-match-xxxx')
-    await expect.element(screen.getByText('No results found.')).toBeInTheDocument()
+    await userEvent.fill(
+      screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER),
+      'zzzz-no-match-xxxx'
+    )
+    await expect
+      .element(screen.getByText('No results found.'))
+      .toBeInTheDocument()
   })
 })

@@ -14,54 +14,32 @@ interface MeResponse {
   user?: UserResponse
 }
 
-function updateAuthUser(
-  user: UserResponse
-) {
-  const currentUser =
-    useAuthStore.getState().auth.user
+function updateAuthUser(user: UserResponse) {
+  const currentUser = useAuthStore.getState().auth.user
 
   useAuthStore.getState().auth.setUser({
     accountNo: `USER_${user.id}`,
     email: user.email,
-    role:
-      currentUser?.role ?? ['user'],
-    exp:
-      currentUser?.exp ??
-      Date.now() +
-        15 * 60 * 1000,
+    role: currentUser?.role ?? ['user'],
+    exp: currentUser?.exp ?? Date.now() + 15 * 60 * 1000,
     name: user.name,
-    avatar:
-      user.avatar ||
-      currentUser?.avatar ||
-      '',
+    avatar: user.avatar || currentUser?.avatar || '',
   })
 }
 
 export async function getCurrentUser() {
-  const accessToken =
-    useAuthStore
-      .getState()
-      .auth.accessToken
+  const accessToken = useAuthStore.getState().auth.accessToken
 
   if (!accessToken) {
     return null
   }
 
-  const response =
-    await apiFetch('/api/me')
+  const response = await apiFetch('/api/me')
 
-  const result: MeResponse =
-    await response.json()
+  const result: MeResponse = await response.json()
 
-  if (
-    !response.ok ||
-    !result.ok ||
-    !result.user
-  ) {
-    throw new Error(
-      result.message ||
-        'Gagal mengambil data pengguna.'
-    )
+  if (!response.ok || !result.ok || !result.user) {
+    throw new Error(result.message || 'Gagal mengambil data pengguna.')
   }
 
   updateAuthUser(result.user)
@@ -74,7 +52,9 @@ export interface UpdateProfileInput {
   avatar: string
 }
 
-export async function updateCurrentUserProfile(input: UpdateProfileInput): Promise<UserResponse> {
+export async function updateCurrentUserProfile(
+  input: UpdateProfileInput
+): Promise<UserResponse> {
   const response = await apiFetch('/api/me', {
     method: 'PUT',
     body: JSON.stringify(input),
@@ -88,12 +68,16 @@ export async function updateCurrentUserProfile(input: UpdateProfileInput): Promi
   updateAuthUser(result.user)
   return result.user
 }
-export async function verifyCurrentUserPasswordForDeletion(password: string): Promise<void> {
+export async function verifyCurrentUserPasswordForDeletion(
+  password: string
+): Promise<void> {
   const response = await apiFetch('/api/me/verify-delete-password', {
     method: 'POST',
     body: JSON.stringify({ password }),
   })
-  const result: { ok?: boolean; message?: string } = await response.json().catch(() => ({}))
+  const result: { ok?: boolean; message?: string } = await response
+    .json()
+    .catch(() => ({}))
 
   if (!response.ok || !result.ok) {
     throw new Error(result.message || 'Gagal memverifikasi kata sandi.')
@@ -102,22 +86,32 @@ export async function verifyCurrentUserPasswordForDeletion(password: string): Pr
 
 /** Accounts that signed in with Google have no known password: they confirm with a code e-mailed to them. */
 export async function requestAccountDeletionCode(): Promise<void> {
-  const response = await apiFetch('/api/me/delete/request', { method: 'POST', body: JSON.stringify({}) })
-  const result: { ok?: boolean; message?: string } = await response.json().catch(() => ({}))
+  const response = await apiFetch('/api/me/delete/request', {
+    method: 'POST',
+    body: JSON.stringify({}),
+  })
+  const result: { ok?: boolean; message?: string } = await response
+    .json()
+    .catch(() => ({}))
 
   if (!response.ok || !result.ok) {
     throw new Error(result.message || 'Gagal mengirim kode verifikasi.')
   }
 }
 
-export type AccountDeletionProof = { password: string; otp?: undefined } | { otp: string; password?: undefined }
+export type AccountDeletionProof =
+  { password: string; otp?: undefined } | { otp: string; password?: undefined }
 
-export async function deleteCurrentUserAccount(proof: AccountDeletionProof): Promise<void> {
+export async function deleteCurrentUserAccount(
+  proof: AccountDeletionProof
+): Promise<void> {
   const response = await apiFetch('/api/me', {
     method: 'DELETE',
     body: JSON.stringify(proof),
   })
-  const result: { ok?: boolean; message?: string } = await response.json().catch(() => ({}))
+  const result: { ok?: boolean; message?: string } = await response
+    .json()
+    .catch(() => ({}))
 
   if (!response.ok || !result.ok) {
     throw new Error(result.message || 'Gagal menghapus akun.')
@@ -130,12 +124,16 @@ export interface ChangePasswordInput {
   confirm_password: string
 }
 
-export async function changeCurrentUserPassword(input: ChangePasswordInput): Promise<void> {
+export async function changeCurrentUserPassword(
+  input: ChangePasswordInput
+): Promise<void> {
   const response = await apiFetch('/api/me/password', {
     method: 'PUT',
     body: JSON.stringify(input),
   })
-  const result: { ok?: boolean; message?: string } = await response.json().catch(() => ({}))
+  const result: { ok?: boolean; message?: string } = await response
+    .json()
+    .catch(() => ({}))
 
   if (!response.ok || !result.ok) {
     throw new Error(result.message || 'Gagal mengubah password.')

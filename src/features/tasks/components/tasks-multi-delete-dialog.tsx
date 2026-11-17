@@ -1,9 +1,9 @@
 'use client'
 
-import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 import { type Table } from '@tanstack/react-table'
 import { AlertTriangle } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { sleep } from '@/lib/utils'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -31,7 +31,9 @@ export function TasksMultiDeleteDialog<TData>({
 
   const handleDelete = () => {
     if (value.trim() !== CONFIRM_WORD) {
-      toast.error(t('tasksPage.multiDelete.typeToConfirm', { word: CONFIRM_WORD }))
+      toast.error(
+        t('tasksPage.multiDelete.typeToConfirm', { word: CONFIRM_WORD })
+      )
       return
     }
 
@@ -42,7 +44,9 @@ export function TasksMultiDeleteDialog<TData>({
       success: () => {
         setValue('')
         table.resetRowSelection()
-        return t('tasksPage.multiDelete.deleted', { count: selectedRows.length })
+        return t('tasksPage.multiDelete.deleted', {
+          count: selectedRows.length,
+        })
       },
       error: t('tasksPage.multiDelete.error'),
     })
@@ -78,11 +82,15 @@ export function TasksMultiDeleteDialog<TData>({
           </p>
 
           <Label className='my-4 flex flex-col items-start gap-1.5'>
-            <span className=''>{t('tasksPage.multiDelete.confirmLabel', { word: CONFIRM_WORD })}</span>
+            <span className=''>
+              {t('tasksPage.multiDelete.confirmLabel', { word: CONFIRM_WORD })}
+            </span>
             <Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder={t('tasksPage.multiDelete.typeToConfirm', { word: CONFIRM_WORD })}
+              placeholder={t('tasksPage.multiDelete.typeToConfirm', {
+                word: CONFIRM_WORD,
+              })}
               autoFocus
             />
           </Label>

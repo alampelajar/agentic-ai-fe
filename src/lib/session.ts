@@ -1,5 +1,5 @@
-import { refreshAccessTokenOnce } from '@/lib/api'
 import { useAuthStore } from '@/stores/auth-store'
+import { refreshAccessTokenOnce } from '@/lib/api'
 
 /**
  * Whether the person is still signed in, renewing the session when needed.

@@ -1,7 +1,7 @@
-import { useTranslation } from 'react-i18next'
 import React from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { ArrowRight, ChevronRight, Laptop, Moon, Sun } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useSearch } from '@/context/search-provider'
 import { useTheme } from '@/context/theme-provider'
 import {
@@ -37,7 +37,10 @@ export function CommandMenu() {
         <ScrollArea type='hover' className='h-72 pe-1'>
           <CommandEmpty>{t('dataTable.noResults')}</CommandEmpty>
           {sidebarData.navGroups.map((group) => (
-            <CommandGroup key={group.title} heading={t(`navigation.groups.${group.title}`)}>
+            <CommandGroup
+              key={group.title}
+              heading={t(`navigation.groups.${group.title}`)}
+            >
               {group.items.map((navItem, i) => {
                 if (navItem.url)
                   return (

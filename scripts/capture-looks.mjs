@@ -11,26 +11,50 @@
 import { mkdir } from 'node:fs/promises'
 import { chromium } from 'playwright'
 
-const LOOKS = ['warm-editorial', 'bold-industrial', 'quiet-luxury', 'fresh-clinic', 'playful-pop', 'nordic-minimal', 'night-studio', 'heritage-serif', 'tropical-sun', 'tech-precise', 'handmade-craft', 'street-market']
+const LOOKS = [
+  'warm-editorial',
+  'bold-industrial',
+  'quiet-luxury',
+  'fresh-clinic',
+  'playful-pop',
+  'nordic-minimal',
+  'night-studio',
+  'heritage-serif',
+  'tropical-sun',
+  'tech-precise',
+  'handmade-craft',
+  'street-market',
+]
 const port = process.argv[2] ?? '8090'
 const previewDomain = process.env.SITE_PREVIEW_DOMAIN ?? 'preview.localhost'
 const scheme = process.env.SITE_PUBLIC_SCHEME ?? 'http'
-const origin = (look) => (scheme === 'https' ? `https://contoh-${look}.${previewDomain}/` : `http://contoh-${look}.${previewDomain}:${port}/`)
+const origin = (look) =>
+  scheme === 'https'
+    ? `https://contoh-${look}.${previewDomain}/`
+    : `http://contoh-${look}.${previewDomain}:${port}/`
 
 await mkdir('public/looks', { recursive: true })
 const browser = await chromium.launch()
 let taken = 0
 for (const look of LOOKS) {
   // *.localhost names reach this computer without DNS; the gateway picks the example by name.
-  const context = await browser.newContext({ viewport: { width: 1280, height: 800 } })
+  const context = await browser.newContext({
+    viewport: { width: 1280, height: 800 },
+  })
   const page = await context.newPage()
-  const response = await page.goto(origin(look), { waitUntil: 'networkidle' }).catch(() => null)
+  const response = await page
+    .goto(origin(look), { waitUntil: 'networkidle' })
+    .catch(() => null)
   if (!response || !response.ok()) {
     console.log(`${look.padEnd(16)} no example yet`)
     await context.close()
     continue
   }
-  await page.screenshot({ path: `public/looks/${look}.jpg`, type: 'jpeg', quality: 70 })
+  await page.screenshot({
+    path: `public/looks/${look}.jpg`,
+    type: 'jpeg',
+    quality: 70,
+  })
   console.log(`${look.padEnd(16)} saved`)
   taken++
   await context.close()

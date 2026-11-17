@@ -28,7 +28,7 @@ export function PasswordInput({
       <input
         type={showPassword ? 'text' : 'password'}
         className={cn(
-          'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50',
+          'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 dark:bg-input/30',
           inputClassName,
           // Last, so long passwords never run under the eye button.
           'pe-9'
@@ -45,7 +45,11 @@ export function PasswordInput({
         className='absolute inset-e-1 top-1/2 h-7 w-7 -translate-y-1/2 rounded-md text-muted-foreground'
         onClick={() => setShowPassword((prev) => !prev)}
       >
-        {showPassword ? <EyeOff className='size-4' /> : <Eye className='size-4' />}
+        {showPassword ? (
+          <EyeOff className='size-4' />
+        ) : (
+          <Eye className='size-4' />
+        )}
         <span className='sr-only'>
           {showPassword ? t('common.hidePassword') : t('common.showPassword')}
         </span>

@@ -86,7 +86,6 @@
   }
 }
 
-
 /* --------------------------------------------------------------------------
    Agentic workspace: flat surfaces, no glow. The layout lives in the components
    under src/features/ai; only the motion rule below is global.

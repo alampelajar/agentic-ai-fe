@@ -4,9 +4,9 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
 import { ArrowRight, Loader2 } from 'lucide-react'
-import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
-
+import { toast } from 'sonner'
+import { API_BASE_URL } from '@/lib/api-config'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -17,7 +17,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { API_BASE_URL } from '@/lib/api-config'
 
 type ForgotPasswordValues = {
   email: string
@@ -41,7 +40,7 @@ export function ForgotPasswordForm({
               : t('passwordReset.errors.emailInvalid'),
         }),
       }),
-    [t],
+    [t]
   )
 
   const form = useForm<ForgotPasswordValues>({
@@ -53,15 +52,18 @@ export function ForgotPasswordForm({
     setIsLoading(true)
 
     try {
-      const response = await fetch(API_BASE_URL + '/api/auth/forgot-password/request', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ email: data.email.trim() }),
-      })
+      const response = await fetch(
+        API_BASE_URL + '/api/auth/forgot-password/request',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({ email: data.email.trim() }),
+        }
+      )
       const result = await response.json().catch(() => ({}))
 
       if (!response.ok || result.ok !== true) {
@@ -82,7 +84,7 @@ export function ForgotPasswordForm({
       toast.error(
         error instanceof Error
           ? error.message
-          : t('passwordReset.errors.requestFailed'),
+          : t('passwordReset.errors.requestFailed')
       )
     } finally {
       setIsLoading(false)
@@ -109,7 +111,7 @@ export function ForgotPasswordForm({
                   type='email'
                   autoComplete='email'
                   placeholder={t('passwordReset.request.emailPlaceholder')}
-                  className='h-11 rounded-md border-white/10 bg-white/[0.035] px-3.5 text-sm shadow-none placeholder:text-zinc-600 focus-visible:ring-2 focus-visible:ring-primary/20'
+                  className='h-11 px-3.5'
                   {...field}
                 />
               </FormControl>
@@ -117,7 +119,10 @@ export function ForgotPasswordForm({
             </FormItem>
           )}
         />
-        <Button className='h-11 w-full rounded-md font-medium shadow-none' disabled={isLoading}>
+        <Button
+          className='h-11 w-full rounded-md font-medium shadow-none'
+          disabled={isLoading}
+        >
           {isLoading ? (
             <>
               <Loader2 className='size-4 animate-spin' />

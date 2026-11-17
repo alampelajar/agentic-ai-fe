@@ -57,9 +57,7 @@ export function ConfigDrawer() {
       <SheetContent className='flex flex-col'>
         <SheetHeader className='pb-0 text-start'>
           <SheetTitle>{t('configDrawer.title')}</SheetTitle>
-          <SheetDescription>
-            {t('configDrawer.description')}
-          </SheetDescription>
+          <SheetDescription>{t('configDrawer.description')}</SheetDescription>
         </SheetHeader>
         <div className='space-y-6 overflow-y-auto px-4'>
           <ThemeConfig />
@@ -135,12 +133,14 @@ function RadioGroupItem({
     <Item
       value={item.value}
       className={cn('group outline-none', 'transition duration-200 ease-in')}
-      aria-label={t('configDrawer.selectOption', { label: item.label.toLowerCase() })}
+      aria-label={t('configDrawer.selectOption', {
+        label: item.label.toLowerCase(),
+      })}
       aria-describedby={`${item.value}-description`}
     >
       <div
         className={cn(
-          'relative rounded-[6px] ring-[1px] ring-border',
+          'relative rounded-md ring-1 ring-border',
           'group-data-[state=checked]:shadow-2xl group-data-[state=checked]:ring-primary',
           'group-focus-visible:ring-2'
         )}
@@ -150,7 +150,7 @@ function RadioGroupItem({
       >
         <CircleCheck
           className={cn(
-            'size-6 fill-primary stroke-white',
+            'size-6 fill-primary stroke-primary-foreground',
             'group-data-[state=unchecked]:hidden',
             'absolute top-0 right-0 translate-x-1/2 -translate-y-1/2'
           )}

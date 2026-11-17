@@ -1,6 +1,12 @@
 import { apiFetch } from '@/lib/api'
 
-export const FEEDBACK_CATEGORIES = ['feature', 'bug', 'service', 'aiExperience', 'help'] as const
+export const FEEDBACK_CATEGORIES = [
+  'feature',
+  'bug',
+  'service',
+  'aiExperience',
+  'help',
+] as const
 export type FeedbackCategory = (typeof FEEDBACK_CATEGORIES)[number]
 export type FeedbackStatus = 'new' | 'processing' | 'completed' | 'rejected'
 
@@ -13,7 +19,6 @@ export const RATING_REASONS = [
   'responsif',
   'masalah_terselesaikan',
 ] as const
-export type RatingReason = (typeof RATING_REASONS)[number]
 
 export const MAX_ATTACHMENT_BYTES = 5 * 1024 * 1024
 export const ATTACHMENT_TYPES = ['image/png', 'image/jpeg', 'image/webp']
@@ -44,29 +49,41 @@ export type FeedbackDraft = {
   attachment: File | null
 }
 
-export type RatingDraft = { rating: number; rating_reasons: string[]; rating_comment: string }
+export type RatingDraft = {
+  rating: number
+  rating_reasons: string[]
+  rating_comment: string
+}
 
 /** Only finished tickets can be deleted; the server enforces the same rule. */
-export const isFinished = (status: FeedbackStatus) => status === 'completed' || status === 'rejected'
+export const isFinished = (status: FeedbackStatus) =>
+  status === 'completed' || status === 'rejected'
 
 /** Whether the report has an uploaded image (older reports may hold only a file name). */
-export const hasStoredAttachment = (path: string) => path.startsWith('/uploads/feedback/')
+export const hasStoredAttachment = (path: string) =>
+  path.startsWith('/uploads/feedback/')
 
 /** The report's image. It is only sent to the signed-in owner, so it is fetched with the login. */
 export async function getFeedbackAttachment(id: number): Promise<Blob> {
   const response = await apiFetch(`/api/feedback/${id}/attachment`)
-  if (!response.ok) throw new Error(`Attachment request failed with status ${response.status}`)
+  if (!response.ok)
+    throw new Error(`Attachment request failed with status ${response.status}`)
   return response.blob()
 }
 
 async function parse<T>(response: Response): Promise<T> {
   const data = await response.json().catch(() => ({}))
-  if (!response.ok || data?.ok === false) throw new Error(data?.message || data?.error || 'Permintaan feedback gagal.')
+  if (!response.ok || data?.ok === false)
+    throw new Error(
+      data?.message || data?.error || 'Permintaan feedback gagal.'
+    )
   return data as T
 }
 
 export async function getMyFeedback(): Promise<Feedback[]> {
-  const data = await parse<{ feedback: Feedback[] }>(await apiFetch('/api/feedback'))
+  const data = await parse<{ feedback: Feedback[] }>(
+    await apiFetch('/api/feedback')
+  )
   return Array.isArray(data.feedback) ? data.feedback : []
 }
 
@@ -77,12 +94,22 @@ export async function createFeedback(draft: FeedbackDraft): Promise<Feedback> {
   body.set('description', draft.description)
   body.set('related_page', draft.related_page)
   if (draft.attachment) body.set('attachment', draft.attachment)
-  const data = await parse<{ feedback: Feedback }>(await apiFetch('/api/feedback', { method: 'POST', body }))
+  const data = await parse<{ feedback: Feedback }>(
+    await apiFetch('/api/feedback', { method: 'POST', body })
+  )
   return data.feedback
 }
 
-export async function rateFeedback(id: number, draft: RatingDraft): Promise<void> {
-  await parse(await apiFetch(`/api/feedback/${id}/rating`, { method: 'PATCH', body: JSON.stringify(draft) }))
+export async function rateFeedback(
+  id: number,
+  draft: RatingDraft
+): Promise<void> {
+  await parse(
+    await apiFetch(`/api/feedback/${id}/rating`, {
+      method: 'PATCH',
+      body: JSON.stringify(draft),
+    })
+  )
 }
 
 export async function deleteFeedback(id: number): Promise<void> {

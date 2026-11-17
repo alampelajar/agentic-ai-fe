@@ -1,9 +1,15 @@
-import { useEffect, useState, type ReactNode } from "react";
-import { Outlet } from "@tanstack/react-router";
-import { useTranslation } from "react-i18next";
-import { Check, ChevronDown } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
+import { useEffect, useState, type ReactNode } from 'react'
+import { Outlet } from '@tanstack/react-router'
+import i18n from '@/i18n'
+import { Check, ChevronDown } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { getCurrentUser } from '@/lib/api-auth'
+import { API_BASE_URL } from '@/lib/api-config'
+import { getCookie } from '@/lib/cookies'
+import { cn } from '@/lib/utils'
+import { LayoutProvider } from '@/context/layout-provider'
+import { SearchProvider } from '@/context/search-provider'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,77 +17,33 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-import { getCookie } from "@/lib/cookies";
-import { API_BASE_URL } from "@/lib/api-config";
-import { cn } from "@/lib/utils";
-
-import { LayoutProvider } from "@/context/layout-provider";
-import { SearchProvider } from "@/context/search-provider";
-
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-
-import { AppSidebar } from "@/components/layout/app-sidebar";
-import { Header } from "@/components/layout/header";
-import { Search } from "@/components/search";
-import { ThemeSwitch } from "@/components/theme-switch";
-import { ConfigDrawer } from "@/components/config-drawer";
-import { ProfileDropdown } from "@/components/profile-dropdown";
-import { SkipToMain } from "@/components/skip-to-main";
-
-
-import { getCurrentUser } from "@/lib/api-auth";
-
-import i18n from "@/i18n";
-
-function LanguageFlag({ language }: { language: "id" | "en" }) {
-  if (language === "id") {
-    return (
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 60 40"
-        className="h-4 w-6 shrink-0 overflow-hidden rounded-[3px] border border-border/70"
-      >
-        <rect width="60" height="20" fill="#dc2626" />
-        <rect y="20" width="60" height="20" fill="#ffffff" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 60 40"
-      className="h-4 w-6 shrink-0 overflow-hidden rounded-[3px] border border-border/70"
-    >
-      <rect width="60" height="40" fill="#012169" />
-      <path d="M0 0 60 40M60 0 0 40" stroke="#ffffff" strokeWidth="10" />
-      <path d="M0 0 60 40M60 0 0 40" stroke="#c8102e" strokeWidth="4" />
-      <path d="M30 0V40M0 20H60" stroke="#ffffff" strokeWidth="15" />
-      <path d="M30 0V40M0 20H60" stroke="#c8102e" strokeWidth="8" />
-    </svg>
-  );
-}
-
+} from '@/components/ui/dropdown-menu'
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
+import { ConfigDrawer } from '@/components/config-drawer'
+import { AppSidebar } from '@/components/layout/app-sidebar'
+import { Header } from '@/components/layout/header'
+import { LanguageFlag } from '@/components/layout/language-flag'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { Search } from '@/components/search'
+import { SkipToMain } from '@/components/skip-to-main'
+import { ThemeSwitch } from '@/components/theme-switch'
 
 export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
-  const defaultOpen = getCookie("sidebar_state") !== "false";
+  const defaultOpen = getCookie('sidebar_state') !== 'false'
 
-  const { t, i18n: currentI18n } = useTranslation();
+  const { t, i18n: currentI18n } = useTranslation()
 
-  const currentLanguage = currentI18n.language;
+  const currentLanguage = currentI18n.language
 
-  const isIndonesian = currentLanguage.startsWith("id");
-  const isEnglish = currentLanguage.startsWith("en");
+  const isIndonesian = currentLanguage.startsWith('id')
+  const isEnglish = currentLanguage.startsWith('en')
 
   // ============================================================
   // MAINTENANCE STATE
   // ============================================================
 
-  const [maintenance, setMaintenance] = useState(false);
-  const [checkingMaintenance, setCheckingMaintenance] =
-    useState(true);
+  const [maintenance, setMaintenance] = useState(false)
+  const [checkingMaintenance, setCheckingMaintenance] = useState(true)
 
   // ============================================================
   // CHECK MAINTENANCE STATUS
@@ -89,43 +51,34 @@ export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
 
   const checkMaintenance = async () => {
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/api/system/maintenance`,
-        {
-          method: "GET",
-          cache: "no-store",
-        },
-      );
+      const response = await fetch(`${API_BASE_URL}/api/system/maintenance`, {
+        method: 'GET',
+        cache: 'no-store',
+      })
 
-      const data = await response.json().catch(() => ({}));
+      const data = await response.json().catch(() => ({}))
 
       if (!response.ok || !data?.ok) {
-        console.error(
-          "Gagal mengecek maintenance mode:",
-          data?.message,
-        );
+        console.error('Gagal mengecek maintenance mode:', data?.message)
 
-        return;
+        return
       }
 
-      setMaintenance(data.maintenance === true);
+      setMaintenance(data.maintenance === true)
     } catch (error) {
-      console.error(
-        "Gagal menghubungi server maintenance:",
-        error,
-      );
+      console.error('Gagal menghubungi server maintenance:', error)
     } finally {
-      setCheckingMaintenance(false);
+      setCheckingMaintenance(false)
     }
-  };
+  }
 
   // ============================================================
   // MAINTENANCE INITIAL CHECK
   // ============================================================
 
   useEffect(() => {
-    checkMaintenance();
-  }, []);
+    checkMaintenance()
+  }, [])
 
   // ============================================================
   // CHECK MAINTENANCE PERIODICALLY
@@ -133,50 +86,47 @@ export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
 
   useEffect(() => {
     const interval = window.setInterval(() => {
-      checkMaintenance();
-    }, 10000);
+      checkMaintenance()
+    }, 10000)
 
     return () => {
-      window.clearInterval(interval);
-    };
-  }, []);
+      window.clearInterval(interval)
+    }
+  }, [])
 
   // ============================================================
   // GET CURRENT USER
   // ============================================================
 
   useEffect(() => {
-    let cancelled = false;
+    let cancelled = false
 
     async function loadCurrentUser() {
       try {
-        if (cancelled) return;
+        if (cancelled) return
 
-        await getCurrentUser();
+        await getCurrentUser()
       } catch (error) {
-        console.error(
-          "Gagal mengambil profile user:",
-          error,
-        );
+        console.error('Gagal mengambil profile user:', error)
       }
     }
 
-    loadCurrentUser();
+    loadCurrentUser()
 
     return () => {
-      cancelled = true;
-    };
-  }, []);
+      cancelled = true
+    }
+  }, [])
 
   // ============================================================
   // LANGUAGE
   // ============================================================
 
-  const changeLanguage = (language: "id" | "en") => {
-    if (currentLanguage.startsWith(language)) return;
+  const changeLanguage = (language: 'id' | 'en') => {
+    if (currentLanguage.startsWith(language)) return
 
-    i18n.changeLanguage(language);
-  };
+    i18n.changeLanguage(language)
+  }
 
   // ============================================================
   // CHECKING MAINTENANCE
@@ -184,16 +134,16 @@ export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
 
   if (checkingMaintenance) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <div className="text-center">
-          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-muted border-t-primary" />
+      <div className='flex min-h-screen items-center justify-center bg-background'>
+        <div className='text-center'>
+          <div className='mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-muted border-t-primary' />
 
-          <p className="text-sm text-muted-foreground">
-            {t("maintenance.checking")}
+          <p className='text-sm text-muted-foreground'>
+            {t('maintenance.checking')}
           </p>
         </div>
       </div>
-    );
+    )
   }
 
   // ============================================================
@@ -202,53 +152,51 @@ export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
 
   if (maintenance) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background px-6">
-        <div className="w-full max-w-md text-center">
-
-          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-amber-500/10">
+      <div className='flex min-h-screen items-center justify-center bg-background px-6'>
+        <div className='w-full max-w-md text-center'>
+          <div className='mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-amber-500/10'>
             <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              className="h-10 w-10 text-amber-500"
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 24 24'
+              fill='none'
+              stroke='currentColor'
+              strokeWidth='1.8'
+              className='h-10 w-10 text-amber-700 dark:text-amber-400'
             >
               <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M11.42 3.58a6.5 6.5 0 0 0 8.99 8.99l-3.13 3.13a2 2 0 0 1-2.83 0l-6.16-6.16a2 2 0 0 1 0-2.83l3.13-3.13Z"
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='M11.42 3.58a6.5 6.5 0 0 0 8.99 8.99l-3.13 3.13a2 2 0 0 1-2.83 0l-6.16-6.16a2 2 0 0 1 0-2.83l3.13-3.13Z'
               />
               <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m14.5 9.5 5 5"
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='m14.5 9.5 5 5'
               />
               <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6.5 17.5 3 21"
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='M6.5 17.5 3 21'
               />
             </svg>
           </div>
 
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">
-            {t("maintenance.title")}
+          <h1 className='text-3xl font-bold tracking-tight text-foreground'>
+            {t('maintenance.title')}
           </h1>
 
-          <p className="mt-4 text-sm leading-6 text-muted-foreground">
-            {t("maintenance.description")}
+          <p className='mt-4 text-sm leading-6 text-muted-foreground'>
+            {t('maintenance.description')}
           </p>
 
-          <div className="mt-8 rounded-lg border bg-muted/30 px-4 py-3">
-            <p className="text-xs text-muted-foreground">
-              {t("maintenance.note")}
+          <div className='mt-8 rounded-lg border bg-muted/30 px-4 py-3'>
+            <p className='text-xs text-muted-foreground'>
+              {t('maintenance.note')}
             </p>
           </div>
-
         </div>
       </div>
-    );
+    )
   }
 
   // ============================================================
@@ -258,118 +206,108 @@ export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
   return (
     <SearchProvider>
       <LayoutProvider>
-          <SidebarProvider defaultOpen={defaultOpen}>
-            <SkipToMain />
+        <SidebarProvider defaultOpen={defaultOpen}>
+          <SkipToMain />
 
-            {/* ================================
+          {/* ================================
                 SIDEBAR
             ================================= */}
 
-            <AppSidebar />
+          <AppSidebar />
 
-            <SidebarInset
-              className={cn(
-                "@container/content",
-                "has-data-[layout=fixed]:h-svh",
-                "peer-data-[variant=inset]:has-data-[layout=fixed]:h-[calc(100svh-(var(--spacing)*4))]",
-              )}
-            >
-              {/* ================================
+          <SidebarInset
+            className={cn(
+              '@container/content',
+              'has-data-[layout=fixed]:h-svh',
+              // design-system-ignore: the inset sidebar leaves a margin on both sides; no scale value fits
+              'peer-data-[variant=inset]:has-data-[layout=fixed]:h-[calc(100svh-(var(--spacing)*4))]'
+            )}
+          >
+            {/* ================================
                   GLOBAL HEADER
               ================================= */}
 
-              <Header fixed>
+            <Header fixed>
+              {/* Search */}
 
-                {/* Search */}
+              <Search className='me-auto' />
 
-                <Search className="me-auto" />
-
-                {/* ================================
+              {/* ================================
                     LANGUAGE SWITCHER
                 ================================= */}
 
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      aria-label={
-                        t("languageMenu.current")
-                      }
-                      className="h-9 gap-2 px-3"
-                    >
-                      <LanguageFlag language={isIndonesian ? "id" : "en"} />
-                      {/* Only the flag below lg: with the sidebar open, a tablet-width header has no room for the name. */}
-                      <span className="hidden text-sm lg:inline">
-                        {t("languageMenu.currentName")}
-                      </span>
-                      <ChevronDown className="size-4 text-muted-foreground" />
-                    </Button>
-                  </DropdownMenuTrigger>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    type='button'
+                    variant='outline'
+                    size='sm'
+                    aria-label={t('languageMenu.current')}
+                    className='h-9 gap-2 px-3'
+                  >
+                    <LanguageFlag language={isIndonesian ? 'id' : 'en'} />
+                    {/* Only the flag below lg: with the sidebar open, a tablet-width header has no room for the name. */}
+                    <span className='hidden text-sm lg:inline'>
+                      {t('languageMenu.currentName')}
+                    </span>
+                    <ChevronDown className='size-4 text-muted-foreground' />
+                  </Button>
+                </DropdownMenuTrigger>
 
-                  <DropdownMenuContent align="end" className="min-w-44">
-                    {/* design-system-ignore: the language menu names itself in both languages */}
-                    <DropdownMenuLabel>Language / Bahasa</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
+                <DropdownMenuContent align='end' className='min-w-44'>
+                  {/* design-system-ignore: the language menu names itself in both languages */}
+                  <DropdownMenuLabel>Language / Bahasa</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
 
-                    <DropdownMenuItem
-                      onSelect={() => changeLanguage("id")}
-                      className={cn(
-                        "gap-3 py-2",
-                        isIndonesian && "bg-accent/70",
-                      )}
-                      aria-current={isIndonesian ? "true" : undefined}
-                    >
-                      <LanguageFlag language="id" />
-                      {/* design-system-ignore: each language is named in its own language */}
-                      <span>Bahasa Indonesia</span>
-                      {isIndonesian && (
-                        <Check className="ms-auto size-4 text-primary" />
-                      )}
-                    </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={() => changeLanguage('id')}
+                    className={cn('gap-3 py-2', isIndonesian && 'bg-accent/70')}
+                    aria-current={isIndonesian ? 'true' : undefined}
+                  >
+                    <LanguageFlag language='id' />
+                    {/* design-system-ignore: each language is named in its own language */}
+                    <span>Bahasa Indonesia</span>
+                    {isIndonesian && (
+                      <Check className='ms-auto size-4 text-primary' />
+                    )}
+                  </DropdownMenuItem>
 
-                    <DropdownMenuItem
-                      onSelect={() => changeLanguage("en")}
-                      className={cn(
-                        "gap-3 py-2",
-                        isEnglish && "bg-accent/70",
-                      )}
-                      aria-current={isEnglish ? "true" : undefined}
-                    >
-                      <LanguageFlag language="en" />
-                      {/* design-system-ignore: each language is named in its own language */}
-                      <span>English</span>
-                      {isEnglish && (
-                        <Check className="ms-auto size-4 text-primary" />
-                      )}
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                  <DropdownMenuItem
+                    onSelect={() => changeLanguage('en')}
+                    className={cn('gap-3 py-2', isEnglish && 'bg-accent/70')}
+                    aria-current={isEnglish ? 'true' : undefined}
+                  >
+                    <LanguageFlag language='en' />
+                    {/* design-system-ignore: each language is named in its own language */}
+                    <span>English</span>
+                    {isEnglish && (
+                      <Check className='ms-auto size-4 text-primary' />
+                    )}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-                {/* Theme */}
+              {/* Theme */}
 
-                <ThemeSwitch />
+              <ThemeSwitch />
 
-                {/* Settings */}
+              {/* Settings */}
 
-                <ConfigDrawer />
+              <ConfigDrawer />
 
-                {/* Profile */}
+              {/* Profile */}
 
-                <ProfileDropdown />
+              <ProfileDropdown />
+            </Header>
 
-              </Header>
-
-              {/* ================================
+            {/* ================================
                   PAGE CONTENT
               ================================= */}
 
-              {children ?? <Outlet />}
-
-            </SidebarInset>
-          </SidebarProvider>
+            {children ?? <Outlet />}
+          </SidebarInset>
+        </SidebarProvider>
       </LayoutProvider>
     </SearchProvider>
-  );
+  )
 }

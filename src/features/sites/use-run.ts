@@ -1,11 +1,20 @@
 import { useEffect, useState } from 'react'
-import { FINISHED_RUN, followRun, type AgentRun, type RunStep } from './data/api'
+import {
+  FINISHED_RUN,
+  followRun,
+  type AgentRun,
+  type RunStep,
+} from './data/api'
 
 /**
  * Follows a run live. onFinished runs once when the run ends (completed, failed or
  * cancelled), with its final state.
  */
-export function useRun(siteId: number, runId: number | undefined, onFinished: (run: AgentRun) => void) {
+export function useRun(
+  siteId: number,
+  runId: number | undefined,
+  onFinished: (run: AgentRun) => void
+) {
   const [run, setRun] = useState<AgentRun | null>(null)
   const [steps, setSteps] = useState<RunStep[]>([])
 
@@ -24,7 +33,7 @@ export function useRun(siteId: number, runId: number | undefined, onFinished: (r
           onFinished(state.run)
         }
       },
-      controller.signal,
+      controller.signal
     )
     return () => controller.abort()
     // onFinished is read when the run ends; following again for a new callback would restart the stream.

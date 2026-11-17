@@ -1,30 +1,50 @@
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import i18n from '@/i18n'
+import {
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from 'vitest'
 import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
-import i18n from '@/i18n'
 import { DesktopInteractionPanel } from './interaction-panel'
 import { stubRunner } from './runner-stub'
 
 const mocks = vi.hoisted(() => ({ toastError: vi.fn(), toastSuccess: vi.fn() }))
-vi.mock('sonner', () => ({ toast: { error: mocks.toastError, success: mocks.toastSuccess } }))
+vi.mock('sonner', () => ({
+  toast: { error: mocks.toastError, success: mocks.toastSuccess },
+}))
 
 const EXPIRED = 'Approval expired. Request a new one to continue.'
 const DIALOG = { name: 'Desktop action approval' }
-const expiredToasts = () => mocks.toastError.mock.calls.filter(([message]) => message === EXPIRED).length
+const expiredToasts = () =>
+  mocks.toastError.mock.calls.filter(([message]) => message === EXPIRED).length
 
 async function openPanel() {
-  return render(<DesktopInteractionPanel baseUrl='http://127.0.0.1:8765' token='test-token' disabled={false} />)
+  return render(
+    <DesktopInteractionPanel
+      baseUrl='http://127.0.0.1:8765'
+      token='test-token'
+      disabled={false}
+    />
+  )
 }
 type Screen = Awaited<ReturnType<typeof openPanel>>
 
 async function request(screen: Screen) {
   await userEvent.fill(screen.getByLabelText('Target window'), '131406')
-  await userEvent.click(screen.getByRole('button', { name: 'Request approval' }))
+  await userEvent.click(
+    screen.getByRole('button', { name: 'Request approval' })
+  )
   const dialog = screen.getByRole('dialog', DIALOG)
   await expect.element(dialog).toBeInTheDocument()
   return dialog
 }
-const closed = (screen: Screen) => expect.element(screen.getByRole('dialog', DIALOG)).not.toBeInTheDocument()
+const closed = (screen: Screen) =>
+  expect.element(screen.getByRole('dialog', DIALOG)).not.toBeInTheDocument()
 
 // These tests read the English text.
 beforeAll(async () => {
@@ -35,7 +55,15 @@ describe('approval lifecycle on the Desktop Runtime panel', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     // The countdown must be driven by the runner's expiry time, so the clock is under the test's control.
-    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'Date'] })
+    vi.useFakeTimers({
+      toFake: [
+        'setTimeout',
+        'clearTimeout',
+        'setInterval',
+        'clearInterval',
+        'Date',
+      ],
+    })
   })
   afterEach(() => {
     vi.useRealTimers()
@@ -55,7 +83,9 @@ describe('approval lifecycle on the Desktop Runtime panel', () => {
       await vi.advanceTimersByTimeAsync(1_000)
       await closed(screen)
       expect(expiredToasts()).toBe(1)
-      await expect.element(screen.getByText('Approval expired: desktop.focus_window')).toBeInTheDocument()
+      await expect
+        .element(screen.getByText('Approval expired: desktop.focus_window'))
+        .toBeInTheDocument()
       // Nothing was approved, denied or retried on the user's behalf.
       expect(runner.count('/approve')).toBe(0)
       expect(runner.count('/deny')).toBe(0)
@@ -65,11 +95,15 @@ describe('approval lifecycle on the Desktop Runtime panel', () => {
       stubRunner()
       const screen = await openPanel()
       const dialog = await request(screen)
-      await expect.element(dialog.getByRole('button', { name: 'Allow once' })).toBeEnabled()
+      await expect
+        .element(dialog.getByRole('button', { name: 'Allow once' }))
+        .toBeEnabled()
 
       await vi.advanceTimersByTimeAsync(60_000)
       await closed(screen)
-      await expect.element(screen.getByRole('button', { name: 'Allow once' })).not.toBeInTheDocument()
+      await expect
+        .element(screen.getByRole('button', { name: 'Allow once' }))
+        .not.toBeInTheDocument()
     })
 
     it('uses the expiry time the runner gave, and a re-render does not extend it', async () => {
@@ -78,7 +112,10 @@ describe('approval lifecycle on the Desktop Runtime panel', () => {
       const dialog = await request(screen)
 
       await vi.advanceTimersByTimeAsync(5_000)
-      await userEvent.fill(screen.getByLabelText('Reason'), 'a different reason, which re-renders the panel')
+      await userEvent.fill(
+        screen.getByLabelText('Reason'),
+        'a different reason, which re-renders the panel'
+      )
       await expect.element(dialog).toBeInTheDocument()
 
       await vi.advanceTimersByTimeAsync(5_000)
@@ -119,7 +156,9 @@ describe('approval lifecycle on the Desktop Runtime panel', () => {
       await vi.advanceTimersByTimeAsync(60_000)
       await closed(screen)
 
-      await userEvent.click(screen.getByRole('button', { name: 'Request approval' }))
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Request approval' })
+      )
       const second = screen.getByRole('dialog', DIALOG)
       await expect.element(second).toBeInTheDocument()
       await vi.advanceTimersByTimeAsync(59_000)
@@ -127,9 +166,13 @@ describe('approval lifecycle on the Desktop Runtime panel', () => {
 
       await userEvent.click(second.getByRole('button', { name: 'Allow once' }))
       await vi.waitFor(() => expect(runner.count('/approve')).toBe(1))
-      const request2 = runner.calls.filter((call) => call.path === '/actions/request')[1]
+      const request2 = runner.calls.filter(
+        (call) => call.path === '/actions/request'
+      )[1]
       expect(request2).toBeDefined()
-      expect(runner.calls.find((call) => call.path.endsWith('/approve'))!.path).toMatch(/^\/actions\/desktop-\d+\/approve$/)
+      expect(
+        runner.calls.find((call) => call.path.endsWith('/approve'))!.path
+      ).toMatch(/^\/actions\/desktop-\d+\/approve$/)
       await closed(screen)
       expect(expiredToasts()).toBe(1) // only the first one expired
     })
@@ -137,7 +180,13 @@ describe('approval lifecycle on the Desktop Runtime panel', () => {
 
   describe('HTTP 410 from the runner', () => {
     it('clears the dialog, shows the expired message and does not retry', async () => {
-      const runner = stubRunner({ approve: { ok: false, status: 410, body: { ok: false, error: 'approval expired' } } })
+      const runner = stubRunner({
+        approve: {
+          ok: false,
+          status: 410,
+          body: { ok: false, error: 'approval expired' },
+        },
+      })
       const screen = await openPanel()
       const dialog = await request(screen)
       await userEvent.click(dialog.getByRole('button', { name: 'Allow once' }))
@@ -152,13 +201,21 @@ describe('approval lifecycle on the Desktop Runtime panel', () => {
     })
 
     it('also clears the dialog for other answers from the runner, since the approval is gone', async () => {
-      stubRunner({ approve: { ok: false, status: 409, body: { ok: false, error: 'another agent owns the desktop session' } } })
+      stubRunner({
+        approve: {
+          ok: false,
+          status: 409,
+          body: { ok: false, error: 'another agent owns the desktop session' },
+        },
+      })
       const screen = await openPanel()
       const dialog = await request(screen)
       await userEvent.click(dialog.getByRole('button', { name: 'Allow once' }))
 
       await closed(screen)
-      expect(mocks.toastError).toHaveBeenCalledWith('another agent owns the desktop session')
+      expect(mocks.toastError).toHaveBeenCalledWith(
+        'another agent owns the desktop session'
+      )
       expect(expiredToasts()).toBe(0)
     })
 
@@ -168,9 +225,15 @@ describe('approval lifecycle on the Desktop Runtime panel', () => {
       const dialog = await request(screen)
       await userEvent.click(dialog.getByRole('button', { name: 'Allow once' }))
 
-      await vi.waitFor(() => expect(mocks.toastError).toHaveBeenCalledWith('Failed to fetch'))
-      await expect.element(screen.getByRole('dialog', DIALOG)).toBeInTheDocument()
-      await expect.element(dialog.getByRole('button', { name: 'Allow once' })).toBeEnabled()
+      await vi.waitFor(() =>
+        expect(mocks.toastError).toHaveBeenCalledWith('Failed to fetch')
+      )
+      await expect
+        .element(screen.getByRole('dialog', DIALOG))
+        .toBeInTheDocument()
+      await expect
+        .element(dialog.getByRole('button', { name: 'Allow once' }))
+        .toBeEnabled()
       expect(runner.count('/approve')).toBe(1)
     })
   })
@@ -184,9 +247,15 @@ describe('approval lifecycle on the Desktop Runtime panel', () => {
       await userEvent.click(allow)
       // While the approval is on its way, both buttons are locked, so a second click cannot send another.
       await expect.element(allow).toBeDisabled()
-      await expect.element(dialog.getByRole('button', { name: 'Deny', exact: true })).toBeDisabled()
+      await expect
+        .element(dialog.getByRole('button', { name: 'Deny', exact: true }))
+        .toBeDisabled()
       expect(runner.count('/approve')).toBe(1)
-      runner.release({ ok: true, status: 200, body: { ok: true, result: { ok: true } } })
+      runner.release({
+        ok: true,
+        status: 200,
+        body: { ok: true, result: { ok: true } },
+      })
       await closed(screen)
     })
 
@@ -201,9 +270,15 @@ describe('approval lifecycle on the Desktop Runtime panel', () => {
       expect(expiredToasts()).toBe(0)
 
       // It had been sent in time, so the runner approves it.
-      runner.release({ ok: true, status: 200, body: { ok: true, result: { ok: true } } })
+      runner.release({
+        ok: true,
+        status: 200,
+        body: { ok: true, result: { ok: true } },
+      })
       await closed(screen)
-      await expect.element(screen.getByText('Approved desktop.focus_window (once)')).toBeInTheDocument()
+      await expect
+        .element(screen.getByText('Approved desktop.focus_window (once)'))
+        .toBeInTheDocument()
       expect(expiredToasts()).toBe(0)
     })
 
@@ -212,15 +287,23 @@ describe('approval lifecycle on the Desktop Runtime panel', () => {
       const screen = await openPanel()
       const dialog = await request(screen)
       await userEvent.click(dialog.getByRole('button', { name: 'Allow once' }))
-      await userEvent.click(screen.getByRole('button', { name: 'Emergency stop' }))
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Emergency stop' })
+      )
       await closed(screen)
 
       // A new request is made while the old approval is still unanswered.
-      await userEvent.click(screen.getByRole('button', { name: 'Request approval' }))
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Request approval' })
+      )
       const second = screen.getByRole('dialog', DIALOG)
       await expect.element(second).toBeInTheDocument()
 
-      runner.release({ ok: false, status: 410, body: { ok: false, error: 'approval expired' } })
+      runner.release({
+        ok: false,
+        status: 410,
+        body: { ok: false, error: 'approval expired' },
+      })
       await vi.advanceTimersByTimeAsync(1_000)
       await expect.element(second).toBeInTheDocument() // the late answer did not close the new dialog
       expect(expiredToasts()).toBe(0)
@@ -231,11 +314,19 @@ describe('approval lifecycle on the Desktop Runtime panel', () => {
       const screen = await openPanel()
       const dialog = await request(screen)
       await userEvent.click(dialog.getByRole('button', { name: 'Allow once' }))
-      await userEvent.click(screen.getByRole('button', { name: 'Emergency stop' }))
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Emergency stop' })
+      )
       await closed(screen)
 
-      runner.release({ ok: true, status: 200, body: { ok: true, result: { ok: true } } })
-      await expect.element(screen.getByText('Approved desktop.focus_window (once)')).toBeInTheDocument()
+      runner.release({
+        ok: true,
+        status: 200,
+        body: { ok: true, result: { ok: true } },
+      })
+      await expect
+        .element(screen.getByText('Approved desktop.focus_window (once)'))
+        .toBeInTheDocument()
     })
   })
 
@@ -244,22 +335,36 @@ describe('approval lifecycle on the Desktop Runtime panel', () => {
       const runner = stubRunner({ deny: 'hold' })
       const screen = await openPanel()
       const dialog = await request(screen)
-      await userEvent.click(dialog.getByRole('button', { name: 'Deny', exact: true }))
+      await userEvent.click(
+        dialog.getByRole('button', { name: 'Deny', exact: true })
+      )
 
       await closed(screen) // before the runner has even answered the deny
       expect(runner.count('/deny')).toBe(1)
       expect(runner.count('/approve')).toBe(0)
-      runner.release({ ok: true, status: 200, body: { ok: true, status: 'denied' } })
+      runner.release({
+        ok: true,
+        status: 200,
+        body: { ok: true, status: 'denied' },
+      })
       await vi.advanceTimersByTimeAsync(120_000)
       expect(runner.count('/approve')).toBe(0)
       expect(expiredToasts()).toBe(0) // its countdown died with the dialog
     })
 
     it('still closes when the runner no longer knows the approval, without an error', async () => {
-      stubRunner({ deny: { ok: false, status: 404, body: { ok: false, error: 'action not found or already resolved' } } })
+      stubRunner({
+        deny: {
+          ok: false,
+          status: 404,
+          body: { ok: false, error: 'action not found or already resolved' },
+        },
+      })
       const screen = await openPanel()
       const dialog = await request(screen)
-      await userEvent.click(dialog.getByRole('button', { name: 'Deny', exact: true }))
+      await userEvent.click(
+        dialog.getByRole('button', { name: 'Deny', exact: true })
+      )
       await closed(screen)
       await vi.advanceTimersByTimeAsync(1_000)
       expect(mocks.toastError).not.toHaveBeenCalled()
@@ -271,23 +376,37 @@ describe('approval lifecycle on the Desktop Runtime panel', () => {
       const runner = stubRunner()
       const screen = await openPanel()
       await request(screen)
-      await userEvent.click(screen.getByRole('button', { name: 'Emergency stop' }))
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Emergency stop' })
+      )
 
       await closed(screen)
       await vi.waitFor(() => expect(runner.count('/emergency-stop')).toBe(1))
       await vi.advanceTimersByTimeAsync(120_000)
       expect(runner.count('/approve')).toBe(0)
       expect(expiredToasts()).toBe(0)
-      expect(mocks.toastSuccess).toHaveBeenCalledWith('Emergency stop activated.')
+      expect(mocks.toastSuccess).toHaveBeenCalledWith(
+        'Emergency stop activated.'
+      )
     })
 
     it('closes the dialog even when the stop request fails, so nothing can be approved afterwards', async () => {
-      stubRunner({ emergency: { ok: false, status: 500, body: { ok: false, error: 'runner busy' } } })
+      stubRunner({
+        emergency: {
+          ok: false,
+          status: 500,
+          body: { ok: false, error: 'runner busy' },
+        },
+      })
       const screen = await openPanel()
       await request(screen)
-      await userEvent.click(screen.getByRole('button', { name: 'Emergency stop' }))
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Emergency stop' })
+      )
       await closed(screen)
-      await vi.waitFor(() => expect(mocks.toastError).toHaveBeenCalledWith('runner busy'))
+      await vi.waitFor(() =>
+        expect(mocks.toastError).toHaveBeenCalledWith('runner busy')
+      )
     })
   })
 
@@ -303,16 +422,26 @@ describe('approval lifecycle on the Desktop Runtime panel', () => {
       await closed(screen)
       expect(vi.getTimerCount()).toBe(0) // expired
 
-      await userEvent.click(screen.getByRole('button', { name: 'Request approval' }))
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Request approval' })
+      )
       const denyDialog = screen.getByRole('dialog', DIALOG)
       await expect.element(denyDialog).toBeInTheDocument()
-      await userEvent.click(denyDialog.getByRole('button', { name: 'Deny', exact: true }))
+      await userEvent.click(
+        denyDialog.getByRole('button', { name: 'Deny', exact: true })
+      )
       await closed(screen)
       expect(vi.getTimerCount()).toBe(0) // denied
 
-      await userEvent.click(screen.getByRole('button', { name: 'Request approval' }))
-      await expect.element(screen.getByRole('dialog', DIALOG)).toBeInTheDocument()
-      await userEvent.click(screen.getByRole('button', { name: 'Emergency stop' }))
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Request approval' })
+      )
+      await expect
+        .element(screen.getByRole('dialog', DIALOG))
+        .toBeInTheDocument()
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Emergency stop' })
+      )
       await closed(screen)
       expect(vi.getTimerCount()).toBe(0) // stopped
     })
@@ -334,15 +463,25 @@ describe('approval lifecycle on the Desktop Runtime panel', () => {
   describe('activity list', () => {
     it('lists repeated identical events as separate rows without duplicate-key errors', async () => {
       stubRunner()
-      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+      const consoleError = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => undefined)
       const screen = await openPanel()
       for (let round = 0; round < 2; round++) {
         const dialog = await request(screen)
-        await userEvent.click(dialog.getByRole('button', { name: 'Deny', exact: true }))
+        await userEvent.click(
+          dialog.getByRole('button', { name: 'Deny', exact: true })
+        )
         await closed(screen)
       }
-      expect(screen.getByText('Denied desktop.focus_window').elements()).toHaveLength(2)
-      expect(consoleError.mock.calls.filter(([message]) => String(message).includes('same key'))).toHaveLength(0)
+      expect(
+        screen.getByText('Denied desktop.focus_window').elements()
+      ).toHaveLength(2)
+      expect(
+        consoleError.mock.calls.filter(([message]) =>
+          String(message).includes('same key')
+        )
+      ).toHaveLength(0)
       consoleError.mockRestore()
     })
   })

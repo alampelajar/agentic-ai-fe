@@ -3,34 +3,58 @@ import { ShieldCheck, TriangleAlert } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { diffLines } from '@/features/desktop-runtime/line-diff'
-import { compactDiff, runnerActionCommands, type LocalRunnerApproval } from './local-runner-approval'
+import {
+  compactDiff,
+  runnerActionCommands,
+  type LocalRunnerApproval,
+} from './local-runner-approval'
 
 const marker = { add: '+', del: '−', same: ' ' } as const
 
-function WriteDetails({ request }: { request: Extract<LocalRunnerApproval, { kind: 'write' }> }) {
+function WriteDetails({
+  request,
+}: {
+  request: Extract<LocalRunnerApproval, { kind: 'write' }>
+}) {
   const { t } = useTranslation()
   const isNew = request.before === null
-  const diff = typeof request.before === 'string' ? diffLines(request.before, request.after) : null
+  const diff =
+    typeof request.before === 'string'
+      ? diffLines(request.before, request.after)
+      : null
   const added = diff?.filter((line) => line.type === 'add').length ?? 0
   const removed = diff?.filter((line) => line.type === 'del').length ?? 0
 
   let note: string
   if (isNew) note = t('localRunnerApproval.newFile')
-  else if (request.before === undefined) note = t('localRunnerApproval.readFailed')
+  else if (request.before === undefined)
+    note = t('localRunnerApproval.readFailed')
   else if (!diff) note = t('localRunnerApproval.tooLarge')
-  else if (added === 0 && removed === 0) note = t('localRunnerApproval.unchanged')
+  else if (added === 0 && removed === 0)
+    note = t('localRunnerApproval.unchanged')
   else note = t('localRunnerApproval.changedLines', { added, removed })
 
   return (
     <div className='space-y-2'>
       <p className='text-muted-foreground'>
-        {t('localRunnerApproval.file')}: <code className='break-all'>{request.path}</code>
+        {t('localRunnerApproval.file')}:{' '}
+        <code className='break-all'>{request.path}</code>
       </p>
       <p className='text-xs text-muted-foreground'>{note}</p>
       {diff && !isNew ? (
-        <pre aria-label={t('localRunnerApproval.changes')} className='max-h-72 overflow-auto rounded-md border bg-muted/40 p-2 text-xs'>
+        <pre
+          aria-label={t('localRunnerApproval.changes')}
+          className='max-h-72 overflow-auto rounded-md border bg-muted/40 p-2 text-xs'
+        >
           {compactDiff(diff).map((row, index) =>
             row.type === 'gap' ? (
               <div key={index} className='text-muted-foreground'>
@@ -42,7 +66,8 @@ function WriteDetails({ request }: { request: Extract<LocalRunnerApproval, { kin
                 data-line={row.type}
                 className={cn(
                   'break-all whitespace-pre-wrap',
-                  row.type === 'add' && 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
+                  row.type === 'add' &&
+                    'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
                   row.type === 'del' && 'bg-destructive/10 text-destructive'
                 )}
               >
@@ -52,7 +77,10 @@ function WriteDetails({ request }: { request: Extract<LocalRunnerApproval, { kin
           )}
         </pre>
       ) : (
-        <pre aria-label={t('localRunnerApproval.content')} className='max-h-72 overflow-auto rounded-md border bg-muted/40 p-2 text-xs break-all whitespace-pre-wrap'>
+        <pre
+          aria-label={t('localRunnerApproval.content')}
+          className='max-h-72 overflow-auto rounded-md border bg-muted/40 p-2 text-xs break-all whitespace-pre-wrap'
+        >
           {request.after || t('localRunnerApproval.emptyFile')}
         </pre>
       )}
@@ -60,16 +88,26 @@ function WriteDetails({ request }: { request: Extract<LocalRunnerApproval, { kin
   )
 }
 
-function ExecuteDetails({ request }: { request: Extract<LocalRunnerApproval, { kind: 'execute' }> }) {
+function ExecuteDetails({
+  request,
+}: {
+  request: Extract<LocalRunnerApproval, { kind: 'execute' }>
+}) {
   const { t } = useTranslation()
   const command = runnerActionCommands[request.action] ?? request.action
   return (
     <div className='space-y-2'>
-      <p className='text-muted-foreground'>{t('localRunnerApproval.command')}:</p>
-      <pre className='rounded-md border bg-muted/40 p-2 text-xs break-all whitespace-pre-wrap'>{command}</pre>
+      <p className='text-muted-foreground'>
+        {t('localRunnerApproval.command')}:
+      </p>
+      <pre className='rounded-md border bg-muted/40 p-2 text-xs break-all whitespace-pre-wrap'>
+        {command}
+      </pre>
       <p className='text-muted-foreground'>
         {t('localRunnerApproval.runtime')}:{' '}
-        {request.runtime === 'docker' ? t('localRunnerApproval.runtimeDocker') : t('localRunnerApproval.runtimeNative')}
+        {request.runtime === 'docker'
+          ? t('localRunnerApproval.runtimeDocker')
+          : t('localRunnerApproval.runtimeNative')}
       </p>
       {request.runtime === 'native' && (
         <p className='flex gap-2 rounded-md bg-amber-500/10 p-2 text-xs text-amber-700 dark:text-amber-400'>
@@ -92,7 +130,11 @@ type Props = {
  * their computer. A write shows exactly what changes; a command shows what runs and
  * where. It reports exactly one decision; closing the dialog denies.
  */
-export function LocalRunnerApprovalDialog({ request, agentName, onDecision }: Props) {
+export function LocalRunnerApprovalDialog({
+  request,
+  agentName,
+  onDecision,
+}: Props) {
   const { t } = useTranslation()
   const decided = useRef(false)
   const [settled, setSettled] = useState(false)
@@ -104,9 +146,17 @@ export function LocalRunnerApprovalDialog({ request, agentName, onDecision }: Pr
     onDecision(allowed)
   }
 
-  const title = request.kind === 'write' ? t('localRunnerApproval.titleWrite') : t('localRunnerApproval.titleExecute')
+  const title =
+    request.kind === 'write'
+      ? t('localRunnerApproval.titleWrite')
+      : t('localRunnerApproval.titleExecute')
   return (
-    <Dialog open onOpenChange={(open) => { if (!open) decide(false) }}>
+    <Dialog
+      open
+      onOpenChange={(open) => {
+        if (!open) decide(false)
+      }}
+    >
       <DialogContent aria-label={title} className='sm:max-w-2xl'>
         <DialogHeader>
           <DialogTitle className='flex items-center gap-2'>
@@ -114,14 +164,25 @@ export function LocalRunnerApprovalDialog({ request, agentName, onDecision }: Pr
             {title}
           </DialogTitle>
           <DialogDescription>
-            {t('localRunnerApproval.description', { agent: agentName, workspace: request.workspace })}
+            {t('localRunnerApproval.description', {
+              agent: agentName,
+              workspace: request.workspace,
+            })}
           </DialogDescription>
         </DialogHeader>
         <div className='min-w-0 text-sm'>
-          {request.kind === 'write' ? <WriteDetails request={request} /> : <ExecuteDetails request={request} />}
+          {request.kind === 'write' ? (
+            <WriteDetails request={request} />
+          ) : (
+            <ExecuteDetails request={request} />
+          )}
         </div>
         <DialogFooter>
-          <Button variant='outline' disabled={settled} onClick={() => decide(false)}>
+          <Button
+            variant='outline'
+            disabled={settled}
+            onClick={() => decide(false)}
+          >
             {t('localRunnerApproval.deny')}
           </Button>
           <Button disabled={settled} onClick={() => decide(true)}>

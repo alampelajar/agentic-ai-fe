@@ -1,13 +1,31 @@
 import { useEffect, useState } from 'react'
-import { CircleAlert, CircleCheck, Copy, ExternalLink, Loader2 } from 'lucide-react'
+import {
+  CircleAlert,
+  CircleCheck,
+  Copy,
+  ExternalLink,
+  Loader2,
+} from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { ConfirmDialog } from '@/components/confirm-dialog'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { checkSlug, publishSite, unpublishSite, type SiteDetail } from './data/api'
+import { ConfirmDialog } from '@/components/confirm-dialog'
+import {
+  checkSlug,
+  publishSite,
+  unpublishSite,
+  type SiteDetail,
+} from './data/api'
 import { siteErrorText } from './errors'
 
 type PublishDialogProps = {
@@ -17,12 +35,25 @@ type PublishDialogProps = {
   onChanged: () => void
 }
 
-type Check = { state: 'idle' | 'checking' | 'ok' | 'problem'; text: string; url: string }
+type Check = {
+  state: 'idle' | 'checking' | 'ok' | 'problem'
+  text: string
+  url: string
+}
 
-export function PublishDialog({ site, open, onOpenChange, onChanged }: PublishDialogProps) {
+export function PublishDialog({
+  site,
+  open,
+  onOpenChange,
+  onChanged,
+}: PublishDialogProps) {
   const { t } = useTranslation()
   const [slug, setSlug] = useState(site.slug ?? site.suggested_slug)
-  const [check, setCheck] = useState<Check>({ state: 'idle', text: '', url: '' })
+  const [check, setCheck] = useState<Check>({
+    state: 'idle',
+    text: '',
+    url: '',
+  })
   const [busy, setBusy] = useState(false)
   const [published, setPublished] = useState<string | null>(null)
   const [confirmOff, setConfirmOff] = useState(false)
@@ -37,9 +68,22 @@ export function PublishDialog({ site, open, onOpenChange, onChanged }: PublishDi
       try {
         const result = await checkSlug(site.id, value)
         if (!current) return
-        setCheck(result.available ? { state: 'ok', text: t('siteBuilder.publish.available'), url: result.url } : { state: 'problem', text: t(`siteBuilder.errors.${result.code}`), url: result.url })
+        setCheck(
+          result.available
+            ? {
+                state: 'ok',
+                text: t('siteBuilder.publish.available'),
+                url: result.url,
+              }
+            : {
+                state: 'problem',
+                text: t(`siteBuilder.errors.${result.code}`),
+                url: result.url,
+              }
+        )
       } catch (error) {
-        if (current) setCheck({ state: 'problem', text: siteErrorText(t, error), url: '' })
+        if (current)
+          setCheck({ state: 'problem', text: siteErrorText(t, error), url: '' })
       }
     }, 400)
     return () => {
@@ -86,7 +130,8 @@ export function PublishDialog({ site, open, onOpenChange, onChanged }: PublishDi
     }
   }
 
-  const upToDate = site.published && site.published_version === site.current_version
+  const upToDate =
+    site.published && site.published_version === site.current_version
 
   return (
     <>
@@ -101,10 +146,16 @@ export function PublishDialog({ site, open, onOpenChange, onChanged }: PublishDi
           {published ? (
             <>
               <DialogHeader>
-                <DialogTitle>{t('siteBuilder.publish.successTitle')}</DialogTitle>
-                <DialogDescription>{t('siteBuilder.publish.successHelp')}</DialogDescription>
+                <DialogTitle>
+                  {t('siteBuilder.publish.successTitle')}
+                </DialogTitle>
+                <DialogDescription>
+                  {t('siteBuilder.publish.successHelp')}
+                </DialogDescription>
               </DialogHeader>
-              <p className='rounded-md border bg-muted px-3 py-2 text-sm break-all'>{published}</p>
+              <p className='rounded-md border bg-muted px-3 py-2 text-sm break-all'>
+                {published}
+              </p>
               <DialogFooter className='gap-2'>
                 <Button variant='outline' onClick={() => void copy(published)}>
                   <Copy className='size-4' />
@@ -121,24 +172,64 @@ export function PublishDialog({ site, open, onOpenChange, onChanged }: PublishDi
           ) : (
             <>
               <DialogHeader>
-                <DialogTitle>{site.published ? t('siteBuilder.publish.updateTitle') : t('siteBuilder.publish.title')}</DialogTitle>
+                <DialogTitle>
+                  {site.published
+                    ? t('siteBuilder.publish.updateTitle')
+                    : t('siteBuilder.publish.title')}
+                </DialogTitle>
                 <DialogDescription>
-                  {site.published ? (upToDate ? t('siteBuilder.publish.upToDate') : t('siteBuilder.publish.updateHelp', { published: site.published_version, current: site.current_version })) : t('siteBuilder.publish.help')}
+                  {site.published
+                    ? upToDate
+                      ? t('siteBuilder.publish.upToDate')
+                      : t('siteBuilder.publish.updateHelp', {
+                          published: site.published_version,
+                          current: site.current_version,
+                        })
+                    : t('siteBuilder.publish.help')}
                 </DialogDescription>
               </DialogHeader>
               <p className='rounded-md border bg-muted/50 p-3 text-sm'>
-                {t('siteBuilder.publish.versionNote', { number: site.current_version })}{' '}
-                <button type='button' className='font-medium text-primary underline-offset-4 hover:underline' onClick={() => onOpenChange(false)}>
+                {t('siteBuilder.publish.versionNote', {
+                  number: site.current_version,
+                })}{' '}
+                <button
+                  type='button'
+                  className='font-medium text-primary underline-offset-4 hover:underline'
+                  onClick={() => onOpenChange(false)}
+                >
                   {t('siteBuilder.publish.seeFirst')}
                 </button>
               </p>
               <div className='space-y-2'>
-                <Label htmlFor='site-slug'>{t('siteBuilder.publish.addressLabel')}</Label>
-                <Input id='site-slug' value={slug} maxLength={40} autoComplete='off' spellCheck={false} aria-describedby='site-slug-help site-slug-check' onChange={(event) => setSlug(event.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))} />
-                <p id='site-slug-help' className='text-xs text-muted-foreground'>
+                <Label htmlFor='site-slug'>
+                  {t('siteBuilder.publish.addressLabel')}
+                </Label>
+                <Input
+                  id='site-slug'
+                  value={slug}
+                  maxLength={40}
+                  autoComplete='off'
+                  spellCheck={false}
+                  aria-describedby='site-slug-help site-slug-check'
+                  onChange={(event) =>
+                    setSlug(
+                      event.target.value
+                        .toLowerCase()
+                        .replace(/[^a-z0-9-]/g, '')
+                    )
+                  }
+                />
+                <p
+                  id='site-slug-help'
+                  className='text-xs text-muted-foreground'
+                >
                   {t('siteBuilder.publish.addressHelp')}
                 </p>
-                <div id='site-slug-check' aria-live='polite' className='min-h-5 text-sm'>
+                <div
+                  id='site-slug-check'
+                  aria-live='polite'
+                  className='min-h-5 text-sm'
+                >
                   {check.state === 'checking' ? (
                     <span className='flex items-center gap-2 text-muted-foreground'>
                       <Loader2 className='size-4 animate-spin' />
@@ -148,7 +239,9 @@ export function PublishDialog({ site, open, onOpenChange, onChanged }: PublishDi
                     <span className='flex flex-wrap items-center gap-2 text-emerald-600 dark:text-emerald-400'>
                       <CircleCheck className='size-4' />
                       {check.text}
-                      <span className='text-xs break-all text-muted-foreground'>{check.url}</span>
+                      <span className='text-xs break-all text-muted-foreground'>
+                        {check.url}
+                      </span>
                     </span>
                   ) : check.state === 'problem' ? (
                     <span className='flex items-center gap-2 text-destructive'>
@@ -160,15 +253,31 @@ export function PublishDialog({ site, open, onOpenChange, onChanged }: PublishDi
               </div>
               <DialogFooter className='gap-2 sm:justify-between'>
                 {site.published ? (
-                  <Button variant='ghost' className='text-destructive' onClick={() => setConfirmOff(true)} disabled={busy}>
+                  <Button
+                    variant='ghost'
+                    className='text-destructive'
+                    onClick={() => setConfirmOff(true)}
+                    disabled={busy}
+                  >
                     {t('siteBuilder.publish.unpublish')}
                   </Button>
                 ) : (
                   <span />
                 )}
-                <Button onClick={() => void publish()} disabled={busy || check.state !== 'ok' || (upToDate && site.slug === slug)}>
+                <Button
+                  onClick={() => void publish()}
+                  disabled={
+                    busy ||
+                    check.state !== 'ok' ||
+                    (upToDate && site.slug === slug)
+                  }
+                >
                   {busy ? <Loader2 className='size-4 animate-spin' /> : null}
-                  {busy ? t('siteBuilder.publish.publishing') : site.published ? t('siteBuilder.workspace.update') : t('siteBuilder.publish.publish')}
+                  {busy
+                    ? t('siteBuilder.publish.publishing')
+                    : site.published
+                      ? t('siteBuilder.workspace.update')
+                      : t('siteBuilder.publish.publish')}
                 </Button>
               </DialogFooter>
             </>

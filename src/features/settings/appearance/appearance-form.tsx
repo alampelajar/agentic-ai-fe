@@ -2,8 +2,8 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { ChevronDownIcon } from '@radix-ui/react-icons'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useTranslation } from 'react-i18next'
 import { fonts } from '@/config/fonts'
+import { useTranslation } from 'react-i18next'
 import { showSubmittedData } from '@/lib/show-submitted-data'
 import { cn } from '@/lib/utils'
 import { useFont } from '@/context/font-provider'
@@ -19,6 +19,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { ThemePreview } from './theme-preview'
 
 const appearanceFormSchema = z.object({
   theme: z.enum(['light', 'dark']),
@@ -58,7 +59,7 @@ export function AppearanceForm() {
           name='font'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("settingsPage.appearance.font")}</FormLabel>
+              <FormLabel>{t('settingsPage.appearance.font')}</FormLabel>
               <div className='relative w-max'>
                 <FormControl>
                   <select
@@ -79,7 +80,7 @@ export function AppearanceForm() {
                 <ChevronDownIcon className='absolute inset-e-3 top-2.5 h-4 w-4 opacity-50' />
               </div>
               <FormDescription className='font-manrope'>
-                {t("settingsPage.appearance.fontDescription")}
+                {t('settingsPage.appearance.fontDescription')}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -90,9 +91,9 @@ export function AppearanceForm() {
           name='theme'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("settingsPage.appearance.theme")}</FormLabel>
+              <FormLabel>{t('settingsPage.appearance.theme')}</FormLabel>
               <FormDescription>
-                {t("settingsPage.appearance.themeDescription")}
+                {t('settingsPage.appearance.themeDescription')}
               </FormDescription>
               <FormMessage />
               <RadioGroup
@@ -106,23 +107,10 @@ export function AppearanceForm() {
                       <RadioGroupItem value='light' className='sr-only' />
                     </FormControl>
                     <div className='items-center rounded-md border-2 border-muted p-1 hover:border-accent'>
-                      <div className='space-y-2 rounded-sm bg-[#ecedef] p-2'>
-                        <div className='space-y-2 rounded-md bg-white p-2 shadow-xs'>
-                          <div className='h-2 w-20 rounded-lg bg-[#ecedef]' />
-                          <div className='h-2 w-25 rounded-lg bg-[#ecedef]' />
-                        </div>
-                        <div className='flex items-center space-x-2 rounded-md bg-white p-2 shadow-xs'>
-                          <div className='h-4 w-4 rounded-full bg-[#ecedef]' />
-                          <div className='h-2 w-25 rounded-lg bg-[#ecedef]' />
-                        </div>
-                        <div className='flex items-center space-x-2 rounded-md bg-white p-2 shadow-xs'>
-                          <div className='h-4 w-4 rounded-full bg-[#ecedef]' />
-                          <div className='h-2 w-25 rounded-lg bg-[#ecedef]' />
-                        </div>
-                      </div>
+                      <ThemePreview mode='light' />
                     </div>
                     <span className='block w-full p-2 text-center font-normal'>
-                      {t("settingsPage.appearance.light")}
+                      {t('settingsPage.appearance.light')}
                     </span>
                   </FormLabel>
                 </FormItem>
@@ -132,23 +120,10 @@ export function AppearanceForm() {
                       <RadioGroupItem value='dark' className='sr-only' />
                     </FormControl>
                     <div className='items-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground'>
-                      <div className='space-y-2 rounded-sm bg-slate-950 p-2'>
-                        <div className='space-y-2 rounded-md bg-slate-800 p-2 shadow-xs'>
-                          <div className='h-2 w-20 rounded-lg bg-slate-400' />
-                          <div className='h-2 w-25 rounded-lg bg-slate-400' />
-                        </div>
-                        <div className='flex items-center space-x-2 rounded-md bg-slate-800 p-2 shadow-xs'>
-                          <div className='h-4 w-4 rounded-full bg-slate-400' />
-                          <div className='h-2 w-25 rounded-lg bg-slate-400' />
-                        </div>
-                        <div className='flex items-center space-x-2 rounded-md bg-slate-800 p-2 shadow-xs'>
-                          <div className='h-4 w-4 rounded-full bg-slate-400' />
-                          <div className='h-2 w-25 rounded-lg bg-slate-400' />
-                        </div>
-                      </div>
+                      <ThemePreview mode='dark' />
                     </div>
                     <span className='block w-full p-2 text-center font-normal'>
-                      {t("settingsPage.appearance.dark")}
+                      {t('settingsPage.appearance.dark')}
                     </span>
                   </FormLabel>
                 </FormItem>
@@ -157,7 +132,9 @@ export function AppearanceForm() {
           )}
         />
 
-        <Button type='submit'>{t("settingsPage.appearance.updatePreferences")}</Button>
+        <Button type='submit'>
+          {t('settingsPage.appearance.updatePreferences')}
+        </Button>
       </form>
     </Form>
   )

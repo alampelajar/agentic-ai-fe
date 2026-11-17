@@ -1,16 +1,24 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { CircleAlert, CircleCheck, Clock, ExternalLink, Globe, Loader2, PencilLine, Sparkles, Trash2 } from 'lucide-react'
+import {
+  ExternalLink,
+  Globe,
+  Loader2,
+  PencilLine,
+  Sparkles,
+  Trash2,
+} from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { ConfirmDialog } from '@/components/confirm-dialog'
-import { Main } from '@/components/layout/main'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { ConfirmDialog } from '@/components/confirm-dialog'
+import { Main } from '@/components/layout/main'
 import { createSite, deleteSite, getSites, type Site } from './data/api'
 import { siteErrorText } from './errors'
+import { SiteStatus } from './site-status'
 
 export function SitesPage() {
   const { t, i18n } = useTranslation()
@@ -45,8 +53,14 @@ export function SitesPage() {
     setCreating(true)
     setProblem(null)
     try {
-      const site = await createSite(description.trim(), i18n.language.startsWith('en') ? 'en' : 'id')
-      await navigate({ to: '/sites/$siteId', params: { siteId: String(site.id) } })
+      const site = await createSite(
+        description.trim(),
+        i18n.language.startsWith('en') ? 'en' : 'id'
+      )
+      await navigate({
+        to: '/sites/$siteId',
+        params: { siteId: String(site.id) },
+      })
     } catch (error) {
       setProblem(siteErrorText(t, error))
       setCreating(false)
@@ -67,33 +81,66 @@ export function SitesPage() {
     }
   }
 
-  const examples = [t('siteBuilder.example1'), t('siteBuilder.example2'), t('siteBuilder.example3')]
+  const examples = [
+    t('siteBuilder.example1'),
+    t('siteBuilder.example2'),
+    t('siteBuilder.example3'),
+  ]
   const length = description.trim().length
 
   return (
     <Main className='space-y-6'>
       <div className='border-b pb-6'>
-        <p className='text-sm text-muted-foreground'>{t('siteBuilder.eyebrow')}</p>
-        <h1 className='text-2xl font-semibold tracking-tight'>{t('siteBuilder.title')}</h1>
-        <p className='mt-1 max-w-2xl text-sm text-muted-foreground'>{t('siteBuilder.subtitle')}</p>
+        <p className='text-sm text-muted-foreground'>
+          {t('siteBuilder.eyebrow')}
+        </p>
+        <h1 className='text-2xl font-semibold tracking-tight'>
+          {t('siteBuilder.title')}
+        </h1>
+        <p className='mt-1 max-w-2xl text-sm text-muted-foreground'>
+          {t('siteBuilder.subtitle')}
+        </p>
       </div>
 
       <Card>
         <CardContent className='space-y-4'>
           <div className='space-y-2'>
-            <Label htmlFor='site-description' className='text-base font-semibold'>
+            <Label
+              htmlFor='site-description'
+              className='text-base font-semibold'
+            >
               {t('siteBuilder.describeLabel')}
             </Label>
-            <Textarea id='site-description' rows={4} maxLength={2000} value={description} onChange={(event) => setDescription(event.target.value)} placeholder={t('siteBuilder.describePlaceholder')} aria-describedby='site-description-help' />
-            <p id='site-description-help' className='text-xs text-muted-foreground'>
+            <Textarea
+              id='site-description'
+              rows={4}
+              maxLength={2000}
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
+              placeholder={t('siteBuilder.describePlaceholder')}
+              aria-describedby='site-description-help'
+            />
+            <p
+              id='site-description-help'
+              className='text-xs text-muted-foreground'
+            >
               {t('siteBuilder.describeHelp')}
             </p>
           </div>
           <div className='space-y-2'>
-            <p className='text-xs text-muted-foreground'>{t('siteBuilder.examplesLabel')}</p>
+            <p className='text-xs text-muted-foreground'>
+              {t('siteBuilder.examplesLabel')}
+            </p>
             <div className='grid gap-2 md:grid-cols-3'>
               {examples.map((example) => (
-                <Button key={example} type='button' variant='outline' size='sm' className='h-full w-full items-start justify-start py-2 text-left font-normal whitespace-normal' onClick={() => setDescription(example)}>
+                <Button
+                  key={example}
+                  type='button'
+                  variant='outline'
+                  size='sm'
+                  className='h-full w-full items-start justify-start py-2 text-left font-normal whitespace-normal'
+                  onClick={() => setDescription(example)}
+                >
                   <PencilLine className='size-4' />
                   {example}
                 </Button>
@@ -106,8 +153,15 @@ export function SitesPage() {
             </p>
           ) : null}
           <div className='flex justify-end'>
-            <Button onClick={() => void start()} disabled={creating || length < 10}>
-              {creating ? <Loader2 className='size-4 animate-spin' /> : <Sparkles className='size-4' />}
+            <Button
+              onClick={() => void start()}
+              disabled={creating || length < 10}
+            >
+              {creating ? (
+                <Loader2 className='size-4 animate-spin' />
+              ) : (
+                <Sparkles className='size-4' />
+              )}
               {creating ? t('siteBuilder.starting') : t('siteBuilder.start')}
             </Button>
           </div>
@@ -115,7 +169,9 @@ export function SitesPage() {
       </Card>
 
       <section className='space-y-4'>
-        <h2 className='text-base font-semibold'>{t('siteBuilder.yourSites')}</h2>
+        <h2 className='text-base font-semibold'>
+          {t('siteBuilder.yourSites')}
+        </h2>
         {loading ? (
           <p className='flex items-center gap-2 text-sm text-muted-foreground'>
             <Loader2 className='size-4 animate-spin' />
@@ -126,7 +182,11 @@ export function SitesPage() {
             <CardContent className='py-10 text-center'>
               <p className='font-medium'>{t('siteBuilder.errorTitle')}</p>
               <p className='mt-1 text-sm text-muted-foreground'>{loadError}</p>
-              <Button className='mt-4' variant='outline' onClick={() => void load()}>
+              <Button
+                className='mt-4'
+                variant='outline'
+                onClick={() => void load()}
+              >
                 {t('siteBuilder.retry')}
               </Button>
             </CardContent>
@@ -135,8 +195,16 @@ export function SitesPage() {
           <div className='rounded-xl border border-dashed p-10 text-center'>
             <Globe className='mx-auto mb-3 size-8 text-muted-foreground' />
             <p className='font-medium'>{t('siteBuilder.emptyTitle')}</p>
-            <p className='mx-auto mt-1 max-w-md text-sm text-muted-foreground'>{t('siteBuilder.emptyDescription')}</p>
-            <Button className='mt-4' variant='outline' onClick={() => document.getElementById('site-description')?.focus()}>
+            <p className='mx-auto mt-1 max-w-md text-sm text-muted-foreground'>
+              {t('siteBuilder.emptyDescription')}
+            </p>
+            <Button
+              className='mt-4'
+              variant='outline'
+              onClick={() =>
+                document.getElementById('site-description')?.focus()
+              }
+            >
               {t('siteBuilder.describeLabel')}
             </Button>
           </div>
@@ -149,21 +217,42 @@ export function SitesPage() {
                     <h3 className='text-base font-semibold'>{site.name}</h3>
                     <SiteStatus site={site} />
                   </div>
-                  <p className='line-clamp-2 text-sm text-muted-foreground'>{site.description}</p>
-                  <p className='text-xs text-muted-foreground'>{t('siteBuilder.updated', { date: new Date(site.updated_at).toLocaleString(i18n.language) })}</p>
+                  <p className='line-clamp-2 text-sm text-muted-foreground'>
+                    {site.description}
+                  </p>
+                  <p className='text-xs text-muted-foreground'>
+                    {t('siteBuilder.updated', {
+                      date: new Date(site.updated_at).toLocaleString(
+                        i18n.language
+                      ),
+                    })}
+                  </p>
                   {site.published && site.live_url ? (
-                    <a href={site.live_url} target='_blank' rel='noreferrer' className='inline-flex w-fit items-center gap-1 text-sm text-emerald-600 underline-offset-4 hover:underline dark:text-emerald-400'>
+                    <a
+                      href={site.live_url}
+                      target='_blank'
+                      rel='noreferrer'
+                      className='inline-flex w-fit items-center gap-1 text-sm text-emerald-600 underline-offset-4 hover:underline dark:text-emerald-400'
+                    >
                       <ExternalLink className='size-4' />
                       {t('siteBuilder.visit')}
                     </a>
                   ) : null}
                   <div className='mt-auto flex flex-wrap gap-2 border-t pt-3'>
                     <Button size='sm' asChild>
-                      <Link to='/sites/$siteId' params={{ siteId: String(site.id) }}>
+                      <Link
+                        to='/sites/$siteId'
+                        params={{ siteId: String(site.id) }}
+                      >
                         {t('siteBuilder.open')}
                       </Link>
                     </Button>
-                    <Button size='sm' variant='ghost' className='text-destructive' onClick={() => setDeleting(site)}>
+                    <Button
+                      size='sm'
+                      variant='ghost'
+                      className='text-destructive'
+                      onClick={() => setDeleting(site)}
+                    >
                       <Trash2 className='size-4' />
                       {t('siteBuilder.delete')}
                     </Button>
@@ -187,27 +276,5 @@ export function SitesPage() {
         handleConfirm={() => deleting && void remove(deleting)}
       />
     </Main>
-  )
-}
-
-/** Status in a word and an icon, never by colour alone. */
-export function SiteStatus({ site }: { site: Site }) {
-  const { t } = useTranslation()
-  if (site.published) {
-    return (
-      <span className='inline-flex shrink-0 items-center gap-1 rounded-md bg-emerald-500/10 px-2 py-0.5 text-xs text-emerald-600 dark:text-emerald-400'>
-        <Globe className='size-3' />
-        {t('siteBuilder.status.published')}
-      </span>
-    )
-  }
-  const icon = { draft: PencilLine, building: Loader2, ready: CircleCheck, failed: CircleAlert }[site.status] ?? Clock
-  const Icon = icon
-  const tone = site.status === 'failed' ? 'bg-amber-500/10 text-amber-700 dark:text-amber-400' : 'bg-muted text-muted-foreground'
-  return (
-    <span className={`inline-flex shrink-0 items-center gap-1 rounded-md px-2 py-0.5 text-xs ${tone}`}>
-      <Icon className={site.status === 'building' ? 'size-3 animate-spin' : 'size-3'} />
-      {t(`siteBuilder.status.${site.status}`)}
-    </span>
   )
 }

@@ -1,4 +1,5 @@
 import { useForm } from 'react-hook-form'
+import i18n from '@/i18n'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
@@ -9,7 +10,6 @@ import {
   FormItem,
   FormLabel,
 } from '@/components/ui/form'
-import i18n from '@/i18n'
 import { PasswordInput } from './password-input'
 
 describe('PasswordInput', () => {

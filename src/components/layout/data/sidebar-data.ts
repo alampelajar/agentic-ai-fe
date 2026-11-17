@@ -1,4 +1,3 @@
-
 import {
   Globe,
   LayoutDashboard,
@@ -13,90 +12,89 @@ import {
   GalleryVerticalEnd,
   AudioWaveform,
   MessageSquareText,
-} from "lucide-react";
-
-import { type SidebarData } from "../types";
+} from 'lucide-react'
+import { type SidebarData } from '../types'
 
 export const sidebarData: SidebarData = {
   user: {
-    name: "satnaing",
-    email: "satnaingdev@gmail.com",
-    avatar: "/avatars/shadcn.jpg",
+    name: 'satnaing',
+    email: 'satnaingdev@gmail.com',
+    avatar: '/avatars/shadcn.jpg',
   },
   teams: [
     {
-      name: "agenticAI",
+      name: 'agenticAI',
       logo: Command,
-      plan: "aiSmart",
+      plan: 'aiSmart',
     },
     {
-      name: "acmeInc",
+      name: 'acmeInc',
       logo: GalleryVerticalEnd,
-      plan: "enterprise",
+      plan: 'enterprise',
     },
     {
-      name: "acmeCorp",
+      name: 'acmeCorp',
       logo: AudioWaveform,
-      plan: "startup",
+      plan: 'startup',
     },
   ],
   navGroups: [
     {
-      title: "Website",
+      title: 'Website',
       items: [
         {
-          title: "aiOverview",
-          url: "/overview",
+          title: 'aiOverview',
+          url: '/overview',
           icon: LayoutDashboard,
         },
         {
-          title: "sitesMenu",
-          url: "/sites",
+          title: 'sitesMenu',
+          url: '/sites',
           icon: Globe,
         },
       ],
     },
     {
-      title: "Settings",
+      title: 'Settings',
       items: [
         {
-          title: "settings",
+          title: 'settings',
           icon: Settings,
           items: [
             {
-              title: "account",
-              url: "/settings/account",
+              title: 'account',
+              url: '/settings/account',
               icon: Wrench,
             },
             {
-              title: "profile",
-              url: "/profile",
+              title: 'profile',
+              url: '/profile',
               icon: UserRound,
             },
             {
-              title: "appearance",
-              url: "/settings/appearance",
+              title: 'appearance',
+              url: '/settings/appearance',
               icon: Palette,
             },
             {
-              title: "notifications",
-              url: "/settings/notifications",
+              title: 'notifications',
+              url: '/settings/notifications',
               icon: Bell,
             },
             {
-              title: "display",
-              url: "/settings/display",
+              title: 'display',
+              url: '/settings/display',
               icon: Monitor,
             },
             {
-              title: "integrationsMenu",
-              url: "/settings/integrations",
+              title: 'integrationsMenu',
+              url: '/settings/integrations',
               icon: Puzzle,
             },
           ],
         },
-        { title: "feedback", url: "/feedback", icon: MessageSquareText },
+        { title: 'feedback', url: '/feedback', icon: MessageSquareText },
       ],
     },
   ],
-};
+}

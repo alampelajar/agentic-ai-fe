@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslation } from 'react-i18next'
 import { showSubmittedData } from '@/lib/show-submitted-data'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -29,7 +29,9 @@ const items = [
 // Built with t() so the message follows the chosen language.
 function makeDisplayFormSchema(message: string) {
   return z.object({
-    items: z.array(z.string()).refine((value) => value.some((item) => item), { message }),
+    items: z
+      .array(z.string())
+      .refine((value) => value.some((item) => item), { message }),
   })
 }
 
@@ -42,7 +44,10 @@ const defaultValues: Partial<DisplayFormValues> = {
 
 export function DisplayForm() {
   const { t } = useTranslation()
-  const displayFormSchema = useMemo(() => makeDisplayFormSchema(t('settingsPage.display.selectOne')), [t])
+  const displayFormSchema = useMemo(
+    () => makeDisplayFormSchema(t('settingsPage.display.selectOne')),
+    [t]
+  )
   const form = useForm<DisplayFormValues>({
     resolver: zodResolver(displayFormSchema),
     defaultValues,
@@ -60,9 +65,11 @@ export function DisplayForm() {
           render={() => (
             <FormItem>
               <div className='mb-4'>
-                <FormLabel className='text-base'>{t("settingsPage.display.sidebar")}</FormLabel>
+                <FormLabel className='text-base'>
+                  {t('settingsPage.display.sidebar')}
+                </FormLabel>
                 <FormDescription>
-                  {t("settingsPage.display.sidebarDescription")}
+                  {t('settingsPage.display.sidebarDescription')}
                 </FormDescription>
               </div>
               {items.map((item) => (
@@ -102,7 +109,7 @@ export function DisplayForm() {
             </FormItem>
           )}
         />
-        <Button type='submit'>{t("settingsPage.display.updateDisplay")}</Button>
+        <Button type='submit'>{t('settingsPage.display.updateDisplay')}</Button>
       </form>
     </Form>
   )

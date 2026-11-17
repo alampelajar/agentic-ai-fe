@@ -2,13 +2,24 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { AlertTriangle, LoaderCircle, ShieldCheck, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
+import { useAuthStore } from '@/stores/auth-store'
+import {
+  deleteCurrentUserAccount,
+  requestAccountDeletionCode,
+  verifyCurrentUserPasswordForDeletion,
+} from '@/lib/api-auth'
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
-import { deleteCurrentUserAccount, requestAccountDeletionCode, verifyCurrentUserPasswordForDeletion } from '@/lib/api-auth'
-import { useAuthStore } from '@/stores/auth-store'
 
 export function DeleteAccountCard() {
   const navigate = useNavigate()
@@ -81,7 +92,9 @@ export function DeleteAccountCard() {
       setConfirmOpen(true)
       setPassword('')
     } catch (error) {
-      setPasswordError(error instanceof Error ? error.message : copy.fallbackError)
+      setPasswordError(
+        error instanceof Error ? error.message : copy.fallbackError
+      )
     } finally {
       setVerifying(false)
     }
@@ -97,7 +110,9 @@ export function DeleteAccountCard() {
       setCode('')
       setNotice(copy.codeSent)
     } catch (error) {
-      setPasswordError(error instanceof Error ? error.message : copy.fallbackError)
+      setPasswordError(
+        error instanceof Error ? error.message : copy.fallbackError
+      )
     } finally {
       setSendingCode(false)
     }
@@ -115,15 +130,20 @@ export function DeleteAccountCard() {
   }
 
   async function handleDeleteAccount() {
-    if (countdown > 0 || deleting || (!verifiedPassword && !verifiedCode)) return
+    if (countdown > 0 || deleting || (!verifiedPassword && !verifiedCode))
+      return
     setDeleting(true)
     setDeleteError('')
     try {
-      await deleteCurrentUserAccount(verifiedCode ? { otp: verifiedCode } : { password: verifiedPassword })
+      await deleteCurrentUserAccount(
+        verifiedCode ? { otp: verifiedCode } : { password: verifiedPassword }
+      )
       resetAuth()
       await navigate({ to: '/sign-in', replace: true })
     } catch (error) {
-      setDeleteError(error instanceof Error ? error.message : copy.fallbackError)
+      setDeleteError(
+        error instanceof Error ? error.message : copy.fallbackError
+      )
       setDeleting(false)
     }
   }
@@ -159,9 +179,22 @@ export function DeleteAccountCard() {
             <AlertTriangle className='size-4' />
             {copy.sectionTitle}
           </h3>
-          <p className='text-sm text-muted-foreground'>{copy.sectionDescription}</p>
+          <p className='text-sm text-muted-foreground'>
+            {copy.sectionDescription}
+          </p>
         </div>
-        <Button type='button' variant='destructive' onClick={() => { setPassword(''); setPasswordError(''); setCodeMode(false); setCode(''); setNotice(''); setPasswordOpen(true) }}>
+        <Button
+          type='button'
+          variant='destructive'
+          onClick={() => {
+            setPassword('')
+            setPasswordError('')
+            setCodeMode(false)
+            setCode('')
+            setNotice('')
+            setPasswordOpen(true)
+          }}
+        >
           <Trash2 className='me-2 size-4' />
           {copy.openButton}
         </Button>
@@ -170,8 +203,12 @@ export function DeleteAccountCard() {
       <AlertDialog open={passwordOpen} onOpenChange={handlePasswordOpenChange}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{codeMode ? copy.codeTitle : copy.passwordTitle}</AlertDialogTitle>
-            <AlertDialogDescription>{codeMode ? copy.codeDescription : copy.passwordDescription}</AlertDialogDescription>
+            <AlertDialogTitle>
+              {codeMode ? copy.codeTitle : copy.passwordTitle}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {codeMode ? copy.codeDescription : copy.passwordDescription}
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <form
             onSubmit={(event) => {
@@ -183,7 +220,12 @@ export function DeleteAccountCard() {
           >
             {codeMode ? (
               <>
-                <label htmlFor='delete-account-code' className='text-sm font-medium'>{copy.codeLabel}</label>
+                <label
+                  htmlFor='delete-account-code'
+                  className='text-sm font-medium'
+                >
+                  {copy.codeLabel}
+                </label>
                 <Input
                   id='delete-account-code'
                   inputMode='numeric'
@@ -191,14 +233,23 @@ export function DeleteAccountCard() {
                   maxLength={6}
                   value={code}
                   placeholder={copy.codePlaceholder}
-                  onChange={(event) => setCode(event.target.value.replace(/\D/g, ''))}
+                  onChange={(event) =>
+                    setCode(event.target.value.replace(/\D/g, ''))
+                  }
                   required
                 />
-                {notice && <p className='text-sm text-muted-foreground'>{notice}</p>}
+                {notice && (
+                  <p className='text-sm text-muted-foreground'>{notice}</p>
+                )}
               </>
             ) : (
               <>
-                <label htmlFor='delete-account-password' className='text-sm font-medium'>{copy.passwordLabel}</label>
+                <label
+                  htmlFor='delete-account-password'
+                  className='text-sm font-medium'
+                >
+                  {copy.passwordLabel}
+                </label>
                 <PasswordInput
                   id='delete-account-password'
                   autoComplete='current-password'
@@ -210,25 +261,50 @@ export function DeleteAccountCard() {
                 />
               </>
             )}
-            {passwordError && <p role='alert' className='text-sm text-destructive'>{passwordError}</p>}
+            {passwordError && (
+              <p role='alert' className='text-sm text-destructive'>
+                {passwordError}
+              </p>
+            )}
             <div className='flex flex-wrap items-center gap-x-4 gap-y-1 text-sm'>
               {codeMode ? (
                 <>
-                  <button type='button' className='text-muted-foreground underline-offset-4 hover:underline' disabled={sendingCode} onClick={() => void handleSendCode()}>
+                  <button
+                    type='button'
+                    className='text-muted-foreground underline-offset-4 hover:underline'
+                    disabled={sendingCode}
+                    onClick={() => void handleSendCode()}
+                  >
                     {sendingCode ? copy.sendingCode : copy.resendCode}
                   </button>
-                  <button type='button' className='text-muted-foreground underline-offset-4 hover:underline' onClick={() => { setCodeMode(false); setCode(''); setNotice(''); setPasswordError('') }}>
+                  <button
+                    type='button'
+                    className='text-muted-foreground underline-offset-4 hover:underline'
+                    onClick={() => {
+                      setCodeMode(false)
+                      setCode('')
+                      setNotice('')
+                      setPasswordError('')
+                    }}
+                  >
                     {copy.usePassword}
                   </button>
                 </>
               ) : (
-                <button type='button' className='text-muted-foreground underline-offset-4 hover:underline' disabled={sendingCode} onClick={() => void handleSendCode()}>
+                <button
+                  type='button'
+                  className='text-muted-foreground underline-offset-4 hover:underline'
+                  disabled={sendingCode}
+                  onClick={() => void handleSendCode()}
+                >
                   {sendingCode ? copy.sendingCode : copy.noPassword}
                 </button>
               )}
             </div>
             <AlertDialogFooter>
-              <AlertDialogCancel type='button' disabled={verifying}>{copy.cancel}</AlertDialogCancel>
+              <AlertDialogCancel type='button' disabled={verifying}>
+                {copy.cancel}
+              </AlertDialogCancel>
               {codeMode ? (
                 <Button type='submit' disabled={!/^\d{6}$/.test(code)}>
                   <ShieldCheck className='me-2 size-4' />
@@ -236,7 +312,17 @@ export function DeleteAccountCard() {
                 </Button>
               ) : (
                 <Button type='submit' disabled={!password || verifying}>
-                  {verifying ? <><LoaderCircle className='me-2 size-4 animate-spin' />{copy.verifying}</> : <><ShieldCheck className='me-2 size-4' />{copy.verify}</>}
+                  {verifying ? (
+                    <>
+                      <LoaderCircle className='me-2 size-4 animate-spin' />
+                      {copy.verifying}
+                    </>
+                  ) : (
+                    <>
+                      <ShieldCheck className='me-2 size-4' />
+                      {copy.verify}
+                    </>
+                  )}
                 </Button>
               )}
             </AlertDialogFooter>
@@ -247,14 +333,42 @@ export function DeleteAccountCard() {
       <AlertDialog open={confirmOpen} onOpenChange={handleConfirmOpenChange}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className='text-destructive'>{copy.finalTitle}</AlertDialogTitle>
-            <AlertDialogDescription>{copy.finalDescription}</AlertDialogDescription>
+            <AlertDialogTitle className='text-destructive'>
+              {copy.finalTitle}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {copy.finalDescription}
+            </AlertDialogDescription>
           </AlertDialogHeader>
-          {deleteError && <p role='alert' className='rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive'>{deleteError}</p>}
+          {deleteError && (
+            <p
+              role='alert'
+              className='rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive'
+            >
+              {deleteError}
+            </p>
+          )}
           <AlertDialogFooter>
-            <AlertDialogCancel type='button' disabled={deleting}>{copy.cancel}</AlertDialogCancel>
-            <Button type='button' variant='destructive' disabled={countdown > 0 || deleting} onClick={() => void handleDeleteAccount()}>
-              {deleting ? <><LoaderCircle className='me-2 size-4 animate-spin' />{copy.deleting}</> : <><Trash2 className='me-2 size-4' />{countdown > 0 ? copy.wait(countdown) : copy.yesDelete}</>}
+            <AlertDialogCancel type='button' disabled={deleting}>
+              {copy.cancel}
+            </AlertDialogCancel>
+            <Button
+              type='button'
+              variant='destructive'
+              disabled={countdown > 0 || deleting}
+              onClick={() => void handleDeleteAccount()}
+            >
+              {deleting ? (
+                <>
+                  <LoaderCircle className='me-2 size-4 animate-spin' />
+                  {copy.deleting}
+                </>
+              ) : (
+                <>
+                  <Trash2 className='me-2 size-4' />
+                  {countdown > 0 ? copy.wait(countdown) : copy.yesDelete}
+                </>
+              )}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

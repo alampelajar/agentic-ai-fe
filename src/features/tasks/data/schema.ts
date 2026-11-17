@@ -9,11 +9,14 @@ export const taskSchema = z.object({
   priority: z.string(),
   agent_id: z.number().nullable().optional(),
   model_id: z.number().nullable().optional(),
-  agent: z.object({
-    id: z.number(),
-    name: z.string(),
-    slug: z.string(),
-  }).nullable().optional(),
+  agent: z
+    .object({
+      id: z.number(),
+      name: z.string(),
+      slug: z.string(),
+    })
+    .nullable()
+    .optional(),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
 })
