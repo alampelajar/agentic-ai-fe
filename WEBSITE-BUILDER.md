@@ -462,7 +462,7 @@ node scripts/capture-looks.mjs           # in the frontend: the card pictures, p
   `*.localhost` name to this computer, so no DNS or hosts file is needed.
 - To serve the made websites (previews, examples and published sites) under a real
   domain from this computer (Cloudflare Tunnel, HTTPS), follow
-  `agentic-ai-be/docs/website-builder-real-domain.md`. In use now: `accpewe.my.id`.
+  `agentic-ai-be/docs/website-builder-real-domain.md`. In use now: `thismy.web.id` (before 2026-11-17: `accpewe.my.id`).
   Published addresses may also use their own scheme and port while previews stay
   local (`SITES_PUBLIC_SCHEME`, `SITES_PUBLIC_PORT`).
 - Only one agent worker per database (`BUILDER_MULTIPLE_WORKERS` unset): on start it
