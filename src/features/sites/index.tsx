@@ -16,14 +16,22 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { Main } from '@/components/layout/main'
-import { createSite, deleteSite, getSites, type Site } from './data/api'
+import {
+  createSite,
+  deleteSite,
+  getSitesAndPlan,
+  type Plan,
+  type Site,
+} from './data/api'
 import { siteErrorText } from './errors'
+import { PlanUsage, planBlocksNewSite } from './plan-usage'
 import { SiteStatus } from './site-status'
 
 export function SitesPage() {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const [sites, setSites] = useState<Site[]>([])
+  const [plan, setPlan] = useState<Plan | null>(null)
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
   const [description, setDescription] = useState('')
@@ -36,7 +44,9 @@ export function SitesPage() {
     setLoading(true)
     setLoadError(null)
     try {
-      setSites(await getSites())
+      const loaded = await getSitesAndPlan()
+      setSites(loaded.sites)
+      setPlan(loaded.plan)
     } catch (error) {
       setLoadError(siteErrorText(t, error))
     } finally {
@@ -87,6 +97,19 @@ export function SitesPage() {
     t('siteBuilder.example3'),
   ]
   const length = description.trim().length
+  const blocked = planBlocksNewSite(plan)
+  let blockedText: string | null = null
+  if (plan && blocked) {
+    blockedText =
+      plan.sites_used >= plan.site_limit
+        ? t('siteBuilder.plan.siteLimitReached', { limit: plan.site_limit })
+        : t('siteBuilder.plan.allowanceUsed', {
+            date: new Date(plan.resets_at).toLocaleDateString(i18n.language, {
+              day: 'numeric',
+              month: 'long',
+            }),
+          })
+  }
 
   return (
     <Main className='space-y-6'>
@@ -152,10 +175,18 @@ export function SitesPage() {
               {problem}
             </p>
           ) : null}
+          {blockedText ? (
+            <p
+              role='status'
+              className='rounded-md bg-amber-500/10 px-3 py-2 text-sm text-amber-700 dark:text-amber-400'
+            >
+              {blockedText}
+            </p>
+          ) : null}
           <div className='flex justify-end'>
             <Button
               onClick={() => void start()}
-              disabled={creating || length < 10}
+              disabled={creating || length < 10 || blocked}
             >
               {creating ? (
                 <Loader2 className='size-4 animate-spin' />
@@ -167,6 +198,8 @@ export function SitesPage() {
           </div>
         </CardContent>
       </Card>
+
+      {plan ? <PlanUsage plan={plan} /> : null}
 
       <section className='space-y-4'>
         <h2 className='text-base font-semibold'>

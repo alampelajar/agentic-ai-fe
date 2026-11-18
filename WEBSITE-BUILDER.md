@@ -78,7 +78,8 @@ Change one only by editing this table first, with the reason.
 | Dependencies | Pinned in `deploy/site-image/package-lock.json` and installed in the site image (`agentic-site-node:1`) when the host builds it. Sites have no `node_modules` and no install job. The agent may not add or upgrade packages | Removes the largest source of broken builds and supply-chain risk, and builds need no network |
 | Database driver | Node's built-in `node:sqlite` | The install job cannot build native add-ons |
 | Visual design | The system picks from a curated library of design directions and writes it into the site as tokens. The model does not choose fonts, colours or page composition | Left alone, a model gives every site the same look |
-| Colours a person asks for | Each look has its own palette and two curated variants (36 palettes, all checked for contrast by `TestPalettesAreReadable`). Colour words in the description or the planner's `look_wish` (`ColourTags`) rank looks and pick the matching variant | A wish ("tema kebun hijau") is honoured without letting the model invent colours |
+| Colours a person asks for | Each look has its own palette and two curated variants (36 palettes, all checked for contrast by `TestPalettesAreReadable`). Colour words in the description or the planner's `look_wish` (`ColourTags`) rank looks and pick the matching variant. *Changed 2026-11-18 (owner):* a change that asks for other colours ("background cyan") is carried out: the model returns the tokens to change in a `<colours>` block, the worker keeps every text token readable (`MergeColours`), stores them in the brief (`Brief.Colours`) and writes them into `theme.css`. Pages still use only the token classes. Choosing another look clears them | A wish ("tema kebun hijau") is honoured; before, a colour asked for in a change was silently undone by the token check and the run still said "done" |
+| Limits per person | *Added 2026-11-18 (owner):* without premium, 2 websites and 200,000 tokens a month (`BUILDER_MONTHLY_TOKENS`), counted from the providers' reported usage in `AIModelCallLog.Tokens` (estimated at four characters per token when a provider reports none) and reset on the 1st (WIB). A premium account (`User.IsPremium`, set by admins in Users, Edit user, Plan) gets 1,000,000 tokens a month (`BUILDER_PREMIUM_MONTHLY_TOKENS`), up to 50 websites and every active system model; it lasts 1, 3, 6 or 12 months, until a date, or without end (`User.PremiumUntil`) and counts as free again once that moment passes. Refused with `site_limit` or `token_limit`; a run that runs out stops with a plain message and keeps its finished parts | Keeps the cost of free accounts bounded; 200,000 tokens is about one website with a few changes |
 | Languages | `Site.language` is the website's, detected from the description by the planner, with a word count (`DetectLanguage`) as fallback; `Site.ui_language` is the builder's (questions, progress, messages) | An Indonesian description in an English interface made an English site |
 | Seeing a look first | One example website per look, made once by the normal pipeline (`cmd/builder-samples`), served as static files at `contoh-<look>.<PREVIEW_DOMAIN>`; its screenshot is the card's picture (`scripts/capture-looks.mjs`) | A look cannot be judged from three colour dots |
 | Finished pieces (kit) | `web/src/kit/` in the template: Guestbook, Countdown, Timeline, AddToCalendar, MapLink, Ornament, Monogram, FramedPhoto, PhotoGallery, styled only by the theme's tokens. Written again into every site at every run (`RefreshFixedFiles`); the agent may use them, never change them | Raises the floor of every site, and an invitation looks like one without the model inventing widgets |
@@ -86,7 +87,7 @@ Change one only by editing this table first, with the reason.
 | Continuing a stopped run | A progress record per site (`<site>/progress.json`, keyed by the brief, look and request) lists the finished parts; the same work started again skips them. Cleared when the run succeeds or a version is restored | A model error late in a run cost the whole run |
 | Moods and kinds | Each look has hand-written mood words (`MoodTags`) and `fits`; for a known kind, looks made for other kinds are offered only when fewer than three fit (`relatedKinds` counts as fitting) | A wedding was offered a workshop look and a shop look |
 | Fonts | A fixed set of font families ships inside the template | The agent cannot add packages, and sites must not depend on an outside font service |
-| Choice of AI model | Automatic, ranked like the chat's Auto (coding steps rank for coding, questions and summaries for speed) over the system models and the person's own; combo models are skipped. The person never picks a model, and the Builder shows no model choice | A layperson cannot judge models; choosing one would only confuse |
+| Choice of AI model | Automatic, ranked like the chat's Auto (coding steps rank for coding, questions and summaries for speed) over the active system models on system providers; combo models are skipped. Without premium only the model(s) an admin marked "Builder default" (`AIModel.IsBuilderDefault`) are used, or every active system model when none is marked. A model refused at once for its key or credit (401, 402, 403) does not use up one of the three tries. A coding call may take 12 minutes, a question 3. The person never picks a model, and the Builder shows no model choice | A layperson cannot judge models; choosing one would only confuse |
 | Where the agent loop runs | On the server, in an agent worker (`cmd/agent-worker`) | A run continues when the tab is closed |
 | Agent protocol | The worker runs fixed steps (layout, each page, check, repair, review) and the model answers with complete files in `<file path="...">` blocks. No native tool calling | Works with every model the router serves, including free ones without tool calling; each step is small enough for short context windows |
 | Build check | One sandbox job, `site-build`: type check, build, render every page once, bundle the server, start it and call it. Errors name the file and line | Catches what breaks a page before the person sees it, and gives the repair step precise errors |
@@ -164,6 +165,8 @@ enforces the ones marked *enforced*):
   (`CheckAgentPath`, tested).
 - Colours, fonts, radius and spacing come from the tokens in `theme.css` only. No hex
   values, no `font-family` and no palette classes in pages or sections. *Enforced.*
+  Colours the owner asks for in a change go into the tokens through a `<colours>`
+  block (section 4), never into the pages.
 - Compose each page following the direction's composition (described in words for
   each direction, see section 15), with the sections in the order the brief gives.
 - No secrets, tokens or personal data in the code. No calls to outside services.
@@ -434,6 +437,14 @@ reads well at phone width. The token rule (no hex values, no `font-family`, no
 palette classes) is checked by the worker with a plain text search, not left to the
 model. Judging a screenshot of the rendered page is out of scope for the first
 target.
+
+*Added 2026-11-18 (owner):* what the owner asked for in a change wins over the
+direction, its composition and the "never" list. The review and every fix get the
+owner's requests listed under "The owner's requests come first" (`ownerRequestsRule`),
+and a fix that would undo one is ignored. A reviewer had removed a rainbow the owner
+asked for because the look was plain. The worker's plain-text check still refuses
+gradients and palette classes, so a decoration in many colours is limited to the
+eight theme tokens.
 
 ## 16. Running it on this computer
 

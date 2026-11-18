@@ -160,10 +160,30 @@ async function parse<T>(response: Response): Promise<T> {
 
 const json = (body: unknown): RequestInit => ({ body: JSON.stringify(body) })
 
-export async function getSites(): Promise<Site[]> {
-  return (
-    (await parse<{ sites: Site[] }>(await apiFetch('/api/sites'))).sites ?? []
+/** What the person may still use: websites, and the monthly AI allowance (0 = no limit). */
+export type Plan = {
+  premium: boolean
+  site_limit: number
+  sites_used: number
+  token_limit: number
+  tokens_used: number
+  resets_at: string
+  /** When the premium account ends; null when it does not end or there is none. */
+  premium_until: string | null
+}
+
+export async function getSitesAndPlan(): Promise<{
+  sites: Site[]
+  plan: Plan | null
+}> {
+  const data = await parse<{ sites: Site[]; plan?: Plan }>(
+    await apiFetch('/api/sites')
   )
+  return { sites: data.sites ?? [], plan: data.plan ?? null }
+}
+
+export async function getSites(): Promise<Site[]> {
+  return (await getSitesAndPlan()).sites
 }
 
 export async function createSite(
