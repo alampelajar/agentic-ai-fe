@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import {
+  ArrowUp,
   ExternalLink,
   Globe,
   Loader2,
@@ -91,13 +92,12 @@ export function SitesPage() {
     }
   }
 
-  const examples = [
-    t('siteBuilder.example1'),
-    t('siteBuilder.example2'),
-    t('siteBuilder.example3'),
-  ]
-  const length = description.trim().length
+  const examples = [1, 2, 3].map((number) => ({
+    label: t(`siteBuilder.example${number}Short`),
+    text: t(`siteBuilder.example${number}`),
+  }))
   const blocked = planBlocksNewSite(plan)
+  const canStart = !creating && !blocked && description.trim().length >= 10
   let blockedText: string | null = null
   if (plan && blocked) {
     blockedText =
@@ -112,92 +112,112 @@ export function SitesPage() {
   }
 
   return (
-    <Main className='space-y-6'>
-      <div className='border-b pb-6'>
-        <p className='text-sm text-muted-foreground'>
-          {t('siteBuilder.eyebrow')}
-        </p>
-        <h1 className='text-2xl font-semibold tracking-tight'>
-          {t('siteBuilder.title')}
-        </h1>
-        <p className='mt-1 max-w-2xl text-sm text-muted-foreground'>
-          {t('siteBuilder.subtitle')}
-        </p>
-      </div>
+    <Main className='space-y-12'>
+      <section className='mx-auto flex w-full max-w-3xl flex-col items-center gap-6 pt-6 text-center sm:pt-16'>
+        <div className='space-y-2'>
+          <p className='inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs text-muted-foreground'>
+            <Sparkles className='size-4' />
+            {t('siteBuilder.eyebrow')}
+          </p>
+          <h1 className='text-2xl font-semibold tracking-tight sm:text-3xl'>
+            {t('siteBuilder.describeLabel')}
+          </h1>
+          <p className='mx-auto max-w-xl text-sm text-muted-foreground'>
+            {t('siteBuilder.subtitle')}
+          </p>
+        </div>
 
-      <Card>
-        <CardContent className='space-y-4'>
-          <div className='space-y-2'>
-            <Label
-              htmlFor='site-description'
-              className='text-base font-semibold'
-            >
-              {t('siteBuilder.describeLabel')}
-            </Label>
-            <Textarea
-              id='site-description'
-              rows={4}
-              maxLength={2000}
-              value={description}
-              onChange={(event) => setDescription(event.target.value)}
-              placeholder={t('siteBuilder.describePlaceholder')}
-              aria-describedby='site-description-help'
-            />
+        <form
+          className='w-full rounded-xl border bg-card text-left transition-colors focus-within:border-ring'
+          onSubmit={(event) => {
+            event.preventDefault()
+            if (canStart) void start()
+          }}
+        >
+          <Label htmlFor='site-description' className='sr-only'>
+            {t('siteBuilder.describeLabel')}
+          </Label>
+          <Textarea
+            id='site-description'
+            rows={4}
+            maxLength={2000}
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+            onKeyDown={(event) => {
+              // Ctrl+Enter (or Cmd+Enter) starts, Enter alone adds a new line.
+              if (
+                event.key === 'Enter' &&
+                (event.ctrlKey || event.metaKey) &&
+                canStart
+              ) {
+                event.preventDefault()
+                void start()
+              }
+            }}
+            placeholder={t('siteBuilder.describePlaceholder')}
+            aria-describedby='site-description-help'
+            className='min-h-32 resize-none border-0 bg-transparent px-4 py-3 shadow-none focus-visible:ring-0 dark:bg-transparent'
+          />
+          <div className='flex flex-col gap-2 border-t px-4 py-3 sm:flex-row sm:items-center sm:justify-between'>
             <p
               id='site-description-help'
               className='text-xs text-muted-foreground'
             >
               {t('siteBuilder.describeHelp')}
             </p>
-          </div>
-          <div className='space-y-2'>
-            <p className='text-xs text-muted-foreground'>
-              {t('siteBuilder.examplesLabel')}
-            </p>
-            <div className='grid gap-2 md:grid-cols-3'>
-              {examples.map((example) => (
-                <Button
-                  key={example}
-                  type='button'
-                  variant='outline'
-                  size='sm'
-                  className='h-full w-full items-start justify-start py-2 text-left font-normal whitespace-normal'
-                  onClick={() => setDescription(example)}
-                >
-                  <PencilLine className='size-4' />
-                  {example}
-                </Button>
-              ))}
-            </div>
-          </div>
-          {problem ? (
-            <p role='alert' className='text-sm text-destructive'>
-              {problem}
-            </p>
-          ) : null}
-          {blockedText ? (
-            <p
-              role='status'
-              className='rounded-md bg-amber-500/10 px-3 py-2 text-sm text-amber-700 dark:text-amber-400'
-            >
-              {blockedText}
-            </p>
-          ) : null}
-          <div className='flex justify-end'>
             <Button
-              onClick={() => void start()}
-              disabled={creating || length < 10 || blocked}
+              type='submit'
+              className='shrink-0 self-end sm:self-auto'
+              disabled={!canStart}
             >
               {creating ? (
                 <Loader2 className='size-4 animate-spin' />
               ) : (
-                <Sparkles className='size-4' />
+                <ArrowUp className='size-4' />
               )}
               {creating ? t('siteBuilder.starting') : t('siteBuilder.start')}
             </Button>
           </div>
-        </CardContent>
-      </Card>
+        </form>
+
+        <div className='flex w-full flex-col items-center gap-2'>
+          <p className='text-xs text-muted-foreground'>
+            {t('siteBuilder.examplesLabel')}
+          </p>
+          <div className='flex flex-wrap justify-center gap-2'>
+            {examples.map((example) => (
+              <Button
+                key={example.label}
+                type='button'
+                variant='outline'
+                size='sm'
+                className='rounded-full font-normal'
+                onClick={() => {
+                  setDescription(example.text)
+                  document.getElementById('site-description')?.focus()
+                }}
+              >
+                <PencilLine className='size-4' />
+                {example.label}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {problem ? (
+          <p role='alert' className='text-sm text-destructive'>
+            {problem}
+          </p>
+        ) : null}
+        {blockedText ? (
+          <p
+            role='status'
+            className='rounded-md bg-amber-500/10 px-3 py-2 text-sm text-amber-700 dark:text-amber-400'
+          >
+            {blockedText}
+          </p>
+        ) : null}
+      </section>
 
       {plan ? <PlanUsage plan={plan} /> : null}
 

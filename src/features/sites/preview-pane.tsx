@@ -18,6 +18,8 @@ type PreviewPaneProps = {
   /** Changes when a new version is shown, so the frame loads it. */
   version: number
   busy: boolean
+  /** Shown inside another panel: no frame of its own, and the title only for screen readers. */
+  bare?: boolean
 }
 
 // A preview address works for two hours; asking again every 10 minutes keeps the
@@ -29,6 +31,7 @@ export function PreviewPane({
   siteName,
   version,
   busy,
+  bare,
 }: PreviewPaneProps) {
   const { t } = useTranslation()
   const [url, setUrl] = useState<string | null>(null)
@@ -55,10 +58,18 @@ export function PreviewPane({
   return (
     <section
       aria-label={t('siteBuilder.preview.title')}
-      className='flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border bg-card'
+      className={cn(
+        'flex min-h-0 flex-1 flex-col overflow-hidden',
+        !bare && 'rounded-xl border bg-card'
+      )}
     >
-      <div className='flex flex-wrap items-center justify-between gap-2 border-b px-3 py-2'>
-        <h2 className='text-sm font-semibold'>
+      <div
+        className={cn(
+          'flex flex-wrap items-center gap-2 border-b px-3 py-2',
+          bare ? 'justify-end' : 'justify-between'
+        )}
+      >
+        <h2 className={cn('text-sm font-semibold', bare && 'sr-only')}>
           {t('siteBuilder.preview.title')}
         </h2>
         <div className='flex items-center gap-1'>

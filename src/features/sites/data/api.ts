@@ -406,3 +406,41 @@ export async function followRun(
     await new Promise((resolve) => setTimeout(resolve, 2000))
   }
 }
+
+/** One readable file of a version, marked against the version before it. */
+export type VersionFile = {
+  path: string
+  size: number
+  change?: 'added' | 'changed' | 'removed'
+}
+
+export async function getVersionFiles(
+  id: number,
+  number: number
+): Promise<{ files: VersionFile[]; has_previous: boolean }> {
+  const data = await parse<{ files: VersionFile[]; has_previous: boolean }>(
+    await apiFetch(`/api/sites/${id}/versions/${number}/files`)
+  )
+  return { files: data.files ?? [], has_previous: data.has_previous }
+}
+
+export type VersionFileContent = {
+  path: string
+  /** False when the version removed the file; content is then empty. */
+  exists: boolean
+  content: string
+  /** The same file in the version before, when it had it. */
+  previous_content?: string
+}
+
+export async function getVersionFile(
+  id: number,
+  number: number,
+  path: string
+): Promise<VersionFileContent> {
+  return parse(
+    await apiFetch(
+      `/api/sites/${id}/versions/${number}/file?path=${encodeURIComponent(path)}`
+    )
+  )
+}
