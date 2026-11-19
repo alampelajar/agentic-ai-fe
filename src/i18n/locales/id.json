@@ -1583,7 +1583,7 @@
       "unauthorized": "Sesi Anda sudah berakhir. Silakan masuk lagi.",
       "not_found": "Website ini tidak ada atau bukan milik Anda.",
       "description_length": "Ceritakan website Anda dalam 10 sampai 2000 karakter.",
-      "site_limit": "Anda sudah mencapai batas 10 website. Hapus website yang tidak dipakai.",
+      "site_limit": "Jumlah website Anda sudah mencapai batas. Hapus website yang tidak dipakai.",
       "workspace_limit": "Proyek Anda sudah terlalu banyak. Hapus yang tidak dipakai.",
       "storage": "Penyimpanan sedang bermasalah. Coba lagi nanti.",
       "run_active": "Website sedang dikerjakan. Tunggu sampai selesai.",
@@ -1604,7 +1604,8 @@
       "slug_reserved": "Alamat ini tidak boleh dipakai. Pilih yang lain.",
       "restore_failed": "Versi tersebut belum bisa dikembalikan.",
       "delete_failed": "Website belum berhasil dihapus.",
-      "invalid_name": "Nama tidak valid."
+      "invalid_name": "Nama tidak valid.",
+      "token_limit": "Jatah AI Anda bulan ini sudah habis. Coba lagi bulan depan."
     },
     "toast": {
       "deleted": "Website sudah dihapus.",
@@ -1617,6 +1618,19 @@
       "done": "Website Anda sudah jadi.",
       "changeDone": "Perubahan sudah selesai.",
       "runFailed": "Pekerjaan belum selesai."
+    },
+    "plan": {
+      "title": "Paket gratis Anda",
+      "sites": "Website",
+      "sitesValue": "{{used}} dari {{limit}}",
+      "allowance": "Jatah AI bulan ini",
+      "allowanceValue": "{{percent}}% terpakai",
+      "resets": "Jatah AI kembali penuh pada {{date}}.",
+      "premium": "Premium, tanpa batas waktu",
+      "siteLimitReached": "Anda sudah punya {{limit}} website. Hapus satu untuk membuat yang baru.",
+      "allowanceUsed": "Jatah AI Anda bulan ini sudah habis. Anda bisa membuat dan mengubah website lagi mulai {{date}}.",
+      "premiumUntil": "Premium sampai {{date}}",
+      "titlePremium": "Paket premium Anda"
     }
   }
 }

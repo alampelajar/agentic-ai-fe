@@ -1583,7 +1583,7 @@
       "unauthorized": "Your session has ended. Sign in again.",
       "not_found": "This website does not exist or is not yours.",
       "description_length": "Describe your website in 10 to 2000 characters.",
-      "site_limit": "You have reached the limit of 10 websites. Delete one you no longer need.",
+      "site_limit": "You have reached the limit of websites. Delete one you no longer need.",
       "workspace_limit": "You have too many projects. Delete one you do not use.",
       "storage": "Saving is not possible right now. Try again later.",
       "run_active": "The website is being worked on. Wait until it is finished.",
@@ -1604,7 +1604,8 @@
       "slug_reserved": "This address cannot be used. Choose another one.",
       "restore_failed": "The version could not be brought back.",
       "delete_failed": "The website could not be deleted.",
-      "invalid_name": "The name is not valid."
+      "invalid_name": "The name is not valid.",
+      "token_limit": "Your AI work for this month is used up. Try again next month."
     },
     "toast": {
       "deleted": "The website was deleted.",
@@ -1617,6 +1618,19 @@
       "done": "Your website is ready.",
       "changeDone": "The change is done.",
       "runFailed": "The work was not finished."
+    },
+    "plan": {
+      "title": "Your free plan",
+      "sites": "Websites",
+      "sitesValue": "{{used}} of {{limit}}",
+      "allowance": "AI work this month",
+      "allowanceValue": "{{percent}}% used",
+      "resets": "The AI work starts again on {{date}}.",
+      "premium": "Premium, no end date",
+      "siteLimitReached": "You already have {{limit}} websites. Delete one to make a new one.",
+      "allowanceUsed": "Your AI work for this month is used up. You can make and change websites again from {{date}}.",
+      "premiumUntil": "Premium until {{date}}",
+      "titlePremium": "Your premium plan"
     }
   }
 }
