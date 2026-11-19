@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import {
   ArrowUp,
+  Copy,
   ExternalLink,
   Globe,
   Loader2,
   PencilLine,
   Sparkles,
   Trash2,
+  X,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
@@ -22,9 +24,11 @@ import {
   deleteSite,
   getSitesAndPlan,
   type Plan,
+  type ShowcaseSite,
   type Site,
 } from './data/api'
 import { siteErrorText } from './errors'
+import { Gallery } from './gallery'
 import { PlanUsage, planBlocksNewSite } from './plan-usage'
 import { SiteStatus } from './site-status'
 
@@ -40,6 +44,8 @@ export function SitesPage() {
   const [problem, setProblem] = useState<string | null>(null)
   const [deleting, setDeleting] = useState<Site | null>(null)
   const [removing, setRemoving] = useState(false)
+  // A gallery website whose look and page list the new website copies.
+  const [remix, setRemix] = useState<ShowcaseSite | null>(null)
 
   const load = async () => {
     setLoading(true)
@@ -66,7 +72,8 @@ export function SitesPage() {
     try {
       const site = await createSite(
         description.trim(),
-        i18n.language.startsWith('en') ? 'en' : 'id'
+        i18n.language.startsWith('en') ? 'en' : 'id',
+        remix?.id
       )
       await navigate({
         to: '/sites/$siteId',
@@ -76,6 +83,14 @@ export function SitesPage() {
       setProblem(siteErrorText(t, error))
       setCreating(false)
     }
+  }
+
+  // Copying a gallery website: the box at the top asks for this person's own story.
+  const copy = (site: ShowcaseSite) => {
+    setRemix(site)
+    setProblem(null)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    document.getElementById('site-description')?.focus({ preventScroll: true })
   }
 
   const remove = async (site: Site) => {
@@ -134,6 +149,24 @@ export function SitesPage() {
             if (canStart) void start()
           }}
         >
+          {remix ? (
+            <div className='flex items-start justify-between gap-2 border-b px-4 py-3'>
+              <p className='flex items-start gap-2 text-sm'>
+                <Copy className='mt-0.5 size-4 shrink-0 text-primary' />
+                {t('siteBuilder.gallery.copying', { name: remix.name })}
+              </p>
+              <Button
+                type='button'
+                variant='ghost'
+                size='icon'
+                className='size-8 shrink-0'
+                aria-label={t('siteBuilder.gallery.stopCopying')}
+                onClick={() => setRemix(null)}
+              >
+                <X className='size-4' />
+              </Button>
+            </div>
+          ) : null}
           <Label htmlFor='site-description' className='sr-only'>
             {t('siteBuilder.describeLabel')}
           </Label>
@@ -316,6 +349,8 @@ export function SitesPage() {
           </div>
         )}
       </section>
+
+      <Gallery onCopy={copy} />
 
       <ConfirmDialog
         open={deleting !== null}

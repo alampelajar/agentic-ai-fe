@@ -50,6 +50,10 @@ These hold on every Builder screen, in addition to `DESIGN.md`.
    (owner):* the code of each version can be read (never edited) in "Code", and what
    the last change did, file by file, in "Changes". The run log stays behind "Lihat
    catatan lengkap", closed by default.
+   *Added 2026-11-19 (owner):* below the person's own websites, the start screen shows
+   a gallery of websites other people made ("Galeri website"), filtered by kind. Each
+   can be opened large ("Lihat") and copied ("Tiru"): the new website starts with its
+   look and page list, never its text (section 4, "Gallery").
 6. **Every change can be undone.** Each finished run is a version the person can
    return to.
 7. **Content is written for the person.** The AI writes real text in the person's
@@ -103,6 +107,7 @@ Change one only by editing this table first, with the reason.
 | Outbound network from a site | None | Stops spam, scanning and data theft from generated code |
 | Addresses | Published: `<name>.<SITES_DOMAIN>`. Preview: the signed name above. Development: `*.sites.localhost` and `*.preview.localhost` on port 8090, which browsers resolve to this computer. Previews, examples and published sites may share one domain (`p-...` and `contoh-...` names are never given to a site), because a free wildcard certificate covers one level of names only | Wildcard DNS and TLS, nothing to set up per site |
 | Domains | Both come from configuration. One domain is acceptable in development; before strangers can publish, sites move to a domain separate from the app | Reputation and cookie isolation |
+| Gallery | *Added 2026-11-19 (owner):* only published websites an admin chose (`Site.ShowcasedAt`, set in the admin console's Website history, "Show in gallery", audited as `site.showcase`); a website taken offline leaves the gallery. The gallery shows the name, kind, look, page titles and a live view of the published address, never the description, contact details or owner. "Tiru" creates a site with `RemixOf`: its look is offered first and chosen, and the brief is asked to keep the same pages in the same order (`BriefInput.PageTitles`), written for the new person's own facts, still leaving out a page without its photos or story | Strangers' websites are shown only after a person checks them, and copying the structure never carries another person's data |
 | Product name in code | `Site` (model, routes, feature folder `sites`) | One word everywhere |
 
 ## 5. Architecture
@@ -250,6 +255,10 @@ into PostgreSQL.
 | `GET /sites/:id/preview` | A fresh signed preview address; keeps the preview running |
 | `POST /sites/:id/publish`, `POST /sites/:id/unpublish` | Publish the current version at an address; take it offline |
 | `GET /sites/slug-available?slug=&site_id=` | Checks an address before publishing |
+| `GET /sites/showcase?lang=` | The gallery: published websites an admin chose, newest choice first (any signed-in person) |
+| `PATCH /admin/sites/:id/showcase` | Admin only: puts a published website in the gallery or takes it out |
+
+`POST /sites` also takes `remix_of`, the id of a website in the gallery to copy.
 
 Versions come with `GET /sites/:id`. Errors carry a `code` that the interface
 translates (`siteBuilder.errors.<code>`).

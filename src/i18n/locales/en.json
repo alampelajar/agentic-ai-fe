@@ -1666,6 +1666,39 @@
       "changesHelp": "After you ask for a change, you can see here what was changed.",
       "tooLarge": "This change is too big to show here.",
       "sameLines": "Unchanged lines: {{count}}"
+    },
+    "gallery": {
+      "title": "Website gallery",
+      "help": "Websites other people made. Like one? Press Copy to use its look and its pages for your own website.",
+      "loading": "Loading the gallery...",
+      "error": "The gallery could not be loaded.",
+      "empty": "No example websites yet",
+      "emptyHelp": "Websites chosen by our team will appear here.",
+      "filter": "Show websites of one kind",
+      "all": "All",
+      "kinds": {
+        "food": "Food and drink",
+        "shop": "Shops",
+        "service": "Services",
+        "health": "Health and beauty",
+        "creative": "Creative work",
+        "event": "Weddings and events",
+        "community": "Community and school",
+        "travel": "Travel and stays",
+        "personal": "Personal",
+        "other": "Other"
+      },
+      "view": "View",
+      "copy": "Copy",
+      "copyThis": "Copy this website",
+      "viewName": "View {{name}}",
+      "copyName": "Copy {{name}}",
+      "pages": "Pages: {{count}}",
+      "frameTitle": "Example website: {{name}}",
+      "viewHelp": "This website is already online. Press Copy to use its look and its pages for your own website.",
+      "copying": "You are copying the look and the pages of \"{{name}}\". Now tell us about your own website.",
+      "stopCopying": "Stop copying",
+      "copiedLook": "The look of \"{{name}}\" is already chosen. You can still pick another one."
     }
   }
 }

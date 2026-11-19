@@ -1,5 +1,5 @@
 import { useState, type RefObject } from 'react'
-import { Loader2 } from 'lucide-react'
+import { Copy, Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import type { Direction } from '../data/api'
@@ -15,6 +15,8 @@ type LookStepProps = {
   onShowAll: (showAll: boolean) => void
   busy: boolean
   problem: string | null
+  /** The name of the gallery website this one copies, whose look is chosen first. */
+  copiedFrom?: string
   headingRef: RefObject<HTMLHeadingElement | null>
   onBack: () => void
   onNext: () => void
@@ -29,6 +31,7 @@ export function LookStep({
   onShowAll,
   busy,
   problem,
+  copiedFrom,
   headingRef,
   onBack,
   onNext,
@@ -43,6 +46,12 @@ export function LookStep({
         title={t('siteBuilder.wizard.lookTitle')}
         help={t('siteBuilder.wizard.lookHelp')}
       />
+      {copiedFrom ? (
+        <p className='flex items-start gap-2 rounded-lg border bg-muted p-3 text-sm'>
+          <Copy className='mt-0.5 size-4 shrink-0 text-primary' />
+          {t('siteBuilder.gallery.copiedLook', { name: copiedFrom })}
+        </p>
+      ) : null}
       <div
         role='radiogroup'
         aria-label={t('siteBuilder.wizard.lookTitle')}

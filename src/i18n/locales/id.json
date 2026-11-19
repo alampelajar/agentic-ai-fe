@@ -1666,6 +1666,39 @@
       "changesHelp": "Setelah Anda minta perubahan, bagian yang diubah terlihat di sini.",
       "tooLarge": "Perubahan ini terlalu besar untuk ditampilkan.",
       "sameLines": "Baris yang sama: {{count}}"
+    },
+    "gallery": {
+      "title": "Galeri website",
+      "help": "Website yang dibuat orang lain. Suka salah satunya? Tekan Tiru untuk memakai tampilan dan halamannya di website Anda.",
+      "loading": "Memuat galeri...",
+      "error": "Galeri belum bisa dimuat.",
+      "empty": "Belum ada contoh website",
+      "emptyHelp": "Website pilihan tim kami akan muncul di sini.",
+      "filter": "Tampilkan website satu jenis",
+      "all": "Semua",
+      "kinds": {
+        "food": "Makanan dan minuman",
+        "shop": "Toko",
+        "service": "Jasa",
+        "health": "Kesehatan dan kecantikan",
+        "creative": "Karya dan portofolio",
+        "event": "Pernikahan dan acara",
+        "community": "Komunitas dan sekolah",
+        "travel": "Wisata dan penginapan",
+        "personal": "Pribadi",
+        "other": "Lainnya"
+      },
+      "view": "Lihat",
+      "copy": "Tiru",
+      "copyThis": "Tiru website ini",
+      "viewName": "Lihat {{name}}",
+      "copyName": "Tiru {{name}}",
+      "pages": "{{count}} halaman",
+      "frameTitle": "Contoh website: {{name}}",
+      "viewHelp": "Website ini sudah online. Tekan Tiru untuk memakai tampilan dan halamannya di website Anda.",
+      "copying": "Anda meniru tampilan dan halaman dari \"{{name}}\". Sekarang ceritakan website Anda sendiri.",
+      "stopCopying": "Batal meniru",
+      "copiedLook": "Tampilan dari \"{{name}}\" sudah dipilih. Anda tetap bisa memilih yang lain."
     }
   }
 }
