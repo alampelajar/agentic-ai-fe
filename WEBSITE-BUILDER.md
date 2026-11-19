@@ -93,6 +93,7 @@ Change one only by editing this table first, with the reason.
 | Languages | `Site.language` is the website's, detected from the description by the planner, with a word count (`DetectLanguage`) as fallback; `Site.ui_language` is the builder's (questions, progress, messages) | An Indonesian description in an English interface made an English site |
 | Seeing a look first | One example website per look, made once by the normal pipeline (`cmd/builder-samples`), served as static files at `contoh-<look>.<PREVIEW_DOMAIN>`; its screenshot is the card's picture (`scripts/capture-looks.mjs`) | A look cannot be judged from three colour dots |
 | Finished pieces (kit) | `web/src/kit/` in the template: Guestbook, Countdown, Timeline, AddToCalendar, MapLink, Ornament, Monogram, FramedPhoto, PhotoGallery, styled only by the theme's tokens. Written again into every site at every run (`RefreshFixedFiles`); the agent may use them, never change them | Raises the floor of every site, and an invitation looks like one without the model inventing widgets |
+| Movement | *Added 2026-11-19 (owner):* websites move, so they feel alive. Movement comes only from finished motion pieces in the kit, written by people: Reveal (a block fades in as it is scrolled into view), Stagger (a group appears one after another), CountUp (a number from the brief counts up), Marquee (a line of words slides across), RotatingWords (one word of a headline changes), Parallax (a picture moves slower than the page), and the classes `lift` (rises on hover) and `float` (a decoration bobs). Each look has a motion level (`Direction.Motion`: calm, lively or playful) that sets the theme's `--motion-*` tokens (speed, easing, distance, delay between items) and how many pieces the agent is told to use. The agent may not write its own animation (`@keyframes`, `animate-bounce`/`ping`/`pulse`, `requestAnimationFrame` are refused by the plain-text check). A CountUp must show a number written in the brief (`CheckCountUp`): in the first real test the model counted up to prices the owner never gave. Pieces may be imported one by one (`../kit/Reveal`) or together (`../kit`, `kit/index.ts`). Visitors who turned movement off on their device see everything at once, without movement | A plain page looks unfinished next to a moving one; people-written pieces keep the movement smooth, readable and the same quality on every site, where model-written animation would be uneven |
 | Guest book | A form marked `guestbook` in the brief shows only its fields `name` and `message` through `GET /api/forms/<name>/public`; every other answer stays private. `server/routes/forms.js` is fixed by the template | Wishes on an invitation are public by nature; attendance and phone numbers are not |
 | Continuing a stopped run | A progress record per site (`<site>/progress.json`, keyed by the brief, look and request) lists the finished parts; the same work started again skips them. Cleared when the run succeeds or a version is restored | A model error late in a run cost the whole run |
 | Moods and kinds | Each look has hand-written mood words (`MoodTags`) and `fits`; for a known kind, looks made for other kinds are offered only when fewer than three fit (`relatedKinds` counts as fitting) | A wedding was offered a workshop look and a shop look |
@@ -157,7 +158,8 @@ site/
   web/src/site.ts         The facts from the brief (name, pages, contact, pictures). Written by the worker
   web/src/routes.tsx      One route per page of the brief. Written by the worker
   web/src/main.tsx, App.tsx, router.tsx, components/SiteForm.tsx   Fixed by the template
-  web/src/kit/            Finished pieces (Guestbook, Countdown, Timeline...). Fixed by the template
+  web/src/kit/            Finished pieces (Guestbook, Countdown, Timeline...) and motion pieces
+                          (Reveal, Stagger, CountUp, Marquee, RotatingWords, Parallax). Fixed by the template
   web/src/components/     Layout.tsx and shared pieces. Written by the agent
   web/src/pages/          One file per page. Written by the agent
   web/public/uploads/     The person's logo and photos
@@ -408,6 +410,7 @@ beside the template. Each has:
 | `voice` | Tone for the written text (warm, formal, playful) |
 | `tags`, `variants` | The colours of the palette, and two curated other palettes with their own tags |
 | `moods`, `kit` | Everyday words for the feeling of the look, and which finished pieces it uses and how |
+| `motion` | How much the look moves: calm, lively or playful (section 4, "Movement") |
 | `preview` | The example website and its screenshot, made once (section 4, "Seeing a look first") |
 
 Rules:
@@ -440,8 +443,10 @@ The Coding agent's prompt carries this list, and the Review step checks it:
 - Emoji in headings or as icons.
 - Vague hero text that could belong to any business ("Welcome to our website").
 - Heavy shadows on everything, or corners rounder than the direction's `shape`.
-- Animation scattered over the page. One purposeful moment at most, and it respects
-  `prefers-reduced-motion`.
+- Movement that does not come from the kit's motion pieces, more movement than the
+  look's motion level asks for, or movement that hides or delays the main text.
+  *Changed 2026-11-19 (owner):* this replaced "one purposeful moment at most"; the
+  owner wants websites to feel interactive (section 4, "Movement").
 - Placeholder text or pictures left in a finished site.
 
 ### Review step
@@ -494,6 +499,11 @@ node scripts/capture-looks.mjs           # in the frontend: the card pictures, p
   local (`SITES_PUBLIC_SCHEME`, `SITES_PUBLIC_PORT`).
 - Only one agent worker per database (`BUILDER_MULTIPLE_WORKERS` unset): on start it
   fails the runs a stopped worker left running.
+- Groq's free tier allows a model 8,000 tokens a minute, counting the question and the
+  answer space. A repair request with a long system prompt and long build errors can be
+  larger than that and is refused every time (HTTP 413). The worker shortens TypeScript's
+  long type shapes in build errors (`ShortenErrors`) and keeps the motion instructions
+  short for this reason.
 - How fast a site is made depends on the models. With the free tier of Groq
   (8,000 tokens a minute) a four-page site takes about 10 to 15 minutes, because the
   worker waits out the rate limit between pages. A model with higher limits makes it
