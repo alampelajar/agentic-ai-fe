@@ -73,6 +73,11 @@ export function SetupWizard({ site, onStarted }: SetupWizardProps) {
         setLanguage(result.language)
         setContact((current) => fillKnownContact(current, result))
       }
+      // A copied website starts with the look of the website it copies.
+      if (result.remix && !site.design_direction) {
+        setDirection(result.remix.direction)
+        setVariant(result.remix.variant)
+      }
     } catch (error) {
       setLoadError(siteErrorText(t, error))
     }
@@ -231,6 +236,7 @@ export function SetupWizard({ site, onStarted }: SetupWizardProps) {
               onShowAll={setShowAll}
               busy={busy}
               problem={problem}
+              copiedFrom={data.remix?.name}
               headingRef={headingRef}
               onBack={() => setStep(STEP.details)}
               onNext={() => void plan()}

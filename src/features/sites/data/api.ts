@@ -186,18 +186,46 @@ export async function getSites(): Promise<Site[]> {
   return (await getSitesAndPlan()).sites
 }
 
+/**
+ * Starts a website from a description. remixOf is a gallery website whose look and
+ * page list the new one copies.
+ */
 export async function createSite(
   description: string,
-  language: string
+  language: string,
+  remixOf?: number
 ): Promise<Site> {
   return (
     await parse<{ site: Site }>(
       await apiFetch('/api/sites', {
         method: 'POST',
-        ...json({ description, language }),
+        ...json({ description, language, remix_of: remixOf }),
       })
     )
   ).site
+}
+
+/** A published website an admin chose for the gallery every person sees. */
+export type ShowcaseSite = {
+  id: number
+  name: string
+  kind: string
+  /** The look's name, in the language asked for. */
+  look: string
+  pages: string[] | null
+  live_url: string
+}
+
+export async function getShowcase(
+  language: 'id' | 'en'
+): Promise<ShowcaseSite[]> {
+  return (
+    (
+      await parse<{ sites: ShowcaseSite[] }>(
+        await apiFetch(`/api/sites/showcase?lang=${language}`)
+      )
+    ).sites ?? []
+  )
 }
 
 export async function getSite(id: number): Promise<SiteDetail> {
@@ -221,6 +249,8 @@ export type QuestionsResult = {
   look_wish: string
   directions: Direction[]
   all_directions: Direction[]
+  /** The gallery website this one copies: its look is offered first. */
+  remix?: { name: string; direction: string; variant: string } | null
 }
 
 export async function getQuestions(id: number): Promise<QuestionsResult> {
