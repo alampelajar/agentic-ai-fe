@@ -42,8 +42,14 @@ These hold on every Builder screen, in addition to `DESIGN.md`.
    kami pahami", to correct rather than repeat. One question may be answered in the
    person's own words, without choices, when the site lives on personal content (how
    a couple met).
-5. **The screen is chat and preview.** Files and logs sit behind "Advanced", closed
-   by default.
+5. **The screen is chat and preview.** The start screen is one box in the middle
+   ("What website do you want to make?"). Once making starts, the screen splits: on
+   the left the person's words, the AI's progress and the change box; on the right
+   how far the making is (with the usual time, 5 to 15 minutes), then the website.
+   The right side has three tabs: Website, Code and Changes. *Changed 2026-11-19
+   (owner):* the code of each version can be read (never edited) in "Code", and what
+   the last change did, file by file, in "Changes". The run log stays behind "Lihat
+   catatan lengkap", closed by default.
 6. **Every change can be undone.** Each finished run is a version the person can
    return to.
 7. **Content is written for the person.** The AI writes real text in the person's
@@ -61,7 +67,7 @@ These hold on every Builder screen, in addition to `DESIGN.md`.
 | 1. Describe | Writes one or two sentences | Creates a `Site` in `draft` |
 | 2. Answer | Checks "what we understood", answers the questions still open (0 to 4), checks the website's language, opens the example website of a look and picks one of three, may upload a logo and photos | Planner reads the description (language, facts, contact details, wished colours); the system offers three looks that fit the kind of site and the wished colours |
 | 3. Confirm | Reads a summary ("4 pages: Home, Services, Gallery, Contact") and presses Create | Stores the brief, queues an `AgentRun` |
-| 4. Wait | Watches simple progress ("Writing the Services page...") | Agent worker writes files, builds, tests, repairs |
+| 4. Wait | Watches simple progress ("Writing the Services page...") on the left, and on the right how long it usually takes, how long it has run and about how far it is | Agent worker writes files, builds, tests, repairs |
 | 5. Preview | Sees the site first, at full width, with one sentence of what to do next; switches between phone and computer width | Site runner starts the preview |
 | 6. Revise | Types a change, or clicks a part of the preview and says what to change | A new `AgentRun` on the same site; a new version when it finishes |
 | 7. Publish | Presses Publish and confirms the address | A release is made and served at `<name>.<SITES_DOMAIN>` |
@@ -239,6 +245,7 @@ into PostgreSQL.
 | `GET /sites/:id/runs/:runId/events` | SSE stream of steps |
 | `POST /sites/:id/runs/:runId/cancel` | Stops a run |
 | `GET /sites/:id/versions`, `POST /sites/:id/versions/:n/restore` | List versions, go back to one |
+| `GET /sites/:id/versions/:n/files`, `GET /sites/:id/versions/:n/file?path=` | The readable files of a version (source text only, no pictures), each marked new, changed or removed against the version before; one file with the same file of the version before |
 | `POST/DELETE /sites/:id/images` | Upload a photo or the logo (PNG, JPG, WEBP, 3 MB, 8 at most); forget one |
 | `GET /sites/:id/preview` | A fresh signed preview address; keeps the preview running |
 | `POST /sites/:id/publish`, `POST /sites/:id/unpublish` | Publish the current version at an address; take it offline |

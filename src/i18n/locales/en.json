@@ -1386,8 +1386,11 @@
     "describeHelp": "A few sentences are enough: what the business does, where, and what visitors should do.",
     "examplesLabel": "Or start from an example",
     "example1": "A website for my home bakery in Yogyakarta. We sell bread and cakes to order through WhatsApp.",
+    "example1Short": "Home bakery",
     "example2": "A portfolio for my wedding photography, with a gallery and a way to ask for a date.",
+    "example2Short": "Wedding photographer",
     "example3": "A website for a small dental clinic in Surabaya with services, opening hours and appointments.",
+    "example3Short": "Dental clinic",
     "start": "Start",
     "starting": "Getting ready...",
     "yourSites": "Your websites",
@@ -1605,7 +1608,9 @@
       "restore_failed": "The version could not be brought back.",
       "delete_failed": "The website could not be deleted.",
       "invalid_name": "The name is not valid.",
-      "token_limit": "Your AI work for this month is used up. Try again next month."
+      "token_limit": "Your AI work for this month is used up. Try again next month.",
+      "file_not_readable": "This file cannot be opened.",
+      "files_failed": "We could not open the contents of your website. Please try again."
     },
     "toast": {
       "deleted": "The website was deleted.",
@@ -1631,6 +1636,36 @@
       "allowanceUsed": "Your AI work for this month is used up. You can make and change websites again from {{date}}.",
       "premiumUntil": "Premium until {{date}}",
       "titlePremium": "Your premium plan"
+    },
+    "screen": {
+      "tabPreview": "Website",
+      "tabCode": "Code",
+      "tabChanges": "Changes",
+      "history": "History",
+      "sides": "Show",
+      "sideChat": "Progress",
+      "sideSite": "Your website",
+      "estimate": "This usually takes 5 to 15 minutes. You can close this page; the work goes on.",
+      "elapsed": "Running for {{count}} min",
+      "percent": "About {{percent}}% done",
+      "slow": "This is taking a little longer than usual. We are still working on it.",
+      "leave": "We will show your website here when it is ready.",
+      "failedHelp": "Read the message on the left, then press Continue or Try again.",
+      "changeStopped": "Your change was not finished",
+      "nextPublished": "Look at your website on the right. Ask for a change below, then publish the changes when you like them.",
+      "changeLater": "You can ask for changes once your website is ready."
+    },
+    "code": {
+      "files": "Files",
+      "loading": "Opening...",
+      "added": "New",
+      "changed": "Changed",
+      "removed": "Removed",
+      "firstVersion": "This is the first version.",
+      "noChanges": "Nothing changed in this version.",
+      "changesHelp": "After you ask for a change, you can see here what was changed.",
+      "tooLarge": "This change is too big to show here.",
+      "sameLines": "Unchanged lines: {{count}}"
     }
   }
 }

@@ -1386,8 +1386,11 @@
     "describeHelp": "Beberapa kalimat sudah cukup: usahanya apa, di mana, dan apa yang perlu dilakukan pengunjung.",
     "examplesLabel": "Atau mulai dari contoh",
     "example1": "Website untuk usaha roti rumahan saya di Yogyakarta. Kami menjual roti dan kue pesanan lewat WhatsApp.",
+    "example1Short": "Toko roti rumahan",
     "example2": "Portofolio fotografi pernikahan saya, dengan galeri dan cara menanyakan jadwal.",
+    "example2Short": "Fotografer pernikahan",
     "example3": "Website klinik gigi kecil di Surabaya berisi layanan, jam praktik, dan janji temu.",
+    "example3Short": "Klinik gigi",
     "start": "Mulai",
     "starting": "Menyiapkan...",
     "yourSites": "Website Anda",
@@ -1605,7 +1608,9 @@
       "restore_failed": "Versi tersebut belum bisa dikembalikan.",
       "delete_failed": "Website belum berhasil dihapus.",
       "invalid_name": "Nama tidak valid.",
-      "token_limit": "Jatah AI Anda bulan ini sudah habis. Coba lagi bulan depan."
+      "token_limit": "Jatah AI Anda bulan ini sudah habis. Coba lagi bulan depan.",
+      "file_not_readable": "File ini tidak bisa dibuka.",
+      "files_failed": "Isi website Anda belum bisa dibuka. Silakan coba lagi."
     },
     "toast": {
       "deleted": "Website sudah dihapus.",
@@ -1631,6 +1636,36 @@
       "allowanceUsed": "Jatah AI Anda bulan ini sudah habis. Anda bisa membuat dan mengubah website lagi mulai {{date}}.",
       "premiumUntil": "Premium sampai {{date}}",
       "titlePremium": "Paket premium Anda"
+    },
+    "screen": {
+      "tabPreview": "Website",
+      "tabCode": "Kode",
+      "tabChanges": "Perubahan",
+      "history": "Riwayat",
+      "sides": "Tampilkan",
+      "sideChat": "Proses",
+      "sideSite": "Website Anda",
+      "estimate": "Biasanya butuh 5 sampai 15 menit. Halaman ini boleh ditutup; pekerjaan tetap berjalan.",
+      "elapsed": "Sudah berjalan {{count}} menit",
+      "percent": "Sekitar {{percent}}% selesai",
+      "slow": "Ini sedikit lebih lama dari biasanya. Kami masih mengerjakannya.",
+      "leave": "Website Anda akan muncul di sini setelah selesai.",
+      "failedHelp": "Baca pesan di sebelah kiri, lalu tekan Lanjutkan atau Coba lagi.",
+      "changeStopped": "Perubahan Anda belum selesai",
+      "nextPublished": "Lihat website Anda di sebelah kanan. Minta perubahan di bawah, lalu terbitkan kalau sudah cocok.",
+      "changeLater": "Anda bisa minta perubahan setelah website selesai."
+    },
+    "code": {
+      "files": "Daftar file",
+      "loading": "Membuka...",
+      "added": "Baru",
+      "changed": "Diubah",
+      "removed": "Dihapus",
+      "firstVersion": "Ini versi pertama.",
+      "noChanges": "Tidak ada yang berubah di versi ini.",
+      "changesHelp": "Setelah Anda minta perubahan, bagian yang diubah terlihat di sini.",
+      "tooLarge": "Perubahan ini terlalu besar untuk ditampilkan.",
+      "sameLines": "Baris yang sama: {{count}}"
     }
   }
 }

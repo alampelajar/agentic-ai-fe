@@ -8,8 +8,7 @@ import { Main } from '@/components/layout/main'
 import { getSite, type SiteDetail } from '../data/api'
 import { siteErrorText } from '../errors'
 import { SetupWizard } from '../setup-wizard'
-import { FirstBuild } from './first-build'
-import { Workspace } from './workspace'
+import { BuilderScreen } from './screen'
 
 export function SiteBuilderRoute() {
   const { siteId } = useParams({ from: '/_authenticated/sites/$siteId' })
@@ -17,8 +16,8 @@ export function SiteBuilderRoute() {
 }
 
 /**
- * One website, in the stage it is in: the questions before the first run, the
- * first run, then the workspace with the preview.
+ * One website, in the stage it is in: the questions before the first run, then the
+ * screen with the AI's work on the left and the website on the right.
  */
 function SiteBuilder({ siteId }: { siteId: number }) {
   const { t } = useTranslation()
@@ -108,18 +107,7 @@ function SiteBuilder({ siteId }: { siteId: number }) {
     )
   }
 
-  if (!site.has_version) {
-    return (
-      <Main className='mx-auto w-full max-w-3xl space-y-6'>
-        {header}
-        <FirstBuild
-          site={site}
-          onChanged={() => void load()}
-          onEdit={() => setEditing(true)}
-        />
-      </Main>
-    )
-  }
-
-  return <Workspace site={site} header={header} reload={load} />
+  return (
+    <BuilderScreen site={site} reload={load} onEdit={() => setEditing(true)} />
+  )
 }
