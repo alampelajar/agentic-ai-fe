@@ -27,7 +27,9 @@ export type FeedbackReply = { id: number; message: string; created_at: string }
 
 export type Feedback = {
   id: number
-  category: FeedbackCategory
+  // 'accountRestore' is sent from the sign-in page by an account waiting to be
+  // deleted (never from the feedback form), so it is not in FEEDBACK_CATEGORIES.
+  category: FeedbackCategory | 'accountRestore'
   subject: string
   description: string
   related_page: string

@@ -4,7 +4,7 @@ import { ChevronDownIcon } from '@radix-ui/react-icons'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { fonts } from '@/config/fonts'
 import { useTranslation } from 'react-i18next'
-import { showSubmittedData } from '@/lib/show-submitted-data'
+import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { useFont } from '@/context/font-provider'
 import { useTheme } from '@/context/theme-provider'
@@ -45,10 +45,28 @@ export function AppearanceForm() {
   })
 
   function onSubmit(data: AppearanceFormValues) {
-    if (data.font != font) setFont(data.font)
-    if (data.theme != theme) setTheme(data.theme)
+    const themeChanged = data.theme != theme
+    const fontChanged = data.font != font
+    if (fontChanged) setFont(data.font)
+    if (themeChanged) setTheme(data.theme)
 
-    showSubmittedData(data)
+    if (themeChanged) {
+      toast.success(
+        t(
+          data.theme === 'dark'
+            ? 'settingsPage.appearance.changedToDark'
+            : 'settingsPage.appearance.changedToLight'
+        )
+      )
+    }
+    if (fontChanged) {
+      toast.success(
+        t('settingsPage.appearance.fontChanged', { font: data.font })
+      )
+    }
+    if (!themeChanged && !fontChanged) {
+      toast.info(t('settingsPage.appearance.nothingChanged'))
+    }
   }
 
   return (

@@ -530,6 +530,10 @@
       "saveChanges": "Simpan Perubahan",
       "saving": "Menyimpan...",
       "success": "Pengaturan tampilan berhasil diperbarui!",
+      "changedToDark": "Halaman berhasil diubah ke mode gelap.",
+      "changedToLight": "Halaman berhasil diubah ke mode terang.",
+      "fontChanged": "Huruf berhasil diganti ke {{font}}.",
+      "nothingChanged": "Tidak ada yang berubah.",
       "updatePreferences": "Perbarui Preferensi"
     },
     "display": {
@@ -541,7 +545,7 @@
       "layoutDescription": "Pilih layout aplikasi.",
       "saveChanges": "Simpan Perubahan",
       "saving": "Menyimpan...",
-      "success": "Pengaturan display berhasil diperbarui!",
+      "success": "Pengaturan tampilan layar berhasil diperbarui!",
       "updateDisplay": "Perbarui Tampilan",
       "selectOne": "Pilih minimal satu item.",
       "items": {
@@ -568,6 +572,7 @@
       "saveChanges": "Simpan Perubahan",
       "saving": "Menyimpan...",
       "success": "Pengaturan notifikasi berhasil diperbarui!",
+      "selectType": "Pilih notifikasi yang ingin Anda terima.",
       "notifyAbout": "Beri tahu saya tentang...",
       "updateNotifications": "Perbarui Notifikasi",
       "allNewMessages": "Semua pesan baru",
@@ -682,6 +687,28 @@
       "description": "Masukkan informasi akun untuk melanjutkan ke Agentic AI.",
       "noAccount": "Belum punya akun Agentic AI?",
       "createAccount": "Buat akun"
+    },
+    "pendingDeletion": {
+      "title": "Akun ini sedang dalam proses penghapusan",
+      "description": "Akun ini akan dihapus permanen pada {{date}}. Sampai saat itu, akun tidak bisa dipakai.",
+      "restoreHint": "Ingin memakai akun ini lagi? Kirim pesan ke admin. Admin bisa memulihkan akun Anda.",
+      "writeMessage": "Kirim pesan ke admin",
+      "messageLabel": "Pesan untuk admin",
+      "messagePlaceholder": "Ceritakan kenapa Anda ingin akun ini dipulihkan.",
+      "messageHelp": "Paling sedikit 10 huruf.",
+      "send": "Kirim pesan",
+      "sending": "Mengirim…",
+      "cancel": "Batal",
+      "back": "Kembali ke halaman masuk",
+      "sentTitle": "Pesan terkirim",
+      "sentDescription": "Admin akan membaca pesan Anda. Jika akun dipulihkan, Anda bisa masuk seperti biasa.",
+      "errors": {
+        "appeal_expired": "Waktu habis. Masuk lagi untuk mengirim pesan.",
+        "appeal_length": "Pesan harus 10 sampai 2000 huruf.",
+        "appeal_limit": "Anda sudah mengirim beberapa pesan. Tunggu balasan admin dulu.",
+        "not_pending_deletion": "Akun ini tidak sedang dihapus. Silakan masuk lagi.",
+        "fallback": "Pesan gagal dikirim. Coba lagi."
+      }
     },
     "fields": {
       "email": "Alamat email",
@@ -800,7 +827,8 @@
       "bug": "Laporan bug",
       "service": "Keluhan layanan",
       "aiExperience": "Penilaian pengalaman menggunakan AI",
-      "help": "Permintaan bantuan"
+      "help": "Permintaan bantuan",
+      "accountRestore": "Permintaan pemulihan akun"
     },
     "statuses": {
       "new": "Baru",
@@ -1289,7 +1317,7 @@
   },
   "deleteAccount": {
     "sectionTitle": "Zona berbahaya",
-    "sectionDescription": "Hapus akun dan data pribadi terkait secara permanen.",
+    "sectionDescription": "Hapus akun dan data pribadi Anda. Akun dihapus permanen setelah 30 hari.",
     "openButton": "Hapus akun",
     "passwordTitle": "Verifikasi kata sandi",
     "passwordDescription": "Masukkan kata sandi akun untuk melanjutkan. Akun belum dihapus pada tahap ini.",
@@ -1299,7 +1327,11 @@
     "verifying": "Memverifikasi...",
     "cancel": "Tidak",
     "finalTitle": "Apakah Anda yakin ingin menghapus akun Anda?",
-    "finalDescription": "Akun, tugas, riwayat percakapan, serta provider dan model AI custom milik Anda akan dihapus permanen. Data sistem bersama tetap dipertahankan. Tindakan ini tidak dapat dibatalkan.",
+    "finalDescription": "Akun Anda langsung tidak bisa dipakai, dan website Anda tidak tampil lagi. Setelah 30 hari, akun dan semua data Anda dihapus permanen. Selama 30 hari itu, Anda bisa meminta admin memulihkan akun lewat halaman masuk.",
+    "scheduled": "Akun Anda akan dihapus permanen dalam 30 hari.",
+    "sectionDescriptionFinal": "Hapus akun dan data pribadi Anda. Akun ini pernah dipulihkan, jadi akan langsung dihapus permanen.",
+    "finalDescriptionFinal": "Akun ini sudah pernah dipulihkan satu kali. Jika dihapus lagi, akun, website, dan semua data Anda langsung dihapus permanen. Akun tidak bisa dipulihkan lagi.",
+    "removedNow": "Akun Anda sudah dihapus permanen.",
     "yesDelete": "Ya, hapus akun",
     "wait": "Tunggu {{seconds}} detik...",
     "deleting": "Menghapus akun...",
