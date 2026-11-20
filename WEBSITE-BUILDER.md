@@ -108,7 +108,7 @@ Change one only by editing this table first, with the reason.
 | Outbound network from a site | None | Stops spam, scanning and data theft from generated code |
 | Addresses | Published: `<name>.<SITES_DOMAIN>`. Preview: the signed name above. Development: `*.sites.localhost` and `*.preview.localhost` on port 8090, which browsers resolve to this computer. Previews, examples and published sites may share one domain (`p-...` and `contoh-...` names are never given to a site), because a free wildcard certificate covers one level of names only | Wildcard DNS and TLS, nothing to set up per site |
 | Domains | Both come from configuration. One domain is acceptable in development; before strangers can publish, sites move to a domain separate from the app | Reputation and cookie isolation |
-| Gallery | *Added 2026-11-19 (owner):* only published websites an admin chose (`Site.ShowcasedAt`, set in the admin console's Website history, "Show in gallery", audited as `site.showcase`); a website taken offline leaves the gallery. The gallery shows the name, kind, look, page titles and a live view of the published address, never the description, contact details or owner. "Tiru" creates a site with `RemixOf`: its look is offered first and chosen, and the brief is asked to keep the same pages in the same order (`BriefInput.PageTitles`), written for the new person's own facts, still leaving out a page without its photos or story | Strangers' websites are shown only after a person checks them, and copying the structure never carries another person's data |
+| Gallery | *Added 2026-11-19 (owner):* only published websites an admin chose (`Site.ShowcasedAt`, set in the admin console's Websites page, "Show", audited as `site.showcase`); a website taken offline leaves the gallery. The gallery shows the name, kind, look, page titles and a live view of the published address, never the description, contact details or owner. "Tiru" creates a site with `RemixOf`: its look is offered first and chosen, and the brief is asked to keep the same pages in the same order (`BriefInput.PageTitles`), written for the new person's own facts, still leaving out a page without its photos or story | Strangers' websites are shown only after a person checks them, and copying the structure never carries another person's data |
 | Product name in code | `Site` (model, routes, feature folder `sites`) | One word everywhere |
 
 ## 5. Architecture
@@ -259,6 +259,8 @@ into PostgreSQL.
 | `GET /sites/slug-available?slug=&site_id=` | Checks an address before publishing |
 | `GET /sites/showcase?lang=` | The gallery: published websites an admin chose, newest choice first (any signed-in person) |
 | `PATCH /admin/sites/:id/showcase` | Admin only: puts a published website in the gallery or takes it out |
+| `PATCH /admin/sites/:id`, `POST /admin/sites/:id/publish`, `POST /admin/sites/:id/unpublish`, `DELETE /admin/sites/:id` | Admin only: rename any website, publish its current version (at a new address or the one it has), take it offline, delete it. Each is in the audit log |
+| `GET /admin/site-logs` | Admin only: when websites were made (`site.create`), published and deleted, newest first; a website made before making was recorded gets its event from the website itself |
 
 `POST /sites` also takes `remix_of`, the id of a website in the gallery to copy.
 
@@ -520,7 +522,6 @@ Known gaps of the first version, in rough order of importance:
   changes are asked for in the text box.
 - The owner cannot read the form answers a site stores yet (they are in the site's
   SQLite file), and there is no e-mail notice for them.
-- Admins have no screen to take a published site offline (rule 8); the owner can.
 - The review reads code, not screenshots.
 - `ExecutionJob.AgentRunID` has no foreign key yet.
 - Only tested on Docker Desktop for Windows. A Linux host needs the data folders
@@ -819,6 +820,10 @@ routes. A test fails if one of them is put back on the user's group
 the signed-in admin; admin pages that manage skills, memory, combos and workspaces for
 everyone are still to be built.
 Kept for now by the owner's choice: Tasks and the GitHub integration in Settings.
+**Admin console, 2026-11-20 (owner):** Logs shows only websites made, published and
+deleted. A Websites page lists the live websites (and, on request, all of them) with
+publish, publish the newer version, rename, change address, take offline, delete and the
+gallery switch, and the builds in progress; this closes the gap of section 11, rule 8.
 
 Still proposed: a "Pesan masuk" view of form answers per site (section 17), and
 removing Tasks and the GitHub integration later. User routes for the removed
