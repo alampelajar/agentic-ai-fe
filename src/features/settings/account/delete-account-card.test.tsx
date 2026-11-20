@@ -5,6 +5,7 @@ import { userEvent } from 'vitest/browser'
 import { DeleteAccountCard } from './delete-account-card'
 
 const api = vi.hoisted(() => ({
+  getCurrentUser: vi.fn(),
   deleteCurrentUserAccount: vi.fn(),
   requestAccountDeletionCode: vi.fn(),
   verifyCurrentUserPasswordForDeletion: vi.fn(),
@@ -25,7 +26,18 @@ describe('DeleteAccountCard', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     api.requestAccountDeletionCode.mockResolvedValue(undefined)
-    api.deleteCurrentUserAccount.mockResolvedValue(undefined)
+    api.deleteCurrentUserAccount.mockResolvedValue({ final: false })
+    api.getCurrentUser.mockResolvedValue({ deletion_is_final: false })
+  })
+
+  it('warns that an account restored before is removed at once', async () => {
+    api.getCurrentUser.mockResolvedValue({ deletion_is_final: true })
+    const screen = await render(<DeleteAccountCard />)
+    await expect
+      .element(
+        screen.getByText(/restored before, so it is removed for good at once/i)
+      )
+      .toBeInTheDocument()
   })
 
   it('offers an e-mailed code to accounts without a password (Google sign-in)', async () => {
