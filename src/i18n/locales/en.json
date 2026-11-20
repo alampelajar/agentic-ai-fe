@@ -530,6 +530,10 @@
       "saveChanges": "Save Changes",
       "saving": "Saving...",
       "success": "Appearance settings updated successfully!",
+      "changedToDark": "The page is now in dark mode.",
+      "changedToLight": "The page is now in light mode.",
+      "fontChanged": "The text now uses {{font}}.",
+      "nothingChanged": "Nothing changed.",
       "updatePreferences": "Update preferences"
     },
     "display": {
@@ -568,6 +572,7 @@
       "saveChanges": "Save Changes",
       "saving": "Saving...",
       "success": "Notification settings updated successfully!",
+      "selectType": "Please choose which notifications you want.",
       "notifyAbout": "Notify me about...",
       "updateNotifications": "Update notifications",
       "allNewMessages": "All new messages",
