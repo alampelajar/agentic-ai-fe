@@ -191,4 +191,25 @@ describe('SignUpForm', () => {
     expect(toastMocks.error).not.toHaveBeenCalled()
     expect(navigate).not.toHaveBeenCalled()
   })
+
+  it.each([
+    ['email_domain_not_allowed', 'rina@brand-new-mailer.xyz', 'Please use an email from a common provider, such as Gmail, Yahoo, Outlook or iCloud.'],
+    ['email_reused', 'rina@gmail.com', 'This email has been used to make too many accounts. Please use another email.'],
+    ['email_taken', 'r.ina+2@gmail.com', 'This email already has an account. Sign in instead.'],
+  ])('explains a %s refusal under the email field', async (code, email, message) => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => Promise.resolve({ ok: false, json: async () => ({ ok: false, code, message: 'server text' }) }))
+    )
+
+    await userEvent.fill(nameInput, 'Rina')
+    await userEvent.fill(emailInput, email)
+    await userEvent.fill(passwordInput, 'RinaPass-123')
+    await userEvent.fill(confirmPasswordInput, 'RinaPass-123')
+    await userEvent.click(submitButton)
+
+    await expect.element(screen.getByText(message)).toBeVisible()
+    await expect.element(emailInput).toHaveAttribute('aria-invalid', 'true')
+    expect(toastMocks.error).not.toHaveBeenCalled()
+  })
 })

@@ -18,6 +18,21 @@ export class OtpRequestError extends Error {
   }
 }
 
+/**
+ * The text key for an address the server would not accept, by its code, or
+ * undefined for any other refusal. Keys live under authPage.errors.
+ */
+const emailRefusalKeys: Record<string, string> = {
+  disposable_email: 'authPage.errors.disposableEmail',
+  email_domain_not_allowed: 'authPage.errors.emailDomainNotAllowed',
+  email_reused: 'authPage.errors.emailReused',
+  email_taken: 'authPage.errors.emailTaken',
+}
+
+export function emailRefusalKey(code: string | undefined): string | undefined {
+  return code ? emailRefusalKeys[code] : undefined
+}
+
 async function parse(
   response: Response,
   fallback: string
