@@ -9,6 +9,11 @@ const api = vi.hoisted(() => ({
   startGitHubConnect: vi.fn(),
   disconnectGitHub: vi.fn(),
 }))
+// These tests are for someone who has signed in.
+vi.mock('@/lib/guest', async (importActual) => ({
+  ...(await importActual<typeof import('@/lib/guest')>()),
+  isSignedIn: () => true,
+}))
 vi.mock('@/lib/api-github', () => api)
 const toasts = vi.hoisted(() => ({
   success: vi.fn(),

@@ -170,6 +170,8 @@ export type Plan = {
   resets_at: string
   /** When the premium account ends; null when it does not end or there is none. */
   premium_until: string | null
+  /** One of the owners' own accounts: no AI allowance to run out. */
+  unlimited?: boolean
 }
 
 export async function getSitesAndPlan(): Promise<{

@@ -384,7 +384,8 @@
       "Website": "Website",
       "Settings": "Settings"
     },
-    "openProfileMenu": "Open profile menu"
+    "openProfileMenu": "Open profile menu",
+    "signIn": "Sign in"
   },
   "sidebar": {
     "smartAgentic": "SMART AGENTIC",
@@ -1671,7 +1672,8 @@
       "siteLimitReached": "You already have {{limit}} websites. Delete one to make a new one.",
       "allowanceUsed": "Your AI work for this month is used up. You can make and change websites again from {{date}}.",
       "premiumUntil": "Premium until {{date}}",
-      "titlePremium": "Your premium plan"
+      "titlePremium": "Your premium plan",
+      "unlimited": "No limit"
     },
     "screen": {
       "tabPreview": "Website",
@@ -1704,10 +1706,10 @@
       "sameLines": "Unchanged lines: {{count}}"
     },
     "gallery": {
-      "title": "Website gallery",
+      "title": "Showcase",
       "help": "Websites other people made. Like one? Press Copy to use its look and its pages for your own website.",
-      "loading": "Loading the gallery...",
-      "error": "The gallery could not be loaded.",
+      "loading": "Loading the showcase...",
+      "error": "The showcase could not be loaded.",
       "empty": "No example websites yet",
       "emptyHelp": "Websites chosen by our team will appear here.",
       "filter": "Show websites of one kind",
@@ -1735,6 +1737,17 @@
       "copying": "You are copying the look and the pages of \"{{name}}\". Now tell us about your own website.",
       "stopCopying": "Stop copying",
       "copiedLook": "The look of \"{{name}}\" is already chosen. You can still pick another one."
+    },
+    "guest": {
+      "help": "Look around freely. You only need an account when you make a website."
     }
+  },
+  "signInPrompt": {
+    "title": "Sign in to continue",
+    "description": "You can look around without an account. To use this, sign in first.",
+    "signIn": "Sign in",
+    "noAccount": "Don't have an account yet?",
+    "signUp": "Sign up here",
+    "needed": "Sign in first to use this."
   }
 }

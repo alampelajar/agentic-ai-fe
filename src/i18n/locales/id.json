@@ -384,7 +384,8 @@
       "Website": "Website",
       "Settings": "Pengaturan"
     },
-    "openProfileMenu": "Buka menu profil"
+    "openProfileMenu": "Buka menu profil",
+    "signIn": "Masuk"
   },
   "sidebar": {
     "smartAgentic": "SMART AGENTIC",
@@ -1671,7 +1672,8 @@
       "siteLimitReached": "Anda sudah punya {{limit}} website. Hapus satu untuk membuat yang baru.",
       "allowanceUsed": "Jatah AI Anda bulan ini sudah habis. Anda bisa membuat dan mengubah website lagi mulai {{date}}.",
       "premiumUntil": "Premium sampai {{date}}",
-      "titlePremium": "Paket premium Anda"
+      "titlePremium": "Paket premium Anda",
+      "unlimited": "Tanpa batas"
     },
     "screen": {
       "tabPreview": "Website",
@@ -1704,10 +1706,10 @@
       "sameLines": "Baris yang sama: {{count}}"
     },
     "gallery": {
-      "title": "Galeri website",
+      "title": "Showcase",
       "help": "Website yang dibuat orang lain. Suka salah satunya? Tekan Tiru untuk memakai tampilan dan halamannya di website Anda.",
-      "loading": "Memuat galeri...",
-      "error": "Galeri belum bisa dimuat.",
+      "loading": "Memuat showcase...",
+      "error": "Showcase belum bisa dimuat.",
       "empty": "Belum ada contoh website",
       "emptyHelp": "Website pilihan tim kami akan muncul di sini.",
       "filter": "Tampilkan website satu jenis",
@@ -1735,6 +1737,17 @@
       "copying": "Anda meniru tampilan dan halaman dari \"{{name}}\". Sekarang ceritakan website Anda sendiri.",
       "stopCopying": "Batal meniru",
       "copiedLook": "Tampilan dari \"{{name}}\" sudah dipilih. Anda tetap bisa memilih yang lain."
+    },
+    "guest": {
+      "help": "Silakan lihat-lihat dulu. Akun baru diperlukan saat Anda membuat website."
     }
+  },
+  "signInPrompt": {
+    "title": "Masuk untuk melanjutkan",
+    "description": "Anda bisa melihat-lihat tanpa akun. Untuk memakai fitur ini, masuk dulu.",
+    "signIn": "Masuk",
+    "noAccount": "Belum punya akun?",
+    "signUp": "Daftar di sini",
+    "needed": "Masuk dulu untuk memakai fitur ini."
   }
 }

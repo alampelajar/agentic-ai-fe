@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { Link } from '@tanstack/react-router'
 import { CircleAlert, Globe, Loader2, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { isSignedIn } from '@/lib/guest'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -21,7 +22,8 @@ export function Overview() {
   const load = useCallback(async () => {
     setProblem(null)
     try {
-      setSites(await getSites())
+      // A visitor has no websites yet.
+      setSites(isSignedIn() ? await getSites() : [])
     } catch (error) {
       setProblem(siteErrorText(t, error))
     }

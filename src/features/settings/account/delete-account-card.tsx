@@ -209,6 +209,7 @@ export function DeleteAccountCard() {
         <Button
           type='button'
           variant='destructive'
+          data-needs-account
           onClick={() => {
             setPassword('')
             setPasswordError('')

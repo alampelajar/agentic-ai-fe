@@ -10,7 +10,8 @@ const user = {
 
 async function setup() {
   const { useAuthStore } = await import('@/stores/auth-store')
-  const { ensureSession } = await import('./session')
+  const { ensureSession, forgetRestoreAttempt } = await import('./session')
+  forgetRestoreAttempt()
   return { useAuthStore, ensureSession }
 }
 
@@ -86,12 +87,86 @@ describe('ensureSession', () => {
     expect(useAuthStore.getState().auth.accessToken).toBe('')
   })
 
-  it('does not try to renew when nobody signed in', async () => {
-    const fetchMock = vi.fn()
+  it('asks once, for a visitor without an account, and not on every page', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: false,
+      json: async () => ({ ok: false, message: 'no refresh token' }),
+    })
     vi.stubGlobal('fetch', fetchMock)
     const { ensureSession } = await setup()
 
     expect(await ensureSession()).toBe(false)
-    expect(fetchMock).not.toHaveBeenCalled()
+    expect(await ensureSession()).toBe(false)
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('signs the person back in when the browser forgot who they were', async () => {
+    const fetchMock = vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () =>
+        String(url).includes('/api/auth/refresh')
+          ? { ok: true, access_token: 'restored' }
+          : {
+              ok: true,
+              user: { id: 22, name: 'Sasa', email: 'sasa@example.com' },
+            },
+    }))
+    vi.stubGlobal('fetch', fetchMock)
+    const { useAuthStore, ensureSession } = await setup()
+
+    expect(await ensureSession()).toBe(true)
+    const { auth } = useAuthStore.getState()
+    expect(auth.accessToken).toBe('restored')
+    expect(auth.user?.email).toBe('sasa@example.com')
+  })
+
+  it('keeps the person signed in when the server cannot be reached', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockRejectedValue(new TypeError('Failed to fetch'))
+    )
+    const { useAuthStore, ensureSession } = await setup()
+    useAuthStore.getState().auth.setAccessToken('stale')
+    useAuthStore.getState().auth.setUser({ ...user, exp: Date.now() - 1_000 })
+
+    expect(await ensureSession()).toBe(false)
+    expect(useAuthStore.getState().auth.user?.email).toBe(user.email)
+  })
+})
+
+describe('signOut', () => {
+  beforeEach(() => {
+    clearCookies()
+    vi.resetModules()
+  })
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('signs out on the server and does not sign the person back in', async () => {
+    const fetchMock = vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () =>
+        String(url).includes('/api/auth/refresh')
+          ? { ok: true, access_token: 'should-not-be-used' }
+          : { ok: true },
+    }))
+    vi.stubGlobal('fetch', fetchMock)
+    const { useAuthStore, ensureSession } = await setup()
+    const { signOut } = await import('./session')
+    useAuthStore.getState().auth.setAccessToken('fresh')
+    useAuthStore.getState().auth.setUser({ ...user, exp: Date.now() + 60_000 })
+
+    await signOut()
+
+    expect(String(fetchMock.mock.calls[0][0])).toContain('/api/auth/logout')
+    expect(fetchMock.mock.calls[0][1]).toMatchObject({
+      method: 'POST',
+      credentials: 'include',
+    })
+    expect(useAuthStore.getState().auth.user).toBeNull()
+    // Looking around afterwards: a visitor, not the old account.
+    expect(await ensureSession()).toBe(false)
+    expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 })

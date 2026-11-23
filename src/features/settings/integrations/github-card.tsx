@@ -8,6 +8,7 @@ import {
   startGitHubConnect,
   type GitHubConnection,
 } from '@/lib/api-github'
+import { isSignedIn } from '@/lib/guest'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -51,7 +52,14 @@ export function GitHubCard({
     else if (result === 'denied') toast.info(t('githubIntegration.denied'))
     else if (result) toast.error(t('githubIntegration.error'))
 
-    getGitHubConnection()
+    // A visitor has nothing connected; connecting asks them to sign in.
+    const loading = isSignedIn()
+      ? getGitHubConnection()
+      : Promise.resolve<GitHubConnection>({
+          configured: true,
+          connected: false,
+        })
+    loading
       .then((value) => !cancelled && setState(value))
       .catch(() => !cancelled && setFailed(true))
     return () => {
@@ -141,6 +149,7 @@ export function GitHubCard({
             <Button
               type='button'
               disabled={busy}
+              data-needs-account
               onClick={() => void connect()}
             >
               {busy ? (

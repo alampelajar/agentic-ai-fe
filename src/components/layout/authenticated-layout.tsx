@@ -25,6 +25,7 @@ import { Header } from '@/components/layout/header'
 import { LanguageFlag } from '@/components/layout/language-flag'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
+import { SignInPrompt } from '@/components/sign-in-prompt'
 import { SkipToMain } from '@/components/skip-to-main'
 import { ThemeSwitch } from '@/components/theme-switch'
 
@@ -305,6 +306,8 @@ export function AuthenticatedLayout({ children }: { children?: ReactNode }) {
               ================================= */}
 
             {children ?? <Outlet />}
+
+            <SignInPrompt />
           </SidebarInset>
         </SidebarProvider>
       </LayoutProvider>

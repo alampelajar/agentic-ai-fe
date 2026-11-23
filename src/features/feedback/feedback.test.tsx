@@ -14,6 +14,11 @@ const mocks = vi.hoisted(() => ({
   toastError: vi.fn(),
   toastSuccess: vi.fn(),
 }))
+// These tests are for someone who has signed in.
+vi.mock('@/lib/guest', async (importActual) => ({
+  ...(await importActual<typeof import('@/lib/guest')>()),
+  isSignedIn: () => true,
+}))
 vi.mock('sonner', () => ({
   toast: { error: mocks.toastError, success: mocks.toastSuccess },
 }))
