@@ -8,6 +8,7 @@ import { Loader2, UserPlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import {
+  emailRefusalKey,
   OtpRequestError,
   requestRegisterOtp,
   resendRegisterOtp,
@@ -104,9 +105,10 @@ export function SignUpForm({
 
       setPendingEmail(email)
     } catch (error) {
-      // A throwaway address is a problem with the field: say it there.
-      if (error instanceof OtpRequestError && error.code === 'disposable_email') {
-        form.setError('email', { type: 'server', message: t('authPage.errors.disposableEmail') })
+      // An address the server will not take is a problem with the field: say it there.
+      const refusalKey = error instanceof OtpRequestError ? emailRefusalKey(error.code) : undefined
+      if (refusalKey) {
+        form.setError('email', { type: 'server', message: t(refusalKey) })
         return
       }
       toast.error(

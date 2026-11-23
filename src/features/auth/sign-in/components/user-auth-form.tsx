@@ -5,6 +5,7 @@ import { Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
+import { emailRefusalKey } from '@/lib/api-email-otp'
 import { API_BASE_URL } from '@/lib/api-config'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -167,8 +168,10 @@ export function UserAuthForm({
         return
       }
 
-      if (result.code === 'disposable_email') {
-        throw new Error(t('authPage.errors.disposableEmail'))
+      // A new account from Google follows the sign-up rules for its address.
+      const refusalKey = emailRefusalKey(result.code)
+      if (refusalKey) {
+        throw new Error(t(refusalKey))
       }
       if (!response.ok || !result.ok || !result.access_token || !result.user) {
         throw new Error(result.message || t('authPage.errors.googleFailed'))
