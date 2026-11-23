@@ -530,6 +530,10 @@
       "saveChanges": "Save Changes",
       "saving": "Saving...",
       "success": "Appearance settings updated successfully!",
+      "changedToDark": "The page is now in dark mode.",
+      "changedToLight": "The page is now in light mode.",
+      "fontChanged": "The text now uses {{font}}.",
+      "nothingChanged": "Nothing changed.",
       "updatePreferences": "Update preferences"
     },
     "display": {
@@ -568,6 +572,7 @@
       "saveChanges": "Save Changes",
       "saving": "Saving...",
       "success": "Notification settings updated successfully!",
+      "selectType": "Please choose which notifications you want.",
       "notifyAbout": "Notify me about...",
       "updateNotifications": "Update notifications",
       "allNewMessages": "All new messages",
@@ -682,6 +687,28 @@
       "description": "Use your account details to continue to Agentic AI.",
       "noAccount": "New to Agentic AI?",
       "createAccount": "Create an account"
+    },
+    "pendingDeletion": {
+      "title": "This account is being deleted",
+      "description": "This account will be removed for good on {{date}}. Until then, it cannot be used.",
+      "restoreHint": "Want to use this account again? Send a message to an admin. An admin can restore your account.",
+      "writeMessage": "Message an admin",
+      "messageLabel": "Message for the admin",
+      "messagePlaceholder": "Tell us why you want this account back.",
+      "messageHelp": "At least 10 characters.",
+      "send": "Send message",
+      "sending": "Sending…",
+      "cancel": "Cancel",
+      "back": "Back to sign in",
+      "sentTitle": "Message sent",
+      "sentDescription": "An admin will read your message. If your account is restored, you can sign in as usual.",
+      "errors": {
+        "appeal_expired": "Time is up. Sign in again to send a message.",
+        "appeal_length": "The message must be 10 to 2000 characters.",
+        "appeal_limit": "You have already sent several messages. Please wait for an admin to reply.",
+        "not_pending_deletion": "This account is not being deleted. Please sign in again.",
+        "fallback": "The message could not be sent. Please try again."
+      }
     },
     "fields": {
       "email": "Email address",
@@ -801,7 +828,8 @@
       "bug": "Bug report",
       "service": "Service complaint",
       "aiExperience": "AI experience rating",
-      "help": "Request for help"
+      "help": "Request for help",
+      "accountRestore": "Account restore request"
     },
     "statuses": {
       "new": "New",
@@ -1290,7 +1318,7 @@
   },
   "deleteAccount": {
     "sectionTitle": "Danger zone",
-    "sectionDescription": "Permanently delete your account and associated private data.",
+    "sectionDescription": "Delete your account and private data. The account is removed for good after 30 days.",
     "openButton": "Delete account",
     "passwordTitle": "Verify your password",
     "passwordDescription": "Enter your account password to continue. Your account has not been deleted yet.",
@@ -1300,7 +1328,11 @@
     "verifying": "Verifying...",
     "cancel": "No",
     "finalTitle": "Are you sure you want to delete your account?",
-    "finalDescription": "Your account, tasks, conversation history, and custom AI providers and models will be permanently deleted. Shared system data will be kept. This action cannot be undone.",
+    "finalDescription": "Your account stops working at once, and your websites go offline. After 30 days, the account and all your data are removed for good. During those 30 days, you can ask an admin to restore it from the sign-in page.",
+    "scheduled": "Your account will be removed for good in 30 days.",
+    "sectionDescriptionFinal": "Delete your account and private data. This account was restored before, so it is removed for good at once.",
+    "finalDescriptionFinal": "This account was already restored once. If you delete it again, the account, your websites and all your data are removed for good at once. It cannot be restored again.",
+    "removedNow": "Your account has been removed for good.",
     "yesDelete": "Yes, delete account",
     "wait": "Wait {{seconds}} seconds...",
     "deleting": "Deleting account...",

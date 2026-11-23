@@ -1,9 +1,10 @@
+import { useMemo } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import { showSubmittedData } from '@/lib/show-submitted-data'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -18,21 +19,23 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Switch } from '@/components/ui/switch'
 
-const notificationsFormSchema = z.object({
-  type: z.enum(['all', 'mentions', 'none'], {
-    error: (iss) =>
-      iss.input === undefined
-        ? 'Please select a notification type.'
-        : undefined,
-  }),
-  mobile: z.boolean().default(false).optional(),
-  communication_emails: z.boolean().default(false).optional(),
-  social_emails: z.boolean().default(false).optional(),
-  marketing_emails: z.boolean().default(false).optional(),
-  security_emails: z.boolean(),
-})
+// Built with t() so the message follows the chosen language.
+function makeNotificationsFormSchema(selectType: string) {
+  return z.object({
+    type: z.enum(['all', 'mentions', 'none'], {
+      error: (iss) => (iss.input === undefined ? selectType : undefined),
+    }),
+    mobile: z.boolean().default(false).optional(),
+    communication_emails: z.boolean().default(false).optional(),
+    social_emails: z.boolean().default(false).optional(),
+    marketing_emails: z.boolean().default(false).optional(),
+    security_emails: z.boolean(),
+  })
+}
 
-type NotificationsFormValues = z.infer<typeof notificationsFormSchema>
+type NotificationsFormValues = z.infer<
+  ReturnType<typeof makeNotificationsFormSchema>
+>
 
 // This can come from your database or API.
 const defaultValues: Partial<NotificationsFormValues> = {
@@ -44,6 +47,11 @@ const defaultValues: Partial<NotificationsFormValues> = {
 
 export function NotificationsForm() {
   const { t } = useTranslation()
+  const notificationsFormSchema = useMemo(
+    () =>
+      makeNotificationsFormSchema(t('settingsPage.notifications.selectType')),
+    [t]
+  )
   const form = useForm<NotificationsFormValues>({
     resolver: zodResolver(notificationsFormSchema),
     defaultValues,
@@ -52,7 +60,9 @@ export function NotificationsForm() {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit((data) => showSubmittedData(data))}
+        onSubmit={form.handleSubmit(() =>
+          toast.success(t('settingsPage.notifications.success'))
+        )}
         className='space-y-8'
       >
         <FormField

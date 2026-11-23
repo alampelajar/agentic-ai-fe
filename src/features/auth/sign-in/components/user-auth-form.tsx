@@ -10,7 +10,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { PasswordInput } from '@/components/password-input'
+import { readPendingDeletion, type PendingDeletion } from '../data/api'
 import { clearSignInPrefill, peekSignInPrefill } from '../prefill'
+import { PendingDeletionNotice } from './pending-deletion-notice'
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
   redirectTo?: string
@@ -19,6 +21,9 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
 interface LoginResponse {
   ok: boolean
   message: string
+  code?: string
+  deletes_at?: string
+  appeal_token?: string
   access_token?: string
   user?: {
     id: number
@@ -30,8 +35,10 @@ interface LoginResponse {
 
 interface GoogleLoginResponse {
   ok: boolean
-  code?: string
   message: string
+  code?: string
+  deletes_at?: string
+  appeal_token?: string
   access_token?: string
   user?: {
     id: number
@@ -58,6 +65,8 @@ export function UserAuthForm({
     clearSignInPrefill()
   }, [])
   const [isLoading, setIsLoading] = useState(false)
+  // Set when the account exists but waits to be deleted: a notice replaces the form.
+  const [pending, setPending] = useState<PendingDeletion | null>(null)
 
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -86,6 +95,13 @@ export function UserAuthForm({
       })
 
       const result: LoginResponse = await response.json()
+
+      const pendingDeletion = readPendingDeletion(response.status, result)
+      if (pendingDeletion) {
+        setPassword('')
+        setPending(pendingDeletion)
+        return
+      }
 
       if (!response.ok || !result.ok || !result.access_token || !result.user) {
         throw new Error(
@@ -145,6 +161,12 @@ export function UserAuthForm({
 
       const result: GoogleLoginResponse = await response.json()
 
+      const pendingDeletion = readPendingDeletion(response.status, result)
+      if (pendingDeletion) {
+        setPending(pendingDeletion)
+        return
+      }
+
       if (result.code === 'disposable_email') {
         throw new Error(t('authPage.errors.disposableEmail'))
       }
@@ -185,6 +207,17 @@ export function UserAuthForm({
 
   function handleGoogleError() {
     toast.error(t('authPage.errors.googleFailed'))
+  }
+
+  if (pending) {
+    return (
+      <div className={`w-full ${className ?? ''}`} {...props}>
+        <PendingDeletionNotice
+          pending={pending}
+          onBack={() => setPending(null)}
+        />
+      </div>
+    )
   }
 
   return (
