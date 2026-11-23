@@ -102,6 +102,7 @@ Change one only by editing this table first, with the reason.
 | Finished pieces (kit) | `web/src/kit/` in the template: Guestbook, Countdown, Timeline, AddToCalendar, MapLink, Ornament, Monogram, FramedPhoto, PhotoGallery, styled only by the theme's tokens. Written again into every site at every run (`RefreshFixedFiles`); the agent may use them, never change them | Raises the floor of every site, and an invitation looks like one without the model inventing widgets |
 | Finished sections | *Added 2026-11-23 (owner):* pages are put together from sections written by people in `web/src/blocks/`: Header, Footer, Hero, PageIntro, EventHero, Features, Steps, Statement, InfoTable, FAQ, ContactSection, CallToAction, Gallery, plus Section and SectionHeading for a section of the agent's own. The look decides each section's variant (`Direction.Blocks`: which header, hero, list, steps, statement and footer, the button shape, the edge of cards, capital headings, centring, the accent rule, tilted cards, airiness), written by the worker into `web/src/look.ts` at every run (`LookTS`), as is `theme.css` since 2026-11-23, so a site made earlier gets new theme rules with its next change; sections alternate the page and surface colours by themselves (`data-band`); the agent passes only words, facts and the order. Every page starts with Hero, EventHero or PageIntro (its h1). The agent writes its own section only where none fits, inside Section and SectionHeading. The plain-text check sends back a page or layout that does not use `../blocks` (`CheckUsesBlocks`; the page-not-found page may stay simple). Words on the accent colour use `--color-on-accent`, the page or text colour that reads better on the accent in that palette (checked for every palette by `TestOnAccentIsReadable`) | A model writing every page from scratch gave uneven pages that followed the look only loosely; sections written once and well raise every site to the same floor, keep the looks distinct, and shorten what the model must write |
 | Movement | *Added 2026-11-19 (owner):* websites move, so they feel alive. Movement comes only from finished motion pieces in the kit, written by people: Reveal (a block fades in as it is scrolled into view), Stagger (a group appears one after another), CountUp (a number from the brief counts up), Marquee (a line of words slides across), RotatingWords (one word of a headline changes), Parallax (a picture moves slower than the page), and the classes `lift` (rises on hover) and `float` (a decoration bobs). Each look has a motion level (`Direction.Motion`: calm, lively or playful) that sets the theme's `--motion-*` tokens (speed, easing, distance, delay between items) and how many pieces the agent is told to use. The agent may not write its own animation (`@keyframes`, `animate-bounce`/`ping`/`pulse`, `requestAnimationFrame` are refused by the plain-text check). A CountUp must show a number written in the brief (`CheckCountUp`): in the first real test the model counted up to prices the owner never gave. Pieces may be imported one by one (`../kit/Reveal`) or together (`../kit`, `kit/index.ts`). Visitors who turned movement off on their device see everything at once, without movement | A plain page looks unfinished next to a moving one; people-written pieces keep the movement smooth, readable and the same quality on every site, where model-written animation would be uneven |
+| Product illustrations | *Added 2026-11-23 (owner):* an image model draws one illustration for each product, dish or item the person named themselves (`Brief.Products`, at most 6, written by the planner from the person's words only). Nothing else is drawn: never people, places, the hero, the gallery or a photo of the business, which stay the owner's own photos (`site.images`). The agent worker draws them before the pages (`illustrate.go`, step "Menggambar ilustrasi produk"), asks for a drawing in the look's colours and never a photograph, with no people, text or logos, and writes them into the site as `/uploads/produk-*`, so the site still makes no outside call. Pages show them only through `productImage(name)` in a `Features` item's `image`; nothing is shown when there is none. A product the owner uploaded a photo of (its description names the product) is not drawn. A picture is drawn again only when the product's words or the colours change. A failed drawing never stops a run: the product is shown without one. The model is `recraft/recraft-v4.1-flash-v2:free` on the system OpenRouter provider (`POST /images`); `BUILDER_IMAGE_MODELS` lists the models in order (the paid one after it as a fallback, about $0.007 a picture), `off` turns it off. Model paths from the planner are cleared (`ForgetIllustrations`) and `site.ts` carries only paths the worker wrote | A list of products without pictures looks unfinished, and most people have no product photos when they start; a drawing that is clearly a drawing fills the gap without passing an invented photo off as the real thing |
 | Guest book | A form marked `guestbook` in the brief shows only its fields `name` and `message` through `GET /api/forms/<name>/public`; every other answer stays private. `server/routes/forms.js` is fixed by the template | Wishes on an invitation are public by nature; attendance and phone numbers are not |
 | Continuing a stopped run | A progress record per site (`<site>/progress.json`, keyed by the brief, look and request) lists the finished parts; the same work started again skips them. Cleared when the run succeeds or a version is restored | A model error late in a run cost the whole run |
 | Moods and kinds | Each look has hand-written mood words (`MoodTags`) and `fits`; for a known kind, looks made for other kinds are offered only when fewer than three fit (`relatedKinds` counts as fitting) | A wedding was offered a workshop look and a shop look |
@@ -163,7 +164,8 @@ Caddy in production (wildcard TLS) in front of the gateway
 site/
   web/index.html          Written by the worker (language, name, description)
   web/src/theme.css       Design tokens of the chosen direction. Written by the worker
-  web/src/site.ts         The facts from the brief (name, pages, contact, pictures). Written by the worker
+  web/src/site.ts         The facts from the brief (name, pages, contact, pictures, products with their
+                          illustrations, productImage). Written by the worker
   web/src/routes.tsx      One route per page of the brief. Written by the worker
   web/src/main.tsx, App.tsx, router.tsx, components/SiteForm.tsx   Fixed by the template
   web/src/look.ts         The look's choice for every finished section. Written by the worker
@@ -172,7 +174,7 @@ site/
                           (Reveal, Stagger, CountUp, Marquee, RotatingWords, Parallax). Fixed by the template
   web/src/components/     Layout.tsx and shared pieces. Written by the agent
   web/src/pages/          One file per page. Written by the agent
-  web/public/uploads/     The person's logo and photos
+  web/public/uploads/     The person's logo and photos, and the product illustrations (produk-*)
   server/index.js, db.js  Fixed: static files, /api/health, opens DATA_DIR/site.db
   server/routes/          index.js registers routes; forms.js (fixed) stores answers and lists guest books. The agent may add files
   server/schema.sql       Tables, CREATE TABLE IF NOT EXISTS. The agent may add tables
@@ -203,7 +205,8 @@ enforces the ones marked *enforced*):
 1. The API creates an `AgentRun` (`queued`) with the brief or the revision request.
 2. The agent worker claims it and works through fixed steps, each stored as an
    `AgentRunStep` and streamed to the browser over SSE: write the generated files
-   (theme, site facts, routes), then the layout, then each page (create), or one
+   (theme, site facts, routes), then the product illustrations (section 4), then the
+   layout, then each page (create), or one
    change across the files (revise). A revise answer may also carry a new page list
    (`<pages>`), from which the worker writes the routes again.
 3. A plain-text check finds what breaks the design rules (hex colours, palette
@@ -535,6 +538,12 @@ Known gaps of the first version, in rough order of importance:
 - The owner cannot read the form answers a site stores yet (they are in the site's
   SQLite file), and there is no e-mail notice for them.
 - The review reads code, not screenshots.
+- Product illustrations: their cost is not counted in a person's monthly tokens or
+  logged per call yet; a change ("add a product") cannot add a product to the list;
+  the image model is set in the environment, not in the admin console. Tried for
+  real on 2026-11-23: a café with five named menu items (site 88) got five
+  drawings from the free Recraft model, shown on its menu page. The planner's
+  short product texts may add small details the owner did not write.
 - `ExecutionJob.AgentRunID` has no foreign key yet.
 - Only tested on Docker Desktop for Windows. A Linux host needs the data folders
   writable by the containers' user (65534), and opening the Builder to strangers
