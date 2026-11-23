@@ -6,6 +6,9 @@ interface UserResponse {
   name: string
   email: string
   avatar?: string
+  // True once the account was restored after a deletion: deleting it again is
+  // final at once, without the 30 days.
+  deletion_is_final?: boolean
 }
 
 interface MeResponse {
@@ -102,20 +105,24 @@ export async function requestAccountDeletionCode(): Promise<void> {
 export type AccountDeletionProof =
   { password: string; otp?: undefined } | { otp: string; password?: undefined }
 
+/**
+ * Deletes the signed-in account. Returns whether it was removed for good at once
+ * (an account restored before), or only marked to be removed in 30 days.
+ */
 export async function deleteCurrentUserAccount(
   proof: AccountDeletionProof
-): Promise<void> {
+): Promise<{ final: boolean }> {
   const response = await apiFetch('/api/me', {
     method: 'DELETE',
     body: JSON.stringify(proof),
   })
-  const result: { ok?: boolean; message?: string } = await response
-    .json()
-    .catch(() => ({}))
+  const result: { ok?: boolean; message?: string; final?: boolean } =
+    await response.json().catch(() => ({}))
 
   if (!response.ok || !result.ok) {
     throw new Error(result.message || 'Gagal menghapus akun.')
   }
+  return { final: result.final === true }
 }
 
 export interface ChangePasswordInput {

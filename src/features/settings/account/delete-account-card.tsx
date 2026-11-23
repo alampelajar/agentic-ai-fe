@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { AlertTriangle, LoaderCircle, ShieldCheck, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
 import {
+  getCurrentUser,
   deleteCurrentUserAccount,
   requestAccountDeletionCode,
   verifyCurrentUserPasswordForDeletion,
@@ -41,10 +43,26 @@ export function DeleteAccountCard() {
   const [notice, setNotice] = useState('')
   const [deleteError, setDeleteError] = useState('')
   const [countdown, setCountdown] = useState(5)
+  // An account restored once before is removed at once when deleted again.
+  const [deletionIsFinal, setDeletionIsFinal] = useState(false)
+
+  useEffect(() => {
+    let active = true
+    getCurrentUser()
+      .then((profile) => {
+        if (active) setDeletionIsFinal(profile?.deletion_is_final === true)
+      })
+      .catch(() => {})
+    return () => {
+      active = false
+    }
+  }, [])
 
   const copy = {
     sectionTitle: t('deleteAccount.sectionTitle'),
-    sectionDescription: t('deleteAccount.sectionDescription'),
+    sectionDescription: deletionIsFinal
+      ? t('deleteAccount.sectionDescriptionFinal')
+      : t('deleteAccount.sectionDescription'),
     openButton: t('deleteAccount.openButton'),
     passwordTitle: t('deleteAccount.passwordTitle'),
     passwordDescription: t('deleteAccount.passwordDescription'),
@@ -54,7 +72,9 @@ export function DeleteAccountCard() {
     verifying: t('deleteAccount.verifying'),
     cancel: t('deleteAccount.cancel'),
     finalTitle: t('deleteAccount.finalTitle'),
-    finalDescription: t('deleteAccount.finalDescription'),
+    finalDescription: deletionIsFinal
+      ? t('deleteAccount.finalDescriptionFinal')
+      : t('deleteAccount.finalDescription'),
     yesDelete: t('deleteAccount.yesDelete'),
     wait: (seconds: number) => t('deleteAccount.wait', { seconds }),
     deleting: t('deleteAccount.deleting'),
@@ -135,10 +155,13 @@ export function DeleteAccountCard() {
     setDeleting(true)
     setDeleteError('')
     try {
-      await deleteCurrentUserAccount(
+      const { final } = await deleteCurrentUserAccount(
         verifiedCode ? { otp: verifiedCode } : { password: verifiedPassword }
       )
       resetAuth()
+      toast.info(
+        final ? t('deleteAccount.removedNow') : t('deleteAccount.scheduled')
+      )
       await navigate({ to: '/sign-in', replace: true })
     } catch (error) {
       setDeleteError(
