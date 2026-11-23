@@ -164,4 +164,31 @@ describe('SignUpForm', () => {
     })
     expect(fetchMock).toHaveBeenCalledTimes(2)
   })
+
+  it('says under the email field when a temporary address is refused', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() =>
+        Promise.resolve({
+          ok: false,
+          json: async () => ({ ok: false, code: 'disposable_email', message: 'Email sementara tidak bisa dipakai.' }),
+        })
+      )
+    )
+
+    await userEvent.fill(nameInput, 'Rina')
+    await userEvent.fill(emailInput, 'rina@mailinator.com')
+    await userEvent.fill(passwordInput, 'RinaPass-123')
+    await userEvent.fill(confirmPasswordInput, 'RinaPass-123')
+    await userEvent.click(submitButton)
+
+    // In the person's language, at the field, and the code step does not open.
+    await expect
+      .element(screen.getByText("Temporary email addresses can't be used. Please use the email you normally use."))
+      .toBeVisible()
+    await expect.element(emailInput).toHaveAttribute('aria-invalid', 'true')
+    await expect.element(emailInput).toHaveFocus()
+    expect(toastMocks.error).not.toHaveBeenCalled()
+    expect(navigate).not.toHaveBeenCalled()
+  })
 })

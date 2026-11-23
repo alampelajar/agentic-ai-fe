@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -8,6 +8,7 @@ import { Loader2, UserPlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import {
+  OtpRequestError,
   requestRegisterOtp,
   resendRegisterOtp,
   verifyRegisterOtp,
@@ -82,6 +83,13 @@ export function SignUpForm({
     },
   })
 
+  // The fields are disabled while the request runs, so a refusal from the server
+  // moves the focus to the email field only once they are usable again.
+  const emailRefused = form.formState.errors.email?.type === 'server'
+  useEffect(() => {
+    if (!isLoading && emailRefused) form.setFocus('email')
+  }, [isLoading, emailRefused, form])
+
   async function onSubmit(data: SignUpValues) {
     setIsLoading(true)
 
@@ -96,6 +104,11 @@ export function SignUpForm({
 
       setPendingEmail(email)
     } catch (error) {
+      // A throwaway address is a problem with the field: say it there.
+      if (error instanceof OtpRequestError && error.code === 'disposable_email') {
+        form.setError('email', { type: 'server', message: t('authPage.errors.disposableEmail') })
+        return
+      }
       toast.error(
         error instanceof Error
           ? error.message

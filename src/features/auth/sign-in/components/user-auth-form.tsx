@@ -30,6 +30,7 @@ interface LoginResponse {
 
 interface GoogleLoginResponse {
   ok: boolean
+  code?: string
   message: string
   access_token?: string
   user?: {
@@ -144,6 +145,9 @@ export function UserAuthForm({
 
       const result: GoogleLoginResponse = await response.json()
 
+      if (result.code === 'disposable_email') {
+        throw new Error(t('authPage.errors.disposableEmail'))
+      }
       if (!response.ok || !result.ok || !result.access_token || !result.user) {
         throw new Error(result.message || t('authPage.errors.googleFailed'))
       }

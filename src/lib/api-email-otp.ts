@@ -8,13 +8,23 @@ type OtpResponse = {
   resend_after?: number
 }
 
+/** A refused e-mail code request; `code` is the server's reason, for a translated message. */
+export class OtpRequestError extends Error {
+  code?: string
+  constructor(message: string, code?: string) {
+    super(message)
+    this.name = 'OtpRequestError'
+    this.code = code
+  }
+}
+
 async function parse(
   response: Response,
   fallback: string
 ): Promise<OtpResponse> {
   const result: OtpResponse = await response.json().catch(() => ({}))
   if (!response.ok || result.ok !== true) {
-    throw new Error(result.message || fallback)
+    throw new OtpRequestError(result.message || fallback, result.code)
   }
   return result
 }

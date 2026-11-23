@@ -696,6 +696,7 @@
       "emailRequired": "Masukkan alamat email.",
       "passwordRequired": "Masukkan kata sandi.",
       "invalidCredentials": "Email atau kata sandi salah.",
+      "disposableEmail": "Email sementara tidak bisa dipakai. Gunakan email yang biasa Anda pakai.",
       "googleFailed": "Login Google gagal.",
       "loginUnexpected": "Terjadi kesalahan saat login.",
       "resetUnavailable": "Reset kata sandi belum tersedia."
