@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
 import {
+  OtpRequestError,
   requestChangeEmailOtp,
   resendChangeEmailOtp,
   verifyChangeEmailOtp,
@@ -31,6 +32,10 @@ export function ChangeEmailCard() {
       await requestChangeEmailOtp({ new_email: newEmail.trim(), password })
       setStage('otp')
     } catch (error) {
+      if (error instanceof OtpRequestError && error.code === 'disposable_email') {
+        toast.error(t('authPage.errors.disposableEmail'))
+        return
+      }
       toast.error(
         error instanceof Error ? error.message : t('changeEmail.failure')
       )

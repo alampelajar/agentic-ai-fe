@@ -723,6 +723,7 @@
       "emailRequired": "Enter your email address.",
       "passwordRequired": "Enter your password.",
       "invalidCredentials": "The email or password is incorrect.",
+      "disposableEmail": "Temporary email addresses can't be used. Please use the email you normally use.",
       "googleFailed": "Google sign-in failed.",
       "loginUnexpected": "Something went wrong while signing in.",
       "resetUnavailable": "Password reset is not available yet."

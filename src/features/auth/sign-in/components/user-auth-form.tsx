@@ -167,6 +167,9 @@ export function UserAuthForm({
         return
       }
 
+      if (result.code === 'disposable_email') {
+        throw new Error(t('authPage.errors.disposableEmail'))
+      }
       if (!response.ok || !result.ok || !result.access_token || !result.user) {
         throw new Error(result.message || t('authPage.errors.googleFailed'))
       }
