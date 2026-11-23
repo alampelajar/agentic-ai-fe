@@ -67,29 +67,35 @@ export function PlanUsage({ plan }: { plan: Plan }) {
             {t('siteBuilder.plan.allowance')}
           </dt>
           <dd className='font-medium'>
-            {t('siteBuilder.plan.allowanceValue', { percent })}
+            {plan.unlimited
+              ? t('siteBuilder.plan.unlimited')
+              : t('siteBuilder.plan.allowanceValue', { percent })}
           </dd>
-          <div
-            className='mt-2 h-2 overflow-hidden rounded-full bg-muted'
-            role='progressbar'
-            aria-label={t('siteBuilder.plan.allowance')}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={percent}
-          >
+          {plan.unlimited ? null : (
             <div
-              className={cn(
-                'h-full rounded-full transition-colors',
-                outOfTokens ? 'bg-destructive' : 'bg-primary'
-              )}
-              style={{ width: `${percent}%` }}
-            />
-          </div>
+              className='mt-2 h-2 overflow-hidden rounded-full bg-muted'
+              role='progressbar'
+              aria-label={t('siteBuilder.plan.allowance')}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={percent}
+            >
+              <div
+                className={cn(
+                  'h-full rounded-full transition-colors',
+                  outOfTokens ? 'bg-destructive' : 'bg-primary'
+                )}
+                style={{ width: `${percent}%` }}
+              />
+            </div>
+          )}
         </div>
       </dl>
-      <p className='text-xs text-muted-foreground'>
-        {t('siteBuilder.plan.resets', { date: dateText(plan.resets_at) })}
-      </p>
+      {plan.unlimited ? null : (
+        <p className='text-xs text-muted-foreground'>
+          {t('siteBuilder.plan.resets', { date: dateText(plan.resets_at) })}
+        </p>
+      )}
     </div>
   )
 }

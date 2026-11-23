@@ -19,6 +19,7 @@ import {
   getAvatarPresetId,
   getAvatarSrc,
 } from '@/lib/avatar-presets'
+import { isSignedIn } from '@/lib/guest'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -141,6 +142,11 @@ export function AccountForm() {
   useEffect(() => {
     let active = true
     async function loadProfile() {
+      // A visitor has no profile yet: the form stays empty to look at.
+      if (!isSignedIn()) {
+        setLoading(false)
+        return
+      }
       try {
         const profile = await getCurrentUser()
         if (!active) return

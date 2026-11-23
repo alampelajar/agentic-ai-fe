@@ -1,5 +1,7 @@
+import i18n from '@/i18n'
 import { useAuthStore } from '@/stores/auth-store'
 import { API_BASE_URL } from '@/lib/api-config'
+import { askToSignIn, SignInRequiredError } from '@/lib/guest'
 
 let refreshPromise: Promise<string> | null = null
 
@@ -51,6 +53,15 @@ export async function apiFetch(
   options: RequestInit = {}
 ): Promise<Response> {
   const accessToken = useAuthStore.getState().auth.accessToken
+  const guest = !useAuthStore.getState().auth.user
+
+  // A visitor may look around, but anything that changes data needs an account:
+  // ask them to sign in instead of sending a request that can only fail.
+  const method = (options.method ?? 'GET').toUpperCase()
+  if (guest && method !== 'GET' && !path.startsWith('/api/auth/')) {
+    askToSignIn()
+    throw new SignInRequiredError(i18n.t('signInPrompt.needed'))
+  }
 
   const headers = new Headers(options.headers)
 
@@ -75,7 +86,8 @@ export async function apiFetch(
   })
 
   // Access token expired
-  if (response.status === 401) {
+  // Nothing to renew for a visitor: their request simply has no answer.
+  if (response.status === 401 && !guest) {
     try {
       const newAccessToken = await getNewAccessToken()
 
@@ -88,8 +100,9 @@ export async function apiFetch(
         credentials: 'include',
       })
     } catch (error) {
-      // Refresh token juga sudah tidak valid
-      useAuthStore.getState().auth.reset()
+      // The refresh token is no longer valid. A server that could not be reached
+      // (restarting, offline) is not a reason to sign the person out.
+      if (!(error instanceof TypeError)) useAuthStore.getState().auth.reset()
 
       throw error
     }

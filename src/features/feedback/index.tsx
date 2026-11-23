@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { AlertCircle, FileText, Loader2, MessageSquareText } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { isSignedIn } from '@/lib/guest'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -25,8 +26,9 @@ export function FeedbackPage() {
   const [toDelete, setToDelete] = useState<Feedback | null>(null)
   const [deleting, setDeleting] = useState(false)
 
+  // A visitor has sent nothing yet.
   const fetchReports = () =>
-    getMyFeedback()
+    (isSignedIn() ? getMyFeedback() : Promise.resolve<Feedback[]>([]))
       .then(setReports)
       .catch((error: unknown) =>
         setLoadError(errorText(error, t('feedbackPage.loadError')))

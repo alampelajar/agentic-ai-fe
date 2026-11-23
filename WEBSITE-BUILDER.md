@@ -51,9 +51,16 @@ These hold on every Builder screen, in addition to `DESIGN.md`.
    the last change did, file by file, in "Changes". The run log stays behind "Lihat
    catatan lengkap", closed by default.
    *Added 2026-11-19 (owner):* below the person's own websites, the start screen shows
-   a gallery of websites other people made ("Galeri website"), filtered by kind. Each
+   a gallery of websites other people made ("Showcase"; called "Galeri website" before 2026-11-23), filtered by kind. Each
    can be opened large ("Lihat") and copied ("Tiru"): the new website starts with its
    look and page list, never its text (section 4, "Gallery").
+   *Added 2026-11-23 (owner):* a visitor who has not signed in may open every page
+   and look around (the gallery, the start screen, Ringkasan, Pengaturan, Feedback).
+   Using a feature (Mulai, saving, sending) opens a pop-up, not the sign-in page:
+   "Masuk", and "Belum punya akun? Daftar di sini", in the interface's language.
+   What they wrote on the start screen is kept for that tab and comes back after
+   signing in. Only one of a person's own websites (`/sites/<id>`) sends a visitor
+   back to the start screen.
 6. **Every change can be undone.** Each finished run is a version the person can
    return to.
 7. **Content is written for the person.** The AI writes real text in the person's
@@ -89,7 +96,7 @@ Change one only by editing this table first, with the reason.
 | Database driver | Node's built-in `node:sqlite` | The install job cannot build native add-ons |
 | Visual design | The system picks from a curated library of design directions and writes it into the site as tokens. The model does not choose fonts, colours or page composition | Left alone, a model gives every site the same look |
 | Colours a person asks for | Each look has its own palette and two curated variants (36 palettes, all checked for contrast by `TestPalettesAreReadable`). Colour words in the description or the planner's `look_wish` (`ColourTags`) rank looks and pick the matching variant. *Changed 2026-11-18 (owner):* a change that asks for other colours ("background cyan") is carried out: the model returns the tokens to change in a `<colours>` block, the worker keeps every text token readable (`MergeColours`), stores them in the brief (`Brief.Colours`) and writes them into `theme.css`. Pages still use only the token classes. Choosing another look clears them | A wish ("tema kebun hijau") is honoured; before, a colour asked for in a change was silently undone by the token check and the run still said "done" |
-| Limits per person | *Added 2026-11-18 (owner):* without premium, 2 websites and 200,000 tokens a month (`BUILDER_MONTHLY_TOKENS`), counted from the providers' reported usage in `AIModelCallLog.Tokens` (estimated at four characters per token when a provider reports none) and reset on the 1st (WIB). A premium account (`User.IsPremium`, set by admins in Users, Edit user, Plan) gets 1,000,000 tokens a month (`BUILDER_PREMIUM_MONTHLY_TOKENS`), up to 50 websites and every active system model; it lasts 1, 3, 6 or 12 months, until a date, or without end (`User.PremiumUntil`) and counts as free again once that moment passes. Refused with `site_limit` or `token_limit`; a run that runs out stops with a plain message and keeps its finished parts | Keeps the cost of free accounts bounded; 200,000 tokens is about one website with a few changes |
+| Limits per person | *Added 2026-11-18 (owner):* without premium, 2 websites and 200,000 tokens a month (`BUILDER_MONTHLY_TOKENS`), counted from the providers' reported usage in `AIModelCallLog.Tokens` (estimated at four characters per token when a provider reports none) and reset on the 1st (WIB). A premium account (`User.IsPremium`, set by admins in Users, Edit user, Plan) gets 1,000,000 tokens a month (`BUILDER_PREMIUM_MONTHLY_TOKENS`), up to 50 websites and every active system model; it lasts 1, 3, 6 or 12 months, until a date, or without end (`User.PremiumUntil`) and counts as free again once that moment passes. *Added 2026-11-23 (owner):* the owners' own accounts, listed by e-mail in `BUILDER_UNLIMITED_EMAILS`, count as premium with no monthly tokens and no daily system-model quota ("Tanpa batas"). Refused with `site_limit` or `token_limit`; a run that runs out stops with a plain message and keeps its finished parts | Keeps the cost of free accounts bounded; 200,000 tokens is about one website with a few changes |
 | Languages | `Site.language` is the website's, detected from the description by the planner, with a word count (`DetectLanguage`) as fallback; `Site.ui_language` is the builder's (questions, progress, messages) | An Indonesian description in an English interface made an English site |
 | Seeing a look first | One example website per look, made once by the normal pipeline (`cmd/builder-samples`), served as static files at `contoh-<look>.<PREVIEW_DOMAIN>`; its screenshot is the card's picture (`scripts/capture-looks.mjs`) | A look cannot be judged from three colour dots |
 | Finished pieces (kit) | `web/src/kit/` in the template: Guestbook, Countdown, Timeline, AddToCalendar, MapLink, Ornament, Monogram, FramedPhoto, PhotoGallery, styled only by the theme's tokens. Written again into every site at every run (`RefreshFixedFiles`); the agent may use them, never change them | Raises the floor of every site, and an invitation looks like one without the model inventing widgets |
@@ -240,7 +247,7 @@ version and the time the preview was last asked for. `ExecutionJob.AgentRunID` i
 filled for site builds; its foreign key is not added yet. File content never goes
 into PostgreSQL.
 
-## 9. API (new routes, all under `/api`, all signed-in and owner-checked)
+## 9. API (new routes, all under `/api`, signed-in and owner-checked except the gallery)
 
 | Method and path | Purpose |
 |---|---|
@@ -257,7 +264,7 @@ into PostgreSQL.
 | `GET /sites/:id/preview` | A fresh signed preview address; keeps the preview running |
 | `POST /sites/:id/publish`, `POST /sites/:id/unpublish` | Publish the current version at an address; take it offline |
 | `GET /sites/slug-available?slug=&site_id=` | Checks an address before publishing |
-| `GET /sites/showcase?lang=` | The gallery: published websites an admin chose, newest choice first (any signed-in person) |
+| `GET /sites/showcase?lang=` | The gallery: published websites an admin chose, newest choice first (anyone, also before signing in) |
 | `PATCH /admin/sites/:id/showcase` | Admin only: puts a published website in the gallery or takes it out |
 | `PATCH /admin/sites/:id`, `POST /admin/sites/:id/publish`, `POST /admin/sites/:id/unpublish`, `DELETE /admin/sites/:id` | Admin only: rename any website, publish its current version (at a new address or the one it has), take it offline, delete it. Each is in the audit log |
 | `GET /admin/site-logs` | Admin only: when websites were made (`site.create`), published and deleted, newest first; a website made before making was recorded gets its event from the website itself |

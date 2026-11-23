@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { isSignedIn } from '@/lib/guest'
 import useDialogState from '@/hooks/use-dialog-state'
 import {
   createTask,
@@ -54,7 +55,8 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     setLoading(true)
     setError(null)
     try {
-      const data = await getTasks()
+      // A visitor has no tasks yet.
+      const data = isSignedIn() ? await getTasks() : []
       setTasks(data.map(mapTask))
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load tasks')

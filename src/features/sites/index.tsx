@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { askToSignIn, useSignedIn } from '@/lib/guest'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
@@ -32,20 +33,46 @@ import { Gallery } from './gallery'
 import { PlanUsage, planBlocksNewSite } from './plan-usage'
 import { SiteStatus } from './site-status'
 
+// What a visitor wrote before signing in, kept for this tab until they are back.
+const DRAFT_KEY = 'siteBuilder.draft'
+
+type Draft = { description: string; remix: ShowcaseSite | null }
+
+function takeDraft(): Draft | null {
+  try {
+    const saved = window.sessionStorage.getItem(DRAFT_KEY)
+    window.sessionStorage.removeItem(DRAFT_KEY)
+    return saved ? (JSON.parse(saved) as Draft) : null
+  } catch {
+    return null
+  }
+}
+
+function keepDraft(draft: Draft) {
+  try {
+    window.sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft))
+  } catch {
+    // Without storage the visitor writes it again after signing in.
+  }
+}
+
 export function SitesPage() {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
+  // A visitor who has not signed in sees the start screen and the gallery only.
+  const signedIn = useSignedIn()
+  const [draft] = useState(() => (signedIn ? takeDraft() : null))
   const [sites, setSites] = useState<Site[]>([])
   const [plan, setPlan] = useState<Plan | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(signedIn)
   const [loadError, setLoadError] = useState<string | null>(null)
-  const [description, setDescription] = useState('')
+  const [description, setDescription] = useState(draft?.description ?? '')
   const [creating, setCreating] = useState(false)
   const [problem, setProblem] = useState<string | null>(null)
   const [deleting, setDeleting] = useState<Site | null>(null)
   const [removing, setRemoving] = useState(false)
   // A gallery website whose look and page list the new website copies.
-  const [remix, setRemix] = useState<ShowcaseSite | null>(null)
+  const [remix, setRemix] = useState<ShowcaseSite | null>(draft?.remix ?? null)
 
   const load = async () => {
     setLoading(true)
@@ -62,11 +89,18 @@ export function SitesPage() {
   }
 
   useEffect(() => {
-    void load()
+    if (signedIn) void load()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [signedIn])
 
   const start = async () => {
+    // Making a website needs an account: the pop-up asks the visitor to sign in,
+    // and what they wrote comes back afterwards.
+    if (!signedIn) {
+      keepDraft({ description, remix })
+      askToSignIn()
+      return
+    }
     setCreating(true)
     setProblem(null)
     try {
@@ -143,6 +177,8 @@ export function SitesPage() {
         </div>
 
         <form
+          // Handles visitors itself, to keep what they wrote (see `start`).
+          data-guest-ok
           className='w-full rounded-xl border bg-card text-left transition-colors focus-within:border-ring'
           onSubmit={(event) => {
             event.preventDefault()
@@ -237,6 +273,12 @@ export function SitesPage() {
           </div>
         </div>
 
+        {signedIn ? null : (
+          <p className='text-xs text-muted-foreground'>
+            {t('siteBuilder.guest.help')}
+          </p>
+        )}
+
         {problem ? (
           <p role='alert' className='text-sm text-destructive'>
             {problem}
@@ -254,101 +296,105 @@ export function SitesPage() {
 
       {plan ? <PlanUsage plan={plan} /> : null}
 
-      <section className='space-y-4'>
-        <h2 className='text-base font-semibold'>
-          {t('siteBuilder.yourSites')}
-        </h2>
-        {loading ? (
-          <p className='flex items-center gap-2 text-sm text-muted-foreground'>
-            <Loader2 className='size-4 animate-spin' />
-            {t('siteBuilder.loading')}
-          </p>
-        ) : loadError ? (
-          <Card role='alert'>
-            <CardContent className='py-10 text-center'>
-              <p className='font-medium'>{t('siteBuilder.errorTitle')}</p>
-              <p className='mt-1 text-sm text-muted-foreground'>{loadError}</p>
+      {signedIn ? (
+        <section className='space-y-4'>
+          <h2 className='text-base font-semibold'>
+            {t('siteBuilder.yourSites')}
+          </h2>
+          {loading ? (
+            <p className='flex items-center gap-2 text-sm text-muted-foreground'>
+              <Loader2 className='size-4 animate-spin' />
+              {t('siteBuilder.loading')}
+            </p>
+          ) : loadError ? (
+            <Card role='alert'>
+              <CardContent className='py-10 text-center'>
+                <p className='font-medium'>{t('siteBuilder.errorTitle')}</p>
+                <p className='mt-1 text-sm text-muted-foreground'>
+                  {loadError}
+                </p>
+                <Button
+                  className='mt-4'
+                  variant='outline'
+                  onClick={() => void load()}
+                >
+                  {t('siteBuilder.retry')}
+                </Button>
+              </CardContent>
+            </Card>
+          ) : sites.length === 0 ? (
+            <div className='rounded-xl border border-dashed p-10 text-center'>
+              <Globe className='mx-auto mb-3 size-8 text-muted-foreground' />
+              <p className='font-medium'>{t('siteBuilder.emptyTitle')}</p>
+              <p className='mx-auto mt-1 max-w-md text-sm text-muted-foreground'>
+                {t('siteBuilder.emptyDescription')}
+              </p>
               <Button
                 className='mt-4'
                 variant='outline'
-                onClick={() => void load()}
+                onClick={() =>
+                  document.getElementById('site-description')?.focus()
+                }
               >
-                {t('siteBuilder.retry')}
+                {t('siteBuilder.describeLabel')}
               </Button>
-            </CardContent>
-          </Card>
-        ) : sites.length === 0 ? (
-          <div className='rounded-xl border border-dashed p-10 text-center'>
-            <Globe className='mx-auto mb-3 size-8 text-muted-foreground' />
-            <p className='font-medium'>{t('siteBuilder.emptyTitle')}</p>
-            <p className='mx-auto mt-1 max-w-md text-sm text-muted-foreground'>
-              {t('siteBuilder.emptyDescription')}
-            </p>
-            <Button
-              className='mt-4'
-              variant='outline'
-              onClick={() =>
-                document.getElementById('site-description')?.focus()
-              }
-            >
-              {t('siteBuilder.describeLabel')}
-            </Button>
-          </div>
-        ) : (
-          <div className='grid gap-4 md:grid-cols-2 xl:grid-cols-3'>
-            {sites.map((site) => (
-              <Card key={site.id} className='gap-0 py-0'>
-                <CardContent className='flex h-full flex-col gap-3 p-5'>
-                  <div className='flex items-start justify-between gap-3'>
-                    <h3 className='text-base font-semibold'>{site.name}</h3>
-                    <SiteStatus site={site} />
-                  </div>
-                  <p className='line-clamp-2 text-sm text-muted-foreground'>
-                    {site.description}
-                  </p>
-                  <p className='text-xs text-muted-foreground'>
-                    {t('siteBuilder.updated', {
-                      date: new Date(site.updated_at).toLocaleString(
-                        i18n.language
-                      ),
-                    })}
-                  </p>
-                  {site.published && site.live_url ? (
-                    <a
-                      href={site.live_url}
-                      target='_blank'
-                      rel='noreferrer'
-                      className='inline-flex w-fit items-center gap-1 text-sm text-emerald-600 underline-offset-4 hover:underline dark:text-emerald-400'
-                    >
-                      <ExternalLink className='size-4' />
-                      {t('siteBuilder.visit')}
-                    </a>
-                  ) : null}
-                  <div className='mt-auto flex flex-wrap gap-2 border-t pt-3'>
-                    <Button size='sm' asChild>
-                      <Link
-                        to='/sites/$siteId'
-                        params={{ siteId: String(site.id) }}
+            </div>
+          ) : (
+            <div className='grid gap-4 md:grid-cols-2 xl:grid-cols-3'>
+              {sites.map((site) => (
+                <Card key={site.id} className='gap-0 py-0'>
+                  <CardContent className='flex h-full flex-col gap-3 p-5'>
+                    <div className='flex items-start justify-between gap-3'>
+                      <h3 className='text-base font-semibold'>{site.name}</h3>
+                      <SiteStatus site={site} />
+                    </div>
+                    <p className='line-clamp-2 text-sm text-muted-foreground'>
+                      {site.description}
+                    </p>
+                    <p className='text-xs text-muted-foreground'>
+                      {t('siteBuilder.updated', {
+                        date: new Date(site.updated_at).toLocaleString(
+                          i18n.language
+                        ),
+                      })}
+                    </p>
+                    {site.published && site.live_url ? (
+                      <a
+                        href={site.live_url}
+                        target='_blank'
+                        rel='noreferrer'
+                        className='inline-flex w-fit items-center gap-1 text-sm text-emerald-600 underline-offset-4 hover:underline dark:text-emerald-400'
                       >
-                        {t('siteBuilder.open')}
-                      </Link>
-                    </Button>
-                    <Button
-                      size='sm'
-                      variant='ghost'
-                      className='text-destructive'
-                      onClick={() => setDeleting(site)}
-                    >
-                      <Trash2 className='size-4' />
-                      {t('siteBuilder.delete')}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
-      </section>
+                        <ExternalLink className='size-4' />
+                        {t('siteBuilder.visit')}
+                      </a>
+                    ) : null}
+                    <div className='mt-auto flex flex-wrap gap-2 border-t pt-3'>
+                      <Button size='sm' asChild>
+                        <Link
+                          to='/sites/$siteId'
+                          params={{ siteId: String(site.id) }}
+                        >
+                          {t('siteBuilder.open')}
+                        </Link>
+                      </Button>
+                      <Button
+                        size='sm'
+                        variant='ghost'
+                        className='text-destructive'
+                        onClick={() => setDeleting(site)}
+                      >
+                        <Trash2 className='size-4' />
+                        {t('siteBuilder.delete')}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </section>
+      ) : null}
 
       <Gallery onCopy={copy} />
 

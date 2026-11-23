@@ -4,6 +4,11 @@ import { userEvent } from 'vitest/browser'
 import { getCurrentUser, updateCurrentUserProfile } from '@/lib/api-auth'
 import { AccountForm } from './account-form'
 
+// These tests are for someone who has signed in.
+vi.mock('@/lib/guest', async (importActual) => ({
+  ...(await importActual<typeof import('@/lib/guest')>()),
+  isSignedIn: () => true,
+}))
 vi.mock('@/lib/api-auth', () => ({
   getCurrentUser: vi.fn(),
   updateCurrentUserProfile: vi.fn(),

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
+import { LogIn } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '@/stores/auth-store'
 import { getAvatarSrc } from '@/lib/avatar-presets'
+import { currentPage } from '@/lib/guest'
 import useDialogState from '@/hooks/use-dialog-state'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -61,6 +63,18 @@ export function ProfileDropdown() {
     .join('')
     .slice(0, 2)
     .toUpperCase()
+
+  // A visitor who has not signed in gets a way to sign in instead of a profile.
+  if (!user) {
+    return (
+      <Button size='sm' asChild>
+        <Link to='/sign-in' search={{ redirect: currentPage() }}>
+          <LogIn className='size-4' />
+          {t('navigation.signIn')}
+        </Link>
+      </Button>
+    )
+  }
 
   return (
     <>
