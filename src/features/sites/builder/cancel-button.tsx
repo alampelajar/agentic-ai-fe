@@ -5,7 +5,7 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { cancelRun, type AgentRun } from '../data/api'
-import { siteErrorText } from '../errors'
+import { siteErrorText } from '../lib/errors'
 
 /** Stops a run after a confirmation; the finished parts are kept. */
 export function CancelButton({

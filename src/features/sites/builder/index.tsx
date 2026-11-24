@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Main } from '@/components/layout/main'
 import { getSite, type SiteDetail } from '../data/api'
-import { siteErrorText } from '../errors'
+import { siteErrorText } from '../lib/errors'
 import { SetupWizard } from '../setup-wizard'
 import { BuilderScreen } from './screen'
 

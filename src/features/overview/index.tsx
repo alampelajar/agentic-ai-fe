@@ -7,9 +7,9 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Main } from '@/components/layout/main'
+import { SiteStatus } from '@/features/sites/components/site-status'
 import { getSites, type Site } from '@/features/sites/data/api'
-import { siteErrorText } from '@/features/sites/errors'
-import { SiteStatus } from '@/features/sites/site-status'
+import { siteErrorText } from '@/features/sites/lib/errors'
 
 const RECENT = 5
 

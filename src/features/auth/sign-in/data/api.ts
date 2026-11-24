@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/lib/api-config'
+import { API_BASE_URL } from '@/lib/api/config'
 
 /** What the server answers when the right password opens an account in deletion. */
 export type PendingDeletion = {

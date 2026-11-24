@@ -2,12 +2,6 @@ import { useEffect, useState } from 'react'
 import { GitBranch, LoaderCircle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import {
-  disconnectGitHub,
-  getGitHubConnection,
-  startGitHubConnect,
-  type GitHubConnection,
-} from '@/lib/api-github'
 import { isSignedIn } from '@/lib/guest'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -18,6 +12,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  disconnectGitHub,
+  getGitHubConnection,
+  startGitHubConnect,
+  type GitHubConnection,
+} from '@/features/settings/integrations/data/api'
 
 // GitHub sends the browser back with ?github=connected|denied|error.
 function takeResultFromAddress(): string | null {

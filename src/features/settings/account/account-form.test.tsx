@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
-import { getCurrentUser, updateCurrentUserProfile } from '@/lib/api-auth'
+import { getCurrentUser, updateCurrentUserProfile } from '@/lib/api/auth'
 import { AccountForm } from './account-form'
 
 // These tests are for someone who has signed in.
@@ -9,7 +9,7 @@ vi.mock('@/lib/guest', async (importActual) => ({
   ...(await importActual<typeof import('@/lib/guest')>()),
   isSignedIn: () => true,
 }))
-vi.mock('@/lib/api-auth', () => ({
+vi.mock('@/lib/api/auth', () => ({
   getCurrentUser: vi.fn(),
   updateCurrentUserProfile: vi.fn(),
 }))
@@ -41,8 +41,6 @@ vi.mock('react-i18next', () => {
     'settingsPage.account.email': 'Email',
     'settingsPage.account.profilePhoto': 'Profile photo',
     'settingsPage.account.chooseAvatar': 'Choose an avatar below.',
-    'settingsPage.account.avatarDescription':
-      'Your avatar appears in navigation.',
     'settingsPage.account.profileNameHint':
       'Use a name between 2 and 30 characters.',
     'settingsPage.account.emailReadOnly': 'Email cannot be edited.',

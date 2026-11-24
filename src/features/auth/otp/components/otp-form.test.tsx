@@ -2,7 +2,7 @@ import i18n from '@/i18n'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, type RenderResult } from 'vitest-browser-react'
 import { type Locator, userEvent } from 'vitest/browser'
-import { API_BASE_URL } from '@/lib/api-config'
+import { API_BASE_URL } from '@/lib/api/config'
 import { OtpForm } from './otp-form'
 
 const navigate = vi.fn()

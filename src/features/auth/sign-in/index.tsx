@@ -2,7 +2,7 @@ import { Link, useSearch } from '@tanstack/react-router'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { ShieldAlert } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { AuthLayout } from '../auth-layout'
+import { AuthLayout } from '../components/auth-layout'
 import { UserAuthForm } from './components/user-auth-form'
 
 export function SignIn() {

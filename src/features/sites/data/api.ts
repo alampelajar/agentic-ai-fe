@@ -1,4 +1,4 @@
-import { apiFetch } from '@/lib/api'
+import { apiFetch } from '@/lib/api/client'
 
 // Website Builder API (see WEBSITE-BUILDER.md). Every error carries a `code` the
 // interface translates under siteBuilder.errors.<code>.

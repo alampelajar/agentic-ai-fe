@@ -2,7 +2,7 @@ import i18n from '@/i18n'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
-import { peekSignInPrefill, setSignInPrefill } from '../prefill'
+import { peekSignInPrefill, setSignInPrefill } from '../lib/prefill'
 import { UserAuthForm } from './user-auth-form'
 
 const mocks = vi.hoisted(() => ({

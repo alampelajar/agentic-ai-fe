@@ -15,7 +15,7 @@ import { ConfirmDialog } from '@/components/confirm-dialog'
 import { FeedbackForm } from './components/feedback-form'
 import { ReportCard } from './components/report-card'
 import { deleteFeedback, getMyFeedback, type Feedback } from './data/api'
-import { errorText } from './error-text'
+import { errorText } from './lib/error-text'
 
 export function FeedbackPage() {
   const { t } = useTranslation()

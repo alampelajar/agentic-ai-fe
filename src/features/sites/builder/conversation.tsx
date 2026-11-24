@@ -11,14 +11,14 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { RunProgress } from '../components/run-progress'
 import {
   startRun,
   type AgentRun,
   type RunStep,
   type SiteDetail,
 } from '../data/api'
-import { siteErrorText } from '../errors'
-import { RunProgress } from '../run-progress'
+import { siteErrorText } from '../lib/errors'
 import { CancelButton } from './cancel-button'
 
 /** The id of the change box, so other parts of the screen can focus it. */

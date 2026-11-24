@@ -20,6 +20,9 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { Main } from '@/components/layout/main'
+import { Gallery } from './components/gallery'
+import { PlanUsage, planBlocksNewSite } from './components/plan-usage'
+import { SiteStatus } from './components/site-status'
 import {
   createSite,
   deleteSite,
@@ -28,10 +31,7 @@ import {
   type ShowcaseSite,
   type Site,
 } from './data/api'
-import { siteErrorText } from './errors'
-import { Gallery } from './gallery'
-import { PlanUsage, planBlocksNewSite } from './plan-usage'
-import { SiteStatus } from './site-status'
+import { siteErrorText } from './lib/errors'
 
 // What a visitor wrote before signing in, kept for this tab until they are back.
 const DRAFT_KEY = 'siteBuilder.draft'

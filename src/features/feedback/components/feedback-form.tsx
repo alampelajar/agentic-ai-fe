@@ -20,7 +20,7 @@ import {
   type Feedback,
   type FeedbackCategory,
 } from '../data/api'
-import { errorText } from '../error-text'
+import { errorText } from '../lib/error-text'
 
 export function FeedbackForm({
   onCreated,

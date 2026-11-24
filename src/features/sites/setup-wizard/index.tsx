@@ -15,7 +15,7 @@ import {
   type SiteDetail,
   type SiteImage,
 } from '../data/api'
-import { siteErrorText } from '../errors'
+import { siteErrorText } from '../lib/errors'
 import { DetailsStep } from './details-step'
 import {
   EMPTY_CONTACT,

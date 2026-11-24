@@ -13,7 +13,7 @@ import { type Locator, userEvent } from 'vitest/browser'
 import {
   peekSignInPrefill,
   clearSignInPrefill,
-} from '@/features/auth/sign-in/prefill'
+} from '@/features/auth/sign-in/lib/prefill'
 import { SignUpForm } from './sign-up-form'
 
 const toastMocks = vi.hoisted(() => ({
@@ -171,7 +171,11 @@ describe('SignUpForm', () => {
       vi.fn(() =>
         Promise.resolve({
           ok: false,
-          json: async () => ({ ok: false, code: 'disposable_email', message: 'Email sementara tidak bisa dipakai.' }),
+          json: async () => ({
+            ok: false,
+            code: 'disposable_email',
+            message: 'Email sementara tidak bisa dipakai.',
+          }),
         })
       )
     )
@@ -184,7 +188,11 @@ describe('SignUpForm', () => {
 
     // In the person's language, at the field, and the code step does not open.
     await expect
-      .element(screen.getByText("Temporary email addresses can't be used. Please use the email you normally use."))
+      .element(
+        screen.getByText(
+          "Temporary email addresses can't be used. Please use the email you normally use."
+        )
+      )
       .toBeVisible()
     await expect.element(emailInput).toHaveAttribute('aria-invalid', 'true')
     await expect.element(emailInput).toHaveFocus()
@@ -193,23 +201,43 @@ describe('SignUpForm', () => {
   })
 
   it.each([
-    ['email_domain_not_allowed', 'rina@brand-new-mailer.xyz', 'Please use an email from a common provider, such as Gmail, Yahoo, Outlook or iCloud.'],
-    ['email_reused', 'rina@gmail.com', 'This email has been used to make too many accounts. Please use another email.'],
-    ['email_taken', 'r.ina+2@gmail.com', 'This email already has an account. Sign in instead.'],
-  ])('explains a %s refusal under the email field', async (code, email, message) => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(() => Promise.resolve({ ok: false, json: async () => ({ ok: false, code, message: 'server text' }) }))
-    )
+    [
+      'email_domain_not_allowed',
+      'rina@brand-new-mailer.xyz',
+      'Please use an email from a common provider, such as Gmail, Yahoo, Outlook or iCloud.',
+    ],
+    [
+      'email_reused',
+      'rina@gmail.com',
+      'This email has been used to make too many accounts. Please use another email.',
+    ],
+    [
+      'email_taken',
+      'r.ina+2@gmail.com',
+      'This email already has an account. Sign in instead.',
+    ],
+  ])(
+    'explains a %s refusal under the email field',
+    async (code, email, message) => {
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(() =>
+          Promise.resolve({
+            ok: false,
+            json: async () => ({ ok: false, code, message: 'server text' }),
+          })
+        )
+      )
 
-    await userEvent.fill(nameInput, 'Rina')
-    await userEvent.fill(emailInput, email)
-    await userEvent.fill(passwordInput, 'RinaPass-123')
-    await userEvent.fill(confirmPasswordInput, 'RinaPass-123')
-    await userEvent.click(submitButton)
+      await userEvent.fill(nameInput, 'Rina')
+      await userEvent.fill(emailInput, email)
+      await userEvent.fill(passwordInput, 'RinaPass-123')
+      await userEvent.fill(confirmPasswordInput, 'RinaPass-123')
+      await userEvent.click(submitButton)
 
-    await expect.element(screen.getByText(message)).toBeVisible()
-    await expect.element(emailInput).toHaveAttribute('aria-invalid', 'true')
-    expect(toastMocks.error).not.toHaveBeenCalled()
-  })
+      await expect.element(screen.getByText(message)).toBeVisible()
+      await expect.element(emailInput).toHaveAttribute('aria-invalid', 'true')
+      expect(toastMocks.error).not.toHaveBeenCalled()
+    }
+  )
 })

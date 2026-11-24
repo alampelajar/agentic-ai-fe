@@ -827,8 +827,8 @@ Planned, item by item, each in its own change:
 all the features above are gone (`src/features/ai`, `agents`, `apps`, `paid-models`,
 `skills`, `combos`, `memory`, `model-health`, `workspaces`, `users`, `delegation`, and
 the chat history in the sidebar). After signing in, a person lands on `/sites`; the
-menu is Website (Overview, Make a website) and Settings. The diff helper the local
-runner still uses moved to `src/features/desktop-runtime/line-diff.ts`.
+menu is Website (Overview, Make a website) and Settings. The diff helper the Builder's
+"Code" tab uses lives in `src/features/sites/lib/line-diff.ts`.
 **Backend, done 2026-11-16:** the routes of these features left the signed-in user's
 group and are served to admins only under `/api/admin/...` (`routes_admin_features.go`
 in the backend): agents (`/agent-catalog`, the full list with models), skills, memory,

@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { ArrowUpRight, CheckCircle2, UserPlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { AuthLayout } from '../auth-layout'
+import { AuthLayout } from '../components/auth-layout'
 import { SignUpForm } from './components/sign-up-form'
 
 export function SignUp() {

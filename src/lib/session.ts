@@ -1,7 +1,7 @@
 import { useAuthStore } from '@/stores/auth-store'
-import { refreshAccessTokenOnce } from '@/lib/api'
-import { getCurrentUser } from '@/lib/api-auth'
-import { API_BASE_URL } from '@/lib/api-config'
+import { getCurrentUser } from '@/lib/api/auth'
+import { refreshAccessTokenOnce } from '@/lib/api/client'
+import { API_BASE_URL } from '@/lib/api/config'
 
 /**
  * Whether the person is still signed in, renewing the session when needed.

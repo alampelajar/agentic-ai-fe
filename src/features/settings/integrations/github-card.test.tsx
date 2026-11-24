@@ -14,7 +14,7 @@ vi.mock('@/lib/guest', async (importActual) => ({
   ...(await importActual<typeof import('@/lib/guest')>()),
   isSignedIn: () => true,
 }))
-vi.mock('@/lib/api-github', () => api)
+vi.mock('@/features/settings/integrations/data/api', () => api)
 const toasts = vi.hoisted(() => ({
   success: vi.fn(),
   error: vi.fn(),

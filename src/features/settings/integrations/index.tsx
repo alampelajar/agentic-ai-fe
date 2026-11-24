@@ -12,7 +12,7 @@ import { DesktopRuntime } from '@/features/desktop-runtime'
 import {
   DesktopConnectionCard,
   LocalFoldersCard,
-} from '@/features/desktop-runtime/connection-card'
+} from '@/features/desktop-runtime/components/connection-card'
 import { GitHubCard } from './github-card'
 
 // Placeholders only: the real token is something the user chooses and keeps private.

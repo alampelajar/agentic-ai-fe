@@ -2,10 +2,12 @@ import { useState } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
-import { showSubmittedData } from '@/lib/show-submitted-data'
+import { showSubmittedData } from '@/features/tasks/lib/show-submitted-data'
 import { TasksImportDialog } from './tasks-import-dialog'
 
-vi.mock('@/lib/show-submitted-data', () => ({ showSubmittedData: vi.fn() }))
+vi.mock('@/features/tasks/lib/show-submitted-data', () => ({
+  showSubmittedData: vi.fn(),
+}))
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) =>
