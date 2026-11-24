@@ -75,7 +75,6 @@ describe('Website Builder texts', () => {
       'workspace.reviseSend',
       'workspace.publish',
       'workspace.changeLook',
-      'workspace.introAsk',
       'publish.publish',
     ]
     for (const file of [en, id]) {

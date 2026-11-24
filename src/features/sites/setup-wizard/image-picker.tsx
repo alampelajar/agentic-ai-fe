@@ -3,7 +3,7 @@ import { ImagePlus, Loader2, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { removeImage, uploadImage, type SiteImage } from '../data/api'
-import { siteErrorText } from '../errors'
+import { siteErrorText } from '../lib/errors'
 import { OptionalMark } from './parts'
 
 /** Logo and photos, uploaded at once so the planner and the agent can use them. */

@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Eye, EyeOff, KeyRound, LoaderCircle, ShieldCheck } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { changeCurrentUserPassword } from '@/lib/api-auth'
+import { changeCurrentUserPassword } from '@/lib/api/auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 

@@ -9,7 +9,7 @@ import {
   deleteCurrentUserAccount,
   requestAccountDeletionCode,
   verifyCurrentUserPasswordForDeletion,
-} from '@/lib/api-auth'
+} from '@/lib/api/auth'
 import {
   AlertDialog,
   AlertDialogCancel,

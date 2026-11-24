@@ -13,7 +13,7 @@ import {
   requestRegisterOtp,
   resendRegisterOtp,
   verifyRegisterOtp,
-} from '@/lib/api-email-otp'
+} from '@/lib/api/email-otp'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -26,8 +26,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
-import { EmailOtpStep } from '@/features/auth/email-otp/email-otp-step'
-import { setSignInPrefill } from '@/features/auth/sign-in/prefill'
+import { EmailOtpStep } from '@/features/auth/components/email-otp-step'
+import { setSignInPrefill } from '@/features/auth/sign-in/lib/prefill'
 
 // Built with t() so the messages follow the chosen language.
 function makeFormSchema(t: TFunction) {
@@ -106,7 +106,10 @@ export function SignUpForm({
       setPendingEmail(email)
     } catch (error) {
       // An address the server will not take is a problem with the field: say it there.
-      const refusalKey = error instanceof OtpRequestError ? emailRefusalKey(error.code) : undefined
+      const refusalKey =
+        error instanceof OtpRequestError
+          ? emailRefusalKey(error.code)
+          : undefined
       if (refusalKey) {
         form.setError('email', { type: 'server', message: t(refusalKey) })
         return

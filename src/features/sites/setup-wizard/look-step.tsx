@@ -2,9 +2,9 @@ import { useState, type RefObject } from 'react'
 import { Copy, Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
+import { DirectionCard } from '../components/direction-card'
+import { ExampleDialog } from '../components/example-dialog'
 import type { Direction } from '../data/api'
-import { DirectionCard } from '../direction-card'
-import { ExampleDialog } from '../example-dialog'
 import { StepHeading, StepProblem } from './parts'
 
 type LookStepProps = {

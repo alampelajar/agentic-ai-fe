@@ -1,24 +1,6 @@
 {
-  "dashboard": "Dasbor",
-  "overview": "Ringkasan",
-  "activity": "Aktivitas",
-  "workflow": "Alur Kerja",
-  "newTask": "Tugas Baru",
-  "runningAgents": "Agent yang Berjalan",
-  "FailedTask": "Tugas Gagal",
-  "completedTasks": "Tugas Selesai",
-  "activeWorkflows": "Alur Kerja Aktif",
-  "averageResponseTime": "Rata-rata Waktu Respons",
-  "recentTasks": "Tugas Terbaru",
-  "workflowActivity": "Aktivitas Alur Kerja",
-  "agentsRunning": "2 Agent Berjalan",
-  "Second": "90 Detik",
-  "TaskCompleted": "180 Tugas Selesai",
   "agenticAI": "Agentic AI",
   "aiOverview": "Ringkasan",
-  "aiAssistant": "Asisten AI",
-  "tasks": "Tugas",
-  "tools": "Model Gratis",
   "other": "Lainnya",
   "settings": "Pengaturan",
   "profile": "Profil",
@@ -27,207 +9,8 @@
   "notifications": "Notifikasi",
   "display": "Display",
   "documentation": "Dokumentasi",
-  "goodAfternoon": "Selamat Siang",
-  "dashboardDescription": "Pantau Agent AI, tugas, dan alur kerja dari satu tempat.",
-  "startAITask": "Mulai Tugas AI",
-  "activeTasks": "Tugas Aktif",
   "completed": "Selesai",
-  "activeAgentsDescription": "3 sedang aktif",
-  "runningTasksDescription": "4 sedang berjalan",
-  "runningWorkflowsDescription": "6 sedang berjalan",
-  "completedTasksDescription": "Tugas yang telah selesai",
-  "agentsTrend": "+2 minggu ini",
-  "tasksTrend": "+18% dari kemarin",
-  "workflowTrend": "+5 minggu ini",
-  "completedTrend": "+24% bulan ini",
-  "activeAgents": "Agent Aktif",
-  "activeAgentsDescriptionLong": "Agent AI dan progresnya saat ini.",
-  "viewAll": "Lihat Semua",
-  "currentProgress": "Progres Saat Ini",
-  "quickActions": "Aksi Cepat",
-  "quickActionsDescription": "Mulai bekerja dengan Agent AI.",
-  "createAIGoal": "Buat Tujuan AI",
-  "createAIGoalDescription": "Berikan tujuan yang harus dicapai AI",
-  "manageAgents": "Kelola Agent",
-  "manageAgentsDescription": "Lihat dan konfigurasi Agent AI",
-  "viewTasks": "Lihat Tugas",
-  "viewTasksDescription": "Pantau tugas AI saat ini",
-  "viewWorkflows": "Lihat Alur Kerja",
-  "viewWorkflowsDescription": "Pantau tahapan eksekusi AI",
-  "currentWorkflow": "Alur Kerja Saat Ini",
-  "agenticAIPrototype": "Prototype Agentic AI",
-  "overallProgress": "Progres Keseluruhan",
-  "codingInProgress": "Agent sedang mengerjakan Coding.",
-  "goal": "Tujuan",
-  "planning": "Perencanaan",
-  "coding": "Coding",
-  "testing": "Pengujian",
   "done": "Selesai",
-  "goalDescription": "Menentukan tujuan",
-  "planningDescription": "Membuat rencana",
-  "codingDescription": "Menulis kode",
-  "testingDescription": "Menguji hasil",
-  "doneDescription": "Hasil telah selesai",
-  "recentActivity": "Aktivitas Terbaru",
-  "recentActivityDescription": "Aktivitas terbaru dari Agent AI.",
-  "whatAccomplish": "Apa yang ingin kamu capai?",
-  "workflowDescription": "Berikan tujuan kepada Agent AI dan biarkan agent merencanakan, menjalankan, menguji, dan menyelesaikan alur kerja.",
-  "startNewWorkflow": "Mulai Alur Kerja Baru",
-  "status": {
-    "running": "Berjalan",
-    "thinking": "Berpikir",
-    "idle": "Diam"
-  },
-  "agentic": {
-    "newChat": "Chat Baru",
-    "questionTitle": "Apa yang ingin kamu tanyakan?",
-    "questionDescription": "Chat dengan AI, tanyakan apa saja, upload gambar untuk dianalisis, atau minta AI membuat landing page.",
-    "download": "Unduh",
-    "model": "Model",
-    "workflow": {
-      "goal": "Memahami",
-      "planning": "Perencanaan",
-      "coding": "Mengerjakan",
-      "testing": "Pengujian",
-      "done": "Selesai"
-    },
-    "input": {
-      "selectEmployee": "Pilih Virtual Employee terlebih dahulu...",
-      "selectModel": "Pilih model terlebih dahulu...",
-      "processing": "AI sedang memproses...",
-      "writeMessage": "Tulis pesan untuk {{model}}..."
-    },
-    "status": {
-      "thinking": "{{agent}} sedang berpikir...",
-      "ready": "{{agent}} · {{model}} siap digunakan",
-      "selectModel": "{{agent}} · Pilih model",
-      "selectEmployee": "Pilih Virtual Employee"
-    },
-    "messages": {
-      "websiteCreated": "Website berhasil dibuat. Kamu bisa mengunduh file ZIP di bawah ini.",
-      "stopped": "Dihentikan sebelum jawaban selesai."
-    },
-    "errors": {
-      "planningFailed": "Gagal menentukan task AI.",
-      "chatFailed": "Gagal mendapatkan jawaban AI.",
-      "emptyResponse": "AI mengembalikan jawaban kosong.",
-      "generatorFailed": "Generator gagal.",
-      "emptyZip": "File ZIP kosong.",
-      "generic": "Terjadi kesalahan.",
-      "streamIncomplete": "Jawaban terputus sebelum selesai."
-    },
-    "title": "Agentic",
-    "bar": {
-      "ready": "Siap",
-      "working": "Bekerja",
-      "chooseAgent": "Pilih agen",
-      "chooseModel": "Pilih model"
-    },
-    "empty": {
-      "chooseAgentTitle": "Pilih agen untuk memulai",
-      "chooseAgentBody": "Setiap agen punya peran. Coding dapat mengubah file dan menjalankan tes di workspace cloud; Review dan Planning hanya membaca.",
-      "chooseModelTitle": "Pilih model untuk {{agent}}",
-      "chooseModelBody": "Model menulis jawaban dan memutuskan tool mana yang dipanggil.",
-      "readyTitle": "Apa yang perlu dikerjakan {{agent}}?",
-      "factAgent": "Agen",
-      "factModel": "Model",
-      "factWorkspace": "Workspace",
-      "noWorkspace": "Tidak ada. Agen bisa menjawab, tetapi tidak bisa membaca atau mengubah file.",
-      "withWorkspace": "File dibaca dan ditulis di server. Setiap penulisan dan setiap eksekusi meminta persetujuan Anda lebih dulu.",
-      "startersLabel": "Coba salah satu",
-      "starters": {
-        "structure": "Jelaskan struktur proyek ini.",
-        "review": "Tinjau kodenya dan daftar masalah yang kamu temukan, dari yang paling serius.",
-        "readme": "Tulis README yang menjelaskan fungsi proyek ini dan cara menjalankannya."
-      }
-    },
-    "activity": {
-      "title": "Aktivitas",
-      "running": "Bekerja",
-      "done": "Selesai",
-      "denied": "Ditolak",
-      "expired": "Kedaluwarsa",
-      "failed": "Gagal",
-      "tools": {
-        "workspace_list_files": "Melihat daftar file",
-        "workspace_read_file": "Membaca file",
-        "workspace_write_file": "Menulis file",
-        "workspace_get_changes": "Memeriksa perubahan",
-        "workspace_run_test": "Menjalankan tes",
-        "workspace_build": "Build",
-        "workspace_install_dependencies": "Memasang dependensi",
-        "workspace_get_execution": "Membaca hasil job",
-        "workspace_edit_file": "Mengedit file"
-      }
-    },
-    "composer": {
-      "skills": "Skill",
-      "attach": "Lampirkan gambar atau file",
-      "send": "Kirim",
-      "hint": "Enter untuk kirim, Shift+Enter untuk baris baru",
-      "needAgent": "Pilih agen dan model untuk memulai.",
-      "removeFile": "Hapus {{name}}",
-      "unsupportedFile": "{{name}} tidak bisa dilampirkan. Gunakan gambar, PDF, Word (.docx), ZIP, atau file teks/kode.",
-      "fileTooLarge": "{{name}} lebih besar dari 10 MB.",
-      "tooManyFiles": "Maksimal {{count}} file per pesan.",
-      "stop": "Hentikan"
-    },
-    "thread": {
-      "label": "Percakapan",
-      "loading": "Memulihkan percakapan...",
-      "loadError": "Percakapan tidak dapat dipulihkan",
-      "attachedFiles": "File terlampir",
-      "imageLoading": "Memuat {{name}}",
-      "imageUnavailable": "{{name}} tidak tersedia lagi",
-      "downloadFile": "Unduh {{name}}",
-      "downloadFailed": "{{name}} tidak bisa diunduh."
-    },
-    "workspaceLabel": "Ruang Kerja AI",
-    "phase": {
-      "understanding": "Memahami permintaan Anda",
-      "images_one": "Melihat gambar Anda",
-      "images_other": "Melihat {{count}} gambar Anda",
-      "files_one": "Membaca file lampiran",
-      "files_other": "Membaca {{count}} file lampiran",
-      "thinking": "{{agent}} sedang berpikir",
-      "tool": {
-        "explore": "Menelusuri {{detail}}",
-        "read": "Membaca {{detail}}",
-        "changes": "Memeriksa perubahan",
-        "write": "Menulis {{detail}}",
-        "edit": "Mengedit {{detail}}",
-        "test": "Menjalankan test",
-        "build": "Membangun proyek",
-        "install": "Memasang dependensi",
-        "job": "Menunggu proses selesai",
-        "publish": "Mengirim perubahan ke GitHub",
-        "desktop": "Memakai desktop: {{tool}}",
-        "other": "Menjalankan {{tool}}",
-        "exploreRoot": "Menelusuri file proyek"
-      },
-      "approval": "Menunggu persetujuan Anda: {{detail}}",
-      "summarizing": "Merangkum temuan",
-      "site": {
-        "design": "Merancang halaman",
-        "build": "Membuat file situs",
-        "package": "Mengemas ZIP"
-      },
-      "done": "Selesai",
-      "elapsed": "Waktu berjalan",
-      "trail": "Langkah selesai",
-      "stopped": "Dihentikan"
-    },
-    "auto": {
-      "answeredBy": "Otomatis → {{model}}",
-      "need": {
-        "vision": "membaca gambar",
-        "coding": "coding di workspace",
-        "long": "dokumen panjang",
-        "fast": "jawaban cepat"
-      },
-      "fallback": "cadangan karena pilihan pertama gagal"
-    }
-  },
   "tasksPage": {
     "title": "Tugas AI",
     "subtitle": "Kelola dan pantau tugas yang dijalankan oleh Agent AI.",
@@ -260,9 +43,6 @@
       "updateStatus": "Perbarui status",
       "updatePriority": "Perbarui prioritas",
       "exportTasks": "Ekspor tugas",
-      "deleteSelectedTasks": "Hapus tugas yang dipilih",
-      "loadingStatus": "Memperbarui status...",
-      "loadingPriority": "Memperbarui prioritas...",
       "exporting": "Mengekspor tugas...",
       "statusUpdated": "Status diperbarui menjadi \"{{status}}\" untuk {{count}} tugas.",
       "priorityUpdated": "Prioritas diperbarui menjadi \"{{priority}}\" untuk {{count}} tugas.",
@@ -271,7 +51,6 @@
       "deleteSelected": "Hapus tugas yang dipilih"
     },
     "deleteTitle": "Hapus tugas ini: {{id}}?",
-    "deleteMessage": "Tugas berikut telah dihapus:",
     "deleteDescription": "Kamu akan menghapus tugas dengan ID",
     "deleteWarning": "Tindakan ini tidak dapat dibatalkan.",
     "updateTask": "Perbarui Tugas",
@@ -341,21 +120,10 @@
     "updated": "Diubah {{date}}"
   },
   "common": {
-    "save": "Simpan",
     "cancel": "Batal",
     "delete": "Hapus",
-    "edit": "Edit",
-    "create": "Buat",
-    "search": "Cari",
     "close": "Tutup",
     "loading": "Memuat",
-    "back": "Kembali",
-    "next": "Selanjutnya",
-    "previous": "Sebelumnya",
-    "submit": "Kirim",
-    "confirm": "Konfirmasi",
-    "retry": "Coba Lagi",
-    "viewAll": "Lihat Semua",
     "reset": "Atur Ulang",
     "showPassword": "Tampilkan password",
     "hidePassword": "Sembunyikan password",
@@ -365,21 +133,14 @@
       "notModified": "Konten tidak berubah!",
       "sessionExpired": "Sesi Anda berakhir. Silakan masuk lagi.",
       "serverError": "Terjadi kesalahan pada server!"
-    },
-    "agenticWorkspace": "Agentic workspace"
+    }
   },
   "navigation": {
-    "changeAvatar": "Ganti foto profil",
-    "removeAvatar": "Hapus foto profil",
-    "avatarInvalidFile": "Pilih file gambar yang valid.",
-    "avatarUploadFailed": "Foto tidak dapat diproses. Coba gambar lain.",
-    "avatarStorageFull": "Penyimpanan browser penuh. Coba gambar yang lebih kecil.",
     "upgradeToPro": "Upgrade ke Pro",
     "billing": "Tagihan",
     "signOut": "Keluar",
     "profile": "Profil",
     "settings": "Pengaturan",
-    "newTeam": "Tim Baru",
     "groups": {
       "Website": "Website",
       "Settings": "Pengaturan"
@@ -392,85 +153,6 @@
     "openAiPage": "Buka website Anda"
   },
   "auth": {
-    "signIn": {
-      "title": "Masuk",
-      "subtitle": "Masuk ke akun kamu",
-      "email": "Email",
-      "emailPlaceholder": "nama@email.com",
-      "password": "Kata Sandi",
-      "passwordPlaceholder": "Masukkan kata sandi",
-      "rememberMe": "Ingat saya",
-      "forgotPassword": "Lupa kata sandi?",
-      "signInButton": "Masuk",
-      "signingIn": "Sedang masuk...",
-      "noAccount": "Belum punya akun?",
-      "signUp": "Daftar",
-      "orContinueWith": "Atau lanjutkan dengan",
-      "success": "Berhasil masuk!",
-      "welcomeBack": "Selamat datang kembali!",
-      "errors": {
-        "invalidCredentials": "Email atau kata sandi salah.",
-        "emailRequired": "Email wajib diisi.",
-        "emailInvalid": "Format email tidak valid.",
-        "passwordRequired": "Kata sandi wajib diisi."
-      }
-    },
-    "signUp": {
-      "title": "Buat Akun",
-      "subtitle": "Daftar untuk memulai",
-      "name": "Nama",
-      "namePlaceholder": "Nama lengkap",
-      "email": "Email",
-      "emailPlaceholder": "nama@email.com",
-      "password": "Kata Sandi",
-      "passwordPlaceholder": "Buat kata sandi",
-      "confirmPassword": "Konfirmasi Kata Sandi",
-      "confirmPasswordPlaceholder": "Konfirmasi kata sandi",
-      "createAccountButton": "Buat Akun",
-      "creatingAccount": "Membuat akun...",
-      "haveAccount": "Sudah punya akun?",
-      "signIn": "Masuk",
-      "orContinueWith": "Atau lanjutkan dengan",
-      "success": "Akun berhasil dibuat!",
-      "accountCreatedFor": "Akun dibuat untuk {{email}}.",
-      "errors": {
-        "nameRequired": "Nama wajib diisi.",
-        "emailRequired": "Email wajib diisi.",
-        "emailInvalid": "Format email tidak valid.",
-        "passwordRequired": "Kata sandi wajib diisi.",
-        "passwordMin": "Kata sandi minimal 8 karakter.",
-        "confirmPasswordRequired": "Konfirmasi kata sandi wajib diisi.",
-        "passwordMismatch": "Kata sandi tidak cocok."
-      }
-    },
-    "forgotPassword": {
-      "title": "Lupa Kata Sandi",
-      "subtitle": "Masukkan email untuk reset kata sandi",
-      "email": "Email",
-      "emailPlaceholder": "nama@email.com",
-      "sendResetLink": "Kirim Link Reset",
-      "sending": "Mengirim...",
-      "backToSignIn": "Kembali ke halaman masuk",
-      "success": "Link reset berhasil dikirim!",
-      "checkEmail": "Periksa email kamu untuk link reset.",
-      "errors": {
-        "emailRequired": "Email wajib diisi.",
-        "emailInvalid": "Format email tidak valid."
-      }
-    },
-    "otp": {
-      "title": "Verifikasi OTP",
-      "subtitle": "Masukkan kode 6 digit yang dikirim ke email kamu",
-      "otpCode": "Kode OTP",
-      "verify": "Verifikasi",
-      "verifying": "Memverifikasi...",
-      "resendCode": "Kirim ulang kode",
-      "success": "OTP berhasil diverifikasi!",
-      "errors": {
-        "otpRequired": "Kode OTP wajib diisi.",
-        "otpInvalid": "Kode OTP harus 6 digit."
-      }
-    },
     "signOutDialog": {
       "title": "Keluar",
       "description": "Apakah kamu yakin ingin keluar? Kamu perlu masuk lagi untuk mengakses akun.",
@@ -485,32 +167,10 @@
       "name": "Nama",
       "namePlaceholder": "Nama kamu",
       "email": "Email",
-      "emailPlaceholder": "Email kamu",
-      "bio": "Bio",
-      "bioPlaceholder": "Ceritakan tentang diri kamu",
-      "language": "Bahasa",
-      "languageDescription": "Pilih bahasa tampilan.",
-      "timezone": "Zona Waktu",
-      "timezoneDescription": "Pilih zona waktu kamu.",
       "saveChanges": "Simpan Perubahan",
       "saving": "Menyimpan...",
-      "success": "Pengaturan akun berhasil diperbarui!",
-      "errors": {
-        "nameRequired": "Nama wajib diisi.",
-        "emailRequired": "Email wajib diisi.",
-        "emailInvalid": "Format email tidak valid."
-      },
-      "workspace": "Nama Workspace",
-      "workspacePlaceholder": "agenticAI",
-      "workspaceDescription": "Deskripsi Workspace",
-      "workspaceDescriptionPlaceholder": "Jelaskan workspace AI kamu",
-      "selectLanguage": "Pilih bahasa",
-      "searchLanguage": "Cari bahasa...",
-      "noLanguage": "Bahasa tidak ditemukan.",
-      "reset": "Atur Ulang",
       "profilePhoto": "Foto profil",
       "chooseAvatar": "Pilih salah satu avatar di bawah. Pilihanmu akan tersimpan di akun.",
-      "avatarDescription": "Avatar akan tampil di menu akun dan navigasi aplikasi.",
       "profileNameHint": "Gunakan nama 2–30 karakter. Perubahan akan terlihat di seluruh aplikasi.",
       "emailReadOnly": "Email akun ditampilkan untuk informasi dan belum dapat diubah dari halaman ini.",
       "profileLoadError": "Gagal memuat profil. Periksa koneksi dan coba muat ulang halaman.",
@@ -525,12 +185,8 @@
       "themeDescription": "Pilih tema aplikasi.",
       "light": "Terang",
       "dark": "Gelap",
-      "system": "Sistem",
       "font": "Font",
       "fontDescription": "Pilih font aplikasi.",
-      "saveChanges": "Simpan Perubahan",
-      "saving": "Menyimpan...",
-      "success": "Pengaturan tampilan berhasil diperbarui!",
       "changedToDark": "Halaman berhasil diubah ke mode gelap.",
       "changedToLight": "Halaman berhasil diubah ke mode terang.",
       "fontChanged": "Huruf berhasil diganti ke {{font}}.",
@@ -542,10 +198,6 @@
       "subtitle": "Atur layout dan display aplikasi.",
       "sidebar": "Sidebar",
       "sidebarDescription": "Pilih elemen yang ditampilkan di sidebar.",
-      "layout": "Layout",
-      "layoutDescription": "Pilih layout aplikasi.",
-      "saveChanges": "Simpan Perubahan",
-      "saving": "Menyimpan...",
       "success": "Pengaturan tampilan layar berhasil diperbarui!",
       "updateDisplay": "Perbarui Tampilan",
       "selectOne": "Pilih minimal satu item.",
@@ -570,8 +222,6 @@
       "socialEmailsDescription": "Terima email untuk mention, follow, dan lainnya.",
       "securityEmails": "Email Keamanan",
       "securityEmailsDescription": "Terima email tentang keamanan akun kamu.",
-      "saveChanges": "Simpan Perubahan",
-      "saving": "Menyimpan...",
       "success": "Pengaturan notifikasi berhasil diperbarui!",
       "selectType": "Pilih notifikasi yang ingin Anda terima.",
       "notifyAbout": "Beri tahu saya tentang...",
@@ -586,62 +236,6 @@
     },
     "eyebrow": "Workspace",
     "description": "Kelola akun, keamanan, dan preferensi workspace Agentic AI."
-  },
-  "workflowPage": {
-    "title": "Alur Kerja",
-    "subtitle": "Kelola dan pantau alur kerja Agent AI.",
-    "createWorkflow": "Buat Alur Kerja",
-    "noWorkflows": "Belum ada alur kerja.",
-    "noWorkflowsDescription": "Buat alur kerja pertama kamu untuk memulai."
-  },
-  "helpCenterPage": {
-    "title": "Pusat Bantuan",
-    "subtitle": "Temukan jawaban untuk pertanyaan kamu.",
-    "search": "Cari bantuan...",
-    "documentation": "Dokumentasi",
-    "tutorials": "Tutorial",
-    "faq": "FAQ",
-    "contactSupport": "Hubungi Dukungan"
-  },
-  "chatsPage": {
-    "title": "Chat",
-    "subtitle": "Riwayat percakapan dengan Agent AI.",
-    "newChat": "Chat Baru",
-    "noChats": "Belum ada chat.",
-    "noChatsDescription": "Mulai chat baru untuk memulai percakapan."
-  },
-  "errors": {
-    "error401": {
-      "title": "401 - Tidak Terotorisasi",
-      "description": "Kamu tidak memiliki akses ke halaman ini.",
-      "backToHome": "Kembali ke Beranda"
-    },
-    "error403": {
-      "title": "403 - Akses Ditolak",
-      "description": "Kamu tidak memiliki izin untuk mengakses halaman ini.",
-      "backToHome": "Kembali ke Beranda"
-    },
-    "error404": {
-      "title": "404 - Halaman Tidak Ditemukan",
-      "description": "Halaman yang kamu cari tidak ditemukan.",
-      "backToHome": "Kembali ke Beranda"
-    },
-    "error500": {
-      "title": "500 - Kesalahan Server",
-      "description": "Terjadi kesalahan di server kami.",
-      "retry": "Coba Lagi",
-      "backToHome": "Kembali ke Beranda"
-    },
-    "error503": {
-      "title": "503 - Layanan Tidak Tersedia",
-      "description": "Layanan sedang dalam pemeliharaan.",
-      "backToHome": "Kembali ke Beranda"
-    },
-    "generalError": {
-      "title": "Terjadi Kesalahan",
-      "description": "Maaf, terjadi kesalahan yang tidak terduga.",
-      "backToHome": "Kembali ke Beranda"
-    }
   },
   "dataTable": {
     "reset": "Atur Ulang",
@@ -729,8 +323,7 @@
       "emailTaken": "Email ini sudah punya akun. Silakan masuk.",
       "disposableEmail": "Email sementara tidak bisa dipakai. Gunakan email yang biasa Anda pakai.",
       "googleFailed": "Login Google gagal.",
-      "loginUnexpected": "Terjadi kesalahan saat login.",
-      "resetUnavailable": "Reset kata sandi belum tersedia."
+      "loginUnexpected": "Terjadi kesalahan saat login."
     },
     "toasts": {
       "loginSuccess": "Berhasil masuk",
@@ -882,29 +475,6 @@
     }
   },
   "integrationsMenu": "Integrasi",
-  "localRunnerApproval": {
-    "titleWrite": "Izinkan perubahan file ini?",
-    "titleExecute": "Izinkan perintah ini?",
-    "description": "{{agent}} ingin bertindak di workspace lokal \"{{workspace}}\" di komputer ini. Tidak ada yang terjadi sampai Anda mengizinkannya.",
-    "file": "File",
-    "newFile": "File baru akan dibuat dengan isi ini.",
-    "readFailed": "File yang ada tidak dapat dibaca, jadi seluruh isi baru ditampilkan.",
-    "tooLarge": "Perubahannya terlalu besar untuk dibandingkan, jadi seluruh isi baru ditampilkan.",
-    "unchanged": "Isi baru sama dengan file di disk.",
-    "changedLines": "Baris ditambah: {{added}}, dihapus: {{removed}}.",
-    "changes": "Perubahan pada file",
-    "content": "Isi file",
-    "emptyFile": "(file kosong)",
-    "unchangedLines_one": "… {{count}} baris tidak berubah",
-    "unchangedLines_other": "… {{count}} baris tidak berubah",
-    "command": "Perintah",
-    "runtime": "Dijalankan",
-    "runtimeNative": "di komputer ini",
-    "runtimeDocker": "di dalam container Docker",
-    "nativeWarning": "Perintah ini menjalankan script milik project dengan akses akun Anda di komputer ini. Izinkan hanya untuk project yang Anda percaya. Key dan token di environment variable Anda tidak diteruskan ke perintah ini.",
-    "deny": "Tolak",
-    "allow": "Izinkan"
-  },
   "desktopRuntime": {
     "pageTitle": "Integrasi",
     "pageSubtitle": "Koneksi opsional ke alat di luar cloud. Tidak ada yang di sini yang diperlukan untuk memakai Workspace Cloud.",
@@ -941,7 +511,6 @@
       "reconnect": "Hubungkan ulang",
       "connecting": "Menghubungkan...",
       "disconnect": "Putuskan",
-      "status": "Status",
       "connected": "Terhubung",
       "notConnected": "Belum terhubung",
       "device": "Komputer",
@@ -951,8 +520,7 @@
         "disabled": "Dimatikan di runner",
         "unknown": "Belum diperiksa"
       },
-      "stopped": "Dihentikan. Hubungkan lagi untuk memakainya.",
-      "disconnected": "Terputus dari browser ini. Runner tetap berjalan di komputer Anda."
+      "stopped": "Dihentikan. Hubungkan lagi untuk memakainya."
     },
     "problems": {
       "missing-credentials": "Isi URL runner dan bearer token.",
@@ -1016,14 +584,6 @@
       "noScreenshot": "Belum ada screenshot.",
       "takeScreenshot": "Ambil screenshot",
       "stop": "Hentikan"
-    },
-    "chat": {
-      "statusLabel": "Desktop Runtime (opsional)",
-      "connected": "terhubung",
-      "notConnected": "belum terhubung",
-      "manage": "Kelola di Settings",
-      "desktopNeedsRuntime": "Ini membutuhkan Desktop Runtime yang belum terhubung. Hubungkan di Settings → Integrasi → Desktop Runtime, lalu kirim ulang permintaan.\n\nPermintaan tool tidak dijalankan.",
-      "localNeedsFolder": "Ini membutuhkan folder proyek lokal pada Desktop Runtime. Pilih di Settings → Integrasi, atau pilih Cloud Workspace.\n\nPermintaan tool tidak dijalankan."
     },
     "interaction": {
       "title": "Persetujuan interaksi desktop",
@@ -1093,21 +653,6 @@
         "expired": "Persetujuan kedaluwarsa. Minta yang baru untuk melanjutkan.",
         "emergency": "Emergency stop aktif."
       }
-    },
-    "chatApproval": {
-      "label": "Persetujuan tindakan desktop",
-      "title": "Persetujuan tindakan desktop",
-      "description": "AI meminta izin sebelum mengubah desktop.",
-      "waiting": "Menunggu",
-      "agent": "Agent",
-      "skill": "Skill",
-      "tool": "Tool / tindakan",
-      "reason": "Alasan",
-      "note": "Hanya tindakan ini yang dijalankan; tindakan desktop berikutnya tetap meminta persetujuan. Setelah disetujui, agent ini memegang kendali desktop sampai Anda menekan Emergency Stop.",
-      "deny": "Tolak",
-      "allowOnce": "Izinkan sekali",
-      "emergencyStop": "Emergency Stop",
-      "expired": "Persetujuan tindakan desktop kedaluwarsa. Minta agent mengajukan permintaan baru."
     }
   },
   "emailOtp": {
@@ -1274,11 +819,6 @@
       "line2": "Kami akan segera kembali."
     }
   },
-  "comingSoon": {
-    "title": "Segera Hadir!",
-    "line1": "Halaman ini belum dibuat.",
-    "line2": "Nantikan ya!"
-  },
   "signUpPage": {
     "title": "Buat akun Anda",
     "description": "Buat akun dan mulai membangun workspace AI otonom Anda.",
@@ -1416,7 +956,6 @@
   "sitesMenu": "Pembuat Website",
   "siteBuilder": {
     "eyebrow": "Pembuat Website",
-    "title": "Website Anda",
     "subtitle": "Ceritakan website yang Anda mau. Kami yang membuat tampilannya, menulis isinya, dan memasangnya di internet.",
     "describeLabel": "Website apa yang ingin Anda buat?",
     "describePlaceholder": "Misalnya: website untuk bengkel motor saya di Bandung, berisi layanan, jam buka, dan tombol WhatsApp.",
@@ -1535,7 +1074,6 @@
     },
     "run": {
       "buildingTitle": "Website Anda sedang dibuat",
-      "buildingHelp": "Biasanya butuh 3 sampai 10 menit. Halaman ini boleh ditutup; pekerjaan tetap berjalan.",
       "changingTitle": "Mengerjakan perubahan Anda",
       "waiting": "Menunggu giliran...",
       "cancel": "Hentikan",
@@ -1560,18 +1098,12 @@
       "publish": "Terbitkan",
       "update": "Terbitkan perubahan",
       "changeLook": "Ganti tampilan",
-      "versions": "Riwayat perubahan",
       "reviseLabel": "Ada yang mau diubah?",
       "revisePlaceholder": "Misalnya: tambahkan halaman daftar harga, atau buat beranda terasa lebih ceria.",
       "reviseHelp": "Tulis seperti Anda bercerita ke teman.",
       "reviseSend": "Ubah",
-      "reviseSending": "Memulai...",
       "busy": "Tunggu sampai pekerjaan yang sedang berjalan selesai.",
-      "lastChange": "Perubahan terakhir",
-      "notMade": "Website ini belum dibuat.",
-      "introTitle": "Ini website Anda",
-      "introHelp": "Lihat dulu semuanya. Kalau sudah cocok, tekan Terbitkan. Kalau ada yang kurang, minta perubahan.",
-      "introAsk": "Minta perubahan"
+      "introHelp": "Lihat dulu semuanya. Kalau sudah cocok, tekan Terbitkan. Kalau ada yang kurang, minta perubahan."
     },
     "preview": {
       "title": "Website Anda",

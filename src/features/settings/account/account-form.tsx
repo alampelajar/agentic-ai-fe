@@ -12,7 +12,7 @@ import {
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '@/stores/auth-store'
-import { getCurrentUser, updateCurrentUserProfile } from '@/lib/api-auth'
+import { getCurrentUser, updateCurrentUserProfile } from '@/lib/api/auth'
 import {
   AVATAR_PRESETS,
   avatarPresetValue,

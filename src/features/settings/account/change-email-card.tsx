@@ -10,11 +10,11 @@ import {
   requestChangeEmailOtp,
   resendChangeEmailOtp,
   verifyChangeEmailOtp,
-} from '@/lib/api-email-otp'
+} from '@/lib/api/email-otp'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
-import { EmailOtpStep } from '@/features/auth/email-otp/email-otp-step'
+import { EmailOtpStep } from '@/features/auth/components/email-otp-step'
 
 export function ChangeEmailCard() {
   const { t } = useTranslation()
@@ -33,7 +33,10 @@ export function ChangeEmailCard() {
       await requestChangeEmailOtp({ new_email: newEmail.trim(), password })
       setStage('otp')
     } catch (error) {
-      const refusalKey = error instanceof OtpRequestError ? emailRefusalKey(error.code) : undefined
+      const refusalKey =
+        error instanceof OtpRequestError
+          ? emailRefusalKey(error.code)
+          : undefined
       if (refusalKey) {
         toast.error(t(refusalKey))
         return

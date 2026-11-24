@@ -1,24 +1,6 @@
 {
-  "dashboard": "Dashboard",
-  "overview": "Overview",
-  "activity": "Activity",
-  "workflow": "Workflow",
-  "newTask": "New Task",
-  "runningAgents": "Running Agents",
-  "FailedTask": "Failed Tasks",
-  "completedTasks": "Completed Tasks",
-  "activeWorkflows": "Active Workflows",
-  "averageResponseTime": "Average Response Time",
-  "recentTasks": "Recent Tasks",
-  "workflowActivity": "Workflow Activity",
-  "agentsRunning": "2 Agents Running",
-  "Second": "90 Seconds",
-  "TaskCompleted": "180 Tasks Completed",
   "agenticAI": "Agentic AI",
   "aiOverview": "Overview",
-  "aiAssistant": "AI Assistant",
-  "tasks": "Tasks",
-  "tools": "Free Model",
   "other": "Other",
   "settings": "Settings",
   "profile": "Profile",
@@ -27,207 +9,8 @@
   "notifications": "Notifications",
   "display": "Display",
   "documentation": "Documentation",
-  "goodAfternoon": "Good Afternoon",
-  "dashboardDescription": "Monitor AI agents, tasks, and workflows from one place.",
-  "startAITask": "Start AI Task",
-  "activeTasks": "Active Tasks",
   "completed": "Completed",
-  "activeAgentsDescription": "3 currently active",
-  "runningTasksDescription": "4 currently running",
-  "runningWorkflowsDescription": "6 currently running",
-  "completedTasksDescription": "Tasks completed",
-  "agentsTrend": "+2 this week",
-  "tasksTrend": "+18% from yesterday",
-  "workflowTrend": "+5 this week",
-  "completedTrend": "+24% this month",
-  "activeAgents": "Active Agents",
-  "activeAgentsDescriptionLong": "AI agents and their current progress.",
-  "viewAll": "View All",
-  "currentProgress": "Current Progress",
-  "quickActions": "Quick Actions",
-  "quickActionsDescription": "Start working with AI Agents.",
-  "createAIGoal": "Create AI Goal",
-  "createAIGoalDescription": "Give the AI a goal to achieve",
-  "manageAgents": "Manage Agents",
-  "manageAgentsDescription": "View and configure AI Agents",
-  "viewTasks": "View Tasks",
-  "viewTasksDescription": "Monitor current AI tasks",
-  "viewWorkflows": "View Workflows",
-  "viewWorkflowsDescription": "Monitor AI execution stages",
-  "currentWorkflow": "Current Workflow",
-  "agenticAIPrototype": "Agentic AI Prototype",
-  "overallProgress": "Overall Progress",
-  "codingInProgress": "Agent is working on Coding.",
-  "goal": "Goal",
-  "planning": "Planning",
-  "coding": "Coding",
-  "testing": "Testing",
   "done": "Done",
-  "goalDescription": "Determine the goal",
-  "planningDescription": "Create a plan",
-  "codingDescription": "Write the code",
-  "testingDescription": "Test the result",
-  "doneDescription": "Completed result",
-  "recentActivity": "Recent Activity",
-  "recentActivityDescription": "Recent activity from AI Agents.",
-  "whatAccomplish": "What do you want to accomplish?",
-  "workflowDescription": "Give a goal to the AI Agent and let the agent plan, execute, test, and complete the workflow.",
-  "startNewWorkflow": "Start New Workflow",
-  "status": {
-    "running": "Running",
-    "thinking": "Thinking",
-    "idle": "Idle"
-  },
-  "agentic": {
-    "newChat": "New Chat",
-    "questionTitle": "What would you like to ask?",
-    "questionDescription": "Chat with AI, ask anything, upload images for analysis, or ask AI to create a landing page.",
-    "download": "Download",
-    "model": "Model",
-    "workflow": {
-      "goal": "Understand",
-      "planning": "Planning",
-      "coding": "Working",
-      "testing": "Testing",
-      "done": "Completed"
-    },
-    "input": {
-      "selectEmployee": "Select a Virtual Employee first...",
-      "selectModel": "Select a model first...",
-      "processing": "AI is processing...",
-      "writeMessage": "Write a message for {{model}}..."
-    },
-    "status": {
-      "thinking": "{{agent}} is thinking...",
-      "ready": "{{agent}} · {{model}} is ready to use",
-      "selectModel": "{{agent}} · Select a model",
-      "selectEmployee": "Select a Virtual Employee"
-    },
-    "messages": {
-      "websiteCreated": "Website created successfully. You can download the ZIP file below.",
-      "stopped": "Stopped before the answer was finished."
-    },
-    "errors": {
-      "planningFailed": "Failed to determine the AI task.",
-      "chatFailed": "Failed to get an AI response.",
-      "emptyResponse": "AI returned an empty response.",
-      "generatorFailed": "Generator failed.",
-      "emptyZip": "ZIP file is empty.",
-      "generic": "An error occurred.",
-      "streamIncomplete": "The answer stopped before it was complete."
-    },
-    "title": "Agentic",
-    "bar": {
-      "ready": "Ready",
-      "working": "Working",
-      "chooseAgent": "Choose an agent",
-      "chooseModel": "Choose a model"
-    },
-    "empty": {
-      "chooseAgentTitle": "Choose an agent to begin",
-      "chooseAgentBody": "Each agent has a role. Coding can edit files and run tests in a cloud workspace; Review and Planning only read.",
-      "chooseModelTitle": "Choose a model for {{agent}}",
-      "chooseModelBody": "The model writes the answers and decides which tools to call.",
-      "readyTitle": "What should {{agent}} work on?",
-      "factAgent": "Agent",
-      "factModel": "Model",
-      "factWorkspace": "Workspace",
-      "noWorkspace": "None. The agent can answer, but cannot read or change files.",
-      "withWorkspace": "Files are read and written on the server. Every write and every run asks for your approval first.",
-      "startersLabel": "Try one of these",
-      "starters": {
-        "structure": "Describe the structure of this project.",
-        "review": "Review the code and list the problems you find, most serious first.",
-        "readme": "Write a README that explains what this project does and how to run it."
-      }
-    },
-    "activity": {
-      "title": "Activity",
-      "running": "Working",
-      "done": "Done",
-      "denied": "Not allowed",
-      "expired": "Expired",
-      "failed": "Failed",
-      "tools": {
-        "workspace_list_files": "Listed files",
-        "workspace_read_file": "Read file",
-        "workspace_write_file": "Write file",
-        "workspace_get_changes": "Checked changes",
-        "workspace_run_test": "Run tests",
-        "workspace_build": "Build",
-        "workspace_install_dependencies": "Install dependencies",
-        "workspace_get_execution": "Read job result",
-        "workspace_edit_file": "Edit file"
-      }
-    },
-    "composer": {
-      "skills": "Skills",
-      "attach": "Attach an image or file",
-      "send": "Send",
-      "hint": "Enter to send, Shift+Enter for a new line",
-      "needAgent": "Choose an agent and a model to start.",
-      "removeFile": "Remove {{name}}",
-      "unsupportedFile": "{{name}} cannot be attached. Use an image, PDF, Word (.docx), ZIP, or a text or code file.",
-      "fileTooLarge": "{{name}} is larger than 10 MB.",
-      "tooManyFiles": "At most {{count}} files per message.",
-      "stop": "Stop"
-    },
-    "thread": {
-      "label": "Conversation",
-      "loading": "Restoring the conversation...",
-      "loadError": "The conversation could not be restored",
-      "attachedFiles": "Attached files",
-      "imageLoading": "Loading {{name}}",
-      "imageUnavailable": "{{name}} is no longer available",
-      "downloadFile": "Download {{name}}",
-      "downloadFailed": "{{name}} could not be downloaded."
-    },
-    "workspaceLabel": "AI Workspace",
-    "phase": {
-      "understanding": "Understanding your request",
-      "images_one": "Looking at your image",
-      "images_other": "Looking at your {{count}} images",
-      "files_one": "Reading the attached file",
-      "files_other": "Reading {{count}} attached files",
-      "thinking": "{{agent}} is thinking",
-      "tool": {
-        "explore": "Looking through {{detail}}",
-        "read": "Reading {{detail}}",
-        "changes": "Checking what changed",
-        "write": "Writing {{detail}}",
-        "edit": "Editing {{detail}}",
-        "test": "Running the tests",
-        "build": "Building the project",
-        "install": "Installing dependencies",
-        "job": "Waiting for the run to finish",
-        "publish": "Sending the changes to GitHub",
-        "desktop": "Using the desktop: {{tool}}",
-        "other": "Running {{tool}}",
-        "exploreRoot": "Looking through the project files"
-      },
-      "approval": "Waiting for your approval: {{detail}}",
-      "summarizing": "Summing up what was found",
-      "site": {
-        "design": "Designing the page",
-        "build": "Building the site files",
-        "package": "Packing the ZIP"
-      },
-      "done": "Done",
-      "elapsed": "Time taken",
-      "trail": "Steps done",
-      "stopped": "Stopped"
-    },
-    "auto": {
-      "answeredBy": "Auto → {{model}}",
-      "need": {
-        "vision": "reads images",
-        "coding": "coding in the workspace",
-        "long": "long documents",
-        "fast": "fast answer"
-      },
-      "fallback": "backup after the first choice failed"
-    }
-  },
   "tasksPage": {
     "title": "AI Tasks",
     "subtitle": "Manage and monitor tasks executed by AI Agents.",
@@ -260,9 +43,6 @@
       "updateStatus": "Update status",
       "updatePriority": "Update priority",
       "exportTasks": "Export tasks",
-      "deleteSelectedTasks": "Delete selected tasks",
-      "loadingStatus": "Updating status...",
-      "loadingPriority": "Updating priority...",
       "exporting": "Exporting tasks...",
       "statusUpdated": "Status updated to \"{{status}}\" for {{count}} tasks.",
       "priorityUpdated": "Priority updated to \"{{priority}}\" for {{count}} tasks.",
@@ -271,7 +51,6 @@
       "deleteSelected": "Delete selected tasks"
     },
     "deleteTitle": "Delete this task: {{id}}?",
-    "deleteMessage": "The following task has been deleted:",
     "deleteDescription": "You are about to delete a task with the ID",
     "deleteWarning": "This action cannot be undone.",
     "updateTask": "Update Task",
@@ -341,21 +120,10 @@
     "updated": "Changed {{date}}"
   },
   "common": {
-    "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
-    "edit": "Edit",
-    "create": "Create",
-    "search": "Search",
     "close": "Close",
     "loading": "Loading",
-    "back": "Back",
-    "next": "Next",
-    "previous": "Previous",
-    "submit": "Submit",
-    "confirm": "Confirm",
-    "retry": "Retry",
-    "viewAll": "View All",
     "reset": "Reset",
     "showPassword": "Show password",
     "hidePassword": "Hide password",
@@ -365,21 +133,14 @@
       "notModified": "Content not modified!",
       "sessionExpired": "Your session has expired. Please sign in again.",
       "serverError": "Internal server error!"
-    },
-    "agenticWorkspace": "Agentic workspace"
+    }
   },
   "navigation": {
-    "changeAvatar": "Change profile photo",
-    "removeAvatar": "Remove profile photo",
-    "avatarInvalidFile": "Please choose a valid image file.",
-    "avatarUploadFailed": "The photo could not be processed. Try another image.",
-    "avatarStorageFull": "Browser storage is full. Try a smaller image.",
     "upgradeToPro": "Upgrade to Pro",
     "billing": "Billing",
     "signOut": "Sign out",
     "profile": "Profile",
     "settings": "Settings",
-    "newTeam": "New Team",
     "groups": {
       "Website": "Website",
       "Settings": "Settings"
@@ -392,85 +153,6 @@
     "openAiPage": "Open your websites"
   },
   "auth": {
-    "signIn": {
-      "title": "Sign In",
-      "subtitle": "Sign in to your account",
-      "email": "Email",
-      "emailPlaceholder": "name@email.com",
-      "password": "Password",
-      "passwordPlaceholder": "Enter your password",
-      "rememberMe": "Remember me",
-      "forgotPassword": "Forgot password?",
-      "signInButton": "Sign In",
-      "signingIn": "Signing in...",
-      "noAccount": "Don't have an account?",
-      "signUp": "Sign up",
-      "orContinueWith": "Or continue with",
-      "success": "Successfully signed in!",
-      "welcomeBack": "Welcome back!",
-      "errors": {
-        "invalidCredentials": "Invalid email or password.",
-        "emailRequired": "Email is required.",
-        "emailInvalid": "Invalid email format.",
-        "passwordRequired": "Password is required."
-      }
-    },
-    "signUp": {
-      "title": "Create Account",
-      "subtitle": "Sign up to get started",
-      "name": "Name",
-      "namePlaceholder": "Full name",
-      "email": "Email",
-      "emailPlaceholder": "name@email.com",
-      "password": "Password",
-      "passwordPlaceholder": "Create a password",
-      "confirmPassword": "Confirm Password",
-      "confirmPasswordPlaceholder": "Confirm your password",
-      "createAccountButton": "Create Account",
-      "creatingAccount": "Creating account...",
-      "haveAccount": "Already have an account?",
-      "signIn": "Sign in",
-      "orContinueWith": "Or continue with",
-      "success": "Account created successfully!",
-      "accountCreatedFor": "Account created for {{email}}.",
-      "errors": {
-        "nameRequired": "Name is required.",
-        "emailRequired": "Email is required.",
-        "emailInvalid": "Invalid email format.",
-        "passwordRequired": "Password is required.",
-        "passwordMin": "Password must be at least 8 characters.",
-        "confirmPasswordRequired": "Password confirmation is required.",
-        "passwordMismatch": "Passwords do not match."
-      }
-    },
-    "forgotPassword": {
-      "title": "Forgot Password",
-      "subtitle": "Enter your email to reset your password",
-      "email": "Email",
-      "emailPlaceholder": "name@email.com",
-      "sendResetLink": "Send Reset Link",
-      "sending": "Sending...",
-      "backToSignIn": "Back to sign in",
-      "success": "Reset link sent successfully!",
-      "checkEmail": "Check your email for the reset link.",
-      "errors": {
-        "emailRequired": "Email is required.",
-        "emailInvalid": "Invalid email format."
-      }
-    },
-    "otp": {
-      "title": "OTP Verification",
-      "subtitle": "Enter the 6-digit code sent to your email",
-      "otpCode": "OTP Code",
-      "verify": "Verify",
-      "verifying": "Verifying...",
-      "resendCode": "Resend code",
-      "success": "OTP verified successfully!",
-      "errors": {
-        "otpRequired": "OTP code is required.",
-        "otpInvalid": "OTP code must be 6 digits."
-      }
-    },
     "signOutDialog": {
       "title": "Sign out",
       "description": "Are you sure you want to sign out? You will need to sign in again to access your account.",
@@ -485,32 +167,10 @@
       "name": "Name",
       "namePlaceholder": "Your name",
       "email": "Email",
-      "emailPlaceholder": "Your email",
-      "bio": "Bio",
-      "bioPlaceholder": "Tell us about yourself",
-      "language": "Language",
-      "languageDescription": "Select your display language.",
-      "timezone": "Timezone",
-      "timezoneDescription": "Select your timezone.",
       "saveChanges": "Save Changes",
       "saving": "Saving...",
-      "success": "Account settings updated successfully!",
-      "errors": {
-        "nameRequired": "Name is required.",
-        "emailRequired": "Email is required.",
-        "emailInvalid": "Invalid email format."
-      },
-      "workspace": "Workspace Name",
-      "workspacePlaceholder": "agenticAI",
-      "workspaceDescription": "Workspace Description",
-      "workspaceDescriptionPlaceholder": "Describe your AI workspace",
-      "selectLanguage": "Select language",
-      "searchLanguage": "Search language...",
-      "noLanguage": "No language found.",
-      "reset": "Reset",
       "profilePhoto": "Profile photo",
       "chooseAvatar": "Choose an avatar below. Your selection will be saved to your account.",
-      "avatarDescription": "Your avatar appears in the account menu and application navigation.",
       "profileNameHint": "Use a name between 2 and 30 characters. Changes appear throughout the app.",
       "emailReadOnly": "Your account email is shown for reference and cannot be edited from this page yet.",
       "profileLoadError": "Could not load your profile. Check your connection and reload the page.",
@@ -525,12 +185,8 @@
       "themeDescription": "Select the theme for the app.",
       "light": "Light",
       "dark": "Dark",
-      "system": "System",
       "font": "Font",
       "fontDescription": "Select the font for the app.",
-      "saveChanges": "Save Changes",
-      "saving": "Saving...",
-      "success": "Appearance settings updated successfully!",
       "changedToDark": "The page is now in dark mode.",
       "changedToLight": "The page is now in light mode.",
       "fontChanged": "The text now uses {{font}}.",
@@ -542,10 +198,6 @@
       "subtitle": "Configure the layout and display of the app.",
       "sidebar": "Sidebar",
       "sidebarDescription": "Select the items you want to display in the sidebar.",
-      "layout": "Layout",
-      "layoutDescription": "Select the app layout.",
-      "saveChanges": "Save Changes",
-      "saving": "Saving...",
       "success": "Display settings updated successfully!",
       "updateDisplay": "Update display",
       "selectOne": "You have to select at least one item.",
@@ -570,8 +222,6 @@
       "socialEmailsDescription": "Receive emails for mentions, follows, and more.",
       "securityEmails": "Security Emails",
       "securityEmailsDescription": "Receive emails about your account security.",
-      "saveChanges": "Save Changes",
-      "saving": "Saving...",
       "success": "Notification settings updated successfully!",
       "selectType": "Please choose which notifications you want.",
       "notifyAbout": "Notify me about...",
@@ -586,62 +236,6 @@
     },
     "eyebrow": "Workspace",
     "description": "Manage your account, security and Agentic AI workspace preferences."
-  },
-  "workflowPage": {
-    "title": "Workflows",
-    "subtitle": "Manage and monitor AI Agent workflows.",
-    "createWorkflow": "Create Workflow",
-    "noWorkflows": "No workflows yet.",
-    "noWorkflowsDescription": "Create your first workflow to get started."
-  },
-  "helpCenterPage": {
-    "title": "Help Center",
-    "subtitle": "Find answers to your questions.",
-    "search": "Search for help...",
-    "documentation": "Documentation",
-    "tutorials": "Tutorials",
-    "faq": "FAQ",
-    "contactSupport": "Contact Support"
-  },
-  "chatsPage": {
-    "title": "Chats",
-    "subtitle": "Conversation history with AI Agents.",
-    "newChat": "New Chat",
-    "noChats": "No chats yet.",
-    "noChatsDescription": "Start a new chat to begin a conversation."
-  },
-  "errors": {
-    "error401": {
-      "title": "401 - Unauthorized",
-      "description": "You do not have access to this page.",
-      "backToHome": "Back to Home"
-    },
-    "error403": {
-      "title": "403 - Forbidden",
-      "description": "You do not have permission to access this page.",
-      "backToHome": "Back to Home"
-    },
-    "error404": {
-      "title": "404 - Page Not Found",
-      "description": "The page you are looking for does not exist.",
-      "backToHome": "Back to Home"
-    },
-    "error500": {
-      "title": "500 - Server Error",
-      "description": "An error occurred on our server.",
-      "retry": "Retry",
-      "backToHome": "Back to Home"
-    },
-    "error503": {
-      "title": "503 - Service Unavailable",
-      "description": "The service is currently under maintenance.",
-      "backToHome": "Back to Home"
-    },
-    "generalError": {
-      "title": "An Error Occurred",
-      "description": "Sorry, an unexpected error occurred.",
-      "backToHome": "Back to Home"
-    }
   },
   "dataTable": {
     "reset": "Reset",
@@ -729,8 +323,7 @@
       "emailTaken": "This email already has an account. Sign in instead.",
       "disposableEmail": "Temporary email addresses can't be used. Please use the email you normally use.",
       "googleFailed": "Google sign-in failed.",
-      "loginUnexpected": "Something went wrong while signing in.",
-      "resetUnavailable": "Password reset is not available yet."
+      "loginUnexpected": "Something went wrong while signing in."
     },
     "toasts": {
       "loginSuccess": "Signed in successfully",
@@ -882,29 +475,6 @@
     }
   },
   "integrationsMenu": "Integrations",
-  "localRunnerApproval": {
-    "titleWrite": "Allow this file change?",
-    "titleExecute": "Allow this command?",
-    "description": "{{agent}} wants to act in the local workspace \"{{workspace}}\" on this computer. Nothing happens until you allow it.",
-    "file": "File",
-    "newFile": "A new file will be created with this content.",
-    "readFailed": "The current file could not be read, so the full new content is shown.",
-    "tooLarge": "The change is too large to compare, so the full new content is shown.",
-    "unchanged": "The new content is the same as the file on disk.",
-    "changedLines": "Lines added: {{added}}, removed: {{removed}}.",
-    "changes": "Changes to the file",
-    "content": "Content of the file",
-    "emptyFile": "(empty file)",
-    "unchangedLines_one": "… {{count}} unchanged line",
-    "unchangedLines_other": "… {{count}} unchanged lines",
-    "command": "Command",
-    "runtime": "Runs",
-    "runtimeNative": "on this computer",
-    "runtimeDocker": "in a Docker container",
-    "nativeWarning": "The command runs the project's own scripts with your account's access to this computer. Allow it only for a project you trust. Your keys and tokens in environment variables are not passed to it.",
-    "deny": "Deny",
-    "allow": "Allow"
-  },
   "desktopRuntime": {
     "pageTitle": "Integrations",
     "pageSubtitle": "Optional connections to tools outside the cloud. Nothing here is needed to use Cloud Workspaces.",
@@ -941,7 +511,6 @@
       "reconnect": "Reconnect",
       "connecting": "Connecting...",
       "disconnect": "Disconnect",
-      "status": "Status",
       "connected": "Connected",
       "notConnected": "Not connected",
       "device": "Computer",
@@ -951,8 +520,7 @@
         "disabled": "Switched off on the runner",
         "unknown": "Not checked"
       },
-      "stopped": "Stopped. Connect again to use it.",
-      "disconnected": "Disconnected from this browser. The runner keeps running on your computer."
+      "stopped": "Stopped. Connect again to use it."
     },
     "problems": {
       "missing-credentials": "Enter the runner URL and the bearer token.",
@@ -1016,14 +584,6 @@
       "noScreenshot": "No screenshot taken.",
       "takeScreenshot": "Take screenshot",
       "stop": "Stop"
-    },
-    "chat": {
-      "statusLabel": "Desktop Runtime (optional)",
-      "connected": "connected",
-      "notConnected": "not connected",
-      "manage": "Manage in Settings",
-      "desktopNeedsRuntime": "This needs the Desktop Runtime, which is not connected. Connect it in Settings → Integrations → Desktop Runtime, then send the request again.\n\nThe tool request was not run.",
-      "localNeedsFolder": "This needs a local project folder on the Desktop Runtime. Choose one in Settings → Integrations, or select a Cloud Workspace instead.\n\nThe tool request was not run."
     },
     "interaction": {
       "title": "Desktop interaction approval",
@@ -1093,21 +653,6 @@
         "expired": "Approval expired. Request a new one to continue.",
         "emergency": "Emergency stop activated."
       }
-    },
-    "chatApproval": {
-      "label": "Desktop action approval",
-      "title": "Desktop action approval",
-      "description": "The AI asks for permission before changing your desktop.",
-      "waiting": "Waiting",
-      "agent": "Agent",
-      "skill": "Skill",
-      "tool": "Tool / action",
-      "reason": "Reason",
-      "note": "Only this action runs; later desktop actions still ask for approval. Once approved, this agent holds desktop control until you press Emergency Stop.",
-      "deny": "Deny",
-      "allowOnce": "Allow Once",
-      "emergencyStop": "Emergency Stop",
-      "expired": "The desktop action approval expired. Ask the agent to make a new request."
     }
   },
   "emailOtp": {
@@ -1274,11 +819,6 @@
       "line2": "We'll be back online shortly."
     }
   },
-  "comingSoon": {
-    "title": "Coming Soon!",
-    "line1": "This page has not been created yet.",
-    "line2": "Stay tuned!"
-  },
   "signUpPage": {
     "title": "Create your account",
     "description": "Create your account and start building your autonomous AI workspace.",
@@ -1416,7 +956,6 @@
   "sitesMenu": "Make a website",
   "siteBuilder": {
     "eyebrow": "Make a website",
-    "title": "Your websites",
     "subtitle": "Tell us about the website you want. We make the look, write the text and put it online for you.",
     "describeLabel": "What website do you want to make?",
     "describePlaceholder": "For example: a website for my motorbike workshop in Bandung, with our services, opening hours and a WhatsApp button.",
@@ -1535,7 +1074,6 @@
     },
     "run": {
       "buildingTitle": "Your website is being made",
-      "buildingHelp": "This usually takes 3 to 10 minutes. You can close this page; the work continues.",
       "changingTitle": "Working on your change",
       "waiting": "Waiting for its turn...",
       "cancel": "Stop",
@@ -1560,18 +1098,12 @@
       "publish": "Put online",
       "update": "Publish changes",
       "changeLook": "Change look",
-      "versions": "Change history",
       "reviseLabel": "Anything to change?",
       "revisePlaceholder": "For example: add a page with our prices, or make the home page more cheerful.",
       "reviseHelp": "Write it the way you would tell a friend.",
       "reviseSend": "Change it",
-      "reviseSending": "Starting...",
       "busy": "Wait until the current work is finished.",
-      "lastChange": "Last change",
-      "notMade": "This website has not been made yet.",
-      "introTitle": "This is your website",
-      "introHelp": "Look through it first. If you like it, press Publish. If something is missing, ask for a change.",
-      "introAsk": "Request a change"
+      "introHelp": "Look through it first. If you like it, press Publish. If something is missing, ask for a change."
     },
     "preview": {
       "title": "Your website",

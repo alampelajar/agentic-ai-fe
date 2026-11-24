@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { diffLines, type DiffLine } from '@/features/desktop-runtime/line-diff'
+import { diffLines, type DiffLine } from '@/features/sites/lib/line-diff'
 import { getVersionFile, getVersionFiles, type VersionFile } from '../data/api'
-import { siteErrorText } from '../errors'
+import { siteErrorText } from '../lib/errors'
 
 type CodeViewProps = {
   siteId: number

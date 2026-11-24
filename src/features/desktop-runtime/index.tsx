@@ -11,14 +11,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { DesktopInteractionPanel } from './components/interaction-panel'
 import {
   getDesktopScreenshot,
   getDesktopWindows,
   inspectDesktopWindow,
   stopDesktopRuntime,
   type DesktopWindow,
-} from './api'
-import { DesktopInteractionPanel } from './interaction-panel'
+} from './data/api'
 
 /**
  * Desktop control panels: windows, screenshot, inspection and the approval-gated

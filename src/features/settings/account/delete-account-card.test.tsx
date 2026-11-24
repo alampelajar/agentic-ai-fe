@@ -10,7 +10,7 @@ const api = vi.hoisted(() => ({
   requestAccountDeletionCode: vi.fn(),
   verifyCurrentUserPasswordForDeletion: vi.fn(),
 }))
-vi.mock('@/lib/api-auth', () => api)
+vi.mock('@/lib/api/auth', () => api)
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn() }))
 vi.mock('@/stores/auth-store', () => ({
   useAuthStore: (select: (state: { auth: { reset: () => void } }) => unknown) =>

@@ -5,7 +5,7 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { RATING_REASONS, rateFeedback, type Feedback } from '../data/api'
-import { errorText } from '../error-text'
+import { errorText } from '../lib/error-text'
 
 function Stars({
   value,

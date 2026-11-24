@@ -6,7 +6,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { ArrowRight, Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { API_BASE_URL } from '@/lib/api-config'
+import { API_BASE_URL } from '@/lib/api/config'
 import { Button } from '@/components/ui/button'
 import {
   Form,
