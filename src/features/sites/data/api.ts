@@ -476,3 +476,19 @@ export async function getVersionFile(
     )
   )
 }
+
+/** One thing a visitor sent through a form on the website (a booking, an RSVP...). */
+export type SiteMessage = {
+  id: number
+  form: string
+  fields: { name: string; value: string }[]
+  at: string
+  /** Sent to the preview, before the website was published. */
+  test: boolean
+}
+
+export async function getSiteMessages(
+  id: number
+): Promise<{ messages: SiteMessage[]; test: boolean }> {
+  return parse(await apiFetch(`/api/sites/${id}/messages`))
+}

@@ -33,8 +33,12 @@ export function PreviewPane({
   busy,
   bare,
 }: PreviewPaneProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [url, setUrl] = useState<string | null>(null)
+  // The gateway's "getting your website ready" page speaks the builder's language.
+  const frameUrl = url
+    ? `${url}${url.includes('?') ? '&' : '?'}lang=${i18n.language.startsWith('en') ? 'en' : 'id'}`
+    : null
   const [error, setError] = useState<string | null>(null)
   const [phone, setPhone] = useState(false)
   const [reloads, setReloads] = useState(0)
@@ -138,7 +142,7 @@ export function PreviewPane({
         ) : url ? (
           <iframe
             key={`${url}-${version}-${reloads}`}
-            src={url}
+            src={frameUrl ?? url}
             title={t('siteBuilder.preview.frameTitle', { name: siteName })}
             sandbox='allow-scripts allow-forms allow-same-origin allow-popups'
             className={cn(

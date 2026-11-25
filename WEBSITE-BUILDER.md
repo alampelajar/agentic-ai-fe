@@ -50,6 +50,14 @@ These hold on every Builder screen, in addition to `DESIGN.md`.
    (owner):* the code of each version can be read (never edited) in "Code", and what
    the last change did, file by file, in "Changes". The run log stays behind "Lihat
    catatan lengkap", closed by default.
+   *Changed 2026-11-24 (owner), for people who cannot code:* "Code" and "Changes"
+   are shown only after "Lanjutan"; the website tab is all a person sees at first.
+   Beside History, Change look and Publish, the screen has "Foto" (add photos and the
+   logo after the website is made, then "Pakai di website" asks for the change) and
+   "Pesan" (what visitors sent through the website's forms). Above the change box,
+   ideas such as "Ganti warna" or "Tambah halaman" start a request the person
+   finishes in their own words. After publishing, the website can be shared on
+   WhatsApp, through the phone's share menu, or as a QR code.
    *Added 2026-11-19 (owner):* below the person's own websites, the start screen shows
    a gallery of websites other people made ("Showcase"; called "Galeri website" before 2026-11-23), filtered by kind. Each
    can be opened large ("Lihat") and copied ("Tiru"): the new website starts with its
@@ -98,7 +106,7 @@ Change one only by editing this table first, with the reason.
 | Colours a person asks for | Each look has its own palette and two curated variants (36 palettes, all checked for contrast by `TestPalettesAreReadable`). Colour words in the description or the planner's `look_wish` (`ColourTags`) rank looks and pick the matching variant. *Changed 2026-11-18 (owner):* a change that asks for other colours ("background cyan") is carried out: the model returns the tokens to change in a `<colours>` block, the worker keeps every text token readable (`MergeColours`), stores them in the brief (`Brief.Colours`) and writes them into `theme.css`. Pages still use only the token classes. Choosing another look clears them | A wish ("tema kebun hijau") is honoured; before, a colour asked for in a change was silently undone by the token check and the run still said "done" |
 | Limits per person | *Added 2026-11-18 (owner):* without premium, 2 websites and 200,000 tokens a month (`BUILDER_MONTHLY_TOKENS`), counted from the providers' reported usage in `AIModelCallLog.Tokens` (estimated at four characters per token when a provider reports none) and reset on the 1st (WIB). A premium account (`User.IsPremium`, set by admins in Users, Edit user, Plan) gets 1,000,000 tokens a month (`BUILDER_PREMIUM_MONTHLY_TOKENS`), up to 50 websites and every active system model; it lasts 1, 3, 6 or 12 months, until a date, or without end (`User.PremiumUntil`) and counts as free again once that moment passes. *Added 2026-11-23 (owner):* the owners' own accounts, listed by e-mail in `BUILDER_UNLIMITED_EMAILS`, count as premium with no monthly tokens and no daily system-model quota ("Tanpa batas"). Refused with `site_limit` or `token_limit`. *Changed 2026-11-23:* the general workspace limit (10) is raised to the plan's website limit when a website is made (`max`), because it counted workspaces left from features people no longer see and stopped a premium account long before 50 websites; a run that runs out stops with a plain message and keeps its finished parts | Keeps the cost of free accounts bounded; 200,000 tokens is about one website with a few changes |
 | Languages | `Site.language` is the website's, detected from the description by the planner, with a word count (`DetectLanguage`) as fallback; `Site.ui_language` is the builder's (questions, progress, messages) | An Indonesian description in an English interface made an English site |
-| Seeing a look first | One example website per look, made once by the normal pipeline (`cmd/builder-samples`), served as static files at `contoh-<look>.<PREVIEW_DOMAIN>`; its screenshot is the card's picture (`scripts/capture-looks.mjs`) | A look cannot be judged from three colour dots |
+| Seeing a look first | One example website per look, made once by the normal pipeline (`cmd/builder-samples`), served as static files at `contoh-<look>.<PREVIEW_DOMAIN>`; its screenshot is the card's picture (`scripts/capture-looks.mjs`). *Added 2026-11-24:* a look without its own example uses a website in the gallery made with it (in the person's language when there is one), and its card shows that website live, shrunken, until a picture exists | A look cannot be judged from three colour dots |
 | Finished pieces (kit) | `web/src/kit/` in the template: Guestbook, Countdown, Timeline, AddToCalendar, MapLink, Ornament, Monogram, FramedPhoto, PhotoGallery, styled only by the theme's tokens. Written again into every site at every run (`RefreshFixedFiles`); the agent may use them, never change them | Raises the floor of every site, and an invitation looks like one without the model inventing widgets |
 | Finished sections | *Added 2026-11-23 (owner):* pages are put together from sections written by people in `web/src/blocks/`: Header, Footer, Hero, PageIntro, EventHero, Features, Steps, Statement, InfoTable, FAQ, ContactSection, CallToAction, Gallery, plus Section and SectionHeading for a section of the agent's own. The look decides each section's variant (`Direction.Blocks`: which header, hero, list, steps, statement and footer, the button shape, the edge of cards, capital headings, centring, the accent rule, tilted cards, airiness), written by the worker into `web/src/look.ts` at every run (`LookTS`), as is `theme.css` since 2026-11-23, so a site made earlier gets new theme rules with its next change; sections alternate the page and surface colours by themselves (`data-band`); the agent passes only words, facts and the order. Every page starts with Hero, EventHero or PageIntro (its h1). The agent writes its own section only where none fits, inside Section and SectionHeading. The plain-text check sends back a page or layout that does not use `../blocks` (`CheckUsesBlocks`; the page-not-found page may stay simple). Words on the accent colour use `--color-on-accent`, the page or text colour that reads better on the accent in that palette (checked for every palette by `TestOnAccentIsReadable`) | A model writing every page from scratch gave uneven pages that followed the look only loosely; sections written once and well raise every site to the same floor, keep the looks distinct, and shorten what the model must write |
 | Movement | *Added 2026-11-19 (owner):* websites move, so they feel alive. Movement comes only from finished motion pieces in the kit, written by people: Reveal (a block fades in as it is scrolled into view), Stagger (a group appears one after another), CountUp (a number from the brief counts up), Marquee (a line of words slides across), RotatingWords (one word of a headline changes), Parallax (a picture moves slower than the page), and the classes `lift` (rises on hover) and `float` (a decoration bobs). Each look has a motion level (`Direction.Motion`: calm, lively or playful) that sets the theme's `--motion-*` tokens (speed, easing, distance, delay between items) and how many pieces the agent is told to use. The agent may not write its own animation (`@keyframes`, `animate-bounce`/`ping`/`pulse`, `requestAnimationFrame` are refused by the plain-text check). A CountUp must show a number written in the brief (`CheckCountUp`): in the first real test the model counted up to prices the owner never gave. Pieces may be imported one by one (`../kit/Reveal`) or together (`../kit`, `kit/index.ts`). Visitors who turned movement off on their device see everything at once, without movement | A plain page looks unfinished next to a moving one; people-written pieces keep the movement smooth, readable and the same quality on every site, where model-written animation would be uneven |
@@ -271,6 +279,8 @@ into PostgreSQL.
 | `GET /sites/:id/preview` | A fresh signed preview address; keeps the preview running |
 | `POST /sites/:id/publish`, `POST /sites/:id/unpublish` | Publish the current version at an address; take it offline |
 | `GET /sites/slug-available?slug=&site_id=` | Checks an address before publishing |
+| `GET /sites/:id/messages` | What visitors sent through the forms of the published website, newest first (200 at most); before the first publish, what was sent to the preview, marked as a test. Read from the website's own SQLite file, opened read-only |
+| `GET/PUT /me/notifications` | The two e-mails a person may switch off: a website or change finished, and a new message from a visitor. Security e-mails are always sent |
 | `GET /sites/showcase?lang=` | The gallery: published websites an admin chose, newest choice first (anyone, also before signing in) |
 | `PATCH /admin/sites/:id/showcase` | Admin only: puts a published website in the gallery or takes it out |
 | `PATCH /admin/sites/:id`, `POST /admin/sites/:id/publish`, `POST /admin/sites/:id/unpublish`, `DELETE /admin/sites/:id` | Admin only: rename any website, publish its current version (at a new address or the one it has), take it offline, delete it. Each is in the audit log |
@@ -535,8 +545,9 @@ Known gaps of the first version, in rough order of importance:
 
 - Clicking a part of the preview to say what to change (flow step 6) is not built;
   changes are asked for in the text box.
-- The owner cannot read the form answers a site stores yet (they are in the site's
-  SQLite file), and there is no e-mail notice for them.
+- *Done 2026-11-24:* the owner reads the form answers in "Pesan", and gets an e-mail
+  about new ones (checked every two minutes; the first check of a website only notes
+  where it stands). Hiding or deleting a message is not built.
 - The review reads code, not screenshots.
 - Product illustrations: their cost is not counted in a person's monthly tokens or
   logged per call yet; a change ("add a product") cannot add a product to the list;
@@ -841,6 +852,10 @@ routes. A test fails if one of them is put back on the user's group
 the signed-in admin; admin pages that manage skills, memory, combos and workspaces for
 everyone are still to be built.
 Kept for now by the owner's choice: Tasks and the GitHub integration in Settings.
+*Changed 2026-11-24 (owner):* Integrations (GitHub, the Desktop Runtime) left the
+Settings menu; the page stays reachable by its address. Display and Notifications
+now do what they say: Display keeps the text size, the side menu and "reduce
+movement" on the device; Notifications keeps the two e-mails on the account.
 **Admin console, 2026-11-20 (owner):** Logs shows only websites made, published and
 deleted. A Websites page lists the live websites (and, on request, all of them) with
 publish, publish the newer version, rename, change address, take offline, delete and the
