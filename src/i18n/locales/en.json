@@ -1,5 +1,5 @@
 {
-  "agenticAI": "Agentic AI",
+  "agenticAI": "THIS MY WEBSITE",
   "aiOverview": "Overview",
   "other": "Other",
   "settings": "Settings",
@@ -149,7 +149,7 @@
     "signIn": "Sign in"
   },
   "sidebar": {
-    "smartAgentic": "SMART AGENTIC",
+    "smartAgentic": "WEBSITE BUILDER",
     "openAiPage": "Open your websites"
   },
   "auth": {
@@ -163,7 +163,7 @@
     "title": "Settings",
     "account": {
       "title": "User profile",
-      "subtitle": "Manage the display name and profile photo used throughout Agentic AI.",
+      "subtitle": "Manage the display name and profile photo used throughout THIS MY WEBSITE.",
       "name": "Name",
       "namePlaceholder": "Your name",
       "email": "Email",
@@ -235,7 +235,7 @@
       "mobileHintAfter": " page."
     },
     "eyebrow": "Workspace",
-    "description": "Manage your account, security and Agentic AI workspace preferences."
+    "description": "Manage your account, security and THIS MY WEBSITE workspace preferences."
   },
   "dataTable": {
     "reset": "Reset",
@@ -257,7 +257,7 @@
   },
   "toggleNavigation": "Toggle navigation",
   "authLayout": {
-    "eyebrow": "AGENTIC AI WORKSPACE",
+    "eyebrow": "THIS MY WEBSITE",
     "headline": "Your AI work, in one place.",
     "description": "Configure agents, manage tasks, and follow progress from a single workspace.",
     "features": {
@@ -266,7 +266,7 @@
       "models": "Models"
     },
     "footerNote": "A calmer space for focused work.",
-    "copyright": "© {{year}} Agentic AI",
+    "copyright": "© {{year}} THIS MY WEBSITE",
     "privacy": "Privacy",
     "terms": "Terms"
   },
@@ -279,8 +279,8 @@
     "signIn": {
       "eyebrow": "YOUR WORKSPACE",
       "title": "Sign in",
-      "description": "Use your account details to continue to Agentic AI.",
-      "noAccount": "New to Agentic AI?",
+      "description": "Use your account details to continue to THIS MY WEBSITE.",
+      "noAccount": "New to THIS MY WEBSITE?",
       "createAccount": "Create an account"
     },
     "pendingDeletion": {
@@ -386,7 +386,7 @@
   "feedback": "Feedback & Suggestions",
   "feedbackPage": {
     "title": "Feedback & Suggestions",
-    "subtitle": "Share an idea, report a problem, or tell us about your experience with Agentic AI.",
+    "subtitle": "Share an idea, report a problem, or tell us about your experience with THIS MY WEBSITE.",
     "totalReports": "Reports",
     "inProgress": "In progress",
     "completed": "Completed",
@@ -419,7 +419,7 @@
     "adminReply": "Admin reply",
     "noReplyYet": "No reply yet.",
     "sendAnother": "Send another report",
-    "footerNote": "Thank you for helping us improve Agentic AI.",
+    "footerNote": "Thank you for helping us improve THIS MY WEBSITE.",
     "categories": {
       "feature": "Feature suggestion",
       "bug": "Bug report",
@@ -480,7 +480,7 @@
     "pageSubtitle": "Optional connections to tools outside the cloud. Nothing here is needed to use Cloud Workspaces.",
     "title": "Desktop Runtime",
     "optional": "Optional",
-    "summary": "Desktop Runtime is an optional integration that lets Agentic AI control applications and the desktop on your local computer. It is not needed to use Cloud Workspaces.",
+    "summary": "Desktop Runtime is an optional integration that lets THIS MY WEBSITE control applications and the desktop on your local computer. It is not needed to use Cloud Workspaces.",
     "compare": {
       "cloud": {
         "title": "Cloud Workspace",
@@ -711,7 +711,7 @@
       "free": {
         "name": "Free",
         "period": "forever",
-        "description": "To start trying Agentic AI.",
+        "description": "To start trying THIS MY WEBSITE.",
         "features": {
           "0": "Basic features",
           "1": "Free AI models",
@@ -825,7 +825,7 @@
     "haveAccount": "Already have an account?",
     "signIn": "Sign in",
     "secure": "Secure account creation",
-    "poweredBy": "Powered by Agentic AI",
+    "poweredBy": "Powered by THIS MY WEBSITE",
     "form": {
       "name": "Name",
       "namePlaceholder": "Your name",
@@ -941,7 +941,7 @@
   "profilePage": {
     "settings": "Settings",
     "profile": "Profile",
-    "manageHowYourNameAnd": "Manage how your name and photo appear across Agentic AI.",
+    "manageHowYourNameAnd": "Manage how your name and photo appear across THIS MY WEBSITE.",
     "profileInformation": "Profile information",
     "thisInformationIsUsedTo": "This information is used to identify your account."
   },

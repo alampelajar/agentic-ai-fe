@@ -85,7 +85,7 @@ describe('Settings → Integrations → Desktop Runtime', () => {
     await expect
       .element(screen.getByTestId('runtime-summary'))
       .toHaveTextContent(
-        'Desktop Runtime is an optional integration that lets Agentic AI control applications and the desktop on your local computer. It is not needed to use Cloud Workspaces.'
+        'Desktop Runtime is an optional integration that lets THIS MY WEBSITE control applications and the desktop on your local computer. It is not needed to use Cloud Workspaces.'
       )
   })
 

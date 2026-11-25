@@ -1,5 +1,5 @@
 {
-  "agenticAI": "Agentic AI",
+  "agenticAI": "THIS MY WEBSITE",
   "aiOverview": "Ringkasan",
   "other": "Lainnya",
   "settings": "Pengaturan",
@@ -149,7 +149,7 @@
     "signIn": "Masuk"
   },
   "sidebar": {
-    "smartAgentic": "SMART AGENTIC",
+    "smartAgentic": "PEMBUAT WEBSITE",
     "openAiPage": "Buka website Anda"
   },
   "auth": {
@@ -163,7 +163,7 @@
     "title": "Pengaturan",
     "account": {
       "title": "Profil Pengguna",
-      "subtitle": "Kelola nama tampilan dan foto profil yang digunakan di seluruh Agentic AI.",
+      "subtitle": "Kelola nama tampilan dan foto profil yang digunakan di seluruh THIS MY WEBSITE.",
       "name": "Nama",
       "namePlaceholder": "Nama kamu",
       "email": "Email",
@@ -235,7 +235,7 @@
       "mobileHintAfter": "."
     },
     "eyebrow": "Workspace",
-    "description": "Kelola akun, keamanan, dan preferensi workspace Agentic AI."
+    "description": "Kelola akun, keamanan, dan preferensi workspace THIS MY WEBSITE."
   },
   "dataTable": {
     "reset": "Atur Ulang",
@@ -257,7 +257,7 @@
   },
   "toggleNavigation": "Buka/tutup navigasi",
   "authLayout": {
-    "eyebrow": "WORKSPACE AGENTIC AI",
+    "eyebrow": "THIS MY WEBSITE",
     "headline": "Pekerjaan AI dalam satu tempat.",
     "description": "Atur agent, kelola tugas, dan pantau progres dari satu ruang kerja.",
     "features": {
@@ -266,7 +266,7 @@
       "models": "Model"
     },
     "footerNote": "Ruang kerja yang rapi untuk tetap fokus.",
-    "copyright": "© {{year}} Agentic AI",
+    "copyright": "© {{year}} THIS MY WEBSITE",
     "privacy": "Privasi",
     "terms": "Ketentuan"
   },
@@ -279,8 +279,8 @@
     "signIn": {
       "eyebrow": "RUANG KERJA KAMU",
       "title": "Masuk",
-      "description": "Masukkan informasi akun untuk melanjutkan ke Agentic AI.",
-      "noAccount": "Belum punya akun Agentic AI?",
+      "description": "Masukkan informasi akun untuk melanjutkan ke THIS MY WEBSITE.",
+      "noAccount": "Belum punya akun THIS MY WEBSITE?",
       "createAccount": "Buat akun"
     },
     "pendingDeletion": {
@@ -386,7 +386,7 @@
   "feedback": "Feedback / Saran",
   "feedbackPage": {
     "title": "Feedback / Saran",
-    "subtitle": "Sampaikan ide, laporkan masalah, atau ceritakan pengalamanmu menggunakan Agentic AI.",
+    "subtitle": "Sampaikan ide, laporkan masalah, atau ceritakan pengalamanmu menggunakan THIS MY WEBSITE.",
     "totalReports": "Laporan",
     "inProgress": "Diproses",
     "completed": "Selesai",
@@ -419,7 +419,7 @@
     "adminReply": "Balasan admin",
     "noReplyYet": "Belum ada balasan.",
     "sendAnother": "Kirim laporan lain",
-    "footerNote": "Terima kasih telah membantu kami meningkatkan Agentic AI.",
+    "footerNote": "Terima kasih telah membantu kami meningkatkan THIS MY WEBSITE.",
     "categories": {
       "feature": "Saran fitur",
       "bug": "Laporan bug",
@@ -480,7 +480,7 @@
     "pageSubtitle": "Koneksi opsional ke alat di luar cloud. Tidak ada yang di sini yang diperlukan untuk memakai Workspace Cloud.",
     "title": "Desktop Runtime",
     "optional": "Opsional",
-    "summary": "Desktop Runtime adalah integrasi opsional yang memungkinkan Agentic AI mengontrol aplikasi dan desktop di komputer lokal Anda. Integrasi ini tidak diperlukan untuk menggunakan Cloud Workspace.",
+    "summary": "Desktop Runtime adalah integrasi opsional yang memungkinkan THIS MY WEBSITE mengontrol aplikasi dan desktop di komputer lokal Anda. Integrasi ini tidak diperlukan untuk menggunakan Cloud Workspace.",
     "compare": {
       "cloud": {
         "title": "Cloud Workspace",
@@ -711,7 +711,7 @@
       "free": {
         "name": "Free",
         "period": "selamanya",
-        "description": "Untuk mulai mencoba Agentic AI.",
+        "description": "Untuk mulai mencoba THIS MY WEBSITE.",
         "features": {
           "0": "Akses fitur dasar",
           "1": "Model AI gratis",
@@ -825,7 +825,7 @@
     "haveAccount": "Sudah punya akun?",
     "signIn": "Masuk",
     "secure": "Pembuatan akun yang aman",
-    "poweredBy": "Didukung oleh Agentic AI",
+    "poweredBy": "Didukung oleh THIS MY WEBSITE",
     "form": {
       "name": "Nama",
       "namePlaceholder": "Nama Anda",
@@ -941,7 +941,7 @@
   "profilePage": {
     "settings": "Pengaturan",
     "profile": "Profil",
-    "manageHowYourNameAnd": "Atur bagaimana nama dan foto kamu ditampilkan di Agentic AI.",
+    "manageHowYourNameAnd": "Atur bagaimana nama dan foto kamu ditampilkan di THIS MY WEBSITE.",
     "profileInformation": "Informasi profil",
     "thisInformationIsUsedTo": "Informasi ini digunakan untuk mengenali akun kamu."
   },
