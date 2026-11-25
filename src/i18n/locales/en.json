@@ -257,15 +257,16 @@
   },
   "toggleNavigation": "Toggle navigation",
   "authLayout": {
-    "eyebrow": "THIS MY WEBSITE",
-    "headline": "Your AI work, in one place.",
-    "description": "Configure agents, manage tasks, and follow progress from a single workspace.",
+    "home": "Go to the home page",
+    "eyebrow": "WEBSITE BUILDER",
+    "headline": "Describe your website. We make it for you.",
+    "description": "Write the website you want in a sentence or two. The AI picks the look, writes the words and puts it online. No code needed.",
     "features": {
-      "agents": "Agents",
-      "tasks": "Tasks",
-      "models": "Models"
+      "describe": "Describe",
+      "preview": "See it",
+      "publish": "Publish"
     },
-    "footerNote": "A calmer space for focused work.",
+    "footerNote": "A new website usually takes 5 to 15 minutes.",
     "copyright": "© {{year}} THIS MY WEBSITE",
     "privacy": "Privacy",
     "terms": "Terms"
@@ -277,7 +278,7 @@
       "missingVariable": "This environment variable was not found."
     },
     "signIn": {
-      "eyebrow": "YOUR WORKSPACE",
+      "eyebrow": "YOUR WEBSITES",
       "title": "Sign in",
       "description": "Use your account details to continue to THIS MY WEBSITE.",
       "noAccount": "New to THIS MY WEBSITE?",
@@ -821,7 +822,7 @@
   },
   "signUpPage": {
     "title": "Create your account",
-    "description": "Create your account and start building your autonomous AI workspace.",
+    "description": "Create your account and make your first website today.",
     "haveAccount": "Already have an account?",
     "signIn": "Sign in",
     "secure": "Secure account creation",
