@@ -257,15 +257,16 @@
   },
   "toggleNavigation": "Buka/tutup navigasi",
   "authLayout": {
-    "eyebrow": "THIS MY WEBSITE",
-    "headline": "Pekerjaan AI dalam satu tempat.",
-    "description": "Atur agent, kelola tugas, dan pantau progres dari satu ruang kerja.",
+    "home": "Ke halaman utama",
+    "eyebrow": "PEMBUAT WEBSITE",
+    "headline": "Ceritakan websitenya, kami yang membuatkan.",
+    "description": "Tulis website yang Anda inginkan dalam satu atau dua kalimat. AI memilih tampilan, menulis isinya, lalu menerbitkannya. Tanpa kode.",
     "features": {
-      "agents": "Agent",
-      "tasks": "Tugas",
-      "models": "Model"
+      "describe": "Ceritakan",
+      "preview": "Lihat hasilnya",
+      "publish": "Terbitkan"
     },
-    "footerNote": "Ruang kerja yang rapi untuk tetap fokus.",
+    "footerNote": "Satu website biasanya jadi dalam 5 sampai 15 menit.",
     "copyright": "© {{year}} THIS MY WEBSITE",
     "privacy": "Privasi",
     "terms": "Ketentuan"
@@ -277,7 +278,7 @@
       "missingVariable": "Variabel lingkungan ini tidak ditemukan."
     },
     "signIn": {
-      "eyebrow": "RUANG KERJA KAMU",
+      "eyebrow": "WEBSITE ANDA",
       "title": "Masuk",
       "description": "Masukkan informasi akun untuk melanjutkan ke THIS MY WEBSITE.",
       "noAccount": "Belum punya akun THIS MY WEBSITE?",
@@ -821,7 +822,7 @@
   },
   "signUpPage": {
     "title": "Buat akun Anda",
-    "description": "Buat akun dan mulai membangun workspace AI otonom Anda.",
+    "description": "Buat akun dan buat website pertama Anda hari ini.",
     "haveAccount": "Sudah punya akun?",
     "signIn": "Masuk",
     "secure": "Pembuatan akun yang aman",
