@@ -1178,9 +1178,9 @@
       "restore_failed": "The version could not be brought back.",
       "delete_failed": "The website could not be deleted.",
       "invalid_name": "The name is not valid.",
-      "token_limit": "Your AI work for this month is used up. Try again next month.",
       "file_not_readable": "This file cannot be opened.",
-      "files_failed": "We could not open the contents of your website. Please try again."
+      "files_failed": "We could not open the contents of your website. Please try again.",
+      "credit_limit": "You do not have enough credits. Add credits to go on."
     },
     "toast": {
       "deleted": "The website was deleted.",
@@ -1195,18 +1195,7 @@
       "runFailed": "The work was not finished."
     },
     "plan": {
-      "title": "Your free plan",
-      "sites": "Websites",
-      "sitesValue": "{{used}} of {{limit}}",
-      "allowance": "AI work this month",
-      "allowanceValue": "{{percent}}% used",
-      "resets": "The AI work starts again on {{date}}.",
-      "premium": "Premium, no end date",
-      "siteLimitReached": "You already have {{limit}} websites. Delete one to make a new one.",
-      "allowanceUsed": "Your AI work for this month is used up. You can make and change websites again from {{date}}.",
-      "premiumUntil": "Premium until {{date}}",
-      "titlePremium": "Your premium plan",
-      "unlimited": "No limit"
+      "siteLimitReached": "You already have {{limit}} websites. Delete one to make a new one."
     },
     "screen": {
       "tabPreview": "Website",
@@ -1273,6 +1262,27 @@
     },
     "guest": {
       "help": "Look around freely. You only need an account when you make a website."
+    },
+    "credits": {
+      "balance_one": "{{count}} credit",
+      "balance_other": "{{count}} credits",
+      "unlimited": "No limit",
+      "costs": "A new website uses {{create}} credits. Each change uses {{revise}}. Credits are used only when the work is done.",
+      "low": "Not enough credits for a new website.",
+      "add": "Top up",
+      "history": "History",
+      "historyTitle": "Where your credits went",
+      "empty_one": "Nothing used yet. Every new account starts with {{count}} credit.",
+      "empty_other": "Nothing used yet. Every new account starts with {{count}} credits.",
+      "reasons": {
+        "create": "New website: {{name}}",
+        "revise": "Change: {{name}}",
+        "admin": "Credits added by us",
+        "topup": "Top up"
+      },
+      "notEnough": "You do not have enough credits for a new website. Add credits first.",
+      "startCost": "Uses {{count}} credits when it is done.",
+      "changeCost": "Each change uses {{count}} credit when it is done."
     }
   },
   "signInPrompt": {
@@ -1282,5 +1292,52 @@
     "noAccount": "Don't have an account yet?",
     "signUp": "Sign up here",
     "needed": "Sign in first to use this."
-  }
+  },
+  "creditsPage": {
+    "title": "Credits",
+    "subtitle": "Credits pay for making and changing websites with AI.",
+    "loading": "Opening your credits...",
+    "error": "Your credits could not be opened.",
+    "retry": "Try again",
+    "balanceLabel": "Your credits",
+    "guestBalance_one": "{{count}} credit for new accounts",
+    "guestBalance_other": "{{count}} credits for new accounts",
+    "newWebsite": "A new website",
+    "change": "One change",
+    "onlyWhenDone": "Credits are used only when the work is done.",
+    "topUpTitle": "Top up credits",
+    "notYet": "Not available yet",
+    "notYetHelp": "Buying credits is being prepared. Check again soon.",
+    "signInToTopUp": "Sign in to buy credits.",
+    "step1": "1. Choose how many credits",
+    "step2": "2. Pay to",
+    "total": "Amount to pay:",
+    "step3": "3. Send the screenshot of your payment",
+    "chooseProof": "Choose a screenshot (PNG, JPG or WEBP, up to 3 MB)",
+    "proofHelp": "We check the payment and add the credits. This usually takes less than a day.",
+    "send": "Send proof",
+    "sending": "Sending...",
+    "sent": "Your proof was sent. We will add the credits after checking it.",
+    "choosePackage": "Choose how many credits first.",
+    "needProof": "Add the screenshot of your payment first.",
+    "errors": {
+      "topup_unavailable": "Buying credits is not available right now.",
+      "topup_package": "Choose one of the packages.",
+      "topup_proof": "The screenshot must be a PNG, JPG or WEBP picture up to 3 MB.",
+      "topup_pending": "Wait until your earlier requests are checked.",
+      "unknown": "The request could not be sent. Please try again."
+    },
+    "requestsTitle": "Your top-up requests",
+    "requestLine_one": "{{count}} credit · {{price}}",
+    "requestLine_other": "{{count}} credits · {{price}}",
+    "reason": "Reason: {{note}}",
+    "status": {
+      "pending": "Being checked",
+      "approved": "Added",
+      "rejected": "Rejected"
+    },
+    "guestHistory": "Sign in to see where your credits went.",
+    "discount": "New account: {{percent}}% off every top-up until {{date}}."
+  },
+  "creditsMenu": "Top up credits"
 }

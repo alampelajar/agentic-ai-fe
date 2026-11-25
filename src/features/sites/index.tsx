@@ -152,12 +152,7 @@ export function SitesPage() {
     blockedText =
       plan.sites_used >= plan.site_limit
         ? t('siteBuilder.plan.siteLimitReached', { limit: plan.site_limit })
-        : t('siteBuilder.plan.allowanceUsed', {
-            date: new Date(plan.resets_at).toLocaleDateString(i18n.language, {
-              day: 'numeric',
-              month: 'long',
-            }),
-          })
+        : t('siteBuilder.credits.notEnough')
   }
 
   return (
@@ -233,6 +228,14 @@ export function SitesPage() {
               className='text-xs text-muted-foreground'
             >
               {t('siteBuilder.describeHelp')}
+              {plan && !plan.unlimited ? (
+                <>
+                  {' '}
+                  {t('siteBuilder.credits.startCost', {
+                    count: plan.create_cost,
+                  })}
+                </>
+              ) : null}
             </p>
             <Button
               type='submit'

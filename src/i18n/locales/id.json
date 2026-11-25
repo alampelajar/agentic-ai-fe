@@ -1178,9 +1178,9 @@
       "restore_failed": "Versi tersebut belum bisa dikembalikan.",
       "delete_failed": "Website belum berhasil dihapus.",
       "invalid_name": "Nama tidak valid.",
-      "token_limit": "Jatah AI Anda bulan ini sudah habis. Coba lagi bulan depan.",
       "file_not_readable": "File ini tidak bisa dibuka.",
-      "files_failed": "Isi website Anda belum bisa dibuka. Silakan coba lagi."
+      "files_failed": "Isi website Anda belum bisa dibuka. Silakan coba lagi.",
+      "credit_limit": "Kredit Anda tidak cukup. Tambah kredit untuk melanjutkan."
     },
     "toast": {
       "deleted": "Website sudah dihapus.",
@@ -1195,18 +1195,7 @@
       "runFailed": "Pekerjaan belum selesai."
     },
     "plan": {
-      "title": "Paket gratis Anda",
-      "sites": "Website",
-      "sitesValue": "{{used}} dari {{limit}}",
-      "allowance": "Jatah AI bulan ini",
-      "allowanceValue": "{{percent}}% terpakai",
-      "resets": "Jatah AI kembali penuh pada {{date}}.",
-      "premium": "Premium, tanpa batas waktu",
-      "siteLimitReached": "Anda sudah punya {{limit}} website. Hapus satu untuk membuat yang baru.",
-      "allowanceUsed": "Jatah AI Anda bulan ini sudah habis. Anda bisa membuat dan mengubah website lagi mulai {{date}}.",
-      "premiumUntil": "Premium sampai {{date}}",
-      "titlePremium": "Paket premium Anda",
-      "unlimited": "Tanpa batas"
+      "siteLimitReached": "Anda sudah punya {{limit}} website. Hapus satu untuk membuat yang baru."
     },
     "screen": {
       "tabPreview": "Website",
@@ -1273,6 +1262,27 @@
     },
     "guest": {
       "help": "Silakan lihat-lihat dulu. Akun baru diperlukan saat Anda membuat website."
+    },
+    "credits": {
+      "balance_one": "{{count}} kredit",
+      "balance_other": "{{count}} kredit",
+      "unlimited": "Tanpa batas",
+      "costs": "Website baru memakai {{create}} kredit. Setiap perubahan memakai {{revise}}. Kredit hanya terpakai kalau pekerjaannya selesai.",
+      "low": "Kredit tidak cukup untuk website baru.",
+      "add": "Top up",
+      "history": "Riwayat",
+      "historyTitle": "Riwayat pemakaian kredit",
+      "empty_one": "Belum ada yang terpakai. Setiap akun baru mendapat {{count}} kredit.",
+      "empty_other": "Belum ada yang terpakai. Setiap akun baru mendapat {{count}} kredit.",
+      "reasons": {
+        "create": "Website baru: {{name}}",
+        "revise": "Perubahan: {{name}}",
+        "admin": "Kredit ditambahkan oleh kami",
+        "topup": "Top up"
+      },
+      "notEnough": "Kredit Anda tidak cukup untuk website baru. Tambah kredit dulu.",
+      "startCost": "Memakai {{count}} kredit setelah selesai.",
+      "changeCost": "Setiap perubahan memakai {{count}} kredit setelah selesai."
     }
   },
   "signInPrompt": {
@@ -1282,5 +1292,52 @@
     "noAccount": "Belum punya akun?",
     "signUp": "Daftar di sini",
     "needed": "Masuk dulu untuk memakai fitur ini."
-  }
+  },
+  "creditsPage": {
+    "title": "Kredit",
+    "subtitle": "Kredit dipakai untuk membuat dan mengubah website dengan AI.",
+    "loading": "Membuka kredit Anda...",
+    "error": "Kredit Anda belum bisa dibuka.",
+    "retry": "Coba lagi",
+    "balanceLabel": "Kredit Anda",
+    "guestBalance_one": "{{count}} kredit untuk akun baru",
+    "guestBalance_other": "{{count}} kredit untuk akun baru",
+    "newWebsite": "Website baru",
+    "change": "Satu perubahan",
+    "onlyWhenDone": "Kredit hanya terpakai kalau pekerjaannya selesai.",
+    "topUpTitle": "Top up kredit",
+    "notYet": "Belum tersedia",
+    "notYetHelp": "Pembelian kredit sedang disiapkan. Coba cek lagi nanti.",
+    "signInToTopUp": "Masuk dulu untuk membeli kredit.",
+    "step1": "1. Pilih jumlah kredit",
+    "step2": "2. Bayar ke",
+    "total": "Jumlah yang dibayar:",
+    "step3": "3. Kirim screenshot bukti bayar",
+    "chooseProof": "Pilih screenshot (PNG, JPG atau WEBP, maksimal 3 MB)",
+    "proofHelp": "Kami mengecek pembayaran lalu menambahkan kredit. Biasanya kurang dari sehari.",
+    "send": "Kirim bukti",
+    "sending": "Mengirim...",
+    "sent": "Bukti bayar terkirim. Kredit ditambahkan setelah kami cek.",
+    "choosePackage": "Pilih jumlah kredit dulu.",
+    "needProof": "Tambahkan screenshot bukti bayar dulu.",
+    "errors": {
+      "topup_unavailable": "Pembelian kredit sedang tidak tersedia.",
+      "topup_package": "Pilih salah satu paket.",
+      "topup_proof": "Screenshot harus gambar PNG, JPG atau WEBP, maksimal 3 MB.",
+      "topup_pending": "Tunggu sampai permintaan sebelumnya dicek.",
+      "unknown": "Permintaan belum bisa dikirim. Silakan coba lagi."
+    },
+    "requestsTitle": "Permintaan top up Anda",
+    "requestLine_one": "{{count}} kredit · {{price}}",
+    "requestLine_other": "{{count}} kredit · {{price}}",
+    "reason": "Alasan: {{note}}",
+    "status": {
+      "pending": "Sedang dicek",
+      "approved": "Ditambahkan",
+      "rejected": "Ditolak"
+    },
+    "guestHistory": "Masuk untuk melihat pemakaian kredit Anda.",
+    "discount": "Akun baru: diskon {{percent}}% untuk setiap top up sampai {{date}}."
+  },
+  "creditsMenu": "Top up kredit"
 }

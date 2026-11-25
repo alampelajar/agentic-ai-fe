@@ -220,7 +220,11 @@ export function Conversation({
             <p id='site-request-help' className='text-xs text-muted-foreground'>
               {busy
                 ? t('siteBuilder.workspace.busy')
-                : t('siteBuilder.workspace.reviseHelp')}
+                : site.plan && !site.plan.unlimited && site.has_version
+                  ? t('siteBuilder.credits.changeCost', {
+                      count: site.plan.revise_cost,
+                    })
+                  : t('siteBuilder.workspace.reviseHelp')}
             </p>
             <Button
               type='submit'

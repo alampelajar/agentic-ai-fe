@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
 import { API_BASE_URL } from '@/lib/api/config'
 import { emailRefusalKey } from '@/lib/api/email-otp'
+import { deviceHeaders } from '@/lib/device-id'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -155,6 +156,8 @@ export function UserAuthForm({
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
+          // A first Google sign-in makes the account: see lib/device-id.
+          ...deviceHeaders(),
         },
         credentials: 'include',
         body: JSON.stringify({ credential: credentialResponse.credential }),

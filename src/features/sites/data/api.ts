@@ -118,6 +118,8 @@ export type RunStep = {
 }
 
 export type SiteDetail = Site & {
+  /** The person's credits, to say what a change uses. */
+  plan?: Plan
   questions?: Question[]
   brief?: BriefSummary
   direction?: Direction
@@ -161,17 +163,45 @@ async function parse<T>(response: Response): Promise<T> {
 const json = (body: unknown): RequestInit => ({ body: JSON.stringify(body) })
 
 /** What the person may still use: websites, and the monthly AI allowance (0 = no limit). */
+/**
+ * What a person may still do: credits. A new website uses create_cost, a change
+ * revise_cost, paid only when the work succeeds.
+ */
 export type Plan = {
-  premium: boolean
+  credits: number
+  /** What is left once the work already started is paid for. */
+  available: number
+  create_cost: number
+  revise_cost: number
   site_limit: number
   sites_used: number
-  token_limit: number
-  tokens_used: number
-  resets_at: string
-  /** When the premium account ends; null when it does not end or there is none. */
-  premium_until: string | null
-  /** One of the owners' own accounts: no AI allowance to run out. */
-  unlimited?: boolean
+  /** One of the owners' own accounts: uses no credits. */
+  unlimited: boolean
+}
+
+/** One change of the balance: credits used for a website, or added by an admin. */
+export type CreditEntry = {
+  id: number
+  amount: number
+  balance: number
+  reason: 'create' | 'revise' | 'admin'
+  site_id: number | null
+  site_name: string
+  note: string
+  created_at: string
+}
+
+export async function getCredits(): Promise<{
+  plan: Plan
+  history: CreditEntry[]
+  welcome: number
+}> {
+  return parse(await apiFetch('/api/me/credits'))
+}
+
+/** Whether the person can pay for work that uses cost credits. */
+export function canAfford(plan: Plan | null, cost: number): boolean {
+  return !plan || plan.unlimited || plan.available >= cost
 }
 
 export async function getSitesAndPlan(): Promise<{
