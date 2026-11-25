@@ -1,5 +1,6 @@
 import { apiFetch } from '@/lib/api/client'
 import { API_BASE_URL } from '@/lib/api/config'
+import { deviceHeaders } from '@/lib/device-id'
 
 type OtpResponse = {
   ok?: boolean
@@ -47,7 +48,12 @@ async function parse(
 async function publicPost(path: string, body: unknown, fallback: string) {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    // The device id lets the server tell a second account from the same browser.
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      ...deviceHeaders(),
+    },
     credentials: 'include',
     body: JSON.stringify(body),
   })
