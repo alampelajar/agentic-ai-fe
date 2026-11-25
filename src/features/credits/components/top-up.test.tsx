@@ -66,6 +66,32 @@ describe('TopUp', () => {
     expect(api.sendTopUp).toHaveBeenCalledWith(25, proof)
   })
 
+  it('lets a person type their own number of credits', async () => {
+    const onSent = vi.fn()
+    const screen = await render(<TopUp topup={open} onSent={onSent} />)
+    await userEvent.click(screen.getByRole('button', { name: /Jumlah lain/ }))
+    const amount = screen.getByLabelText('Jumlah kredit')
+
+    await userEvent.fill(amount, '1001')
+    await userEvent.click(screen.getByRole('button', { name: 'Kirim bukti' }))
+    await expect
+      .element(screen.getByRole('alert'))
+      .toHaveTextContent('Tulis jumlah dari 1 sampai 1000 kredit.')
+
+    await userEvent.fill(amount, '7')
+    await expect.element(screen.getByText(/Rp\s?7\.000/).first()).toBeVisible()
+    const proof = new File([new Uint8Array([137, 80, 78, 71])], 'bukti.png', {
+      type: 'image/png',
+    })
+    await userEvent.upload(
+      screen.getByLabelText('3. Kirim screenshot bukti bayar'),
+      proof
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Kirim bukti' }))
+    await vi.waitFor(() => expect(onSent).toHaveBeenCalled())
+    expect(api.sendTopUp).toHaveBeenCalledWith(7, proof)
+  })
+
   it('shows the new-account discount and the price after it', async () => {
     const screen = await render(
       <TopUp
@@ -78,8 +104,6 @@ describe('TopUp', () => {
       .element(screen.getByRole('status'))
       .toHaveTextContent('diskon 50%')
     await userEvent.click(screen.getByRole('button', { name: /25 kredit/ }))
-    await expect
-      .element(screen.getByText(/Rp\s?12\.500/).first())
-      .toBeVisible()
+    await expect.element(screen.getByText(/Rp\s?12\.500/).first()).toBeVisible()
   })
 })
