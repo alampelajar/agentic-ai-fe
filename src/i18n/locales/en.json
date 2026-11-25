@@ -1320,9 +1320,14 @@
     "sent": "Your proof was sent. We will add the credits after checking it.",
     "choosePackage": "Choose how many credits first.",
     "needProof": "Add the screenshot of your payment first.",
+    "custom": "Other amount",
+    "customHint": "Type your own",
+    "customLabel": "Number of credits",
+    "customHelp": "From {{min}} to {{max}} credits. One credit is {{price}}.",
+    "customWrong": "Type a number from {{min}} to {{max}} credits.",
     "errors": {
       "topup_unavailable": "Buying credits is not available right now.",
-      "topup_package": "Choose one of the packages.",
+      "topup_package": "Choose a package, or type your own number of credits.",
       "topup_proof": "The screenshot must be a PNG, JPG or WEBP picture up to 3 MB.",
       "topup_pending": "Wait until your earlier requests are checked.",
       "unknown": "The request could not be sent. Please try again."

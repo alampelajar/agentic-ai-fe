@@ -1320,9 +1320,14 @@
     "sent": "Bukti bayar terkirim. Kredit ditambahkan setelah kami cek.",
     "choosePackage": "Pilih jumlah kredit dulu.",
     "needProof": "Tambahkan screenshot bukti bayar dulu.",
+    "custom": "Jumlah lain",
+    "customHint": "Tulis sendiri",
+    "customLabel": "Jumlah kredit",
+    "customHelp": "Dari {{min}} sampai {{max}} kredit. Satu kredit {{price}}.",
+    "customWrong": "Tulis jumlah dari {{min}} sampai {{max}} kredit.",
     "errors": {
       "topup_unavailable": "Pembelian kredit sedang tidak tersedia.",
-      "topup_package": "Pilih salah satu paket.",
+      "topup_package": "Pilih paket, atau tulis jumlah kredit sendiri.",
       "topup_proof": "Screenshot harus gambar PNG, JPG atau WEBP, maksimal 3 MB.",
       "topup_pending": "Tunggu sampai permintaan sebelumnya dicek.",
       "unknown": "Permintaan belum bisa dikirim. Silakan coba lagi."

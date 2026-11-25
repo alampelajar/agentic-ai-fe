@@ -8,6 +8,9 @@ export type TopUp = {
   packages: number[]
   /** Where to pay, one line each. */
   payment_info: string
+  /** The bounds of a number the person types in place of a package. */
+  custom_min?: number
+  custom_max?: number
 }
 
 /** The new-account discount: 50% for 30 days, 0 when it does not apply. */
