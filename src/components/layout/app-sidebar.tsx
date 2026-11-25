@@ -36,7 +36,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <div className='grid flex-1 text-start leading-tight'>
             <span className='truncate text-sm font-semibold tracking-tight'>
               {/* design-system-ignore: the product name stays the same in every language */}
-              AGENTIC<span className='text-primary'>AI</span>
+              THIS MY <span className='text-primary'>WEBSITE</span>
             </span>
 
             <span className='truncate text-xs text-muted-foreground'>

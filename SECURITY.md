@@ -1,6 +1,6 @@
 # Security policy
 
-Agentic AI is made of three repositories: the backend API (`agentic-ai-be`), the user
+THIS MY WEBSITE is made of three repositories: the backend API (`agentic-ai-be`), the user
 app (`agentic-ai-fe`) and the admin console (`admin-agentic-ai`). This policy covers all
 three.
 
