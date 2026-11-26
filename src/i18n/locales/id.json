@@ -143,13 +143,14 @@
     "settings": "Pengaturan",
     "groups": {
       "Website": "Website",
-      "Settings": "Pengaturan"
+      "Settings": "Pengaturan",
+      "Help": "Bantuan"
     },
     "openProfileMenu": "Buka menu profil",
     "signIn": "Masuk"
   },
   "sidebar": {
-    "smartAgentic": "PEMBUAT WEBSITE",
+    "smartAgentic": "CREATE YOUR WEBSITE",
     "openAiPage": "Buka website Anda"
   },
   "auth": {
@@ -258,7 +259,7 @@
   "toggleNavigation": "Buka/tutup navigasi",
   "authLayout": {
     "home": "Ke halaman utama",
-    "eyebrow": "PEMBUAT WEBSITE",
+    "eyebrow": "CREATE YOUR WEBSITE",
     "headline": "Ceritakan websitenya, kami yang membuatkan.",
     "description": "Tulis website yang Anda inginkan dalam satu atau dua kalimat. AI memilih tampilan, menulis isinya, lalu menerbitkannya. Tanpa kode.",
     "features": {
@@ -1339,5 +1340,239 @@
     "guestHistory": "Masuk untuk melihat pemakaian kredit Anda.",
     "discount": "Akun baru: diskon {{percent}}% untuk setiap top up sampai {{date}}."
   },
-  "creditsMenu": "Top up kredit"
+  "creditsMenu": "Top up kredit",
+  "docs": {
+    "title": "Panduan dan kebijakan",
+    "description": "Cara memakai THIS MY WEBSITE, aturan memakainya, dan cara kami menjaga data Anda.",
+    "navLabel": "Halaman panduan",
+    "contents": "Isi halaman",
+    "updated": "Terakhir diperbarui {{date}}",
+    "howTo": {
+      "title": "Cara menggunakan",
+      "intro": "Dari cerita singkat sampai website Anda bisa dibuka siapa saja. Ikuti langkah ini satu per satu.",
+      "sections": [
+        {
+          "title": "Ceritakan website yang Anda mau",
+          "body": [
+            "Buka Pembuat Website. Tulis beberapa kalimat: usaha atau acara Anda apa, ada di mana, dan apa yang perlu dilakukan pengunjung. Contohnya: \"Website untuk bengkel motor saya di Bandung, berisi layanan, jam buka, dan tombol WhatsApp.\"",
+            "Anda juga bisa memakai salah satu contoh di bawah kotak, atau menekan \"Tiru\" pada website di Showcase. Website baru Anda akan memakai tampilan dan susunan halamannya, tetapi isinya tetap cerita Anda sendiri."
+          ]
+        },
+        {
+          "title": "Jawab beberapa pertanyaan",
+          "body": [
+            "Kami menunjukkan apa yang sudah kami pahami dari cerita Anda. Kalau ada yang salah, perbaiki di situ.",
+            "Lalu kami bertanya paling banyak empat hal yang belum jelas. Pilih salah satu jawaban, atau pilih \"Lainnya\" untuk menulis jawaban sendiri. Periksa juga bahasa website Anda."
+          ]
+        },
+        {
+          "title": "Pilih tampilan dan tambahkan foto",
+          "body": [
+            "Kami menawarkan tiga tampilan yang cocok. Buka contohnya untuk melihat website contoh sebelum memilih.",
+            "Unggah logo dan foto Anda sendiri agar website terasa milik Anda. Foto boleh berupa PNG, JPG, atau WEBP, paling besar 3 MB, dan paling banyak 8 foto."
+          ]
+        },
+        {
+          "title": "Tekan Buat, lalu tunggu",
+          "body": [
+            "Baca ringkasannya, lalu tekan \"Buat\". Biasanya website jadi dalam 5 sampai 15 menit.",
+            "Anda boleh menutup halaman ini. Pembuatan tetap berjalan, dan hasilnya ada saat Anda kembali."
+          ]
+        },
+        {
+          "title": "Periksa dan minta perubahan",
+          "body": [
+            "Lihat website Anda di tampilan komputer dan HP. Kalau ada yang ingin diubah, tulis di kotak perubahan, misalnya \"Ganti warna tombol menjadi hijau\" atau \"Tambahkan halaman harga\".",
+            "Setiap perubahan disimpan sebagai versi baru. Anda selalu bisa kembali ke versi sebelumnya lewat Riwayat perubahan."
+          ]
+        },
+        {
+          "title": "Terbitkan website Anda",
+          "body": [
+            "Tekan \"Terbitkan\" dan pilih nama alamat. Nama alamat memakai huruf kecil, angka, atau tanda hubung, 3 sampai 40 huruf.",
+            "Setelah terbit, siapa saja bisa membuka website Anda. Kalau Anda mengubah website lagi, tekan \"Terbitkan perubahan\" agar pengunjung melihat versi terbaru. Anda juga bisa menurunkan website kapan saja."
+          ]
+        },
+        {
+          "title": "Kredit",
+          "body": [
+            "Akun baru mendapat 10 kredit. Membuat website baru memakai 2 kredit, dan setiap perubahan memakai 1 kredit. Kredit hanya dipotong kalau pekerjaan berhasil.",
+            "Untuk menambah kredit, buka Top up kredit. Pilih paket, bayar ke rekening yang tertera, lalu kirim foto bukti bayar. Kredit masuk setelah admin memeriksanya."
+          ]
+        },
+        {
+          "title": "Butuh bantuan?",
+          "body": [
+            "Kirim pertanyaan, masalah, atau saran lewat halaman Feedback / Saran. Kami akan membalasnya di sana."
+          ]
+        }
+      ]
+    },
+    "terms": {
+      "title": "Syarat dan ketentuan",
+      "intro": "Aturan ini berlaku saat Anda memakai THIS MY WEBSITE. Dengan membuat akun atau memakai layanan ini, Anda setuju dengan aturan ini.",
+      "sections": [
+        {
+          "title": "Tentang layanan",
+          "body": [
+            "THIS MY WEBSITE membantu Anda membuat website dengan bantuan AI. Anda bercerita, kami membuat tampilan, menulis isi, dan memasangnya di internet."
+          ]
+        },
+        {
+          "title": "Akun Anda",
+          "body": [
+            "Satu akun dipakai oleh satu orang. Gunakan data yang benar, dan jaga akses ke email atau akun Google Anda.",
+            "Bonus akun baru (kredit gratis dan potongan harga) hanya diberikan satu kali untuk satu orang. Akun yang dibuat berulang untuk mendapat bonus lagi tidak mendapat bonus."
+          ]
+        },
+        {
+          "title": "Kredit dan pembayaran",
+          "body": [
+            "Kredit dipakai untuk membuat dan mengubah website. Kredit hanya dipotong kalau pekerjaan berhasil. Pekerjaan yang gagal atau dihentikan tidak memakai kredit.",
+            "Kredit tidak bisa ditukar dengan uang dan tidak bisa dipindahkan ke akun lain. Kredit tidak hangus setiap bulan.",
+            "Top up dibayar secara manual. Kredit ditambahkan setelah admin memeriksa bukti bayar Anda. Kalau ditolak, Anda akan melihat alasannya. Harga yang berlaku adalah harga yang tertera saat Anda membeli."
+          ]
+        },
+        {
+          "title": "Isi website Anda",
+          "body": [
+            "Anda bertanggung jawab atas isi yang Anda berikan dan terbitkan, termasuk teks, logo, dan foto. Pastikan Anda berhak memakainya.",
+            "Teks yang ditulis AI bisa salah. Periksa nama, harga, alamat, dan nomor kontak sebelum menerbitkan."
+          ]
+        },
+        {
+          "title": "Yang tidak boleh",
+          "body": [
+            "Anda tidak boleh memakai layanan ini untuk hal yang melanggar hukum, menipu, atau merugikan orang lain. Contohnya: halaman palsu untuk mencuri data atau uang, meniru orang atau merek lain, konten pornografi, kebencian, atau kekerasan, menyebarkan spam, dan memakai foto atau karya orang lain tanpa izin.",
+            "Anda juga tidak boleh mencoba merusak, membobol, atau membebani layanan ini."
+          ]
+        },
+        {
+          "title": "Website yang diterbitkan",
+          "body": [
+            "Website yang sudah terbit bisa dibuka siapa saja. Kami boleh menurunkan website yang melanggar aturan ini, dengan atau tanpa pemberitahuan lebih dulu.",
+            "Admin bisa memilih website yang terbit untuk ditampilkan di Showcase. Kalau Anda tidak mau website Anda ada di sana, beri tahu kami dan kami akan menghapusnya dari Showcase."
+          ]
+        },
+        {
+          "title": "Hak atas isi",
+          "body": [
+            "Isi yang Anda berikan tetap milik Anda. Anda mengizinkan kami menyimpan, mengolah, dan menampilkannya sejauh dibutuhkan untuk membuat dan menjalankan website Anda."
+          ]
+        },
+        {
+          "title": "Layanan apa adanya",
+          "body": [
+            "Kami berusaha agar layanan selalu berjalan baik, tetapi kami tidak bisa menjamin layanan selalu tersedia atau bebas dari kesalahan. Kami boleh mengubah atau menghentikan fitur.",
+            "Sejauh diizinkan hukum, kami tidak bertanggung jawab atas kerugian yang timbul dari pemakaian layanan ini."
+          ]
+        },
+        {
+          "title": "Menutup akun",
+          "body": [
+            "Anda boleh berhenti memakai layanan ini kapan saja. Kami boleh membatasi atau menutup akun yang melanggar aturan ini."
+          ]
+        },
+        {
+          "title": "Perubahan aturan",
+          "body": [
+            "Kami bisa mengubah aturan ini. Tanggal di atas menunjukkan kapan aturan terakhir diubah. Kalau Anda tetap memakai layanan setelah perubahan, Anda dianggap setuju."
+          ]
+        },
+        {
+          "title": "Hukum yang berlaku",
+          "body": [
+            "Aturan ini tunduk pada hukum Republik Indonesia."
+          ]
+        },
+        {
+          "title": "Hubungi kami",
+          "body": [
+            "Ada pertanyaan tentang aturan ini? Kirim lewat halaman Feedback / Saran."
+          ]
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Kebijakan privasi",
+      "intro": "Halaman ini menjelaskan data apa yang kami simpan, untuk apa, dan siapa yang bisa melihatnya.",
+      "sections": [
+        {
+          "title": "Data yang kami simpan",
+          "body": [
+            "Data akun: nama, alamat email, dan foto profil kalau Anda masuk dengan Google.",
+            "Yang Anda tulis dan unggah: cerita tentang website, jawaban pertanyaan, permintaan perubahan, logo, foto, dan bukti bayar top up.",
+            "Data pemakaian: website yang Anda buat, versinya, dan riwayat kredit.",
+            "Untuk memberi bonus akun baru satu kali saja, kami menyimpan sandi acak dari alamat internet dan browser Anda. Sandi ini tidak bisa dibaca kembali menjadi alamat aslinya."
+          ]
+        },
+        {
+          "title": "Untuk apa data dipakai",
+          "body": [
+            "Untuk membuat, menyimpan, dan menerbitkan website Anda; mengirim kode masuk ke email Anda; memeriksa top up; mencegah penyalahgunaan bonus; membalas feedback; dan memperbaiki layanan.",
+            "Kami tidak menjual data Anda dan tidak memakainya untuk iklan."
+          ]
+        },
+        {
+          "title": "AI yang membantu kami",
+          "body": [
+            "Cerita, jawaban, dan permintaan perubahan Anda dikirim ke penyedia model AI untuk menulis website Anda. Nama produk yang Anda sebut bisa dikirim ke model gambar untuk dibuatkan ilustrasi.",
+            "Jangan menulis data rahasia, seperti kata sandi atau nomor kartu, di cerita atau permintaan perubahan."
+          ]
+        },
+        {
+          "title": "Siapa yang bisa melihat",
+          "body": [
+            "Anda bisa melihat semua data akun Anda. Admin bisa melihatnya untuk membantu Anda, memeriksa top up, dan menjaga keamanan.",
+            "Bukti bayar hanya bisa dilihat oleh Anda dan admin. Website yang sudah terbit bisa dilihat siapa saja, termasuk kontak yang Anda tulis di dalamnya."
+          ]
+        },
+        {
+          "title": "Data pengunjung website Anda",
+          "body": [
+            "Formulir di website Anda, misalnya konfirmasi kehadiran, menyimpan jawaban pengunjung. Buku tamu hanya menampilkan nama dan ucapan. Jawaban lain tidak ditampilkan.",
+            "Kalau website Anda meminta data pengunjung, beri tahu mereka untuk apa data itu dipakai."
+          ]
+        },
+        {
+          "title": "Keamanan",
+          "body": [
+            "Data disimpan di server kami dan hanya bisa dibuka oleh orang yang perlu. Website Anda berjalan terpisah dari aplikasi ini. Meski begitu, tidak ada sistem yang aman sepenuhnya."
+          ]
+        },
+        {
+          "title": "Berapa lama data disimpan",
+          "body": [
+            "Data disimpan selama akun Anda aktif. Kalau Anda menghapus website, website itu dan semua versinya ikut terhapus.",
+            "Kalau Anda ingin akun dan datanya dihapus, minta lewat halaman Feedback / Saran."
+          ]
+        },
+        {
+          "title": "Hak Anda",
+          "body": [
+            "Sesuai Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi, Anda berhak melihat, membetulkan, dan meminta penghapusan data Anda, serta menarik persetujuan Anda."
+          ]
+        },
+        {
+          "title": "Cookie dan penyimpanan browser",
+          "body": [
+            "Kami memakai cookie dan penyimpanan browser untuk membuat Anda tetap masuk dan mengingat pilihan Anda, seperti bahasa dan mode terang atau gelap. Kami tidak memakai cookie iklan atau pelacak dari pihak lain."
+          ]
+        },
+        {
+          "title": "Anak-anak",
+          "body": [
+            "Layanan ini tidak ditujukan untuk anak-anak. Anak di bawah umur sebaiknya memakainya bersama orang tua atau wali."
+          ]
+        },
+        {
+          "title": "Perubahan dan kontak",
+          "body": [
+            "Kami bisa mengubah kebijakan ini. Tanggal di atas menunjukkan kapan terakhir diubah. Ada pertanyaan tentang data Anda? Kirim lewat halaman Feedback / Saran."
+          ]
+        }
+      ]
+    }
+  },
+  "docsMenu": "Panduan & kebijakan"
 }

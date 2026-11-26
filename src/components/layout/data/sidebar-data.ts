@@ -1,4 +1,5 @@
 import {
+  BookOpen,
   Coins,
   Globe,
   LayoutDashboard,
@@ -101,6 +102,10 @@ export const sidebarData: SidebarData = {
         },
         { title: 'feedback', url: '/feedback', icon: MessageSquareText },
       ],
+    },
+    {
+      title: 'Help',
+      items: [{ title: 'docsMenu', url: '/docs/how-to', icon: BookOpen }],
     },
   ],
 }
