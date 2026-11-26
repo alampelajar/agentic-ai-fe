@@ -143,13 +143,14 @@
     "settings": "Settings",
     "groups": {
       "Website": "Website",
-      "Settings": "Settings"
+      "Settings": "Settings",
+      "Help": "Help"
     },
     "openProfileMenu": "Open profile menu",
     "signIn": "Sign in"
   },
   "sidebar": {
-    "smartAgentic": "WEBSITE BUILDER",
+    "smartAgentic": "CREATE YOUR WEBSITE",
     "openAiPage": "Open your websites"
   },
   "auth": {
@@ -274,7 +275,7 @@
   "toggleNavigation": "Toggle navigation",
   "authLayout": {
     "home": "Go to the home page",
-    "eyebrow": "WEBSITE BUILDER",
+    "eyebrow": "CREATE YOUR WEBSITE",
     "headline": "Describe your website. We make it for you.",
     "description": "Write the website you want in a sentence or two. The AI picks the look, writes the words and puts it online. No code needed.",
     "features": {
@@ -1465,5 +1466,239 @@
     "guestHistory": "Sign in to see where your credits went.",
     "discount": "New account: {{percent}}% off every top-up until {{date}}."
   },
-  "creditsMenu": "Top up credits"
+  "creditsMenu": "Top up credits",
+  "docs": {
+    "title": "Guides and policies",
+    "description": "How to use THIS MY WEBSITE, the rules for using it, and how we look after your data.",
+    "navLabel": "Guide pages",
+    "contents": "On this page",
+    "updated": "Last updated {{date}}",
+    "howTo": {
+      "title": "How to use",
+      "intro": "From a short story to a website anyone can open. Follow these steps one by one.",
+      "sections": [
+        {
+          "title": "Tell us the website you want",
+          "body": [
+            "Open Make a website. Write a few sentences: what your business or event is, where it is, and what visitors should do. For example: \"A website for my motorbike workshop in Bandung, with our services, opening hours and a WhatsApp button.\"",
+            "You can also use one of the examples under the box, or press \"Copy\" on a website in the Showcase. Your new website takes its look and its list of pages, but the words are your own story."
+          ]
+        },
+        {
+          "title": "Answer a few questions",
+          "body": [
+            "We show what we understood from your story. If something is wrong, fix it there.",
+            "Then we ask about at most four things that are still unclear. Pick an answer, or pick \"Other\" to write your own. Check the language of your website too."
+          ]
+        },
+        {
+          "title": "Choose a look and add photos",
+          "body": [
+            "We offer three looks that fit. Open the example of a look to see a sample website before you choose.",
+            "Upload your own logo and photos so the website feels like yours. Photos may be PNG, JPG or WEBP, at most 3 MB each, and at most 8 photos."
+          ]
+        },
+        {
+          "title": "Press Create, then wait",
+          "body": [
+            "Read the summary, then press \"Create\". A website is usually ready in 5 to 15 minutes.",
+            "You may close this page. The work goes on, and the result is there when you come back."
+          ]
+        },
+        {
+          "title": "Check it and ask for changes",
+          "body": [
+            "Look at your website on a computer view and a phone view. To change something, write it in the change box, for example \"Make the buttons green\" or \"Add a prices page\".",
+            "Every change is saved as a new version. You can always go back to an older one in the change history."
+          ]
+        },
+        {
+          "title": "Publish your website",
+          "body": [
+            "Press \"Publish\" and choose an address name. It uses small letters, numbers or hyphens, 3 to 40 characters.",
+            "Once published, anyone can open your website. When you change it again, press \"Publish changes\" so visitors see the newest version. You can also take it offline at any time."
+          ]
+        },
+        {
+          "title": "Credits",
+          "body": [
+            "A new account gets 10 credits. A new website uses 2 credits and each change uses 1. Credits are only taken when the work succeeds.",
+            "To get more credits, open Top up credits. Choose a package, pay to the account shown, then send a picture of your payment. The credits arrive after an admin checks it."
+          ]
+        },
+        {
+          "title": "Need help?",
+          "body": [
+            "Send questions, problems or ideas on the Feedback & Suggestions page. We will reply there."
+          ]
+        }
+      ]
+    },
+    "terms": {
+      "title": "Terms and conditions",
+      "intro": "These rules apply when you use THIS MY WEBSITE. By making an account or using the service, you agree to them.",
+      "sections": [
+        {
+          "title": "About the service",
+          "body": [
+            "THIS MY WEBSITE helps you make a website with the help of AI. You tell us about it; we make the look, write the words and put it online."
+          ]
+        },
+        {
+          "title": "Your account",
+          "body": [
+            "One account is for one person. Use true details, and keep your email or Google account safe.",
+            "The new-account bonus (free credits and a discount) is given once per person. Accounts made again and again to get the bonus again do not get it."
+          ]
+        },
+        {
+          "title": "Credits and payment",
+          "body": [
+            "Credits are used to make and change websites. They are only taken when the work succeeds. Work that fails or is stopped uses no credits.",
+            "Credits cannot be exchanged for money and cannot be moved to another account. They do not expire each month.",
+            "Top-ups are paid by hand. Credits are added after an admin checks your proof of payment. If it is turned down, you will see why. The price that applies is the one shown when you buy."
+          ]
+        },
+        {
+          "title": "What is on your website",
+          "body": [
+            "You are responsible for what you give us and publish, including text, logos and photos. Make sure you have the right to use them.",
+            "Text written by AI can be wrong. Check names, prices, addresses and contact numbers before you publish."
+          ]
+        },
+        {
+          "title": "What is not allowed",
+          "body": [
+            "You may not use the service for anything illegal, deceptive or harmful to others. For example: fake pages to steal data or money, pretending to be another person or brand, pornographic, hateful or violent content, spam, and using other people's photos or work without permission.",
+            "You also may not try to break into, damage or overload the service."
+          ]
+        },
+        {
+          "title": "Published websites",
+          "body": [
+            "A published website can be opened by anyone. We may take down a website that breaks these rules, with or without telling you first.",
+            "Admins may pick published websites to show in the Showcase. If you do not want yours there, tell us and we will remove it from the Showcase."
+          ]
+        },
+        {
+          "title": "Rights to your content",
+          "body": [
+            "What you give us stays yours. You allow us to store, process and show it as far as needed to make and run your website."
+          ]
+        },
+        {
+          "title": "The service as it is",
+          "body": [
+            "We work to keep the service running well, but we cannot promise it is always available or free of mistakes. We may change or stop features.",
+            "As far as the law allows, we are not responsible for losses that come from using the service."
+          ]
+        },
+        {
+          "title": "Closing an account",
+          "body": [
+            "You may stop using the service at any time. We may limit or close an account that breaks these rules."
+          ]
+        },
+        {
+          "title": "Changes to these rules",
+          "body": [
+            "We may change these rules. The date above shows when they last changed. If you keep using the service after a change, you agree to it."
+          ]
+        },
+        {
+          "title": "Governing law",
+          "body": [
+            "These rules are governed by the laws of the Republic of Indonesia."
+          ]
+        },
+        {
+          "title": "Contact us",
+          "body": [
+            "Questions about these rules? Send them on the Feedback & Suggestions page."
+          ]
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Privacy policy",
+      "intro": "This page explains what data we keep, what it is for, and who can see it.",
+      "sections": [
+        {
+          "title": "Data we keep",
+          "body": [
+            "Account data: your name, email address, and profile picture if you sign in with Google.",
+            "What you write and upload: the story of your website, your answers, change requests, logo, photos and top-up payment proofs.",
+            "Usage data: the websites you make, their versions and your credit history.",
+            "To give the new-account bonus only once, we keep a scrambled code made from your internet address and your browser. It cannot be turned back into the original address."
+          ]
+        },
+        {
+          "title": "What we use it for",
+          "body": [
+            "To make, keep and publish your websites; send sign-in codes to your email; check top-ups; stop misuse of the bonus; reply to feedback; and improve the service.",
+            "We do not sell your data and do not use it for advertising."
+          ]
+        },
+        {
+          "title": "The AI that helps us",
+          "body": [
+            "Your story, answers and change requests are sent to AI model providers to write your website. Product names you mention may be sent to an image model to draw illustrations.",
+            "Do not write secret data, such as passwords or card numbers, in your story or change requests."
+          ]
+        },
+        {
+          "title": "Who can see it",
+          "body": [
+            "You can see all of your account's data. Admins can see it to help you, check top-ups and keep the service safe.",
+            "Payment proofs are seen only by you and admins. A published website can be seen by anyone, including the contact details you put on it."
+          ]
+        },
+        {
+          "title": "Your visitors' data",
+          "body": [
+            "Forms on your website, such as an RSVP, store your visitors' answers. A guest book shows only the name and the message. Other answers are not shown.",
+            "If your website asks visitors for data, tell them what it is for."
+          ]
+        },
+        {
+          "title": "Security",
+          "body": [
+            "Data is kept on our servers and only people who need it can open it. Your website runs apart from this app. Even so, no system is completely safe."
+          ]
+        },
+        {
+          "title": "How long we keep it",
+          "body": [
+            "Data is kept while your account is active. When you delete a website, it and all of its versions are deleted too.",
+            "If you want your account and its data deleted, ask on the Feedback & Suggestions page."
+          ]
+        },
+        {
+          "title": "Your rights",
+          "body": [
+            "Under Indonesia's Personal Data Protection Law (Law No. 27 of 2022), you have the right to see, correct and ask us to delete your data, and to withdraw your consent."
+          ]
+        },
+        {
+          "title": "Cookies and browser storage",
+          "body": [
+            "We use cookies and browser storage to keep you signed in and to remember your choices, such as the language and light or dark mode. We do not use advertising cookies or trackers from other companies."
+          ]
+        },
+        {
+          "title": "Children",
+          "body": [
+            "The service is not meant for children. Minors should use it together with a parent or guardian."
+          ]
+        },
+        {
+          "title": "Changes and contact",
+          "body": [
+            "We may change this policy. The date above shows when it last changed. Questions about your data? Send them on the Feedback & Suggestions page."
+          ]
+        }
+      ]
+    }
+  },
+  "docsMenu": "Guides & policies"
 }

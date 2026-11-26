@@ -8,7 +8,13 @@ type AuthLayoutProps = {
 }
 
 /** The product's name with its logo, linking back to the home page. */
-function HomeLink({ className, size }: { className?: string; size: 'sm' | 'md' }) {
+function HomeLink({
+  className,
+  size,
+}: {
+  className?: string
+  size: 'sm' | 'md'
+}) {
   const { t } = useTranslation()
   return (
     <Link
@@ -19,8 +25,15 @@ function HomeLink({ className, size }: { className?: string; size: 'sm' | 'md' }
         className
       )}
     >
-      <Logo className={cn('text-foreground', size === 'md' ? 'size-7' : 'size-6')} />
-      <span className={cn('font-semibold tracking-tight', size === 'md' ? 'text-base' : 'text-sm')}>
+      <Logo
+        className={cn('text-foreground', size === 'md' ? 'size-7' : 'size-6')}
+      />
+      <span
+        className={cn(
+          'font-semibold tracking-tight',
+          size === 'md' ? 'text-base' : 'text-sm'
+        )}
+      >
         {/* design-system-ignore: the product name stays the same in every language */}
         THIS MY <span className='text-primary'>WEBSITE</span>
       </span>
@@ -81,8 +94,18 @@ export function AuthLayout({ children }: AuthLayoutProps) {
             <span>
               {t('authLayout.copyright', { year: new Date().getFullYear() })}
             </span>
-            <span>{t('authLayout.privacy')}</span>
-            <span>{t('authLayout.terms')}</span>
+            <Link
+              to='/docs/privacy'
+              className='rounded-sm underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none'
+            >
+              {t('authLayout.privacy')}
+            </Link>
+            <Link
+              to='/docs/terms'
+              className='rounded-sm underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none'
+            >
+              {t('authLayout.terms')}
+            </Link>
           </footer>
         </section>
       </main>

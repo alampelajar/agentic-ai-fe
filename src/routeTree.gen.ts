@@ -21,12 +21,17 @@ import { Route as errors500RouteImport } from './routes/(errors)/500'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedCreditsRouteImport } from './routes/_authenticated/credits'
+import { Route as AuthenticatedDocsRouteRouteImport } from './routes/_authenticated/docs/route'
 import { Route as AuthenticatedFeedbackRouteImport } from './routes/_authenticated/feedback'
 import { Route as AuthenticatedOverviewRouteImport } from './routes/_authenticated/overview'
 import { Route as AuthenticatedPaidModelsRouteImport } from './routes/_authenticated/paid-models'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedSubscriptionPremiumRouteImport } from './routes/_authenticated/subscription-premium'
+import { Route as AuthenticatedDocsIndexRouteImport } from './routes/_authenticated/docs/index'
+import { Route as AuthenticatedDocsHowToRouteImport } from './routes/_authenticated/docs/how-to'
+import { Route as AuthenticatedDocsPrivacyRouteImport } from './routes/_authenticated/docs/privacy'
+import { Route as AuthenticatedDocsTermsRouteImport } from './routes/_authenticated/docs/terms'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
@@ -97,6 +102,11 @@ const AuthenticatedCreditsRoute = AuthenticatedCreditsRouteImport.update({
   path: '/credits',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDocsRouteRoute = AuthenticatedDocsRouteRouteImport.update({
+  id: '/docs',
+  path: '/docs',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedFeedbackRoute = AuthenticatedFeedbackRouteImport.update({
   id: '/feedback',
   path: '/feedback',
@@ -129,6 +139,27 @@ const AuthenticatedSubscriptionPremiumRoute =
     path: '/subscription-premium',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDocsIndexRoute = AuthenticatedDocsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedDocsRouteRoute,
+} as any)
+const AuthenticatedDocsHowToRoute = AuthenticatedDocsHowToRouteImport.update({
+  id: '/how-to',
+  path: '/how-to',
+  getParentRoute: () => AuthenticatedDocsRouteRoute,
+} as any)
+const AuthenticatedDocsPrivacyRoute =
+  AuthenticatedDocsPrivacyRouteImport.update({
+    id: '/privacy',
+    path: '/privacy',
+    getParentRoute: () => AuthenticatedDocsRouteRoute,
+  } as any)
+const AuthenticatedDocsTermsRoute = AuthenticatedDocsTermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => AuthenticatedDocsRouteRoute,
+} as any)
 const AuthenticatedSettingsIndexRoute =
   AuthenticatedSettingsIndexRouteImport.update({
     id: '/',
@@ -190,6 +221,7 @@ const AuthenticatedTasksIndexRoute = AuthenticatedTasksIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
+  '/docs': typeof AuthenticatedDocsRouteRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/forgot-password': typeof authForgotPasswordRoute
   '/otp': typeof authOtpRoute
@@ -206,6 +238,9 @@ export interface FileRoutesByFullPath {
   '/paid-models': typeof AuthenticatedPaidModelsRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/subscription-premium': typeof AuthenticatedSubscriptionPremiumRoute
+  '/docs/how-to': typeof AuthenticatedDocsHowToRoute
+  '/docs/privacy': typeof AuthenticatedDocsPrivacyRoute
+  '/docs/terms': typeof AuthenticatedDocsTermsRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/desktop': typeof AuthenticatedSettingsDesktopRoute
@@ -213,6 +248,7 @@ export interface FileRoutesByFullPath {
   '/settings/integrations': typeof AuthenticatedSettingsIntegrationsRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/sites/$siteId': typeof AuthenticatedSitesSiteIdRoute
+  '/docs/': typeof AuthenticatedDocsIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/sites/': typeof AuthenticatedSitesIndexRoute
   '/tasks/': typeof AuthenticatedTasksIndexRoute
@@ -234,6 +270,9 @@ export interface FileRoutesByTo {
   '/profile': typeof AuthenticatedProfileRoute
   '/subscription-premium': typeof AuthenticatedSubscriptionPremiumRoute
   '/': typeof AuthenticatedIndexRoute
+  '/docs/how-to': typeof AuthenticatedDocsHowToRoute
+  '/docs/privacy': typeof AuthenticatedDocsPrivacyRoute
+  '/docs/terms': typeof AuthenticatedDocsTermsRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/desktop': typeof AuthenticatedSettingsDesktopRoute
@@ -241,6 +280,7 @@ export interface FileRoutesByTo {
   '/settings/integrations': typeof AuthenticatedSettingsIntegrationsRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/sites/$siteId': typeof AuthenticatedSitesSiteIdRoute
+  '/docs': typeof AuthenticatedDocsIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/sites': typeof AuthenticatedSitesIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
@@ -248,6 +288,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/_authenticated/docs': typeof AuthenticatedDocsRouteRouteWithChildren
   '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/otp': typeof authOtpRoute
@@ -265,6 +306,9 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/subscription-premium': typeof AuthenticatedSubscriptionPremiumRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/docs/how-to': typeof AuthenticatedDocsHowToRoute
+  '/_authenticated/docs/privacy': typeof AuthenticatedDocsPrivacyRoute
+  '/_authenticated/docs/terms': typeof AuthenticatedDocsTermsRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/desktop': typeof AuthenticatedSettingsDesktopRoute
@@ -272,6 +316,7 @@ export interface FileRoutesById {
   '/_authenticated/settings/integrations': typeof AuthenticatedSettingsIntegrationsRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/_authenticated/sites/$siteId': typeof AuthenticatedSitesSiteIdRoute
+  '/_authenticated/docs/': typeof AuthenticatedDocsIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/sites/': typeof AuthenticatedSitesIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
@@ -280,6 +325,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/docs'
     | '/settings'
     | '/forgot-password'
     | '/otp'
@@ -296,6 +342,9 @@ export interface FileRouteTypes {
     | '/paid-models'
     | '/profile'
     | '/subscription-premium'
+    | '/docs/how-to'
+    | '/docs/privacy'
+    | '/docs/terms'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/desktop'
@@ -303,6 +352,7 @@ export interface FileRouteTypes {
     | '/settings/integrations'
     | '/settings/notifications'
     | '/sites/$siteId'
+    | '/docs/'
     | '/settings/'
     | '/sites/'
     | '/tasks/'
@@ -324,6 +374,9 @@ export interface FileRouteTypes {
     | '/profile'
     | '/subscription-premium'
     | '/'
+    | '/docs/how-to'
+    | '/docs/privacy'
+    | '/docs/terms'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/desktop'
@@ -331,12 +384,14 @@ export interface FileRouteTypes {
     | '/settings/integrations'
     | '/settings/notifications'
     | '/sites/$siteId'
+    | '/docs'
     | '/settings'
     | '/sites'
     | '/tasks'
   id:
     | '__root__'
     | '/_authenticated'
+    | '/_authenticated/docs'
     | '/_authenticated/settings'
     | '/(auth)/forgot-password'
     | '/(auth)/otp'
@@ -354,6 +409,9 @@ export interface FileRouteTypes {
     | '/_authenticated/profile'
     | '/_authenticated/subscription-premium'
     | '/_authenticated/'
+    | '/_authenticated/docs/how-to'
+    | '/_authenticated/docs/privacy'
+    | '/_authenticated/docs/terms'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/desktop'
@@ -361,6 +419,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/integrations'
     | '/_authenticated/settings/notifications'
     | '/_authenticated/sites/$siteId'
+    | '/_authenticated/docs/'
     | '/_authenticated/settings/'
     | '/_authenticated/sites/'
     | '/_authenticated/tasks/'
@@ -465,6 +524,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCreditsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/docs': {
+      id: '/_authenticated/docs'
+      path: '/docs'
+      fullPath: '/docs'
+      preLoaderRoute: typeof AuthenticatedDocsRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/feedback': {
       id: '/_authenticated/feedback'
       path: '/feedback'
@@ -506,6 +572,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/subscription-premium'
       preLoaderRoute: typeof AuthenticatedSubscriptionPremiumRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/docs/': {
+      id: '/_authenticated/docs/'
+      path: '/'
+      fullPath: '/docs/'
+      preLoaderRoute: typeof AuthenticatedDocsIndexRouteImport
+      parentRoute: typeof AuthenticatedDocsRouteRoute
+    }
+    '/_authenticated/docs/how-to': {
+      id: '/_authenticated/docs/how-to'
+      path: '/how-to'
+      fullPath: '/docs/how-to'
+      preLoaderRoute: typeof AuthenticatedDocsHowToRouteImport
+      parentRoute: typeof AuthenticatedDocsRouteRoute
+    }
+    '/_authenticated/docs/privacy': {
+      id: '/_authenticated/docs/privacy'
+      path: '/privacy'
+      fullPath: '/docs/privacy'
+      preLoaderRoute: typeof AuthenticatedDocsPrivacyRouteImport
+      parentRoute: typeof AuthenticatedDocsRouteRoute
+    }
+    '/_authenticated/docs/terms': {
+      id: '/_authenticated/docs/terms'
+      path: '/terms'
+      fullPath: '/docs/terms'
+      preLoaderRoute: typeof AuthenticatedDocsTermsRouteImport
+      parentRoute: typeof AuthenticatedDocsRouteRoute
     }
     '/_authenticated/settings/': {
       id: '/_authenticated/settings/'
@@ -580,6 +674,26 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedDocsRouteRouteChildren {
+  AuthenticatedDocsHowToRoute: typeof AuthenticatedDocsHowToRoute
+  AuthenticatedDocsPrivacyRoute: typeof AuthenticatedDocsPrivacyRoute
+  AuthenticatedDocsTermsRoute: typeof AuthenticatedDocsTermsRoute
+  AuthenticatedDocsIndexRoute: typeof AuthenticatedDocsIndexRoute
+}
+
+const AuthenticatedDocsRouteRouteChildren: AuthenticatedDocsRouteRouteChildren =
+  {
+    AuthenticatedDocsHowToRoute: AuthenticatedDocsHowToRoute,
+    AuthenticatedDocsPrivacyRoute: AuthenticatedDocsPrivacyRoute,
+    AuthenticatedDocsTermsRoute: AuthenticatedDocsTermsRoute,
+    AuthenticatedDocsIndexRoute: AuthenticatedDocsIndexRoute,
+  }
+
+const AuthenticatedDocsRouteRouteWithChildren =
+  AuthenticatedDocsRouteRoute._addFileChildren(
+    AuthenticatedDocsRouteRouteChildren,
+  )
+
 interface AuthenticatedSettingsRouteRouteChildren {
   AuthenticatedSettingsAccountRoute: typeof AuthenticatedSettingsAccountRoute
   AuthenticatedSettingsAppearanceRoute: typeof AuthenticatedSettingsAppearanceRoute
@@ -609,6 +723,7 @@ const AuthenticatedSettingsRouteRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDocsRouteRoute: typeof AuthenticatedDocsRouteRouteWithChildren
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedCreditsRoute: typeof AuthenticatedCreditsRoute
   AuthenticatedFeedbackRoute: typeof AuthenticatedFeedbackRoute
@@ -623,6 +738,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDocsRouteRoute: AuthenticatedDocsRouteRouteWithChildren,
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedCreditsRoute: AuthenticatedCreditsRoute,
   AuthenticatedFeedbackRoute: AuthenticatedFeedbackRoute,
