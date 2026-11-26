@@ -1090,13 +1090,8 @@
       "useThis": "Use this look",
       "computer": "Computer",
       "phone": "Phone",
-      "uses": {
-        "page": "Page",
-        "boxes": "Boxes",
-        "titles": "Titles",
-        "buttons": "Buttons",
-        "accent": "Accent"
-      }
+      "sample": "Your name here",
+      "sampleButton": "Contact"
     },
     "run": {
       "buildingTitle": "Your website is being made",

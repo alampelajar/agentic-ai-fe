@@ -1090,13 +1090,8 @@
       "useThis": "Pakai tampilan ini",
       "computer": "Komputer",
       "phone": "HP",
-      "uses": {
-        "page": "Latar",
-        "boxes": "Kotak",
-        "titles": "Judul",
-        "buttons": "Tombol",
-        "accent": "Aksen"
-      }
+      "sample": "Nama Anda di sini",
+      "sampleButton": "Hubungi"
     },
     "run": {
       "buildingTitle": "Website Anda sedang dibuat",

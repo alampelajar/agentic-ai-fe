@@ -31,7 +31,7 @@ describe('DirectionCard', () => {
     await i18n.changeLanguage('id')
   })
 
-  it('shows the colours and where each is used, never a website', async () => {
+  it('shows a drawing in the colours of the look, never a website', async () => {
     const screen = await render(
       <DirectionCard
         direction={look}
@@ -43,16 +43,9 @@ describe('DirectionCard', () => {
     await expect
       .element(screen.getByRole('radio', { name: /Hangat dan klasik/ }))
       .toBeVisible()
-    for (const label of ['Latar', 'Kotak', 'Judul', 'Tombol', 'Aksen'])
-      await expect
-        .element(screen.getByText(label, { exact: true }))
-        .toBeVisible()
-
-    const boxes = Array.from(
-      screen.container.querySelectorAll<HTMLElement>('.h-12')
-    ).map((box) => box.style.background)
-    expect(boxes).toHaveLength(5)
-    expect(new Set(boxes).size).toBe(5)
+    await expect.element(screen.getByText('Nama Anda di sini')).toBeVisible()
+    const button = screen.getByText('Hubungi').element() as HTMLElement
+    expect(button.style.borderRadius).toBe('6px')
 
     expect(screen.container.querySelector('img')).toBeNull()
     expect(screen.container.querySelector('iframe')).toBeNull()
