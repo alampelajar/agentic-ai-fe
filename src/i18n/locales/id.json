@@ -158,6 +158,18 @@
       "title": "Keluar",
       "description": "Apakah kamu yakin ingin keluar? Kamu perlu masuk lagi untuk mengakses akun.",
       "confirmButton": "Keluar"
+    },
+    "signIn": {
+      "errors": {}
+    },
+    "signUp": {
+      "errors": {}
+    },
+    "forgotPassword": {
+      "errors": {}
+    },
+    "otp": {
+      "errors": {}
     }
   },
   "settingsPage": {
@@ -177,7 +189,8 @@
       "profileLoadError": "Gagal memuat profil. Periksa koneksi dan coba muat ulang halaman.",
       "profileSaveError": "Gagal menyimpan profil. Silakan coba lagi.",
       "profileSaveSuccess": "Profil berhasil diperbarui.",
-      "profileNameError": "Nama harus terdiri dari 2 sampai 30 karakter."
+      "profileNameError": "Nama harus terdiri dari 2 sampai 30 karakter.",
+      "errors": {}
     },
     "appearance": {
       "title": "Tampilan",
@@ -196,47 +209,50 @@
     },
     "display": {
       "title": "Tampilan Layar",
-      "subtitle": "Atur layout dan display aplikasi.",
-      "sidebar": "Sidebar",
-      "sidebarDescription": "Pilih elemen yang ditampilkan di sidebar.",
-      "success": "Pengaturan tampilan layar berhasil diperbarui!",
-      "updateDisplay": "Perbarui Tampilan",
-      "selectOne": "Pilih minimal satu item.",
-      "items": {
-        "recents": "Terbaru",
-        "home": "Beranda",
-        "applications": "Aplikasi",
-        "desktop": "Desktop",
-        "downloads": "Unduhan",
-        "documents": "Dokumen"
-      }
+      "subtitle": "Cara aplikasi tampil di perangkat ini.",
+      "sidebar": "Menu samping",
+      "sidebarDescription": "Apakah menu di kiri terbuka saat aplikasi dibuka.",
+      "success": "Pengaturan tampilan sudah disimpan.",
+      "updateDisplay": "Simpan",
+      "textSize": "Ukuran tulisan",
+      "textSizeHelp": "Tulisan besar lebih mudah dibaca.",
+      "textSizes": {
+        "normal": "Biasa",
+        "large": "Besar"
+      },
+      "sidebarStates": {
+        "open": "Terbuka",
+        "closed": "Tertutup"
+      },
+      "reduceMotion": "Kurangi gerakan",
+      "reduceMotionHelp": "Isi aplikasi langsung muncul, tanpa bergeser atau memudar."
     },
     "notifications": {
       "title": "Notifikasi",
-      "subtitle": "Kelola preferensi notifikasi kamu.",
-      "emailNotifications": "Notifikasi Email",
-      "communicationEmails": "Email Komunikasi",
-      "communicationEmailsDescription": "Terima email tentang aktivitas akun kamu.",
-      "marketingEmails": "Email Marketing",
-      "marketingEmailsDescription": "Terima email tentang produk baru, fitur, dan lainnya.",
-      "socialEmails": "Email Sosial",
-      "socialEmailsDescription": "Terima email untuk mention, follow, dan lainnya.",
-      "securityEmails": "Email Keamanan",
-      "securityEmailsDescription": "Terima email tentang keamanan akun kamu.",
-      "success": "Pengaturan notifikasi berhasil diperbarui!",
-      "selectType": "Pilih notifikasi yang ingin Anda terima.",
-      "notifyAbout": "Beri tahu saya tentang...",
-      "updateNotifications": "Perbarui Notifikasi",
-      "allNewMessages": "Semua pesan baru",
-      "directMessagesMentions": "Pesan langsung dan mention",
-      "nothing": "Tidak ada",
-      "mobileSettings": "pengaturan mobile",
-      "useDifferentMobile": "Gunakan pengaturan berbeda untuk perangkat mobile",
-      "mobileHintBefore": "Anda bisa mengatur notifikasi mobile di halaman",
-      "mobileHintAfter": "."
+      "subtitle": "Pilih email yang kami kirim kepada Anda.",
+      "emailNotifications": "Email",
+      "securityEmails": "Email keamanan",
+      "success": "Pengaturan pemberitahuan sudah disimpan.",
+      "saveChanges": "Simpan",
+      "choices": {
+        "website_ready": {
+          "title": "Saat website saya selesai",
+          "help": "Email saat website baru atau perubahan yang Anda minta sudah selesai, atau belum bisa diselesaikan."
+        },
+        "new_messages": {
+          "title": "Saat pengunjung mengirim pesan",
+          "help": "Email saat seseorang mengisi form di salah satu website Anda, misalnya konfirmasi hadir atau janji temu."
+        }
+      },
+      "securityAlways": "Kode dan kabar tentang akun Anda selalu dikirim, supaya akun tetap aman.",
+      "saveError": "Pengaturan belum bisa disimpan. Silakan coba lagi.",
+      "loading": "Memuat pengaturan Anda...",
+      "loadError": "Pengaturan Anda belum bisa dimuat. Silakan muat ulang halaman.",
+      "emailOff": "Aplikasi ini belum bisa mengirim email. Pilihan Anda tetap disimpan dan dipakai begitu bisa.",
+      "saving": "Menyimpan..."
     },
-    "eyebrow": "Workspace",
-    "description": "Kelola akun, keamanan, dan preferensi workspace THIS MY WEBSITE."
+    "eyebrow": "Akun",
+    "description": "Atur akun Anda, tampilan aplikasi, dan email yang kami kirim."
   },
   "dataTable": {
     "reset": "Atur Ulang",
@@ -655,7 +671,9 @@
         "expired": "Persetujuan kedaluwarsa. Minta yang baru untuk melanjutkan.",
         "emergency": "Emergency stop aktif."
       }
-    }
+    },
+    "chat": {},
+    "chatApproval": {}
   },
   "emailOtp": {
     "sentTo": "Kami mengirim kode 6 digit ke",
@@ -1092,7 +1110,8 @@
       "doneTitle": "Selesai",
       "stepDone": "selesai",
       "stepFailed": "tidak berhasil",
-      "stepRunning": "sedang berjalan"
+      "stepRunning": "sedang berjalan",
+      "buildingHelp": "Biasanya butuh 5 sampai 15 menit. Halaman ini boleh ditutup; pekerjaan tetap berjalan."
     },
     "workspace": {
       "version": "Versi {{number}}",
@@ -1214,7 +1233,9 @@
       "failedHelp": "Baca pesan di sebelah kiri, lalu tekan Lanjutkan atau Coba lagi.",
       "changeStopped": "Perubahan Anda belum selesai",
       "nextPublished": "Lihat website Anda di sebelah kanan. Minta perubahan di bawah, lalu terbitkan kalau sudah cocok.",
-      "changeLater": "Anda bisa minta perubahan setelah website selesai."
+      "changeLater": "Anda bisa minta perubahan setelah website selesai.",
+      "advanced": "Lanjutan",
+      "hideAdvanced": "Tutup lanjutan"
     },
     "code": {
       "files": "Daftar file",
@@ -1264,6 +1285,69 @@
     "guest": {
       "help": "Silakan lihat-lihat dulu. Akun baru diperlukan saat Anda membuat website."
     },
+    "photos": {
+      "button": "Foto",
+      "title": "Foto dan logo",
+      "help": "Tambahkan foto dan logo Anda sendiri. Semuanya disimpan bersama website Anda. Tekan \"Pakai di website\" untuk memasangnya di halaman.",
+      "use": "Pakai di website",
+      "request": "Pakai foto dan logo yang saya unggah di website saya: logo di bagian atas, dan foto di tempat yang paling cocok, misalnya bagian pertama, galeri, atau di samping teks yang sesuai.",
+      "busy": "Website Anda sedang diubah. Foto bisa dipakai setelah selesai."
+    },
+    "ideas": {
+      "label": "Ide untuk memulai",
+      "colour": {
+        "label": "Ganti warna",
+        "start": "Ganti warna utama menjadi "
+      },
+      "headline": {
+        "label": "Judul baru",
+        "start": "Ganti judul besar di halaman depan menjadi: "
+      },
+      "page": {
+        "label": "Tambah halaman",
+        "start": "Tambahkan halaman tentang "
+      },
+      "section": {
+        "label": "Tambah bagian",
+        "start": "Tambahkan bagian di halaman depan tentang "
+      },
+      "contact": {
+        "label": "Ubah kontak",
+        "start": "Ubah kontak menjadi: "
+      },
+      "photo": {
+        "label": "Pindah foto",
+        "start": "Pindahkan foto "
+      }
+    },
+    "messages": {
+      "button": "Pesan",
+      "title": "Pesan dari pengunjung",
+      "help": "Yang dikirim orang lewat form di website Anda, misalnya konfirmasi hadir, janji temu, atau pertanyaan.",
+      "loading": "Membuka pesan...",
+      "error": "Pesan belum bisa dibuka.",
+      "emptyTitle": "Belum ada pesan",
+      "emptyHelp": "Saat pengunjung mengisi form di website Anda, pesannya muncul di sini.",
+      "emptyHelpTest": "Website Anda belum terbit. Pesan yang Anda kirim untuk mencoba muncul di sini.",
+      "testNote": "Website Anda belum terbit: ini pesan yang dikirim saat mencoba.",
+      "count_one": "{{count}} pesan",
+      "count_other": "{{count}} pesan",
+      "refresh": "Muat ulang"
+    },
+    "share": {
+      "title": "Kabarkan ke orang lain",
+      "message": "Lihat {{name}} di sini: {{url}}",
+      "whatsapp": "Bagikan ke WhatsApp",
+      "other": "Bagikan lewat lain",
+      "downloadQr": "Unduh kode QR",
+      "qrAlt": "Kode QR untuk {{name}}",
+      "help": "Cetak kode QR atau pasang di poster: orang memindainya dengan kamera HP untuk membuka website Anda."
+    },
+    "howItWorks": {
+      "tell": "Ceritakan yang Anda mau",
+      "look": "Pilih tampilan",
+      "publish": "Terbitkan"
+    },
     "credits": {
       "balance_one": "{{count}} kredit",
       "balance_other": "{{count}} kredit",
@@ -1294,6 +1378,43 @@
     "signUp": "Daftar di sini",
     "needed": "Masuk dulu untuk memakai fitur ini."
   },
+  "status": {},
+  "agentic": {
+    "workflow": {},
+    "input": {},
+    "status": {},
+    "messages": {},
+    "errors": {},
+    "bar": {},
+    "empty": {
+      "starters": {}
+    },
+    "activity": {
+      "tools": {}
+    },
+    "composer": {},
+    "thread": {},
+    "phase": {
+      "tool": {},
+      "site": {}
+    },
+    "auto": {
+      "need": {}
+    }
+  },
+  "workflowPage": {},
+  "helpCenterPage": {},
+  "chatsPage": {},
+  "errors": {
+    "error401": {},
+    "error403": {},
+    "error404": {},
+    "error500": {},
+    "error503": {},
+    "generalError": {}
+  },
+  "localRunnerApproval": {},
+  "comingSoon": {},
   "creditsPage": {
     "title": "Kredit",
     "subtitle": "Kredit dipakai untuk membuat dan mengubah website dengan AI.",
@@ -1321,9 +1442,14 @@
     "sent": "Bukti bayar terkirim. Kredit ditambahkan setelah kami cek.",
     "choosePackage": "Pilih jumlah kredit dulu.",
     "needProof": "Tambahkan screenshot bukti bayar dulu.",
+    "custom": "Jumlah lain",
+    "customHint": "Tulis sendiri",
+    "customLabel": "Jumlah kredit",
+    "customHelp": "Dari {{min}} sampai {{max}} kredit. Satu kredit {{price}}.",
+    "customWrong": "Tulis jumlah dari {{min}} sampai {{max}} kredit.",
     "errors": {
       "topup_unavailable": "Pembelian kredit sedang tidak tersedia.",
-      "topup_package": "Pilih salah satu paket.",
+      "topup_package": "Pilih paket, atau tulis jumlah kredit sendiri.",
       "topup_proof": "Screenshot harus gambar PNG, JPG atau WEBP, maksimal 3 MB.",
       "topup_pending": "Tunggu sampai permintaan sebelumnya dicek.",
       "unknown": "Permintaan belum bisa dikirim. Silakan coba lagi."

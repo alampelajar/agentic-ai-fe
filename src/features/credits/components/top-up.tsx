@@ -1,9 +1,10 @@
 import { useId, useState, type FormEvent } from 'react'
-import { Clock, ImageUp, Loader2, Send, Wallet } from 'lucide-react'
+import { Clock, ImageUp, Loader2, PencilLine, Send, Wallet } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
   sendTopUp,
@@ -35,7 +36,9 @@ export function TopUp({
 }) {
   const { t, i18n } = useTranslation()
   const proofId = useId()
-  const [credits, setCredits] = useState<number | null>(null)
+  const customId = useId()
+  const [chosen, setChosen] = useState<number | 'custom' | null>(null)
+  const [customText, setCustomText] = useState('')
   const [proof, setProof] = useState<File | null>(null)
   const [sending, setSending] = useState(false)
   const [problem, setProblem] = useState<string | null>(null)
@@ -62,12 +65,23 @@ export function TopUp({
   }
 
   const percent = discount?.percent ?? 0
+  const min = topup.custom_min ?? 1
+  const max = topup.custom_max ?? 1000
+  const typed = /^\d+$/.test(customText.trim())
+    ? Number(customText.trim())
+    : NaN
+  const customValid = typed >= min && typed <= max
+  const credits = chosen === 'custom' ? (customValid ? typed : null) : chosen
   // Whole Rupiah, rounded down like the server.
   const pay = (amount: number) =>
     Math.floor((amount * topup.price_per_credit * (100 - percent)) / 100)
 
   const send = async (event: FormEvent) => {
     event.preventDefault()
+    if (chosen === 'custom' && !customValid) {
+      setProblem(t('creditsPage.customWrong', { min, max }))
+      return
+    }
     if (!credits) {
       setProblem(t('creditsPage.choosePackage'))
       return
@@ -81,7 +95,8 @@ export function TopUp({
     try {
       await sendTopUp(credits, proof)
       toast.success(t('creditsPage.sent'))
-      setCredits(null)
+      setChosen(null)
+      setCustomText('')
       setProof(null)
       onSent()
     } catch (error) {
@@ -99,6 +114,7 @@ export function TopUp({
   return (
     <form
       onSubmit={send}
+      noValidate
       aria-labelledby='top-up-title'
       className='space-y-5 rounded-xl border bg-card p-5'
     >
@@ -133,11 +149,11 @@ export function TopUp({
             <button
               key={amount}
               type='button'
-              aria-pressed={credits === amount}
-              onClick={() => setCredits(amount)}
+              aria-pressed={chosen === amount}
+              onClick={() => setChosen(amount)}
               className={cn(
                 'rounded-lg border p-3 text-left transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
-                credits === amount
+                chosen === amount
                   ? 'border-primary bg-primary/10'
                   : 'hover:bg-accent'
               )}
@@ -161,7 +177,50 @@ export function TopUp({
               </span>
             </button>
           ))}
+          <button
+            type='button'
+            aria-pressed={chosen === 'custom'}
+            onClick={() => setChosen('custom')}
+            className={cn(
+              'rounded-lg border p-3 text-left transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
+              chosen === 'custom'
+                ? 'border-primary bg-primary/10'
+                : 'hover:bg-accent'
+            )}
+          >
+            <span className='flex items-center gap-1 text-sm font-semibold'>
+              <PencilLine className='size-4' />
+              {t('creditsPage.custom')}
+            </span>
+            <span className='block text-xs text-muted-foreground'>
+              {t('creditsPage.customHint')}
+            </span>
+          </button>
         </div>
+        {chosen === 'custom' ? (
+          <div className='space-y-1 pt-1'>
+            <Label htmlFor={customId}>{t('creditsPage.customLabel')}</Label>
+            <Input
+              id={customId}
+              type='number'
+              inputMode='numeric'
+              min={min}
+              max={max}
+              step={1}
+              autoFocus
+              value={customText}
+              onChange={(event) => setCustomText(event.target.value)}
+              className='sm:max-w-48'
+            />
+            <p className='text-xs text-muted-foreground'>
+              {t('creditsPage.customHelp', {
+                min,
+                max,
+                price: rupiah(topup.price_per_credit, i18n.language),
+              })}
+            </p>
+          </div>
+        ) : null}
       </fieldset>
 
       <div className='space-y-2'>

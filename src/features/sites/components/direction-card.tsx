@@ -58,6 +58,17 @@ export function DirectionCard({
               onError={() => setPictureMissing(true)}
               className='h-full w-full object-cover object-top'
             />
+          ) : hasExample ? (
+            // No picture yet: a live, shrunken view of the example website.
+            <iframe
+              src={direction.sample_url}
+              title={direction.name}
+              loading='lazy'
+              tabIndex={-1}
+              sandbox='allow-scripts allow-same-origin'
+              className='pointer-events-none absolute top-0 left-0 origin-top-left scale-25 border-0 bg-background'
+              style={{ width: '400%', height: '400%' }}
+            />
           ) : (
             <div
               className='flex h-full flex-col gap-2 p-4'

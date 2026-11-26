@@ -27,6 +27,7 @@ import {
   type SiteDetail,
 } from '../data/api'
 import { siteErrorText } from '../lib/errors'
+import { ShareWebsite } from './share-website'
 
 type PublishDialogProps = {
   site: SiteDetail
@@ -156,6 +157,7 @@ export function PublishDialog({
               <p className='rounded-md border bg-muted px-3 py-2 text-sm break-all'>
                 {published}
               </p>
+              <ShareWebsite url={published} name={site.name} />
               <DialogFooter className='gap-2'>
                 <Button variant='outline' onClick={() => void copy(published)}>
                   <Copy className='size-4' />

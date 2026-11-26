@@ -158,6 +158,18 @@
       "title": "Sign out",
       "description": "Are you sure you want to sign out? You will need to sign in again to access your account.",
       "confirmButton": "Sign out"
+    },
+    "signIn": {
+      "errors": {}
+    },
+    "signUp": {
+      "errors": {}
+    },
+    "forgotPassword": {
+      "errors": {}
+    },
+    "otp": {
+      "errors": {}
     }
   },
   "settingsPage": {
@@ -177,7 +189,8 @@
       "profileLoadError": "Could not load your profile. Check your connection and reload the page.",
       "profileSaveError": "Could not save your profile. Please try again.",
       "profileSaveSuccess": "Profile updated successfully.",
-      "profileNameError": "Name must contain between 2 and 30 characters."
+      "profileNameError": "Name must contain between 2 and 30 characters.",
+      "errors": {}
     },
     "appearance": {
       "title": "Appearance",
@@ -196,47 +209,50 @@
     },
     "display": {
       "title": "Display",
-      "subtitle": "Configure the layout and display of the app.",
-      "sidebar": "Sidebar",
-      "sidebarDescription": "Select the items you want to display in the sidebar.",
-      "success": "Display settings updated successfully!",
-      "updateDisplay": "Update display",
-      "selectOne": "You have to select at least one item.",
-      "items": {
-        "recents": "Recents",
-        "home": "Home",
-        "applications": "Applications",
-        "desktop": "Desktop",
-        "downloads": "Downloads",
-        "documents": "Documents"
-      }
+      "subtitle": "How the app looks on this device.",
+      "sidebar": "Side menu",
+      "sidebarDescription": "Whether the menu on the left is open when you open the app.",
+      "success": "Display settings saved.",
+      "updateDisplay": "Save",
+      "textSize": "Text size",
+      "textSizeHelp": "Larger text is easier to read.",
+      "textSizes": {
+        "normal": "Normal",
+        "large": "Large"
+      },
+      "sidebarStates": {
+        "open": "Open",
+        "closed": "Closed"
+      },
+      "reduceMotion": "Reduce movement",
+      "reduceMotionHelp": "Things in the app appear at once, without sliding or fading."
     },
     "notifications": {
       "title": "Notifications",
-      "subtitle": "Manage your notification preferences.",
-      "emailNotifications": "Email Notifications",
-      "communicationEmails": "Communication Emails",
-      "communicationEmailsDescription": "Receive emails about your account activity.",
-      "marketingEmails": "Marketing Emails",
-      "marketingEmailsDescription": "Receive emails about new products, features, and more.",
-      "socialEmails": "Social Emails",
-      "socialEmailsDescription": "Receive emails for mentions, follows, and more.",
-      "securityEmails": "Security Emails",
-      "securityEmailsDescription": "Receive emails about your account security.",
-      "success": "Notification settings updated successfully!",
-      "selectType": "Please choose which notifications you want.",
-      "notifyAbout": "Notify me about...",
-      "updateNotifications": "Update notifications",
-      "allNewMessages": "All new messages",
-      "directMessagesMentions": "Direct messages and mentions",
-      "nothing": "Nothing",
-      "mobileSettings": "mobile settings",
-      "useDifferentMobile": "Use different settings for my mobile devices",
-      "mobileHintBefore": "You can manage your mobile notifications in the",
-      "mobileHintAfter": " page."
+      "subtitle": "Choose which e-mails we send you.",
+      "emailNotifications": "E-mails",
+      "securityEmails": "Security e-mails",
+      "success": "Notification settings saved.",
+      "saveChanges": "Save",
+      "choices": {
+        "website_ready": {
+          "title": "When my website is ready",
+          "help": "An e-mail when a new website or a change you asked for is finished, or could not be finished."
+        },
+        "new_messages": {
+          "title": "When a visitor sends a message",
+          "help": "An e-mail when someone fills in a form on one of your websites, such as an RSVP or a booking."
+        }
+      },
+      "securityAlways": "Codes and messages about your account are always sent, to keep it safe.",
+      "saveError": "The settings could not be saved. Please try again.",
+      "loading": "Loading your settings...",
+      "loadError": "Your settings could not be loaded. Please reload the page.",
+      "emailOff": "This app cannot send e-mail yet. Your choices are saved and used once it can.",
+      "saving": "Saving..."
     },
-    "eyebrow": "Workspace",
-    "description": "Manage your account, security and THIS MY WEBSITE workspace preferences."
+    "eyebrow": "Account",
+    "description": "Manage your account, how the app looks and the e-mails we send you."
   },
   "dataTable": {
     "reset": "Reset",
@@ -655,7 +671,9 @@
         "expired": "Approval expired. Request a new one to continue.",
         "emergency": "Emergency stop activated."
       }
-    }
+    },
+    "chat": {},
+    "chatApproval": {}
   },
   "emailOtp": {
     "sentTo": "We sent a 6-digit code to",
@@ -1092,7 +1110,8 @@
       "doneTitle": "Done",
       "stepDone": "done",
       "stepFailed": "did not work",
-      "stepRunning": "in progress"
+      "stepRunning": "in progress",
+      "buildingHelp": "This usually takes 5 to 15 minutes. You can close this page; the work continues."
     },
     "workspace": {
       "version": "Version {{number}}",
@@ -1214,7 +1233,9 @@
       "failedHelp": "Read the message on the left, then press Continue or Try again.",
       "changeStopped": "Your change was not finished",
       "nextPublished": "Look at your website on the right. Ask for a change below, then publish the changes when you like them.",
-      "changeLater": "You can ask for changes once your website is ready."
+      "changeLater": "You can ask for changes once your website is ready.",
+      "advanced": "Advanced",
+      "hideAdvanced": "Hide advanced"
     },
     "code": {
       "files": "Files",
@@ -1264,6 +1285,69 @@
     "guest": {
       "help": "Look around freely. You only need an account when you make a website."
     },
+    "photos": {
+      "button": "Photos",
+      "title": "Photos and logo",
+      "help": "Add your own photos and logo. They are kept with your website. Press \"Use on my website\" to put them on the pages.",
+      "use": "Use on my website",
+      "request": "Use the photos and the logo I uploaded on my website: the logo in the header, and the photos where they fit best, such as the first section, a gallery or next to the right text.",
+      "busy": "Your website is being changed now. You can use the photos once it is done."
+    },
+    "ideas": {
+      "label": "Ideas to start with",
+      "colour": {
+        "label": "Change the colours",
+        "start": "Change the main colour to "
+      },
+      "headline": {
+        "label": "New headline",
+        "start": "Change the big headline on the home page to: "
+      },
+      "page": {
+        "label": "Add a page",
+        "start": "Add a page about "
+      },
+      "section": {
+        "label": "Add a section",
+        "start": "Add a section to the home page about "
+      },
+      "contact": {
+        "label": "Contact details",
+        "start": "Change the contact details to: "
+      },
+      "photo": {
+        "label": "Move a photo",
+        "start": "Move the photo of "
+      }
+    },
+    "messages": {
+      "button": "Messages",
+      "title": "Messages from visitors",
+      "help": "What people sent through the forms on your website, such as an RSVP, a booking or a question.",
+      "loading": "Opening the messages...",
+      "error": "The messages could not be opened.",
+      "emptyTitle": "No messages yet",
+      "emptyHelp": "When a visitor fills in a form on your website, the message appears here.",
+      "emptyHelpTest": "Your website is not published yet. Messages you send to try it out appear here.",
+      "testNote": "Your website is not published yet: these are messages sent while trying it out.",
+      "count_one": "{{count}} message",
+      "count_other": "{{count}} messages",
+      "refresh": "Refresh"
+    },
+    "share": {
+      "title": "Tell people about it",
+      "message": "Have a look at {{name}}: {{url}}",
+      "whatsapp": "Share on WhatsApp",
+      "other": "Share elsewhere",
+      "downloadQr": "Download QR code",
+      "qrAlt": "QR code for {{name}}",
+      "help": "Print the QR code or put it on a poster: people scan it with their phone camera to open your website."
+    },
+    "howItWorks": {
+      "tell": "Tell us what you want",
+      "look": "Choose a look",
+      "publish": "Publish it"
+    },
     "credits": {
       "balance_one": "{{count}} credit",
       "balance_other": "{{count}} credits",
@@ -1294,6 +1378,43 @@
     "signUp": "Sign up here",
     "needed": "Sign in first to use this."
   },
+  "status": {},
+  "agentic": {
+    "workflow": {},
+    "input": {},
+    "status": {},
+    "messages": {},
+    "errors": {},
+    "bar": {},
+    "empty": {
+      "starters": {}
+    },
+    "activity": {
+      "tools": {}
+    },
+    "composer": {},
+    "thread": {},
+    "phase": {
+      "tool": {},
+      "site": {}
+    },
+    "auto": {
+      "need": {}
+    }
+  },
+  "workflowPage": {},
+  "helpCenterPage": {},
+  "chatsPage": {},
+  "errors": {
+    "error401": {},
+    "error403": {},
+    "error404": {},
+    "error500": {},
+    "error503": {},
+    "generalError": {}
+  },
+  "localRunnerApproval": {},
+  "comingSoon": {},
   "creditsPage": {
     "title": "Credits",
     "subtitle": "Credits pay for making and changing websites with AI.",
@@ -1321,9 +1442,14 @@
     "sent": "Your proof was sent. We will add the credits after checking it.",
     "choosePackage": "Choose how many credits first.",
     "needProof": "Add the screenshot of your payment first.",
+    "custom": "Other amount",
+    "customHint": "Type your own",
+    "customLabel": "Number of credits",
+    "customHelp": "From {{min}} to {{max}} credits. One credit is {{price}}.",
+    "customWrong": "Type a number from {{min}} to {{max}} credits.",
     "errors": {
       "topup_unavailable": "Buying credits is not available right now.",
-      "topup_package": "Choose one of the packages.",
+      "topup_package": "Choose a package, or type your own number of credits.",
       "topup_proof": "The screenshot must be a PNG, JPG or WEBP picture up to 3 MB.",
       "topup_pending": "Wait until your earlier requests are checked.",
       "unknown": "The request could not be sent. Please try again."

@@ -172,6 +172,17 @@ export function SitesPage() {
             <p className='mx-auto max-w-xl text-sm text-muted-foreground'>
               {t('siteBuilder.subtitle')}
             </p>
+            {/* How it goes, for someone who has never made a website. */}
+            <ol className='flex flex-wrap justify-center gap-x-4 gap-y-1 pt-1 text-xs text-muted-foreground'>
+              {(['tell', 'look', 'publish'] as const).map((step, index) => (
+                <li key={step} className='flex items-center gap-1'>
+                  <span className='flex size-5 items-center justify-center rounded-full bg-muted font-medium text-foreground'>
+                    {index + 1}
+                  </span>
+                  {t(`siteBuilder.howItWorks.${step}`)}
+                </li>
+              ))}
+            </ol>
           </div>
 
           <form
