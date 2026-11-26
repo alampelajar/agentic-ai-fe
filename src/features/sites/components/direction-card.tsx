@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Check, Eye } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
@@ -14,8 +13,9 @@ type DirectionCardProps = {
 }
 
 /**
- * One look to choose from: a picture of its example website (or, until that exists, a
- * small drawing in its colours), a plain name, and a button to open the example.
+ * One look to choose from: a small drawing in its colours and heading style (never a
+ * picture of a website, by the owner's wish), a plain name, and a button to open the
+ * example website.
  */
 export function DirectionCard({
   direction,
@@ -24,7 +24,6 @@ export function DirectionCard({
   onPreview,
 }: DirectionCardProps) {
   const { t } = useTranslation()
-  const [pictureMissing, setPictureMissing] = useState(false)
   const p = direction.palette
   const font = direction.serif ? 'Georgia, serif' : 'system-ui, sans-serif'
   const hasExample = Boolean(direction.sample_url)
@@ -46,72 +45,52 @@ export function DirectionCard({
         onClick={onSelect}
         className='flex flex-1 flex-col text-left focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none'
       >
+        {/* A small drawing in the look's colours, never a picture of a website. */}
         <div
           aria-hidden='true'
           className='relative h-36 overflow-hidden border-b'
         >
-          {!pictureMissing ? (
-            <img
-              src={`/looks/${direction.key}.jpg`}
-              alt=''
-              loading='lazy'
-              onError={() => setPictureMissing(true)}
-              className='h-full w-full object-cover object-top'
-            />
-          ) : hasExample ? (
-            // No picture yet: a live, shrunken view of the example website.
-            <iframe
-              src={direction.sample_url}
-              title={direction.name}
-              loading='lazy'
-              tabIndex={-1}
-              sandbox='allow-scripts allow-same-origin'
-              className='pointer-events-none absolute top-0 left-0 origin-top-left scale-25 border-0 bg-background'
-              style={{ width: '400%', height: '400%' }}
-            />
-          ) : (
-            <div
-              className='flex h-full flex-col gap-2 p-4'
-              style={{ background: p.background, color: p.foreground }}
-            >
-              <div className='flex items-center justify-between'>
-                <span
-                  className='h-2 w-12 rounded-full'
-                  style={{ background: p.foreground }}
-                />
-                <span className='flex gap-1'>
-                  <span
-                    className='h-1.5 w-5 rounded-full'
-                    style={{ background: p.muted }}
-                  />
-                  <span
-                    className='h-1.5 w-5 rounded-full'
-                    style={{ background: p.muted }}
-                  />
-                </span>
-              </div>
-              <p
-                className='mt-1 text-xl leading-tight font-semibold'
-                style={{ fontFamily: font }}
-              >
-                {t('siteBuilder.look.sample')}
-              </p>
+          <div
+            className='flex h-full flex-col gap-2 p-4'
+            style={{ background: p.background, color: p.foreground }}
+          >
+            <div className='flex items-center justify-between'>
               <span
-                className='mt-auto w-fit px-3 py-1 text-xs'
-                style={{
-                  background: p.primary,
-                  color: p.primary_foreground,
-                  borderRadius: direction.radius,
-                }}
-              >
-                {t('siteBuilder.look.sampleButton')}
+                className='h-2 w-12 rounded-full'
+                style={{ background: p.foreground }}
+              />
+              <span className='flex gap-1'>
+                <span
+                  className='h-1.5 w-5 rounded-full'
+                  style={{ background: p.muted }}
+                />
+                <span
+                  className='h-1.5 w-5 rounded-full'
+                  style={{ background: p.muted }}
+                />
               </span>
             </div>
-          )}
+            <p
+              className='mt-1 text-xl leading-tight font-semibold'
+              style={{ fontFamily: font }}
+            >
+              {t('siteBuilder.look.sample')}
+            </p>
+            <span
+              className='mt-auto w-fit px-3 py-1 text-xs'
+              style={{
+                background: p.primary,
+                color: p.primary_foreground,
+                borderRadius: direction.radius,
+              }}
+            >
+              {t('siteBuilder.look.sampleButton')}
+            </span>
+          </div>
           <span className='absolute right-2 bottom-2 flex gap-1 rounded-md bg-background p-1'>
-            {[p.primary, p.accent, p.surface].map((colour) => (
+            {[p.primary, p.accent, p.surface].map((colour, index) => (
               <span
-                key={colour}
+                key={index}
                 className='size-4 rounded-sm border'
                 style={{ background: colour }}
               />

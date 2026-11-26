@@ -1076,8 +1076,6 @@
       "languageEn": "Bahasa Inggris"
     },
     "look": {
-      "sample": "Nama Anda di sini",
-      "sampleButton": "Hubungi",
       "chosen": "Dipilih",
       "changeTitle": "Pilih tampilan lain",
       "changeHelp": "Isi website tetap sama, hanya tampilannya yang diganti. Versi sekarang tetap disimpan dan bisa dikembalikan.",
@@ -1091,7 +1089,9 @@
       "exampleColour": "Ditampilkan dengan warna Anda: {{name}}.",
       "useThis": "Pakai tampilan ini",
       "computer": "Komputer",
-      "phone": "HP"
+      "phone": "HP",
+      "sample": "Nama Anda di sini",
+      "sampleButton": "Hubungi"
     },
     "run": {
       "buildingTitle": "Website Anda sedang dibuat",
