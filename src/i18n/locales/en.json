@@ -1076,8 +1076,6 @@
       "languageEn": "English"
     },
     "look": {
-      "sample": "Your name here",
-      "sampleButton": "Contact",
       "chosen": "Chosen",
       "changeTitle": "Choose another look",
       "changeHelp": "The text stays the same; only the look changes. The current version is kept, so you can go back to it.",

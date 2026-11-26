@@ -38,6 +38,22 @@ export type Question = {
   /** Answered in the person's own words, without choices. */ free?: boolean
 }
 
+/** How a look shapes the sections of its pages (which header, opening, list...). */
+export type LookBlocks = {
+  header: string
+  hero: string
+  list: string
+  statement: string
+  footer: string
+  button: string
+  frame: string
+  caps: boolean
+  centered: boolean
+  rule: boolean
+  tilt: boolean
+  airy: boolean
+}
+
 export type Direction = {
   key: string
   /** The colour variant chosen for this site, '' for the look's own colours. */
@@ -60,6 +76,8 @@ export type Direction = {
   radius: string
   /** Address of the look's example website, '' until it has been made. */
   sample_url: string
+  /** Sent by newer servers; the card draws a plain page without it. */
+  blocks?: LookBlocks
 }
 
 export type Contact = {
