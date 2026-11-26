@@ -1,250 +1,129 @@
-import { useMemo } from 'react'
-import { z } from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Link } from '@tanstack/react-router'
+import { useEffect, useState, type FormEvent } from 'react'
+import { Loader2, ShieldCheck, TriangleAlert } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { isSignedIn } from '@/lib/guest'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
+import {
+  getNotificationSettings,
+  saveNotificationSettings,
+  type NotificationSettings,
+} from './data/api'
 
-// Built with t() so the message follows the chosen language.
-function makeNotificationsFormSchema(selectType: string) {
-  return z.object({
-    type: z.enum(['all', 'mentions', 'none'], {
-      error: (iss) => (iss.input === undefined ? selectType : undefined),
-    }),
-    mobile: z.boolean().default(false).optional(),
-    communication_emails: z.boolean().default(false).optional(),
-    social_emails: z.boolean().default(false).optional(),
-    marketing_emails: z.boolean().default(false).optional(),
-    security_emails: z.boolean(),
-  })
-}
+type Choice = 'website_ready' | 'new_messages'
+const CHOICES: Choice[] = ['website_ready', 'new_messages']
 
-type NotificationsFormValues = z.infer<
-  ReturnType<typeof makeNotificationsFormSchema>
->
-
-// This can come from your database or API.
-const defaultValues: Partial<NotificationsFormValues> = {
-  communication_emails: false,
-  marketing_emails: false,
-  social_emails: true,
-  security_emails: true,
-}
-
+/** The e-mails the person wants, stored on their account and used by the server. */
 export function NotificationsForm() {
   const { t } = useTranslation()
-  const notificationsFormSchema = useMemo(
-    () =>
-      makeNotificationsFormSchema(t('settingsPage.notifications.selectType')),
-    [t]
-  )
-  const form = useForm<NotificationsFormValues>({
-    resolver: zodResolver(notificationsFormSchema),
-    defaultValues,
-  })
+  const [settings, setSettings] = useState<NotificationSettings | null>(null)
+  const [failed, setFailed] = useState(false)
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    // A visitor sees the choices as they would start, to look at.
+    if (!isSignedIn()) {
+      setSettings({
+        website_ready: true,
+        new_messages: true,
+        email_ready: true,
+      })
+      return
+    }
+    getNotificationSettings()
+      .then(setSettings)
+      .catch(() => setFailed(true))
+  }, [])
+
+  const save = async (event: FormEvent) => {
+    event.preventDefault()
+    if (!settings) return
+    setSaving(true)
+    try {
+      setSettings(await saveNotificationSettings(settings))
+      toast.success(t('settingsPage.notifications.success'))
+    } catch {
+      toast.error(t('settingsPage.notifications.saveError'))
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  if (failed) {
+    return (
+      <p role='alert' className='text-sm text-destructive'>
+        {t('settingsPage.notifications.loadError')}
+      </p>
+    )
+  }
+  if (!settings) {
+    return (
+      <p className='flex items-center gap-2 text-sm text-muted-foreground'>
+        <Loader2 className='size-4 animate-spin' />
+        {t('settingsPage.notifications.loading')}
+      </p>
+    )
+  }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(() =>
-          toast.success(t('settingsPage.notifications.success'))
-        )}
-        className='space-y-8'
-      >
-        <FormField
-          control={form.control}
-          name='type'
-          render={({ field }) => (
-            <FormItem className='relative space-y-3'>
-              <FormLabel>
-                {t('settingsPage.notifications.notifyAbout')}
-              </FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className='flex flex-col gap-2'
-                >
-                  <FormItem className='flex items-center'>
-                    <FormControl>
-                      <RadioGroupItem value='all' />
-                    </FormControl>
-                    <FormLabel className='font-normal'>
-                      {t('settingsPage.notifications.allNewMessages')}
-                    </FormLabel>
-                  </FormItem>
-                  <FormItem className='flex items-center'>
-                    <FormControl>
-                      <RadioGroupItem value='mentions' />
-                    </FormControl>
-                    <FormLabel className='font-normal'>
-                      {t('settingsPage.notifications.directMessagesMentions')}
-                    </FormLabel>
-                  </FormItem>
-                  <FormItem className='flex items-center'>
-                    <FormControl>
-                      <RadioGroupItem value='none' />
-                    </FormControl>
-                    <FormLabel className='font-normal'>
-                      {t('settingsPage.notifications.nothing')}
-                    </FormLabel>
-                  </FormItem>
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className='relative'>
-          <h3 className='mb-4 text-lg font-medium'>
-            {t('settingsPage.notifications.emailNotifications')}
-          </h3>
-          <div className='space-y-4'>
-            <FormField
-              control={form.control}
-              name='communication_emails'
-              render={({ field }) => (
-                <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
-                  <div className='space-y-0.5'>
-                    <FormLabel className='text-base'>
-                      {t('settingsPage.notifications.communicationEmails')}
-                    </FormLabel>
-                    <FormDescription>
-                      {t(
-                        'settingsPage.notifications.communicationEmailsDescription'
-                      )}
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='marketing_emails'
-              render={({ field }) => (
-                <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
-                  <div className='space-y-0.5'>
-                    <FormLabel className='text-base'>
-                      {t('settingsPage.notifications.marketingEmails')}
-                    </FormLabel>
-                    <FormDescription>
-                      {t(
-                        'settingsPage.notifications.marketingEmailsDescription'
-                      )}
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='social_emails'
-              render={({ field }) => (
-                <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
-                  <div className='space-y-0.5'>
-                    <FormLabel className='text-base'>
-                      {t('settingsPage.notifications.socialEmails')}
-                    </FormLabel>
-                    <FormDescription>
-                      {t('settingsPage.notifications.socialEmailsDescription')}
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='security_emails'
-              render={({ field }) => (
-                <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
-                  <div className='space-y-0.5'>
-                    <FormLabel className='text-base'>
-                      {t('settingsPage.notifications.securityEmails')}
-                    </FormLabel>
-                    <FormDescription>
-                      {t(
-                        'settingsPage.notifications.securityEmailsDescription'
-                      )}
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      disabled
-                      aria-readonly
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
+    <form onSubmit={save} className='space-y-6'>
+      {settings.email_ready ? null : (
+        <p
+          role='status'
+          className='flex items-start gap-2 rounded-md bg-amber-500/10 px-3 py-2 text-sm text-amber-700 dark:text-amber-400'
+        >
+          <TriangleAlert className='mt-0.5 size-4 shrink-0' />
+          {t('settingsPage.notifications.emailOff')}
+        </p>
+      )}
+
+      <div className='space-y-3'>
+        <h3 className='text-base font-semibold'>
+          {t('settingsPage.notifications.emailNotifications')}
+        </h3>
+        {CHOICES.map((choice) => (
+          <div
+            key={choice}
+            className='flex items-start justify-between gap-4 rounded-lg border p-4'
+          >
+            <div className='space-y-1'>
+              <Label htmlFor={`notify-${choice}`}>
+                {t(`settingsPage.notifications.choices.${choice}.title`)}
+              </Label>
+              <p className='text-xs text-muted-foreground'>
+                {t(`settingsPage.notifications.choices.${choice}.help`)}
+              </p>
+            </div>
+            <Switch
+              id={`notify-${choice}`}
+              checked={settings[choice]}
+              onCheckedChange={(checked) =>
+                setSettings({ ...settings, [choice]: checked })
+              }
             />
           </div>
+        ))}
+        <div className='flex items-start gap-3 rounded-lg border border-dashed p-4'>
+          <ShieldCheck className='mt-0.5 size-4 shrink-0 text-muted-foreground' />
+          <div className='space-y-1'>
+            <p className='text-sm font-medium'>
+              {t('settingsPage.notifications.securityEmails')}
+            </p>
+            <p className='text-xs text-muted-foreground'>
+              {t('settingsPage.notifications.securityAlways')}
+            </p>
+          </div>
         </div>
-        <FormField
-          control={form.control}
-          name='mobile'
-          render={({ field }) => (
-            <FormItem className='relative flex flex-row items-start'>
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className='space-y-1 leading-none'>
-                <FormLabel>
-                  {t('settingsPage.notifications.useDifferentMobile')}
-                </FormLabel>
-                <FormDescription>
-                  {t('settingsPage.notifications.mobileHintBefore')}{' '}
-                  <Link
-                    to='/settings'
-                    className='underline decoration-dashed underline-offset-4 hover:decoration-solid'
-                  >
-                    {t('settingsPage.notifications.mobileSettings')}
-                  </Link>
-                  {t('settingsPage.notifications.mobileHintAfter')}
-                </FormDescription>
-              </div>
-            </FormItem>
-          )}
-        />
-        <Button type='submit'>
-          {t('settingsPage.notifications.updateNotifications')}
-        </Button>
-      </form>
-    </Form>
+      </div>
+
+      <Button type='submit' disabled={saving}>
+        {saving ? <Loader2 className='size-4 animate-spin' /> : null}
+        {saving
+          ? t('settingsPage.notifications.saving')
+          : t('settingsPage.notifications.saveChanges')}
+      </Button>
+    </form>
   )
 }

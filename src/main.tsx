@@ -9,6 +9,10 @@ import {
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
+import {
+  applyDisplaySettings,
+  readDisplaySettings,
+} from '@/lib/display-settings'
 import { handleServerError } from '@/lib/handle-server-error'
 import { DirectionProvider } from './context/direction-provider'
 import { FontProvider } from './context/font-provider'
@@ -87,6 +91,9 @@ declare module '@tanstack/react-router' {
     router: typeof router
   }
 }
+
+// The person's text size and movement setting, before anything is drawn.
+applyDisplaySettings(readDisplaySettings())
 
 // Render the app
 const rootElement = document.getElementById('root')!

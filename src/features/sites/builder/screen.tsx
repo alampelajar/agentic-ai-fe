@@ -8,9 +8,12 @@ import {
   GitCompare,
   Globe,
   History,
+  ImagePlus,
+  Inbox,
   MessageSquare,
   Palette,
   Rocket,
+  SlidersHorizontal,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
@@ -19,6 +22,8 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Main } from '@/components/layout/main'
 import { LookDialog } from '../components/look-dialog'
+import { MessagesDialog } from '../components/messages-dialog'
+import { PhotosDialog } from '../components/photos-dialog'
 import { PreviewPane } from '../components/preview-pane'
 import { PublishDialog } from '../components/publish-dialog'
 import { VersionsDialog } from '../components/versions-dialog'
@@ -29,7 +34,7 @@ import { CodeView } from './code-view'
 import { Conversation } from './conversation'
 
 type Tab = 'preview' | 'code' | 'changes'
-type Dialog = 'publish' | 'versions' | 'look'
+type Dialog = 'publish' | 'versions' | 'look' | 'photos' | 'messages'
 
 /**
  * A website once its making has started: on the left what the AI is doing and the box
@@ -47,7 +52,14 @@ export function BuilderScreen({
 }) {
   const { t } = useTranslation()
   const [tab, setTab] = useState<Tab>('preview')
-  const [dialog, setDialog] = useState<Dialog | null>(null)
+  // The code and what each change did are for the curious: shown on request only.
+  const [advanced, setAdvanced] = useState(false)
+  // The e-mail about new messages links here with ?messages=1.
+  const [dialog, setDialog] = useState<Dialog | null>(() =>
+    new URLSearchParams(window.location.search).has('messages')
+      ? 'messages'
+      : null
+  )
   // Below the large width only one side shows at a time.
   const [side, setSide] = useState<'chat' | 'site'>('site')
   const busy = site.active_run_id !== undefined
@@ -74,7 +86,7 @@ export function BuilderScreen({
     onOpenChange: (open: boolean) => setDialog(open ? name : null),
   })
 
-  const tabs: { key: Tab; icon: ReactNode; label: string }[] = [
+  const allTabs: { key: Tab; icon: ReactNode; label: string }[] = [
     {
       key: 'preview',
       icon: <Eye className='size-4' />,
@@ -91,6 +103,9 @@ export function BuilderScreen({
       label: t('siteBuilder.screen.tabChanges'),
     },
   ]
+  const tabs = advanced
+    ? allTabs
+    : allTabs.filter((item) => item.key === 'preview')
 
   return (
     <Main fixed fluid className='gap-3 py-3'>
@@ -118,6 +133,24 @@ export function BuilderScreen({
           </div>
         </div>
         <div className='flex flex-wrap gap-2'>
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={() => setDialog('messages')}
+            disabled={!ready}
+          >
+            <Inbox className='size-4' />
+            {t('siteBuilder.messages.button')}
+          </Button>
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={() => setDialog('photos')}
+            disabled={!ready}
+          >
+            <ImagePlus className='size-4' />
+            {t('siteBuilder.photos.button')}
+          </Button>
           <Button
             variant='outline'
             size='sm'
@@ -222,6 +255,22 @@ export function BuilderScreen({
                 {item.label}
               </Button>
             ))}
+            <Button
+              variant='ghost'
+              size='sm'
+              className='ms-auto text-muted-foreground'
+              aria-pressed={advanced}
+              disabled={!ready}
+              onClick={() => {
+                if (advanced) setTab('preview')
+                setAdvanced(!advanced)
+              }}
+            >
+              <SlidersHorizontal className='size-4' />
+              {advanced
+                ? t('siteBuilder.screen.hideAdvanced')
+                : t('siteBuilder.screen.advanced')}
+            </Button>
           </div>
           <div
             id='site-tab-panel'
@@ -267,6 +316,16 @@ export function BuilderScreen({
             {...dialogProps('versions')}
             busy={busy}
             onChanged={() => void reload()}
+          />
+          <MessagesDialog site={site} {...dialogProps('messages')} />
+          <PhotosDialog
+            site={site}
+            {...dialogProps('photos')}
+            busy={busy}
+            onStarted={() => {
+              setSide('chat')
+              void reload()
+            }}
           />
           <LookDialog
             site={site}

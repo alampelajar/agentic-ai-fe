@@ -1,118 +1,103 @@
-import { useMemo } from 'react'
-import { z } from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+  readDisplaySettings,
+  saveDisplaySettings,
+  type DisplaySettings,
+} from '@/lib/display-settings'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { useSidebar } from '@/components/ui/sidebar'
+import { Switch } from '@/components/ui/switch'
 
-// Labels come from settingsPage.display.items in the language files.
-const items = [
-  { id: 'recents' },
-  { id: 'home' },
-  { id: 'applications' },
-  { id: 'desktop' },
-  { id: 'downloads' },
-  { id: 'documents' },
-] as const
-
-// Built with t() so the message follows the chosen language.
-function makeDisplayFormSchema(message: string) {
-  return z.object({
-    items: z
-      .array(z.string())
-      .refine((value) => value.some((item) => item), { message }),
-  })
-}
-
-type DisplayFormValues = z.infer<ReturnType<typeof makeDisplayFormSchema>>
-
-// This can come from your database or API.
-const defaultValues: Partial<DisplayFormValues> = {
-  items: ['recents', 'home'],
-}
-
+/** Text size, the side menu and movement, for this device. Applied when saved. */
 export function DisplayForm() {
   const { t } = useTranslation()
-  const displayFormSchema = useMemo(
-    () => makeDisplayFormSchema(t('settingsPage.display.selectOne')),
-    [t]
-  )
-  const form = useForm<DisplayFormValues>({
-    resolver: zodResolver(displayFormSchema),
-    defaultValues,
-  })
+  const { setOpen } = useSidebar()
+  const [settings, setSettings] = useState<DisplaySettings>(readDisplaySettings)
+
+  const change = (next: Partial<DisplaySettings>) =>
+    setSettings((current) => ({ ...current, ...next }))
+
+  const save = (event: FormEvent) => {
+    event.preventDefault()
+    saveDisplaySettings(settings)
+    setOpen(settings.sidebar === 'open')
+    toast.success(t('settingsPage.display.success'))
+  }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(() =>
-          toast.success(t('settingsPage.display.success'))
-        )}
-        className='space-y-8'
-      >
-        <FormField
-          control={form.control}
-          name='items'
-          render={() => (
-            <FormItem>
-              <div className='mb-4'>
-                <FormLabel className='text-base'>
-                  {t('settingsPage.display.sidebar')}
-                </FormLabel>
-                <FormDescription>
-                  {t('settingsPage.display.sidebarDescription')}
-                </FormDescription>
-              </div>
-              {items.map((item) => (
-                <FormField
-                  key={item.id}
-                  control={form.control}
-                  name='items'
-                  render={({ field }) => {
-                    return (
-                      <FormItem
-                        key={item.id}
-                        className='flex flex-row items-start'
-                      >
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value?.includes(item.id)}
-                            onCheckedChange={(checked) => {
-                              return checked
-                                ? field.onChange([...field.value, item.id])
-                                : field.onChange(
-                                    field.value?.filter(
-                                      (value) => value !== item.id
-                                    )
-                                  )
-                            }}
-                          />
-                        </FormControl>
-                        <FormLabel className='font-normal'>
-                          {t(`settingsPage.display.items.${item.id}`)}
-                        </FormLabel>
-                      </FormItem>
-                    )
-                  }}
-                />
-              ))}
-              <FormMessage />
-            </FormItem>
-          )}
+    // Kept on this device only, so a visitor may use it too (SignInPrompt).
+    <form onSubmit={save} data-guest-ok className='space-y-8'>
+      <fieldset className='space-y-3'>
+        <legend className='text-sm font-medium'>
+          {t('settingsPage.display.textSize')}
+        </legend>
+        <p className='text-xs text-muted-foreground'>
+          {t('settingsPage.display.textSizeHelp')}
+        </p>
+        <RadioGroup
+          value={settings.textSize}
+          onValueChange={(value) =>
+            change({ textSize: value as DisplaySettings['textSize'] })
+          }
+          className='flex flex-col gap-2 sm:flex-row sm:gap-6'
+        >
+          {(['normal', 'large'] as const).map((size) => (
+            <div key={size} className='flex items-center gap-2'>
+              <RadioGroupItem value={size} id={`text-size-${size}`} />
+              <Label htmlFor={`text-size-${size}`} className='font-normal'>
+                {t(`settingsPage.display.textSizes.${size}`)}
+              </Label>
+            </div>
+          ))}
+        </RadioGroup>
+      </fieldset>
+
+      <fieldset className='space-y-3'>
+        <legend className='text-sm font-medium'>
+          {t('settingsPage.display.sidebar')}
+        </legend>
+        <p className='text-xs text-muted-foreground'>
+          {t('settingsPage.display.sidebarDescription')}
+        </p>
+        <RadioGroup
+          value={settings.sidebar}
+          onValueChange={(value) =>
+            change({ sidebar: value as DisplaySettings['sidebar'] })
+          }
+          className='flex flex-col gap-2 sm:flex-row sm:gap-6'
+        >
+          {(['open', 'closed'] as const).map((state) => (
+            <div key={state} className='flex items-center gap-2'>
+              <RadioGroupItem value={state} id={`sidebar-${state}`} />
+              <Label htmlFor={`sidebar-${state}`} className='font-normal'>
+                {t(`settingsPage.display.sidebarStates.${state}`)}
+              </Label>
+            </div>
+          ))}
+        </RadioGroup>
+      </fieldset>
+
+      <div className='flex items-start justify-between gap-4 rounded-lg border p-4'>
+        <div className='space-y-1'>
+          <Label htmlFor='reduce-motion'>
+            {t('settingsPage.display.reduceMotion')}
+          </Label>
+          <p className='text-xs text-muted-foreground'>
+            {t('settingsPage.display.reduceMotionHelp')}
+          </p>
+        </div>
+        <Switch
+          id='reduce-motion'
+          checked={settings.reduceMotion}
+          onCheckedChange={(checked) => change({ reduceMotion: checked })}
         />
-        <Button type='submit'>{t('settingsPage.display.updateDisplay')}</Button>
-      </form>
-    </Form>
+      </div>
+
+      <Button type='submit'>{t('settingsPage.display.updateDisplay')}</Button>
+    </form>
   )
 }

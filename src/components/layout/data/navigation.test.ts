@@ -32,14 +32,15 @@ describe('main navigation', () => {
       expect(label).not.toMatch(/local ?(agent )?runner/i)
   })
 
-  it('reaches the Desktop Runtime through Settings → Integrations', () => {
+  // Integrations (GitHub, the Desktop Runtime) are for programmers: the menu
+  // leaves them out, and their page stays reachable only by its address.
+  it('does not show Integrations to people who only make websites', () => {
     const settings = entries.find((entry) => entry.title === 'settings')
     const integrations = settings?.items?.find(
       (entry) => entry.title === 'integrationsMenu'
     )
-    expect(integrations?.url).toBe('/settings/integrations')
-    expect(en.integrationsMenu).toBe('Integrations')
-    expect(id.integrationsMenu).toBe('Integrasi')
+    expect(integrations).toBeUndefined()
+    expect(knownPaths.has('/settings/integrations')).toBe(true)
   })
 
   it('keeps the website builder, the overview and the settings pages', () => {
@@ -99,7 +100,6 @@ describe('main navigation', () => {
     for (const title of [
       'sitesMenu',
       'aiOverview',
-      'integrationsMenu',
       'settings',
     ]) {
       expect(

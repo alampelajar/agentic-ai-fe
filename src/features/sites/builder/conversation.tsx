@@ -23,6 +23,15 @@ import { CancelButton } from './cancel-button'
 
 /** The id of the change box, so other parts of the screen can focus it. */
 export const CHANGE_REQUEST_ID = 'site-request'
+// Things people often want to change, each the start of a request (siteBuilder.ideas).
+const IDEAS = [
+  'colour',
+  'headline',
+  'page',
+  'section',
+  'contact',
+  'photo',
+] as const
 
 type ConversationProps = {
   site: SiteDetail
@@ -193,6 +202,33 @@ export function Conversation({
         <Label htmlFor={CHANGE_REQUEST_ID} className='sr-only'>
           {t('siteBuilder.workspace.reviseLabel')}
         </Label>
+        {canChange && request.trim() === '' ? (
+          // Someone who cannot code may not know what they can ask for: each idea
+          // starts the sentence, and they finish it in their own words.
+          <div className='mb-2 space-y-1'>
+            <p className='text-xs text-muted-foreground'>
+              {t('siteBuilder.ideas.label')}
+            </p>
+            <div className='flex flex-wrap gap-1'>
+              {IDEAS.map((idea) => (
+                <Button
+                  key={idea}
+                  type='button'
+                  variant='outline'
+                  size='sm'
+                  className='h-7 rounded-full px-3 text-xs font-normal'
+                  onClick={() => {
+                    setRequest(t(`siteBuilder.ideas.${idea}.start`))
+                    const box = document.getElementById(CHANGE_REQUEST_ID)
+                    if (box instanceof HTMLTextAreaElement) box.focus()
+                  }}
+                >
+                  {t(`siteBuilder.ideas.${idea}.label`)}
+                </Button>
+              ))}
+            </div>
+          </div>
+        ) : null}
         <div className='rounded-xl border bg-background transition-colors focus-within:border-ring'>
           <Textarea
             id={CHANGE_REQUEST_ID}
