@@ -286,7 +286,8 @@
     "footerNote": "A new website usually takes 5 to 15 minutes.",
     "copyright": "© {{year}} THIS MY WEBSITE",
     "privacy": "Privacy",
-    "terms": "Terms"
+    "terms": "Terms",
+    "agreement": "By continuing, you agree to our <terms>Terms and conditions</terms> and <privacy>Privacy policy</privacy>."
   },
   "authPage": {
     "configuration": {
@@ -1536,7 +1537,7 @@
     },
     "terms": {
       "title": "Terms and conditions",
-      "intro": "These rules apply when you use THIS MY WEBSITE. By making an account or using the service, you agree to them.",
+      "intro": "These rules apply when you use THIS MY WEBSITE. By making an account, signing in or using the service, you agree to them.",
       "sections": [
         {
           "title": "About the service",
@@ -1670,7 +1671,7 @@
           "title": "How long we keep it",
           "body": [
             "Data is kept while your account is active. When you delete a website, it and all of its versions are deleted too.",
-            "If you want your account and its data deleted, ask on the Feedback & Suggestions page."
+            "To delete your account, use \"Delete account\" in Settings, Account. Your account stops working at once and your websites go offline. After 30 days, the account and all its data are deleted for good. Within those 30 days you can ask an admin to bring it back."
           ]
         },
         {

@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { ArrowUpRight, CheckCircle2, UserPlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { AgreementNote } from '../components/agreement-note'
 import { AuthLayout } from '../components/auth-layout'
 import { SignUpForm } from './components/sign-up-form'
 
@@ -28,6 +29,8 @@ export function SignUp() {
 
           {/* Existing Sign Up Form */}
           <SignUpForm />
+
+          <AgreementNote className='mt-4 text-center' />
 
           {/* Sign In */}
           <div className='mt-4 border-t pt-4 text-center'>

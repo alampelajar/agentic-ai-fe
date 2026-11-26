@@ -286,7 +286,8 @@
     "footerNote": "Satu website biasanya jadi dalam 5 sampai 15 menit.",
     "copyright": "© {{year}} THIS MY WEBSITE",
     "privacy": "Privasi",
-    "terms": "Ketentuan"
+    "terms": "Ketentuan",
+    "agreement": "Dengan melanjutkan, Anda setuju dengan <terms>Syarat dan ketentuan</terms> serta <privacy>Kebijakan privasi</privacy> kami."
   },
   "authPage": {
     "configuration": {
@@ -1536,7 +1537,7 @@
     },
     "terms": {
       "title": "Syarat dan ketentuan",
-      "intro": "Aturan ini berlaku saat Anda memakai THIS MY WEBSITE. Dengan membuat akun atau memakai layanan ini, Anda setuju dengan aturan ini.",
+      "intro": "Aturan ini berlaku saat Anda memakai THIS MY WEBSITE. Dengan membuat akun, masuk, atau memakai layanan ini, Anda setuju dengan aturan ini.",
       "sections": [
         {
           "title": "Tentang layanan",
@@ -1670,7 +1671,7 @@
           "title": "Berapa lama data disimpan",
           "body": [
             "Data disimpan selama akun Anda aktif. Kalau Anda menghapus website, website itu dan semua versinya ikut terhapus.",
-            "Kalau Anda ingin akun dan datanya dihapus, minta lewat halaman Feedback / Saran."
+            "Untuk menghapus akun, pakai \"Hapus akun\" di Pengaturan, Akun. Akun langsung tidak bisa dipakai dan website Anda tidak tampil lagi. Setelah 30 hari, akun dan semua datanya dihapus permanen. Selama 30 hari itu, Anda bisa meminta admin memulihkannya."
           ]
         },
         {

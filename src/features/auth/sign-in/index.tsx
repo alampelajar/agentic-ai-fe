@@ -2,6 +2,7 @@ import { Link, useSearch } from '@tanstack/react-router'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { ShieldAlert } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { AgreementNote } from '../components/agreement-note'
 import { AuthLayout } from '../components/auth-layout'
 import { UserAuthForm } from './components/user-auth-form'
 
@@ -60,6 +61,8 @@ export function SignIn() {
           </div>
 
           <UserAuthForm redirectTo={redirect} />
+
+          <AgreementNote className='mt-5' />
 
           <div className='mt-8 border-t pt-5'>
             <p className='text-sm text-muted-foreground'>
