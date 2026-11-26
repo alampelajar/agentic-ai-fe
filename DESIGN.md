@@ -1,4 +1,4 @@
-# Design system: Agentic AI web app
+# Design system: THIS MY WEBSITE web app
 
 Follow these rules for every screen, component and style change in this repository.
 They describe how the app already looks, so new work matches it. If a request

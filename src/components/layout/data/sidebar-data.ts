@@ -1,4 +1,5 @@
 import {
+  Coins,
   Globe,
   LayoutDashboard,
   Monitor,
@@ -50,6 +51,11 @@ export const sidebarData: SidebarData = {
           title: 'sitesMenu',
           url: '/sites',
           icon: Globe,
+        },
+        {
+          title: 'creditsMenu',
+          url: '/credits',
+          icon: Coins,
         },
       ],
     },

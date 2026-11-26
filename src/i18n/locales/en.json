@@ -1,5 +1,5 @@
 {
-  "agenticAI": "Agentic AI",
+  "agenticAI": "THIS MY WEBSITE",
   "aiOverview": "Overview",
   "other": "Other",
   "settings": "Settings",
@@ -149,7 +149,7 @@
     "signIn": "Sign in"
   },
   "sidebar": {
-    "smartAgentic": "SMART AGENTIC",
+    "smartAgentic": "WEBSITE BUILDER",
     "openAiPage": "Open your websites"
   },
   "auth": {
@@ -175,7 +175,7 @@
     "title": "Settings",
     "account": {
       "title": "User profile",
-      "subtitle": "Manage the display name and profile photo used throughout Agentic AI.",
+      "subtitle": "Manage the display name and profile photo used throughout THIS MY WEBSITE.",
       "name": "Name",
       "namePlaceholder": "Your name",
       "email": "Email",
@@ -273,16 +273,17 @@
   },
   "toggleNavigation": "Toggle navigation",
   "authLayout": {
-    "eyebrow": "AGENTIC AI WORKSPACE",
-    "headline": "Your AI work, in one place.",
-    "description": "Configure agents, manage tasks, and follow progress from a single workspace.",
+    "home": "Go to the home page",
+    "eyebrow": "WEBSITE BUILDER",
+    "headline": "Describe your website. We make it for you.",
+    "description": "Write the website you want in a sentence or two. The AI picks the look, writes the words and puts it online. No code needed.",
     "features": {
-      "agents": "Agents",
-      "tasks": "Tasks",
-      "models": "Models"
+      "describe": "Describe",
+      "preview": "See it",
+      "publish": "Publish"
     },
-    "footerNote": "A calmer space for focused work.",
-    "copyright": "© {{year}} Agentic AI",
+    "footerNote": "A new website usually takes 5 to 15 minutes.",
+    "copyright": "© {{year}} THIS MY WEBSITE",
     "privacy": "Privacy",
     "terms": "Terms"
   },
@@ -293,10 +294,10 @@
       "missingVariable": "This environment variable was not found."
     },
     "signIn": {
-      "eyebrow": "YOUR WORKSPACE",
+      "eyebrow": "YOUR WEBSITES",
       "title": "Sign in",
-      "description": "Use your account details to continue to Agentic AI.",
-      "noAccount": "New to Agentic AI?",
+      "description": "Use your account details to continue to THIS MY WEBSITE.",
+      "noAccount": "New to THIS MY WEBSITE?",
       "createAccount": "Create an account"
     },
     "pendingDeletion": {
@@ -402,7 +403,7 @@
   "feedback": "Feedback & Suggestions",
   "feedbackPage": {
     "title": "Feedback & Suggestions",
-    "subtitle": "Share an idea, report a problem, or tell us about your experience with Agentic AI.",
+    "subtitle": "Share an idea, report a problem, or tell us about your experience with THIS MY WEBSITE.",
     "totalReports": "Reports",
     "inProgress": "In progress",
     "completed": "Completed",
@@ -435,7 +436,7 @@
     "adminReply": "Admin reply",
     "noReplyYet": "No reply yet.",
     "sendAnother": "Send another report",
-    "footerNote": "Thank you for helping us improve Agentic AI.",
+    "footerNote": "Thank you for helping us improve THIS MY WEBSITE.",
     "categories": {
       "feature": "Feature suggestion",
       "bug": "Bug report",
@@ -496,7 +497,7 @@
     "pageSubtitle": "Optional connections to tools outside the cloud. Nothing here is needed to use Cloud Workspaces.",
     "title": "Desktop Runtime",
     "optional": "Optional",
-    "summary": "Desktop Runtime is an optional integration that lets Agentic AI control applications and the desktop on your local computer. It is not needed to use Cloud Workspaces.",
+    "summary": "Desktop Runtime is an optional integration that lets THIS MY WEBSITE control applications and the desktop on your local computer. It is not needed to use Cloud Workspaces.",
     "compare": {
       "cloud": {
         "title": "Cloud Workspace",
@@ -729,7 +730,7 @@
       "free": {
         "name": "Free",
         "period": "forever",
-        "description": "To start trying Agentic AI.",
+        "description": "To start trying THIS MY WEBSITE.",
         "features": {
           "0": "Basic features",
           "1": "Free AI models",
@@ -839,11 +840,11 @@
   },
   "signUpPage": {
     "title": "Create your account",
-    "description": "Create your account and start building your autonomous AI workspace.",
+    "description": "Create your account and make your first website today.",
     "haveAccount": "Already have an account?",
     "signIn": "Sign in",
     "secure": "Secure account creation",
-    "poweredBy": "Powered by Agentic AI",
+    "poweredBy": "Powered by THIS MY WEBSITE",
     "form": {
       "name": "Name",
       "namePlaceholder": "Your name",
@@ -959,7 +960,7 @@
   "profilePage": {
     "settings": "Settings",
     "profile": "Profile",
-    "manageHowYourNameAnd": "Manage how your name and photo appear across Agentic AI.",
+    "manageHowYourNameAnd": "Manage how your name and photo appear across THIS MY WEBSITE.",
     "profileInformation": "Profile information",
     "thisInformationIsUsedTo": "This information is used to identify your account."
   },
@@ -1196,9 +1197,9 @@
       "restore_failed": "The version could not be brought back.",
       "delete_failed": "The website could not be deleted.",
       "invalid_name": "The name is not valid.",
-      "token_limit": "Your AI work for this month is used up. Try again next month.",
       "file_not_readable": "This file cannot be opened.",
-      "files_failed": "We could not open the contents of your website. Please try again."
+      "files_failed": "We could not open the contents of your website. Please try again.",
+      "credit_limit": "You do not have enough credits. Add credits to go on."
     },
     "toast": {
       "deleted": "The website was deleted.",
@@ -1213,18 +1214,7 @@
       "runFailed": "The work was not finished."
     },
     "plan": {
-      "title": "Your free plan",
-      "sites": "Websites",
-      "sitesValue": "{{used}} of {{limit}}",
-      "allowance": "AI work this month",
-      "allowanceValue": "{{percent}}% used",
-      "resets": "The AI work starts again on {{date}}.",
-      "premium": "Premium, no end date",
-      "siteLimitReached": "You already have {{limit}} websites. Delete one to make a new one.",
-      "allowanceUsed": "Your AI work for this month is used up. You can make and change websites again from {{date}}.",
-      "premiumUntil": "Premium until {{date}}",
-      "titlePremium": "Your premium plan",
-      "unlimited": "No limit"
+      "siteLimitReached": "You already have {{limit}} websites. Delete one to make a new one."
     },
     "screen": {
       "tabPreview": "Website",

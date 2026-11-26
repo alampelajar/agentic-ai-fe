@@ -1,5 +1,5 @@
 {
-  "agenticAI": "Agentic AI",
+  "agenticAI": "THIS MY WEBSITE",
   "aiOverview": "Ringkasan",
   "other": "Lainnya",
   "settings": "Pengaturan",
@@ -149,7 +149,7 @@
     "signIn": "Masuk"
   },
   "sidebar": {
-    "smartAgentic": "SMART AGENTIC",
+    "smartAgentic": "PEMBUAT WEBSITE",
     "openAiPage": "Buka website Anda"
   },
   "auth": {
@@ -175,7 +175,7 @@
     "title": "Pengaturan",
     "account": {
       "title": "Profil Pengguna",
-      "subtitle": "Kelola nama tampilan dan foto profil yang digunakan di seluruh Agentic AI.",
+      "subtitle": "Kelola nama tampilan dan foto profil yang digunakan di seluruh THIS MY WEBSITE.",
       "name": "Nama",
       "namePlaceholder": "Nama kamu",
       "email": "Email",
@@ -273,16 +273,17 @@
   },
   "toggleNavigation": "Buka/tutup navigasi",
   "authLayout": {
-    "eyebrow": "WORKSPACE AGENTIC AI",
-    "headline": "Pekerjaan AI dalam satu tempat.",
-    "description": "Atur agent, kelola tugas, dan pantau progres dari satu ruang kerja.",
+    "home": "Ke halaman utama",
+    "eyebrow": "PEMBUAT WEBSITE",
+    "headline": "Ceritakan websitenya, kami yang membuatkan.",
+    "description": "Tulis website yang Anda inginkan dalam satu atau dua kalimat. AI memilih tampilan, menulis isinya, lalu menerbitkannya. Tanpa kode.",
     "features": {
-      "agents": "Agent",
-      "tasks": "Tugas",
-      "models": "Model"
+      "describe": "Ceritakan",
+      "preview": "Lihat hasilnya",
+      "publish": "Terbitkan"
     },
-    "footerNote": "Ruang kerja yang rapi untuk tetap fokus.",
-    "copyright": "© {{year}} Agentic AI",
+    "footerNote": "Satu website biasanya jadi dalam 5 sampai 15 menit.",
+    "copyright": "© {{year}} THIS MY WEBSITE",
     "privacy": "Privasi",
     "terms": "Ketentuan"
   },
@@ -293,10 +294,10 @@
       "missingVariable": "Variabel lingkungan ini tidak ditemukan."
     },
     "signIn": {
-      "eyebrow": "RUANG KERJA KAMU",
+      "eyebrow": "WEBSITE ANDA",
       "title": "Masuk",
-      "description": "Masukkan informasi akun untuk melanjutkan ke Agentic AI.",
-      "noAccount": "Belum punya akun Agentic AI?",
+      "description": "Masukkan informasi akun untuk melanjutkan ke THIS MY WEBSITE.",
+      "noAccount": "Belum punya akun THIS MY WEBSITE?",
       "createAccount": "Buat akun"
     },
     "pendingDeletion": {
@@ -402,7 +403,7 @@
   "feedback": "Feedback / Saran",
   "feedbackPage": {
     "title": "Feedback / Saran",
-    "subtitle": "Sampaikan ide, laporkan masalah, atau ceritakan pengalamanmu menggunakan Agentic AI.",
+    "subtitle": "Sampaikan ide, laporkan masalah, atau ceritakan pengalamanmu menggunakan THIS MY WEBSITE.",
     "totalReports": "Laporan",
     "inProgress": "Diproses",
     "completed": "Selesai",
@@ -435,7 +436,7 @@
     "adminReply": "Balasan admin",
     "noReplyYet": "Belum ada balasan.",
     "sendAnother": "Kirim laporan lain",
-    "footerNote": "Terima kasih telah membantu kami meningkatkan Agentic AI.",
+    "footerNote": "Terima kasih telah membantu kami meningkatkan THIS MY WEBSITE.",
     "categories": {
       "feature": "Saran fitur",
       "bug": "Laporan bug",
@@ -496,7 +497,7 @@
     "pageSubtitle": "Koneksi opsional ke alat di luar cloud. Tidak ada yang di sini yang diperlukan untuk memakai Workspace Cloud.",
     "title": "Desktop Runtime",
     "optional": "Opsional",
-    "summary": "Desktop Runtime adalah integrasi opsional yang memungkinkan Agentic AI mengontrol aplikasi dan desktop di komputer lokal Anda. Integrasi ini tidak diperlukan untuk menggunakan Cloud Workspace.",
+    "summary": "Desktop Runtime adalah integrasi opsional yang memungkinkan THIS MY WEBSITE mengontrol aplikasi dan desktop di komputer lokal Anda. Integrasi ini tidak diperlukan untuk menggunakan Cloud Workspace.",
     "compare": {
       "cloud": {
         "title": "Cloud Workspace",
@@ -729,7 +730,7 @@
       "free": {
         "name": "Free",
         "period": "selamanya",
-        "description": "Untuk mulai mencoba Agentic AI.",
+        "description": "Untuk mulai mencoba THIS MY WEBSITE.",
         "features": {
           "0": "Akses fitur dasar",
           "1": "Model AI gratis",
@@ -839,11 +840,11 @@
   },
   "signUpPage": {
     "title": "Buat akun Anda",
-    "description": "Buat akun dan mulai membangun workspace AI otonom Anda.",
+    "description": "Buat akun dan buat website pertama Anda hari ini.",
     "haveAccount": "Sudah punya akun?",
     "signIn": "Masuk",
     "secure": "Pembuatan akun yang aman",
-    "poweredBy": "Didukung oleh Agentic AI",
+    "poweredBy": "Didukung oleh THIS MY WEBSITE",
     "form": {
       "name": "Nama",
       "namePlaceholder": "Nama Anda",
@@ -959,7 +960,7 @@
   "profilePage": {
     "settings": "Pengaturan",
     "profile": "Profil",
-    "manageHowYourNameAnd": "Atur bagaimana nama dan foto kamu ditampilkan di Agentic AI.",
+    "manageHowYourNameAnd": "Atur bagaimana nama dan foto kamu ditampilkan di THIS MY WEBSITE.",
     "profileInformation": "Informasi profil",
     "thisInformationIsUsedTo": "Informasi ini digunakan untuk mengenali akun kamu."
   },
@@ -1196,9 +1197,9 @@
       "restore_failed": "Versi tersebut belum bisa dikembalikan.",
       "delete_failed": "Website belum berhasil dihapus.",
       "invalid_name": "Nama tidak valid.",
-      "token_limit": "Jatah AI Anda bulan ini sudah habis. Coba lagi bulan depan.",
       "file_not_readable": "File ini tidak bisa dibuka.",
-      "files_failed": "Isi website Anda belum bisa dibuka. Silakan coba lagi."
+      "files_failed": "Isi website Anda belum bisa dibuka. Silakan coba lagi.",
+      "credit_limit": "Kredit Anda tidak cukup. Tambah kredit untuk melanjutkan."
     },
     "toast": {
       "deleted": "Website sudah dihapus.",
@@ -1213,18 +1214,7 @@
       "runFailed": "Pekerjaan belum selesai."
     },
     "plan": {
-      "title": "Paket gratis Anda",
-      "sites": "Website",
-      "sitesValue": "{{used}} dari {{limit}}",
-      "allowance": "Jatah AI bulan ini",
-      "allowanceValue": "{{percent}}% terpakai",
-      "resets": "Jatah AI kembali penuh pada {{date}}.",
-      "premium": "Premium, tanpa batas waktu",
-      "siteLimitReached": "Anda sudah punya {{limit}} website. Hapus satu untuk membuat yang baru.",
-      "allowanceUsed": "Jatah AI Anda bulan ini sudah habis. Anda bisa membuat dan mengubah website lagi mulai {{date}}.",
-      "premiumUntil": "Premium sampai {{date}}",
-      "titlePremium": "Paket premium Anda",
-      "unlimited": "Tanpa batas"
+      "siteLimitReached": "Anda sudah punya {{limit}} website. Hapus satu untuk membuat yang baru."
     },
     "screen": {
       "tabPreview": "Website",

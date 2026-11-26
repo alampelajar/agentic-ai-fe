@@ -1,6 +1,6 @@
-# Agentic AI — Frontend
+# THIS MY WEBSITE — Frontend
 
-Frontend aplikasi **Agentic AI** yang menyediakan antarmuka untuk menggunakan AI Agent, mengelola model AI, dan berinteraksi melalui chat.
+Frontend aplikasi **THIS MY WEBSITE** yang menyediakan antarmuka untuk menggunakan AI Agent, mengelola model AI, dan berinteraksi melalui chat.
 
 ## Teknologi
 
@@ -29,7 +29,7 @@ Frontend aplikasi **Agentic AI** yang menyediakan antarmuka untuk menggunakan AI
 
 - Node.js versi yang kompatibel dengan Vite 8
 - npm
-- Backend Agentic AI yang berjalan
+- Backend THIS MY WEBSITE yang berjalan
 - Kredensial Google OAuth jika fitur Google Sign-In ingin digunakan
 
 ## Instalasi dan menjalankan
@@ -96,7 +96,7 @@ Pastikan backend mengizinkan origin frontend melalui konfigurasi CORS. Jangan me
 ## Cloud Workspace dan Desktop Runtime
 
 - **Cloud Workspace** (menu Workspace) menyimpan proyek di server: membuka dan mengelola workspace, mengedit file, serta menjalankan test dan build lewat Cloud Execution Worker. Fitur ini **tidak memerlukan Local Agent Runner**. Menjalankan test dan build hanya aktif bila operator server mengaktifkannya.
-- **Desktop Runtime** adalah integrasi opsional yang memungkinkan Agentic AI mengontrol aplikasi dan desktop di komputer lokal Anda (jendela, screenshot, interaksi yang disetujui). Integrasi ini membutuhkan Local Agent Runner yang berjalan di komputer Anda.
+- **Desktop Runtime** adalah integrasi opsional yang memungkinkan THIS MY WEBSITE mengontrol aplikasi dan desktop di komputer lokal Anda (jendela, screenshot, interaksi yang disetujui). Integrasi ini membutuhkan Local Agent Runner yang berjalan di komputer Anda.
 - Hubungkan Desktop Runtime di **Settings → Integrasi → Desktop Runtime**: isi URL runner (default `http://127.0.0.1:8765`) dan bearer token (`LOCAL_RUNNER_TOKEN`), lalu tekan Hubungkan. Token hanya disimpan di memori tab browser dan tidak pernah ditulis ke penyimpanan. Panduan menjalankan runner dan pemecahan masalah ada di halaman itu serta di `docs/local-agent-runner.md` pada repositori backend.
 - Alamat lama `/settings/desktop` diarahkan ke halaman Integrasi.
 

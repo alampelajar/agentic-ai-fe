@@ -61,7 +61,7 @@ export function Tasks() {
 
               <div className='mb-2 inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary'>
                 {/* design-system-ignore: the product name stays the same in every language */}
-                Agentic AI
+                THIS MY WEBSITE
               </div>
 
               {/* Page Title */}

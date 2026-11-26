@@ -1,101 +1,71 @@
-import { Crown, Gauge } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import { Coins, History, Infinity as Endless, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { cn } from '@/lib/utils'
-import type { Plan } from '../data/api'
+import { Button } from '@/components/ui/button'
+import { canAfford, type Plan } from '../data/api'
 
 /** True when the person may not start a new website now. */
 export function planBlocksNewSite(plan: Plan | null): boolean {
   if (!plan) return false
   return (
-    plan.sites_used >= plan.site_limit ||
-    (plan.token_limit > 0 && plan.tokens_used >= plan.token_limit)
+    plan.sites_used >= plan.site_limit || !canAfford(plan, plan.create_cost)
   )
 }
 
-/** How much of the plan is used: websites and this month's AI allowance. */
+/** The credits: how many are left, what a website and a change use, and a top-up. */
 export function PlanUsage({ plan }: { plan: Plan }) {
-  const { t, i18n } = useTranslation()
-
-  const percent =
-    plan.token_limit > 0
-      ? Math.min(100, Math.round((plan.tokens_used / plan.token_limit) * 100))
-      : 0
-  const outOfTokens = percent >= 100
-  const dateText = (value: string, year = false) =>
-    new Date(value).toLocaleDateString(i18n.language, {
-      day: 'numeric',
-      month: 'long',
-      ...(year ? { year: 'numeric' } : {}),
-    })
+  const { t } = useTranslation()
+  const low = !plan.unlimited && plan.available < plan.create_cost
 
   return (
-    <div className='space-y-3 rounded-lg border p-4'>
-      <div className='flex flex-wrap items-center justify-between gap-2'>
-        <div className='flex items-center gap-2'>
-          <Gauge className='size-4 text-muted-foreground' />
-          <h2 className='text-base font-semibold'>
-            {plan.premium
-              ? t('siteBuilder.plan.titlePremium')
-              : t('siteBuilder.plan.title')}
-          </h2>
-        </div>
-        {plan.premium ? (
-          <p className='inline-flex items-center gap-2 rounded-md bg-emerald-500/10 px-3 py-1 text-xs text-emerald-600 dark:text-emerald-400'>
-            <Crown className='size-4' />
-            {plan.premium_until
-              ? t('siteBuilder.plan.premiumUntil', {
-                  date: dateText(plan.premium_until, true),
-                })
-              : t('siteBuilder.plan.premium')}
-          </p>
-        ) : null}
-      </div>
-      <dl className='grid gap-3 text-sm sm:grid-cols-2'>
-        <div>
-          <dt className='text-xs text-muted-foreground'>
-            {t('siteBuilder.plan.sites')}
-          </dt>
-          <dd className='font-medium'>
-            {t('siteBuilder.plan.sitesValue', {
-              used: plan.sites_used,
-              limit: plan.site_limit,
-            })}
-          </dd>
-        </div>
-        <div>
-          <dt className='text-xs text-muted-foreground'>
-            {t('siteBuilder.plan.allowance')}
-          </dt>
-          <dd className='font-medium'>
-            {plan.unlimited
-              ? t('siteBuilder.plan.unlimited')
-              : t('siteBuilder.plan.allowanceValue', { percent })}
-          </dd>
-          {plan.unlimited ? null : (
-            <div
-              className='mt-2 h-2 overflow-hidden rounded-full bg-muted'
-              role='progressbar'
-              aria-label={t('siteBuilder.plan.allowance')}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={percent}
-            >
-              <div
-                className={cn(
-                  'h-full rounded-full transition-colors',
-                  outOfTokens ? 'bg-destructive' : 'bg-primary'
-                )}
-                style={{ width: `${percent}%` }}
-              />
-            </div>
+    <div className='flex flex-col gap-3 rounded-lg border p-4 sm:flex-row sm:items-center sm:justify-between'>
+      <div className='flex items-start gap-3'>
+        <span className='flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary'>
+          {plan.unlimited ? (
+            <Endless className='size-4' />
+          ) : (
+            <Coins className='size-4' />
           )}
+        </span>
+        <div className='space-y-1'>
+          <h2 className='text-base font-semibold'>
+            {plan.unlimited
+              ? t('siteBuilder.credits.unlimited')
+              : t('siteBuilder.credits.balance', { count: plan.credits })}
+          </h2>
+          <p className='text-xs text-muted-foreground'>
+            {t('siteBuilder.credits.costs', {
+              create: plan.create_cost,
+              revise: plan.revise_cost,
+            })}
+          </p>
+          {low ? (
+            <p
+              role='status'
+              className='text-xs text-amber-700 dark:text-amber-400'
+            >
+              {t('siteBuilder.credits.low')}
+            </p>
+          ) : null}
         </div>
-      </dl>
-      {plan.unlimited ? null : (
-        <p className='text-xs text-muted-foreground'>
-          {t('siteBuilder.plan.resets', { date: dateText(plan.resets_at) })}
-        </p>
-      )}
+      </div>
+      <Button
+        asChild
+        variant={low ? 'default' : 'outline'}
+        size='sm'
+        className='self-start sm:self-auto'
+      >
+        <Link to='/credits'>
+          {plan.unlimited ? (
+            <History className='size-4' />
+          ) : (
+            <Plus className='size-4' />
+          )}
+          {plan.unlimited
+            ? t('siteBuilder.credits.history')
+            : t('siteBuilder.credits.add')}
+        </Link>
+      </Button>
     </div>
   )
 }
