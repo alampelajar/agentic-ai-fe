@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import type { Direction } from '../data/api'
-import { LookColours, LookSketch } from './look-sketch'
+import { LookColours } from './look-colours'
 
 type DirectionCardProps = {
   direction: Direction
@@ -14,9 +14,9 @@ type DirectionCardProps = {
 }
 
 /**
- * One look to choose from: a drawing of where things sit on its pages and its colours
- * (never a picture of a website, by the owner's wish), a plain name, and a button to
- * open the example website.
+ * One look to choose from: its colours, each named by where it is used (never a
+ * picture of a website, by the owner's wish), a plain name, and a button to open the
+ * example website.
  */
 export function DirectionCard({
   direction,
@@ -44,11 +44,10 @@ export function DirectionCard({
         onClick={onSelect}
         className='flex flex-1 flex-col text-left focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none'
       >
-        <LookSketch direction={direction} className='h-52 border-b' />
+        <span className='border-b'>
+          <LookColours palette={direction.palette} />
+        </span>
         <span className='flex flex-1 flex-col gap-1 p-4'>
-          <span className='mb-2'>
-            <LookColours palette={direction.palette} />
-          </span>
           <span className='flex items-center justify-between gap-2 text-sm font-semibold'>
             {direction.name}
             {selected ? (
