@@ -234,6 +234,12 @@ enforces the ones marked *enforced*):
    starts the same work again and skips them. A run that stops before writing
    anything puts the workspace back to the current version.
 
+**Length of the person's words** (*changed 2026-11-27, owner; before: 2,000*): a
+description or a change request is at most 10,000 characters, checked by the API
+(`maxSiteTextLength`) and the two boxes (`MAX_SITE_TEXT`). Every later prompt carries
+the owner's last 10 requests, together at most 12,000 characters (`maxChangesChars`):
+older ones leave first, the newest is always kept whole.
+
 **Limits, enforced by the worker:** at most 60 model calls per run, 5 repair
 attempts, 2 review rounds, 20 minutes per run, one active run per site, two per
 person, and the existing per-user job limits. A rate-limited model is asked again

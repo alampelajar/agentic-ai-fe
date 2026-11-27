@@ -19,6 +19,7 @@ import {
   type SiteDetail,
 } from '../data/api'
 import { siteErrorText } from '../lib/errors'
+import { MAX_SITE_TEXT } from '../lib/limits'
 import { CancelButton } from './cancel-button'
 
 /** The id of the change box, so other parts of the screen can focus it. */
@@ -233,7 +234,7 @@ export function Conversation({
           <Textarea
             id={CHANGE_REQUEST_ID}
             rows={3}
-            maxLength={2000}
+            maxLength={MAX_SITE_TEXT}
             value={request}
             disabled={!canChange}
             onChange={(event) => setRequest(event.target.value)}
