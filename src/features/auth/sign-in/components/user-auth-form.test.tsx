@@ -177,4 +177,42 @@ describe('UserAuthForm', () => {
       })
     )
   })
+
+  it('says the account is suspended, with the reason, and signs nobody in', async () => {
+    mocks.fetch.mockResolvedValue({
+      ok: false,
+      status: 403,
+      json: async () => ({
+        ok: false,
+        code: 'account_suspended',
+        message: 'Akun Anda ditangguhkan oleh admin.',
+        reason: 'Trying to make a gambling website.',
+      }),
+    })
+    const screen = await render(<UserAuthForm />)
+    await userEvent.fill(
+      screen.getByRole('textbox', { name: 'Email address' }),
+      'alam@example.com'
+    )
+    await userEvent.fill(screen.getByLabelText('Password'), 'valid-password')
+    await userEvent.click(screen.getByRole('button', { name: 'Sign in' }))
+
+    const notice = screen.getByRole('alert')
+    await expect.element(notice).toHaveTextContent('Your account is suspended')
+    await expect
+      .element(notice)
+      .toHaveTextContent('Reason: Trying to make a gambling website.')
+    expect(mocks.setUser).not.toHaveBeenCalled()
+    expect(mocks.navigate).not.toHaveBeenCalled()
+  })
+
+  it('says why after the person was signed out for a suspension', async () => {
+    window.sessionStorage.setItem('account.suspended', 'Spam.')
+    const screen = await render(<UserAuthForm />)
+    await expect
+      .element(screen.getByRole('alert'))
+      .toHaveTextContent('Reason: Spam.')
+    // Shown once: a later visit starts clean.
+    expect(window.sessionStorage.getItem('account.suspended')).toBeNull()
+  })
 })

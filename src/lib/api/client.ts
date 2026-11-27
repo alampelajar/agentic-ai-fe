@@ -1,6 +1,7 @@
 import i18n from '@/i18n'
 import { useAuthStore } from '@/stores/auth-store'
 import { API_BASE_URL } from '@/lib/api/config'
+import { readSuspended, rememberSuspension } from '@/lib/account-suspended'
 import { askToSignIn, SignInRequiredError } from '@/lib/guest'
 
 let refreshPromise: Promise<string> | null = null
@@ -18,6 +19,13 @@ async function refreshAccessToken() {
   })
 
   const result = await response.json()
+
+  const suspendedReason = readSuspended(response.status, result)
+  if (suspendedReason !== null) {
+    rememberSuspension(suspendedReason)
+    useAuthStore.getState().auth.reset()
+    window.location.assign('/sign-in')
+  }
 
   if (!response.ok || !result.ok || !result.access_token) {
     throw new Error(result.message || 'Refresh token tidak valid.')
@@ -105,6 +113,20 @@ export async function apiFetch(
       if (!(error instanceof TypeError)) useAuthStore.getState().auth.reset()
 
       throw error
+    }
+  }
+
+  // An admin suspended the account: sign out at once and let the sign-in page say why.
+  if (response.status === 403 && !guest) {
+    const body = await response
+      .clone()
+      .json()
+      .catch(() => null)
+    const reason = readSuspended(response.status, body)
+    if (reason !== null) {
+      rememberSuspension(reason)
+      useAuthStore.getState().auth.reset()
+      window.location.assign('/sign-in')
     }
   }
 

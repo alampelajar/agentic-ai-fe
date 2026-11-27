@@ -141,11 +141,14 @@ export const FINISHED_RUN: readonly RunStatus[] = [
 export class SiteRequestError extends Error {
   readonly status: number
   readonly code: string
-  constructor(message: string, status: number, code: string) {
+  /** For code forbidden_topic: which kind of website is refused (gambling, adult). */
+  readonly topic: string
+  constructor(message: string, status: number, code: string, topic = '') {
     super(message)
     this.name = 'SiteRequestError'
     this.status = status
     this.code = code
+    this.topic = topic
   }
 }
 
@@ -155,7 +158,8 @@ async function parse<T>(response: Response): Promise<T> {
     throw new SiteRequestError(
       data?.error || 'Request failed',
       response.status,
-      data?.code || 'unknown'
+      data?.code || 'unknown',
+      data?.topic || ''
     )
   return data as T
 }

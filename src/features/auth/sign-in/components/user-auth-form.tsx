@@ -5,6 +5,7 @@ import { Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
+import { readSuspended, takeSuspension } from '@/lib/account-suspended'
 import { API_BASE_URL } from '@/lib/api/config'
 import { emailRefusalKey } from '@/lib/api/email-otp'
 import { deviceHeaders } from '@/lib/device-id'
@@ -15,6 +16,7 @@ import { PasswordInput } from '@/components/password-input'
 import { readPendingDeletion, type PendingDeletion } from '../data/api'
 import { clearSignInPrefill, peekSignInPrefill } from '../lib/prefill'
 import { PendingDeletionNotice } from './pending-deletion-notice'
+import { SuspendedNotice } from './suspended-notice'
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
   redirectTo?: string
@@ -69,6 +71,8 @@ export function UserAuthForm({
   const [isLoading, setIsLoading] = useState(false)
   // Set when the account exists but waits to be deleted: a notice replaces the form.
   const [pending, setPending] = useState<PendingDeletion | null>(null)
+  // Set when an admin suspended the account, also when the person was signed out for it.
+  const [suspended, setSuspended] = useState<string | null>(takeSuspension)
 
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -102,6 +106,12 @@ export function UserAuthForm({
       if (pendingDeletion) {
         setPassword('')
         setPending(pendingDeletion)
+        return
+      }
+      const suspendedReason = readSuspended(response.status, result)
+      if (suspendedReason !== null) {
+        setPassword('')
+        setSuspended(suspendedReason)
         return
       }
 
@@ -170,6 +180,11 @@ export function UserAuthForm({
         setPending(pendingDeletion)
         return
       }
+      const suspendedReason = readSuspended(response.status, result)
+      if (suspendedReason !== null) {
+        setSuspended(suspendedReason)
+        return
+      }
 
       // A new account from Google follows the sign-up rules for its address.
       const refusalKey = emailRefusalKey(result.code)
@@ -228,6 +243,7 @@ export function UserAuthForm({
 
   return (
     <div className={`w-full ${className ?? ''}`} {...props}>
+      {suspended !== null ? <SuspendedNotice reason={suspended} /> : null}
       <form onSubmit={handleLogin} className='space-y-5'>
         <div className='space-y-2'>
           <Label htmlFor='email' className='text-sm font-medium'>

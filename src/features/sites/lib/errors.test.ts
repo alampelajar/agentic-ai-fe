@@ -3,7 +3,7 @@ import id from '@/i18n/locales/id.json'
 import type { TFunction } from 'i18next'
 import { describe, expect, it } from 'vitest'
 import { SiteRequestError } from '../data/api'
-import { siteErrorText } from './errors'
+import { isForbiddenWebsite, siteErrorText } from './errors'
 
 // A t() that looks keys up in one language file, returning the key when it is missing.
 const tFor = (texts: Record<string, unknown>) =>
@@ -45,6 +45,7 @@ const SERVER_CODES = [
   'restore_failed',
   'delete_failed',
   'invalid_name',
+  'forbidden_topic',
 ]
 
 describe('siteErrorText', () => {
@@ -60,6 +61,25 @@ describe('siteErrorText', () => {
         expect(text, code).not.toBe('server text')
       }
     }
+  })
+
+  it('says which forbidden website was refused, and why', () => {
+    const t = tFor(id)
+    const refused = (topic: string) =>
+      new SiteRequestError('x', 422, 'forbidden_topic', topic)
+    expect(isForbiddenWebsite(refused('gambling'))).toBe(true)
+    expect(isForbiddenWebsite(new SiteRequestError('x', 400, 'invalid'))).toBe(
+      false
+    )
+    expect(siteErrorText(t, refused('gambling'))).toBe(
+      id.siteBuilder.errors.forbidden_gambling
+    )
+    expect(siteErrorText(t, refused('adult'))).toBe(
+      id.siteBuilder.errors.forbidden_adult
+    )
+    expect(siteErrorText(t, refused('something_new'))).toBe(
+      id.siteBuilder.errors.forbidden_topic
+    )
   })
 
   it('never shows a technical message for an unknown code or a network failure', () => {
