@@ -290,3 +290,141 @@
   transition-duration: 0.01ms !important;
   scroll-behavior: auto !important;
 }
+
+/* --------------------------------------------------------------------------
+   Effects page (/docs/effects): small live examples of the movement a website
+   from the builder can have. The real pieces live in the site template's kit.
+   -------------------------------------------------------------------------- */
+@keyframes fx-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes fx-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fx-word {
+  from {
+    opacity: 0;
+    transform: translateY(0.5em);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fx-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.5rem);
+  }
+}
+
+.fx-marquee {
+  animation: fx-marquee 18s linear infinite;
+}
+.fx-marquee:hover {
+  animation-play-state: paused;
+}
+.fx-reveal {
+  animation: fx-reveal 700ms ease-out both;
+}
+.fx-word {
+  animation: fx-word 400ms ease-out both;
+}
+.fx-lift {
+  transition:
+    transform 200ms ease-out,
+    border-color 200ms ease-out;
+}
+.fx-lift:hover {
+  transform: translateY(-0.375rem);
+  border-color: var(--primary);
+}
+.fx-float {
+  animation: fx-float 3s ease-in-out infinite;
+}
+.fx-float-late {
+  animation-delay: 1.2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-marquee,
+  .fx-reveal,
+  .fx-word,
+  .fx-float {
+    animation: none;
+  }
+  .fx-lift,
+  .fx-lift:hover {
+    transform: none;
+  }
+}
+
+@keyframes fx-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes fx-fall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--fall-drift, 0px), 10rem, 0) rotate(300deg);
+  }
+}
+
+@keyframes fx-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.fx-caret {
+  margin-left: 0.05em;
+  animation: fx-caret 0.9s steps(1) infinite;
+}
+.fx-fall {
+  animation: fx-fall 3.5s ease-in both;
+}
+.fx-pop {
+  animation: fx-pop 400ms ease-out 600ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-caret,
+  .fx-pop {
+    animation: none;
+  }
+  .fx-fall {
+    display: none;
+  }
+}

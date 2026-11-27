@@ -1699,6 +1699,229 @@
           ]
         }
       ]
+    },
+    "effects": {
+      "title": "Efek website",
+      "intro": "Pernah lihat sesuatu yang bergerak di website lain, tapi tidak tahu namanya? Cari di sini. Semua efek di bawah bisa dipasang di website Anda.",
+      "howToUse": "Salin kalimat di bawah efek, lalu tempel di kotak perubahan website Anda. Kata-katanya boleh diganti sesuai website Anda.",
+      "calmNote": "Pengunjung yang mematikan gerakan di HP atau komputernya akan melihat semuanya langsung, tanpa gerakan.",
+      "alsoCalled": "Nama lainnya",
+      "goodFor": "Cocok untuk:",
+      "askLike": "Cara memintanya",
+      "copy": "Salin kalimat",
+      "copied": "Kalimat disalin. Tempel di kotak perubahan website Anda.",
+      "copyFailed": "Kalimat gagal disalin. Pilih kalimatnya, lalu salin sendiri.",
+      "replay": "Putar lagi",
+      "items": {
+        "marquee": {
+          "name": "Tulisan berjalan",
+          "what": "Satu baris tulisan bergeser terus di layar, seperti papan tulisan di masjid atau berita di bawah layar TV.",
+          "aka": [
+            "Running text",
+            "Marquee",
+            "Ticker",
+            "News ticker"
+          ],
+          "goodFor": "layanan, promo, jam buka, atau pesan singkat.",
+          "example": "Tambahkan tulisan berjalan di bawah judul utama berisi: Roti segar setiap pagi • Bisa pesan antar • Buka setiap hari."
+        },
+        "reveal": {
+          "name": "Muncul saat digulir",
+          "what": "Bagian halaman muncul pelan-pelan saat pengunjung menggulir ke bawah.",
+          "aka": [
+            "Fade in",
+            "Scroll reveal",
+            "Animate on scroll"
+          ],
+          "goodFor": "membuat halaman yang panjang terasa hidup.",
+          "example": "Buat setiap bagian halaman muncul pelan-pelan saat pengunjung menggulir ke bawah."
+        },
+        "stagger": {
+          "name": "Muncul satu per satu",
+          "what": "Sekumpulan kartu atau foto muncul bergantian, tidak sekaligus.",
+          "aka": [
+            "Stagger",
+            "Sequential animation",
+            "Cascade"
+          ],
+          "goodFor": "daftar layanan, produk, atau foto.",
+          "example": "Buat daftar layanan muncul satu per satu."
+        },
+        "countUp": {
+          "name": "Angka yang menghitung",
+          "what": "Angka naik dari nol sampai jumlah sebenarnya saat terlihat di layar.",
+          "aka": [
+            "Counter",
+            "Count up",
+            "Number animation",
+            "Stats counter"
+          ],
+          "goodFor": "angka yang Anda tahu, misalnya lama usaha atau jumlah pelanggan. Hanya angka dari Anda yang ditampilkan.",
+          "example": "Tampilkan \"250 pelanggan puas\" dan \"10 tahun pengalaman\" sebagai angka yang menghitung naik."
+        },
+        "rotatingWords": {
+          "name": "Kata yang berganti",
+          "what": "Satu kata di judul berganti setiap beberapa detik, menunjukkan beberapa hal yang Anda tawarkan.",
+          "aka": [
+            "Rotating text",
+            "Text rotator",
+            "Word swap",
+            "Changing headline"
+          ],
+          "goodFor": "judul utama yang menyebut beberapa produk atau layanan.",
+          "example": "Di judul utama, buat kata terakhirnya berganti antara roti, kue, dan pesanan."
+        },
+        "parallax": {
+          "name": "Gambar bergerak lebih lambat",
+          "what": "Gambar di belakang tulisan bergerak lebih lambat dari halaman, jadi halaman terasa dalam. Gulir di dalam kotak untuk mencoba.",
+          "aka": [
+            "Parallax",
+            "Parallax scrolling",
+            "Depth effect"
+          ],
+          "goodFor": "foto besar tempat usaha, produk, atau acara Anda.",
+          "example": "Buat foto besar di bagian atas bergerak lebih lambat dari halaman saat digulir."
+        },
+        "lift": {
+          "name": "Kartu yang terangkat",
+          "what": "Kartu sedikit naik saat disentuh penunjuk. Arahkan penunjuk ke kartu untuk mencoba.",
+          "aka": [
+            "Hover effect",
+            "Lift on hover",
+            "Hover card"
+          ],
+          "goodFor": "produk, paket, atau menu yang bisa diklik.",
+          "example": "Buat kartu produk sedikit naik saat disentuh penunjuk."
+        },
+        "float": {
+          "name": "Hiasan melayang",
+          "what": "Hiasan kecil naik turun pelan, seperti sedang melayang.",
+          "aka": [
+            "Floating animation",
+            "Bobbing",
+            "Float"
+          ],
+          "goodFor": "undangan, acara anak, dan website yang ceria.",
+          "example": "Tambahkan hiasan kecil yang melayang di samping judul utama."
+        },
+        "countdown": {
+          "name": "Hitung mundur",
+          "what": "Menunjukkan sisa hari, jam, menit, dan detik sampai suatu tanggal.",
+          "aka": [
+            "Countdown timer",
+            "Event countdown",
+            "Timer"
+          ],
+          "goodFor": "pernikahan, acara, peluncuran, dan promo yang ada batas waktunya.",
+          "example": "Tambahkan hitung mundur ke hari pernikahan, 14 Februari 2027 pukul 10.00."
+        },
+        "typewriter": {
+          "name": "Tulisan seperti diketik",
+          "what": "Satu kalimat pendek muncul huruf demi huruf, seperti sedang diketik.",
+          "aka": [
+            "Typewriter",
+            "Typing effect",
+            "Typing animation"
+          ],
+          "goodFor": "satu kalimat pendek di bawah judul utama, atau salam singkat.",
+          "example": "Buat kalimat di bawah judul utama muncul seperti sedang diketik."
+        },
+        "slideshow": {
+          "name": "Foto bergeser sendiri",
+          "what": "Foto Anda tampil satu per satu dan berganti sendiri. Pengunjung juga bisa menggesernya dengan jari.",
+          "aka": [
+            "Slider",
+            "Carousel",
+            "Slideshow",
+            "Image slider"
+          ],
+          "goodFor": "foto produk, tempat usaha, atau acara Anda. Butuh paling sedikit dua foto Anda.",
+          "example": "Tampilkan foto-foto saya satu per satu, berganti sendiri, di halaman depan."
+        },
+        "whatsapp": {
+          "name": "Tombol WhatsApp melayang",
+          "what": "Tombol WhatsApp bulat selalu ada di pojok bawah setiap halaman, jadi pengunjung bisa chat Anda kapan saja.",
+          "aka": [
+            "Floating WhatsApp button",
+            "Sticky button",
+            "Chat button"
+          ],
+          "goodFor": "toko, jasa, dan siapa saja yang menerima pesanan lewat chat. Butuh nomor WhatsApp Anda.",
+          "example": "Tambahkan tombol WhatsApp melayang dengan pesan: Halo, saya mau pesan."
+        },
+        "cover": {
+          "name": "Sampul pembuka undangan",
+          "what": "Tamu melihat sampul berisi nama kalian dulu, lalu menekan \"Buka undangan\". Kalau tautannya diakhiri ?to=Nama, sampul menyapa tamu itu dengan namanya.",
+          "aka": [
+            "Envelope opening",
+            "Cover page",
+            "Invitation cover",
+            "Splash screen"
+          ],
+          "goodFor": "undangan pernikahan, ulang tahun, dan undangan digital lainnya.",
+          "example": "Tambahkan sampul pembuka di undangan, bertuliskan \"Undangan Pernikahan\" dan nama kami."
+        },
+        "confetti": {
+          "name": "Hujan kelopak bunga",
+          "what": "Kelopak bunga, potongan kertas, atau hati jatuh pelan di atas halaman, sekali saat halaman dibuka.",
+          "aka": [
+            "Confetti",
+            "Falling petals",
+            "Petal rain",
+            "Particles"
+          ],
+          "goodFor": "pernikahan, ulang tahun, dan perayaan lainnya.",
+          "example": "Buat kelopak bunga berjatuhan sekali saat undangan dibuka."
+        }
+      },
+      "demo": {
+        "marquee": [
+          "Roti segar",
+          "Pesan antar",
+          "Buka setiap hari",
+          "Pesan sekarang"
+        ],
+        "revealTitle": "Cerita kami",
+        "revealText": "Bagian ini muncul pelan saat terlihat.",
+        "stagger": [
+          "Roti",
+          "Kue",
+          "Pesanan"
+        ],
+        "countUpLabel": "pelanggan puas",
+        "rotatingLead": "Kami membuat",
+        "rotatingWords": [
+          "roti",
+          "kue",
+          "pesanan"
+        ],
+        "parallaxLabel": "Contoh gambar bergerak lebih lambat. Gulir di dalam kotak ini.",
+        "parallaxText": "Gulir di dalam kotak ini",
+        "parallaxText2": "Lingkarannya bergerak lebih lambat",
+        "lift": [
+          "Dasar",
+          "Plus",
+          "Lengkap"
+        ],
+        "floatText": "Anda diundang",
+        "days": "hari",
+        "hours": "jam",
+        "minutes": "menit",
+        "seconds": "detik",
+        "typewriter": "Roti segar, langsung dari oven.",
+        "slideshow": [
+          "Foto 1",
+          "Foto 2",
+          "Foto 3"
+        ],
+        "whatsapp": "Chat",
+        "confetti": "Selamat ulang tahun!",
+        "coverLabel": "Undangan Pernikahan",
+        "coverNames": "Raka & Nadia",
+        "coverButton": "Buka undangan",
+        "coverInside": "Selamat datang di hari kami",
+        "coverInsideText": "Undangan terbuka di balik sampul."
+      }
     }
   },
   "docsMenu": "Panduan & kebijakan"

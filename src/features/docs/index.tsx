@@ -1,5 +1,11 @@
 import { Link, Outlet } from '@tanstack/react-router'
-import { BookOpen, FileText, ShieldCheck, type LucideIcon } from 'lucide-react'
+import {
+  BookOpen,
+  FileText,
+  ShieldCheck,
+  Sparkles,
+  type LucideIcon,
+} from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Main } from '@/components/layout/main'
 
@@ -12,8 +18,9 @@ export const DOCS_UPDATED = '2026-11-26'
 
 export type DocKey = 'howTo' | 'terms' | 'privacy'
 
-const PAGES: { key: DocKey; to: string; icon: LucideIcon }[] = [
+const PAGES: { key: DocKey | 'effects'; to: string; icon: LucideIcon }[] = [
   { key: 'howTo', to: '/docs/how-to', icon: BookOpen },
+  { key: 'effects', to: '/docs/effects', icon: Sparkles },
   { key: 'terms', to: '/docs/terms', icon: FileText },
   { key: 'privacy', to: '/docs/privacy', icon: ShieldCheck },
 ]

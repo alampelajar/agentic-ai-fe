@@ -29,6 +29,7 @@ import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedSubscriptionPremiumRouteImport } from './routes/_authenticated/subscription-premium'
 import { Route as AuthenticatedDocsIndexRouteImport } from './routes/_authenticated/docs/index'
+import { Route as AuthenticatedDocsEffectsRouteImport } from './routes/_authenticated/docs/effects'
 import { Route as AuthenticatedDocsHowToRouteImport } from './routes/_authenticated/docs/how-to'
 import { Route as AuthenticatedDocsPrivacyRouteImport } from './routes/_authenticated/docs/privacy'
 import { Route as AuthenticatedDocsTermsRouteImport } from './routes/_authenticated/docs/terms'
@@ -144,6 +145,12 @@ const AuthenticatedDocsIndexRoute = AuthenticatedDocsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedDocsRouteRoute,
 } as any)
+const AuthenticatedDocsEffectsRoute =
+  AuthenticatedDocsEffectsRouteImport.update({
+    id: '/effects',
+    path: '/effects',
+    getParentRoute: () => AuthenticatedDocsRouteRoute,
+  } as any)
 const AuthenticatedDocsHowToRoute = AuthenticatedDocsHowToRouteImport.update({
   id: '/how-to',
   path: '/how-to',
@@ -238,6 +245,7 @@ export interface FileRoutesByFullPath {
   '/paid-models': typeof AuthenticatedPaidModelsRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/subscription-premium': typeof AuthenticatedSubscriptionPremiumRoute
+  '/docs/effects': typeof AuthenticatedDocsEffectsRoute
   '/docs/how-to': typeof AuthenticatedDocsHowToRoute
   '/docs/privacy': typeof AuthenticatedDocsPrivacyRoute
   '/docs/terms': typeof AuthenticatedDocsTermsRoute
@@ -270,6 +278,7 @@ export interface FileRoutesByTo {
   '/profile': typeof AuthenticatedProfileRoute
   '/subscription-premium': typeof AuthenticatedSubscriptionPremiumRoute
   '/': typeof AuthenticatedIndexRoute
+  '/docs/effects': typeof AuthenticatedDocsEffectsRoute
   '/docs/how-to': typeof AuthenticatedDocsHowToRoute
   '/docs/privacy': typeof AuthenticatedDocsPrivacyRoute
   '/docs/terms': typeof AuthenticatedDocsTermsRoute
@@ -306,6 +315,7 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/subscription-premium': typeof AuthenticatedSubscriptionPremiumRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/docs/effects': typeof AuthenticatedDocsEffectsRoute
   '/_authenticated/docs/how-to': typeof AuthenticatedDocsHowToRoute
   '/_authenticated/docs/privacy': typeof AuthenticatedDocsPrivacyRoute
   '/_authenticated/docs/terms': typeof AuthenticatedDocsTermsRoute
@@ -342,6 +352,7 @@ export interface FileRouteTypes {
     | '/paid-models'
     | '/profile'
     | '/subscription-premium'
+    | '/docs/effects'
     | '/docs/how-to'
     | '/docs/privacy'
     | '/docs/terms'
@@ -374,6 +385,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/subscription-premium'
     | '/'
+    | '/docs/effects'
     | '/docs/how-to'
     | '/docs/privacy'
     | '/docs/terms'
@@ -409,6 +421,7 @@ export interface FileRouteTypes {
     | '/_authenticated/profile'
     | '/_authenticated/subscription-premium'
     | '/_authenticated/'
+    | '/_authenticated/docs/effects'
     | '/_authenticated/docs/how-to'
     | '/_authenticated/docs/privacy'
     | '/_authenticated/docs/terms'
@@ -580,6 +593,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDocsIndexRouteImport
       parentRoute: typeof AuthenticatedDocsRouteRoute
     }
+    '/_authenticated/docs/effects': {
+      id: '/_authenticated/docs/effects'
+      path: '/effects'
+      fullPath: '/docs/effects'
+      preLoaderRoute: typeof AuthenticatedDocsEffectsRouteImport
+      parentRoute: typeof AuthenticatedDocsRouteRoute
+    }
     '/_authenticated/docs/how-to': {
       id: '/_authenticated/docs/how-to'
       path: '/how-to'
@@ -675,6 +695,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedDocsRouteRouteChildren {
+  AuthenticatedDocsEffectsRoute: typeof AuthenticatedDocsEffectsRoute
   AuthenticatedDocsHowToRoute: typeof AuthenticatedDocsHowToRoute
   AuthenticatedDocsPrivacyRoute: typeof AuthenticatedDocsPrivacyRoute
   AuthenticatedDocsTermsRoute: typeof AuthenticatedDocsTermsRoute
@@ -683,6 +704,7 @@ interface AuthenticatedDocsRouteRouteChildren {
 
 const AuthenticatedDocsRouteRouteChildren: AuthenticatedDocsRouteRouteChildren =
   {
+    AuthenticatedDocsEffectsRoute: AuthenticatedDocsEffectsRoute,
     AuthenticatedDocsHowToRoute: AuthenticatedDocsHowToRoute,
     AuthenticatedDocsPrivacyRoute: AuthenticatedDocsPrivacyRoute,
     AuthenticatedDocsTermsRoute: AuthenticatedDocsTermsRoute,

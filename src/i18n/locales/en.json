@@ -1699,6 +1699,229 @@
           ]
         }
       ]
+    },
+    "effects": {
+      "title": "Website effects",
+      "intro": "Saw something moving on another website and do not know what it is called? Find it here. Every effect below can be added to your website.",
+      "howToUse": "Copy the sentence under an effect, then paste it in the change box of your website. You may change the words to fit your website.",
+      "calmNote": "Visitors who turned off movement on their phone or computer see everything at once, without movement.",
+      "alsoCalled": "Also called",
+      "goodFor": "Good for:",
+      "askLike": "Ask for it like this",
+      "copy": "Copy sentence",
+      "copied": "Sentence copied. Paste it in the change box of your website.",
+      "copyFailed": "The sentence could not be copied. Select it and copy it yourself.",
+      "replay": "Play again",
+      "items": {
+        "marquee": {
+          "name": "Moving text",
+          "what": "A line of words slides across the page without stopping, like the sign in a mosque or the news line on TV.",
+          "aka": [
+            "Running text",
+            "Marquee",
+            "Ticker",
+            "News ticker"
+          ],
+          "goodFor": "services, promos, opening hours, or a short message.",
+          "example": "Add moving text under the main title that says: Fresh bread every morning • Delivery available • Open every day."
+        },
+        "reveal": {
+          "name": "Appears while scrolling",
+          "what": "A part of the page fades in softly when the visitor scrolls down to it.",
+          "aka": [
+            "Fade in",
+            "Scroll reveal",
+            "Animate on scroll"
+          ],
+          "goodFor": "making a long page feel alive.",
+          "example": "Make each part of the page appear softly when visitors scroll down to it."
+        },
+        "stagger": {
+          "name": "Appears one by one",
+          "what": "A group of cards or pictures appears one after another, not all at once.",
+          "aka": [
+            "Stagger",
+            "Sequential animation",
+            "Cascade"
+          ],
+          "goodFor": "a list of services, products or photos.",
+          "example": "Make the list of services appear one by one."
+        },
+        "countUp": {
+          "name": "Counting number",
+          "what": "A number counts up from zero to its real value when it comes into view.",
+          "aka": [
+            "Counter",
+            "Count up",
+            "Number animation",
+            "Stats counter"
+          ],
+          "goodFor": "numbers you know, such as years of work or customers served. Only numbers you give us are shown.",
+          "example": "Show \"250 happy customers\" and \"10 years of experience\" as numbers that count up."
+        },
+        "rotatingWords": {
+          "name": "Changing word",
+          "what": "One word in a title changes every few seconds, showing several things you offer.",
+          "aka": [
+            "Rotating text",
+            "Text rotator",
+            "Word swap",
+            "Changing headline"
+          ],
+          "goodFor": "a main title that names several products or services.",
+          "example": "In the main title, let the last word change between bread, cakes and orders."
+        },
+        "parallax": {
+          "name": "Slower picture",
+          "what": "A picture behind the text moves slower than the page, so the page feels deep. Scroll inside the box to try it.",
+          "aka": [
+            "Parallax",
+            "Parallax scrolling",
+            "Depth effect"
+          ],
+          "goodFor": "a big photo of your place, your products or your event.",
+          "example": "Make the big photo at the top move slower than the page when visitors scroll."
+        },
+        "lift": {
+          "name": "Card that rises",
+          "what": "A card rises a little when the pointer goes over it. Point at a card to try it.",
+          "aka": [
+            "Hover effect",
+            "Lift on hover",
+            "Hover card"
+          ],
+          "goodFor": "products, packages or menu items that can be clicked.",
+          "example": "Make the product cards rise a little when the pointer goes over them."
+        },
+        "float": {
+          "name": "Floating decoration",
+          "what": "A small decoration bobs up and down slowly, as if it floats.",
+          "aka": [
+            "Floating animation",
+            "Bobbing",
+            "Float"
+          ],
+          "goodFor": "invitations, children’s events and cheerful websites.",
+          "example": "Add small floating decorations beside the main title."
+        },
+        "countdown": {
+          "name": "Countdown",
+          "what": "Shows how many days, hours, minutes and seconds are left until a date.",
+          "aka": [
+            "Countdown timer",
+            "Event countdown",
+            "Timer"
+          ],
+          "goodFor": "weddings, events, launches and promos with an end date.",
+          "example": "Add a countdown to the wedding day, 14 February 2027 at 10:00."
+        },
+        "typewriter": {
+          "name": "Typed text",
+          "what": "A short line appears letter by letter, as if someone is typing it.",
+          "aka": [
+            "Typewriter",
+            "Typing effect",
+            "Typing animation"
+          ],
+          "goodFor": "one short line under the main title, or a short greeting.",
+          "example": "Make the line under the main title appear as if it is being typed."
+        },
+        "slideshow": {
+          "name": "Moving photos",
+          "what": "Your photos are shown one at a time and change by themselves. Visitors can also swipe them with a finger.",
+          "aka": [
+            "Slider",
+            "Carousel",
+            "Slideshow",
+            "Image slider"
+          ],
+          "goodFor": "photos of your products, your place or your event. It needs at least two of your photos.",
+          "example": "Show my photos one by one, changing by themselves, on the home page."
+        },
+        "whatsapp": {
+          "name": "Floating WhatsApp button",
+          "what": "A round WhatsApp button stays in the bottom corner of every page, so visitors can chat with you at any time.",
+          "aka": [
+            "Floating WhatsApp button",
+            "Sticky button",
+            "Chat button"
+          ],
+          "goodFor": "shops, services and anyone who takes orders by chat. It needs your WhatsApp number.",
+          "example": "Add a floating WhatsApp button with the message: Hello, I would like to order."
+        },
+        "cover": {
+          "name": "Opening cover",
+          "what": "Guests first see a cover with your names, then press \"Open invitation\". If the link ends in ?to=Name, the cover greets that guest by name.",
+          "aka": [
+            "Envelope opening",
+            "Cover page",
+            "Invitation cover",
+            "Splash screen"
+          ],
+          "goodFor": "wedding invitations, birthdays and other digital invitations.",
+          "example": "Add an opening cover to the invitation, with the words \"Wedding Invitation\" and our names."
+        },
+        "confetti": {
+          "name": "Falling petals",
+          "what": "Flower petals, little pieces of paper or hearts fall softly over the page once, when it opens.",
+          "aka": [
+            "Confetti",
+            "Falling petals",
+            "Petal rain",
+            "Particles"
+          ],
+          "goodFor": "weddings, birthdays and other celebrations.",
+          "example": "Make flower petals fall once when the invitation is opened."
+        }
+      },
+      "demo": {
+        "marquee": [
+          "Fresh bread",
+          "Delivery",
+          "Open every day",
+          "Order now"
+        ],
+        "revealTitle": "Our story",
+        "revealText": "This part fades in as it comes into view.",
+        "stagger": [
+          "Bread",
+          "Cakes",
+          "Orders"
+        ],
+        "countUpLabel": "happy customers",
+        "rotatingLead": "We make fresh",
+        "rotatingWords": [
+          "bread",
+          "cakes",
+          "orders"
+        ],
+        "parallaxLabel": "Example of a slower picture. Scroll inside this box.",
+        "parallaxText": "Scroll inside this box",
+        "parallaxText2": "The circles move slower",
+        "lift": [
+          "Basic",
+          "Plus",
+          "Full"
+        ],
+        "floatText": "You are invited",
+        "days": "days",
+        "hours": "hours",
+        "minutes": "min",
+        "seconds": "sec",
+        "typewriter": "Fresh bread, straight from the oven.",
+        "slideshow": [
+          "Photo 1",
+          "Photo 2",
+          "Photo 3"
+        ],
+        "whatsapp": "Chat",
+        "confetti": "Happy birthday!",
+        "coverLabel": "Wedding Invitation",
+        "coverNames": "Raka & Nadia",
+        "coverButton": "Open invitation",
+        "coverInside": "Welcome to our day",
+        "coverInsideText": "The invitation opens under the cover."
+      }
     }
   },
   "docsMenu": "Guides & policies"
