@@ -33,6 +33,7 @@ import {
   type Site,
 } from './data/api'
 import { siteErrorText } from './lib/errors'
+import { MAX_SITE_TEXT } from './lib/limits'
 
 // What a visitor wrote before signing in, kept for this tab until they are back.
 const DRAFT_KEY = 'siteBuilder.draft'
@@ -218,7 +219,7 @@ export function SitesPage() {
             <Textarea
               id='site-description'
               rows={4}
-              maxLength={2000}
+              maxLength={MAX_SITE_TEXT}
               value={description}
               onChange={(event) => setDescription(event.target.value)}
               onKeyDown={(event) => {
