@@ -32,7 +32,8 @@ import {
   type ShowcaseSite,
   type Site,
 } from './data/api'
-import { siteErrorText } from './lib/errors'
+import { ForbiddenAlert } from './components/forbidden-alert'
+import { isForbiddenWebsite, siteErrorText } from './lib/errors'
 import { MAX_SITE_TEXT } from './lib/limits'
 
 // What a visitor wrote before signing in, kept for this tab until they are back.
@@ -71,6 +72,8 @@ export function SitesPage() {
   const [description, setDescription] = useState(draft?.description ?? '')
   const [creating, setCreating] = useState(false)
   const [problem, setProblem] = useState<string | null>(null)
+  // A website the builder never makes (gambling, pornography) gets the red warning.
+  const [forbidden, setForbidden] = useState(false)
   const [deleting, setDeleting] = useState<Site | null>(null)
   const [removing, setRemoving] = useState(false)
   // A gallery website whose look and page list the new website copies.
@@ -117,6 +120,7 @@ export function SitesPage() {
       })
     } catch (error) {
       setProblem(siteErrorText(t, error))
+      setForbidden(isForbiddenWebsite(error))
       setCreating(false)
     }
   }
@@ -297,7 +301,8 @@ export function SitesPage() {
             </p>
           )}
 
-          {problem ? (
+          {problem && forbidden ? <ForbiddenAlert text={problem} /> : null}
+          {problem && !forbidden ? (
             <p role='alert' className='text-sm text-destructive'>
               {problem}
             </p>

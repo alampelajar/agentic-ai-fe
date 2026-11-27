@@ -348,6 +348,11 @@
       "loginSuccess": "Berhasil masuk",
       "googleLoginSuccess": "Berhasil masuk dengan Google",
       "welcome": "Selamat datang, {{name}}."
+    },
+    "suspended": {
+      "title": "Akun Anda ditangguhkan",
+      "reason": "Alasan: {{reason}}",
+      "help": "Untuk sementara Anda tidak bisa masuk atau memakai website Anda. Jika menurut Anda ini keliru, hubungi admin."
     }
   },
   "passwordReset": {
@@ -1201,7 +1206,10 @@
       "invalid_name": "Nama tidak valid.",
       "file_not_readable": "File ini tidak bisa dibuka.",
       "files_failed": "Isi website Anda belum bisa dibuka. Silakan coba lagi.",
-      "credit_limit": "Kredit Anda tidak cukup. Tambah kredit untuk melanjutkan."
+      "credit_limit": "Kredit Anda tidak cukup. Tambah kredit untuk melanjutkan.",
+      "forbidden_topic": "Kami tidak membuat website seperti ini, karena isinya dilarang.",
+      "forbidden_gambling": "Kami tidak membuat website judi atau taruhan dalam bentuk apa pun, termasuk slot, togel, kasino, dan taruhan bola. Judi online dilarang hukum di Indonesia.",
+      "forbidden_adult": "Kami tidak membuat website pornografi atau konten dewasa. Konten seperti ini dilarang hukum di Indonesia."
     },
     "toast": {
       "deleted": "Website sudah dihapus.",
@@ -1369,6 +1377,10 @@
       "notEnough": "Kredit Anda tidak cukup untuk website baru. Tambah kredit dulu.",
       "startCost": "Memakai {{count}} kredit setelah selesai.",
       "changeCost": "Setiap perubahan memakai {{count}} kredit setelah selesai."
+    },
+    "forbidden": {
+      "title": "Website ini tidak bisa dibuat",
+      "help": "Kredit Anda tidak terpakai. Silakan buat website untuk hal lain."
     }
   },
   "signInPrompt": {

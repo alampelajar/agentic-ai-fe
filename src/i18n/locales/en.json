@@ -348,6 +348,11 @@
       "loginSuccess": "Signed in successfully",
       "googleLoginSuccess": "Google sign-in successful",
       "welcome": "Welcome, {{name}}."
+    },
+    "suspended": {
+      "title": "Your account is suspended",
+      "reason": "Reason: {{reason}}",
+      "help": "You cannot sign in or use your websites for now. If you think this is a mistake, contact the admin."
     }
   },
   "passwordReset": {
@@ -1201,7 +1206,10 @@
       "invalid_name": "The name is not valid.",
       "file_not_readable": "This file cannot be opened.",
       "files_failed": "We could not open the contents of your website. Please try again.",
-      "credit_limit": "You do not have enough credits. Add credits to go on."
+      "credit_limit": "You do not have enough credits. Add credits to go on.",
+      "forbidden_topic": "We do not make websites like this, because what they hold is not allowed.",
+      "forbidden_gambling": "We do not make websites for gambling or betting of any kind, including slots, togel, casinos and sports betting. Online gambling is against the law in Indonesia.",
+      "forbidden_adult": "We do not make websites with pornography or adult content. Such content is against the law in Indonesia."
     },
     "toast": {
       "deleted": "The website was deleted.",
@@ -1369,6 +1377,10 @@
       "notEnough": "You do not have enough credits for a new website. Add credits first.",
       "startCost": "Uses {{count}} credits when it is done.",
       "changeCost": "Each change uses {{count}} credit when it is done."
+    },
+    "forbidden": {
+      "title": "This website cannot be made",
+      "help": "No credits were used. You are welcome to make a website about something else."
     }
   },
   "signInPrompt": {

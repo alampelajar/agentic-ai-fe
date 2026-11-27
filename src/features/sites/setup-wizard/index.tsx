@@ -15,7 +15,8 @@ import {
   type SiteDetail,
   type SiteImage,
 } from '../data/api'
-import { siteErrorText } from '../lib/errors'
+import { ForbiddenAlert } from '../components/forbidden-alert'
+import { isForbiddenWebsite, siteErrorText } from '../lib/errors'
 import { DetailsStep } from './details-step'
 import {
   EMPTY_CONTACT,
@@ -45,6 +46,7 @@ export function SetupWizard({ site, onStarted }: SetupWizardProps) {
   const [step, setStep] = useState<number>(STEP.questions)
   const [data, setData] = useState<QuestionsResult | null>(null)
   const [loadError, setLoadError] = useState<string | null>(null)
+  const [forbidden, setForbidden] = useState(false)
   const [answers, setAnswers] = useState<Record<string, string[]>>({})
   const [other, setOther] = useState<Record<string, string>>({})
   const [extra, setExtra] = useState('')
@@ -64,6 +66,7 @@ export function SetupWizard({ site, onStarted }: SetupWizardProps) {
 
   const load = async () => {
     setLoadError(null)
+    setForbidden(false)
     try {
       const result = await getQuestions(site.id)
       setData(result)
@@ -80,6 +83,7 @@ export function SetupWizard({ site, onStarted }: SetupWizardProps) {
       }
     } catch (error) {
       setLoadError(siteErrorText(t, error))
+      setForbidden(isForbiddenWebsite(error))
     }
   }
 
@@ -153,6 +157,8 @@ export function SetupWizard({ site, onStarted }: SetupWizardProps) {
     }
   }
 
+  // A refused website cannot go on: no "try again", only the red warning.
+  if (loadError && forbidden) return <ForbiddenAlert text={loadError} />
   if (loadError) {
     return (
       <Card role='alert'>
